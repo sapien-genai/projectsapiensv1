@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Copy, CheckCircle2, RotateCcw, ChevronDown, Wand2, X } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -182,11 +183,18 @@ FRIDAY
 
   const generateResponse = async (userMessage: string): Promise<string> => {
     try {
+      // Get user's JWT token for authenticated edge function call
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error('Authentication required');
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -208,6 +216,9 @@ FRIDAY
       return data.response || generateMockResponse(userMessage);
     } catch (error) {
       console.error('Error calling AI:', error);
+      if (error instanceof Error && error.message === 'Authentication required') {
+        return "Please sign in to use the prompt tester.";
+      }
       return generateMockResponse(userMessage);
     }
   };

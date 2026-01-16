@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Copy, CheckCircle2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -138,12 +139,19 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
 
   const generateResponse = async (userPrompt: string): Promise<string> => {
     try {
+      // Get user's JWT token for authenticated edge function call
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error('Authentication required');
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -178,6 +186,9 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
       return data.response;
     } catch (error) {
       console.error('Error calling AI:', error);
+      if (error instanceof Error && error.message === 'Authentication required') {
+        return "Please sign in to use the AI prompt practice features.";
+      }
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       return `I apologize, but I'm having trouble connecting right now.\n\nError: ${errorMsg}\n\nPlease try again in a moment.`;
     }
