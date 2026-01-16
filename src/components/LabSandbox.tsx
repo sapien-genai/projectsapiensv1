@@ -109,6 +109,8 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
   const [history, setHistory] = useState<Experiment[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -138,16 +140,29 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
   const loadHistory = async () => {
     if (!user) return;
 
-    const { data } = await supabase
-      .from('lab_experiments')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('lab_id', labId)
-      .order('created_at', { ascending: false })
-      .limit(20);
+    setHistoryLoading(true);
+    setHistoryError(null);
 
-    if (data) {
-      setHistory(data);
+    try {
+      const { data, error } = await supabase
+        .from('lab_experiments')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('lab_id', labId)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) {
+        throw error;
+      }
+
+      setHistory(data || []);
+    } catch (error) {
+      console.error('Failed to load history:', error);
+      setHistoryError('Failed to load history. Please try again.');
+      setHistory([]);
+    } finally {
+      setHistoryLoading(false);
     }
   };
 
@@ -161,11 +176,18 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
           content: msg.content
         }));
 
+      // Get user's JWT token for authenticated edge function call
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error('Authentication required');
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -176,13 +198,17 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to get AI response');
       }
 
       const data = await response.json();
       return data.response;
     } catch (error) {
       console.error('Error calling AI:', error);
+      if (error instanceof Error && error.message === 'Authentication required') {
+        return "Please sign in to use the AI lab features.";
+      }
       return "I apologize, but I'm having trouble connecting right now. Please try again in a moment.";
     }
   };
@@ -525,7 +551,22 @@ Feel free to ask follow-up questions or request modifications!`;
 
             {showHistory && (
               <div className="max-h-64 overflow-y-auto border-t-2 border-black">
-                {history.length > 0 ? (
+                {historyLoading ? (
+                  <div className="p-4 text-center">
+                    <div className="inline-block w-6 h-6 border-2 border-black border-t-[#FF6A00] rounded-full animate-spin"></div>
+                    <p className="mt-2 text-sm text-[#666666]">Loading history...</p>
+                  </div>
+                ) : historyError ? (
+                  <div className="p-4 text-center">
+                    <p className="text-sm text-red-600 mb-2">{historyError}</p>
+                    <button
+                      onClick={loadHistory}
+                      className="text-xs text-[#FF6A00] hover:underline"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                ) : history.length > 0 ? (
                   <div className="p-2 space-y-1">
                     {history.slice(0, 10).map((exp) => (
                       <button
@@ -541,7 +582,9 @@ Feel free to ask follow-up questions or request modifications!`;
                     ))}
                   </div>
                 ) : (
-                  <p className="p-4 text-xs text-[#666666]">No history yet</p>
+                  <p className="p-4 text-sm text-[#666666] text-center">
+                    No experiments saved yet. Your work will appear here after you save.
+                  </p>
                 )}
               </div>
             )}

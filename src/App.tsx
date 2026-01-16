@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -26,17 +26,50 @@ import JournalPage from './components/JournalPage';
 import ProjectsPage from './components/ProjectsPage';
 import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
+import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
 type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin';
 
 function AppContent() {
   const { user, loading } = useAuth();
+  const [initialized, setInitialized] = useState(false);
   const [view, setView] = useState<View>('home');
   const [selectedLab, setSelectedLab] = useState<string>('');
   const [selectedPath, setSelectedPath] = useState<string>('');
   const [selectedModule, setSelectedModule] = useState<string>('');
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+
+  // Load saved state on mount (only for authenticated users)
+  useEffect(() => {
+    if (!loading && user && !initialized) {
+      const savedState = loadAppState(user.id);
+      if (savedState) {
+        if (savedState.view) setView(savedState.view);
+        if (savedState.selectedLab) setSelectedLab(savedState.selectedLab);
+        if (savedState.selectedPath) setSelectedPath(savedState.selectedPath);
+        if (savedState.selectedModule) setSelectedModule(savedState.selectedModule);
+        if (savedState.selectedLesson) setSelectedLesson(savedState.selectedLesson);
+      }
+      setInitialized(true);
+    } else if (!loading && !user) {
+      clearAppState();
+      setInitialized(true);
+    }
+  }, [user, loading, initialized]);
+
+  // Save state whenever it changes (only for authenticated users)
+  useEffect(() => {
+    if (user && initialized) {
+      saveAppState({
+        view,
+        selectedLab,
+        selectedPath,
+        selectedModule,
+        selectedLesson,
+      }, user.id);
+    }
+  }, [user, initialized, view, selectedLab, selectedPath, selectedModule, selectedLesson]);
 
   if (loading) {
     return (

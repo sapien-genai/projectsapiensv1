@@ -67,6 +67,8 @@ The platform emphasizes learning-by-doing with a warm minimalist design that sup
 
    Get these values from your Supabase project dashboard at: `Settings > API`
 
+   **For AI Edge Function**: Set the `GEMINI_API_KEY` in Supabase Dashboard under `Edge Functions > Secrets` to enable AI features. Also update the CORS allowlist in `supabase/functions/lab-ai-chat/index.ts` with your production domain.
+
 4. **Run database migrations**
 
    The migrations in `supabase/migrations/` need to be applied to your Supabase database. You can use the Supabase dashboard SQL editor to run them in order, or use the Supabase CLI if you have it configured.
@@ -101,10 +103,14 @@ This is the primary endpoint for AI interactions. It handles:
 - AI-guided exercises and feedback
 - Prompt practice conversations
 
-The edge function is designed to proxy external AI API calls securely, keeping API keys server-side. Currently, this is a placeholder implementation ready for integration with AI providers like:
-- OpenAI (GPT-4, GPT-3.5)
-- Anthropic (Claude)
-- Other LLM providers
+**Security Features:**
+- JWT authentication required (validates Supabase access tokens)
+- CORS allowlist (localhost + production domain)
+- Rate limiting (20 requests/minute per user)
+- Request timeouts (20 seconds) with 2 retries
+- Sanitized error messages (no internal details leaked to clients)
+
+The edge function is designed to proxy external AI API calls securely, keeping API keys server-side. Currently integrated with Google's Gemini API.
 
 ### Frontend AI Components
 
@@ -116,12 +122,13 @@ Components that interact with AI functionality:
 
 ### Integration Points
 
-To add a real AI provider:
+The edge function currently uses Google Gemini. To switch providers:
 
 1. Set up API credentials in Supabase Edge Function secrets
 2. Update `supabase/functions/lab-ai-chat/index.ts` with provider SDK
-3. Configure streaming responses for real-time chat UX
-4. Add rate limiting and usage tracking as needed
+3. Configure streaming responses for real-time chat UX (if supported)
+
+**Important:** The edge function requires a valid Supabase JWT token. Frontend components automatically retrieve the user's access token and pass it in the Authorization header.
 
 ## Core vs Experimental Features
 
@@ -177,9 +184,31 @@ The experimental AI layer is designed to be conversational and adaptive, providi
 
 ```
 
+## Security
+
+This project implements multiple security layers:
+
+### Database Security
+- **Row Level Security (RLS)** enabled on all tables
+- Private projects only visible to owners (`is_public` flag enforced)
+- User analytics prevents ID spoofing (users can only insert their own data)
+- SECURITY DEFINER functions have explicit `search_path = public` set
+
+### API Security
+- **AI Edge Function** requires JWT authentication
+- CORS restricted to localhost and production domain (update in code)
+- Rate limiting: 20 requests/minute per authenticated user
+- Request timeouts (20s) with automatic retries
+- Error messages sanitized (no internal details exposed)
+
+### Application Security
+- Session-based authentication via Supabase
+- localStorage state persistence (user-specific, expires after 24h)
+- Protected routes require authentication
+
 ## Contributing
 
-This project follows a migration-based database workflow. All schema changes must be created as new migration files with:
+This project follows a migration-based database workflow. All schema changes must be applied using the `mcp__supabase__apply_migration` tool with:
 - Descriptive filename in snake_case
 - Detailed markdown summary at the top
 - Safe SQL with `IF EXISTS` / `IF NOT EXISTS` checks
