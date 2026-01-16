@@ -1,5 +1,7 @@
 # Project Sapiens
 
+<!-- DEV REPO VERIFICATION: Connected to development branch - January 16, 2026 -->
+
 A modern AI learning platform designed to help users build confidence and practical skills with AI through guided lessons, hands-on labs, and intentional practice.
 
 ## What is Project Sapiens?
