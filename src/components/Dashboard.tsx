@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard } from 'lucide-react';
+import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard, HelpCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { logError, getErrorMessage } from '../utils/errorHandling';
@@ -38,6 +38,7 @@ interface DashboardProps {
   onPathsListClick?: () => void;
   onAdminClick?: () => void;
   onBillingClick?: () => void;
+  onHelpClick?: () => void;
 }
 
 const fluencyLevels = [
@@ -60,7 +61,7 @@ const getIconComponent = (iconName: string): LucideIcon => {
   return iconMap[iconName] || Trophy;
 };
 
-export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick }: DashboardProps) {
+export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick, onHelpClick }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -253,6 +254,13 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                 </p>
               </div>
               <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={onHelpClick}
+                  className="bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
+                >
+                  <HelpCircle className="w-4 h-4" strokeWidth={2} />
+                  HELP
+                </button>
                 <button
                   onClick={onBillingClick}
                   className="bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"

@@ -7,9 +7,10 @@ interface NavigationProps {
   onLabsClick?: () => void;
   onCommunityClick?: () => void;
   onPricingClick?: () => void;
+  onHelpClick?: () => void;
 }
 
-export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onCommunityClick, onPricingClick }: NavigationProps) {
+export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onCommunityClick, onPricingClick, onHelpClick }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -47,6 +48,12 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
               className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
             >
               COMMUNITY
+            </button>
+            <button
+              onClick={onHelpClick}
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+            >
+              HELP
             </button>
             <button
               onClick={onAuthClick}
@@ -112,6 +119,15 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
               className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
             >
               COMMUNITY
+            </button>
+            <button
+              onClick={() => {
+                onHelpClick?.();
+                setMobileMenuOpen(false);
+              }}
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+            >
+              HELP
             </button>
             <button
               onClick={() => {

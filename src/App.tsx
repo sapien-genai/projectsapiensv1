@@ -31,9 +31,10 @@ import AdminPortal from './components/AdminPortal';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
 import BillingPage from './components/BillingPage';
+import HelpCenter from './components/HelpCenter';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -230,6 +231,7 @@ function AppContent() {
         onPathsListClick={() => setView('paths-list')}
         onAdminClick={() => setView('admin')}
         onBillingClick={() => setView('billing')}
+        onHelpClick={() => setView('help')}
         onPathSelect={(pathId) => {
           setSelectedPath(pathId);
           setView('path');
@@ -260,6 +262,10 @@ function AppContent() {
     return <PrivacyPage onBack={() => setView('home')} />;
   }
 
+  if (view === 'help') {
+    return <HelpCenter onBack={() => setView(user ? 'dashboard' : 'home')} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#F4F4F4]">
       <Navigation
@@ -280,6 +286,7 @@ function AppContent() {
           const communitySection = document.getElementById('community');
           communitySection?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onHelpClick={() => setView('help')}
       />
       <Hero
         onStartJourney={() => setView('auth')}
