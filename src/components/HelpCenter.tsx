@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Search,
   ChevronDown,
@@ -137,12 +137,12 @@ const faqs: FAQItem[] = [
 ];
 
 const categories = [
-  { name: 'Getting Started', icon: Lightbulb, color: '#F4A261' },
-  { name: 'AI Labs', icon: Zap, color: '#5B7DB1' },
-  { name: 'Learning Paths', icon: BookOpen, color: '#98C9A3' },
-  { name: 'Account & Billing', icon: CreditCard, color: '#F4A261' },
-  { name: 'Technical Support', icon: Settings, color: '#57524D' },
-  { name: 'Community & Network', icon: MessageCircle, color: '#5B7DB1' }
+  { name: 'Getting Started', icon: Lightbulb },
+  { name: 'AI Labs', icon: Zap },
+  { name: 'Learning Paths', icon: BookOpen },
+  { name: 'Account & Billing', icon: CreditCard },
+  { name: 'Technical Support', icon: Settings },
+  { name: 'Community & Network', icon: MessageCircle }
 ];
 
 export default function HelpCenter({ onBack }: HelpCenterProps) {
@@ -173,65 +173,47 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F8F5F2' }}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back Button */}
+    <div className="min-h-screen bg-[#F4F4F4]">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         {onBack && (
           <button
             onClick={onBack}
-            className="flex items-center gap-2 mb-8 px-4 py-2 rounded-lg transition-all hover:scale-105"
-            style={{ backgroundColor: '#E9E5E0', color: '#1C1A17' }}
+            className="bg-white border border-black px-4 py-2 mb-8 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
           >
-            <ArrowLeft size={20} />
-            <span className="font-medium">Back</span>
+            <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+            BACK
           </button>
         )}
 
-        {/* Header */}
         <div className="text-center mb-12">
-          <h1
-            className="text-4xl sm:text-5xl font-serif font-bold mb-4"
-            style={{ color: '#1C1A17' }}
-          >
-            Help Center
+          <h1 className="font-extrabold text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter mb-4">
+            HELP CENTER
           </h1>
-          <p
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: '#57524D' }}
-          >
+          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
             Find answers to common questions, explore guides, and get the support you need.
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-12">
+        <div className="max-w-3xl mx-auto mb-12">
           <div className="relative">
             <Search
               className="absolute left-4 top-1/2 transform -translate-y-1/2"
               size={20}
-              style={{ color: '#57524D' }}
+              strokeWidth={2}
             />
             <input
               type="text"
-              placeholder="Search for help..."
+              placeholder="SEARCH FOR HELP..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-transparent focus:border-[#F4A261] focus:outline-none transition-colors text-lg"
-              style={{
-                backgroundColor: '#E9E5E0',
-                color: '#1C1A17'
-              }}
+              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-black focus:border-[#FF6A00] focus:outline-none transition-colors font-medium uppercase tracking-tight placeholder:text-gray-400"
             />
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="mb-12">
-          <h2
-            className="text-xl font-semibold mb-4"
-            style={{ color: '#1C1A17' }}
-          >
-            Browse by Category
+          <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6">
+            BROWSE BY CATEGORY
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {categories.map((category) => {
@@ -242,18 +224,18 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
                 <button
                   key={category.name}
                   onClick={() => setSelectedCategory(isSelected ? null : category.name)}
-                  className="p-4 rounded-xl transition-all transform hover:scale-105"
-                  style={{
-                    backgroundColor: isSelected ? '#F4A261' : '#E9E5E0',
-                    color: isSelected ? 'white' : '#1C1A17'
-                  }}
+                  className={`p-6 border-2 border-black transition-all ${
+                    isSelected
+                      ? 'bg-[#FF6A00] text-black shadow-none translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                  }`}
                 >
                   <Icon
-                    size={24}
-                    className="mx-auto mb-2"
-                    style={{ color: isSelected ? 'white' : category.color }}
+                    size={28}
+                    className="mx-auto mb-3"
+                    strokeWidth={2}
                   />
-                  <div className="text-sm font-medium text-center">
+                  <div className="text-xs font-extrabold uppercase tracking-tight text-center">
                     {category.name}
                   </div>
                 </button>
@@ -262,62 +244,45 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
           </div>
         </div>
 
-        {/* FAQ Section */}
         <div className="mb-12">
-          <h2
-            className="text-2xl font-serif font-bold mb-6"
-            style={{ color: '#1C1A17' }}
-          >
-            {selectedCategory ? `${selectedCategory} Questions` : 'Frequently Asked Questions'}
+          <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6">
+            {selectedCategory ? `${selectedCategory.toUpperCase()} QUESTIONS` : 'FREQUENTLY ASKED QUESTIONS'}
           </h2>
 
           {filteredFAQs.length === 0 ? (
-            <div
-              className="text-center py-12 rounded-xl"
-              style={{ backgroundColor: '#E9E5E0' }}
-            >
-              <p style={{ color: '#57524D' }}>
-                No results found. Try adjusting your search or category filter.
+            <div className="bg-white border-2 border-black p-12 text-center shadow-[2px_2px_0px_#000000]">
+              <p className="font-medium">
+                NO RESULTS FOUND. TRY ADJUSTING YOUR SEARCH OR CATEGORY FILTER.
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {filteredFAQs.map((faq) => (
                 <div
                   key={faq.id}
-                  className="rounded-xl overflow-hidden transition-all"
-                  style={{ backgroundColor: '#E9E5E0' }}
+                  className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000]"
                 >
                   <button
                     onClick={() => toggleFAQ(faq.id)}
-                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-opacity-80 transition-all"
+                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex-1 text-left">
-                      <div
-                        className="text-xs font-medium mb-1"
-                        style={{ color: '#F4A261' }}
-                      >
+                      <div className="text-xs font-extrabold mb-2 text-[#FF6A00] uppercase tracking-tight">
                         {faq.category}
                       </div>
-                      <div
-                        className="font-semibold"
-                        style={{ color: '#1C1A17' }}
-                      >
+                      <div className="font-bold text-base">
                         {faq.question}
                       </div>
                     </div>
                     {expandedFAQ === faq.id ? (
-                      <ChevronUp size={20} style={{ color: '#57524D' }} />
+                      <ChevronUp size={24} strokeWidth={2} className="ml-4 flex-shrink-0" />
                     ) : (
-                      <ChevronDown size={20} style={{ color: '#57524D' }} />
+                      <ChevronDown size={24} strokeWidth={2} className="ml-4 flex-shrink-0" />
                     )}
                   </button>
 
                   {expandedFAQ === faq.id && (
-                    <div
-                      className="px-6 pb-4 pt-2"
-                      style={{ color: '#57524D' }}
-                    >
+                    <div className="px-6 pb-6 pt-2 border-t-2 border-black">
                       <p className="leading-relaxed">{faq.answer}</p>
                     </div>
                   )}
@@ -327,47 +292,27 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
           )}
         </div>
 
-        {/* Contact Support Section */}
-        <div
-          className="rounded-xl p-8"
-          style={{ backgroundColor: '#E9E5E0' }}
-        >
-          <h2
-            className="text-2xl font-serif font-bold mb-4"
-            style={{ color: '#1C1A17' }}
-          >
-            Still need help?
+        <div className="bg-white border-2 border-black p-8 shadow-[2px_2px_0px_#000000] mb-8">
+          <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-4">
+            STILL NEED HELP?
           </h2>
-          <p
-            className="mb-6"
-            style={{ color: '#57524D' }}
-          >
+          <p className="mb-6 leading-relaxed">
             Can't find what you're looking for? Our support team is here to help.
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
             <a
               href="mailto:support@projectsapiens.xyz"
-              className="flex items-center gap-3 p-4 rounded-lg transition-all hover:scale-105"
-              style={{ backgroundColor: '#F8F5F2' }}
+              className="flex items-center gap-4 p-6 bg-[#F4F4F4] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
-              <div
-                className="p-3 rounded-lg"
-                style={{ backgroundColor: '#F4A261' }}
-              >
-                <Mail size={24} style={{ color: 'white' }} />
+              <div className="bg-[#FF6A00] border-2 border-black p-3">
+                <Mail size={24} strokeWidth={2} />
               </div>
               <div>
-                <div
-                  className="font-semibold"
-                  style={{ color: '#1C1A17' }}
-                >
-                  Email Support
+                <div className="font-extrabold text-sm uppercase tracking-tight mb-1">
+                  EMAIL SUPPORT
                 </div>
-                <div
-                  className="text-sm"
-                  style={{ color: '#57524D' }}
-                >
+                <div className="text-sm">
                   support@projectsapiens.xyz
                 </div>
               </div>
@@ -375,26 +320,16 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
 
             <a
               href="/admin/tickets"
-              className="flex items-center gap-3 p-4 rounded-lg transition-all hover:scale-105"
-              style={{ backgroundColor: '#F8F5F2' }}
+              className="flex items-center gap-4 p-6 bg-[#F4F4F4] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
-              <div
-                className="p-3 rounded-lg"
-                style={{ backgroundColor: '#5B7DB1' }}
-              >
-                <MessageCircle size={24} style={{ color: 'white' }} />
+              <div className="bg-[#FF6A00] border-2 border-black p-3">
+                <MessageCircle size={24} strokeWidth={2} />
               </div>
               <div>
-                <div
-                  className="font-semibold"
-                  style={{ color: '#1C1A17' }}
-                >
-                  Submit a Ticket
+                <div className="font-extrabold text-sm uppercase tracking-tight mb-1">
+                  SUBMIT A TICKET
                 </div>
-                <div
-                  className="text-sm"
-                  style={{ color: '#57524D' }}
-                >
+                <div className="text-sm">
                   Get personalized support
                 </div>
               </div>
@@ -402,70 +337,48 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
           </div>
         </div>
 
-        {/* Additional Resources */}
-        <div className="mt-8 grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4">
           <a
             href="/about"
-            className="p-6 rounded-xl transition-all hover:scale-105"
-            style={{ backgroundColor: '#E9E5E0' }}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <div className="flex items-center gap-2 mb-2">
-              <BookOpen size={20} style={{ color: '#F4A261' }} />
-              <h3
-                className="font-semibold"
-                style={{ color: '#1C1A17' }}
-              >
-                About Us
+              <BookOpen size={20} strokeWidth={2} />
+              <h3 className="font-extrabold text-sm uppercase tracking-tight">
+                ABOUT US
               </h3>
             </div>
-            <p
-              className="text-sm"
-              style={{ color: '#57524D' }}
-            >
+            <p className="text-sm">
               Learn more about Project Sapiens and our mission
             </p>
           </a>
 
           <a
             href="/terms"
-            className="p-6 rounded-xl transition-all hover:scale-105"
-            style={{ backgroundColor: '#E9E5E0' }}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <div className="flex items-center gap-2 mb-2">
-              <ExternalLink size={20} style={{ color: '#F4A261' }} />
-              <h3
-                className="font-semibold"
-                style={{ color: '#1C1A17' }}
-              >
-                Terms of Service
+              <ExternalLink size={20} strokeWidth={2} />
+              <h3 className="font-extrabold text-sm uppercase tracking-tight">
+                TERMS OF SERVICE
               </h3>
             </div>
-            <p
-              className="text-sm"
-              style={{ color: '#57524D' }}
-            >
+            <p className="text-sm">
               Read our terms and conditions
             </p>
           </a>
 
           <a
             href="/privacy"
-            className="p-6 rounded-xl transition-all hover:scale-105"
-            style={{ backgroundColor: '#E9E5E0' }}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <div className="flex items-center gap-2 mb-2">
-              <ExternalLink size={20} style={{ color: '#F4A261' }} />
-              <h3
-                className="font-semibold"
-                style={{ color: '#1C1A17' }}
-              >
-                Privacy Policy
+              <ExternalLink size={20} strokeWidth={2} />
+              <h3 className="font-extrabold text-sm uppercase tracking-tight">
+                PRIVACY POLICY
               </h3>
             </div>
-            <p
-              className="text-sm"
-              style={{ color: '#57524D' }}
-            >
+            <p className="text-sm">
               Learn how we protect your data
             </p>
           </a>
