@@ -9,6 +9,7 @@ import Hero from './components/Hero';
 import Pillars from './components/Pillars';
 import FeaturedPaths from './components/FeaturedPaths';
 import FluencySpectrum from './components/FluencySpectrum';
+import PricingSection from './components/PricingSection';
 import CTASection from './components/CTASection';
 import Footer from './components/Footer';
 import AuthPage from './components/AuthPage';
@@ -271,6 +272,10 @@ function AppContent() {
           const labsSection = document.getElementById('labs');
           labsSection?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onPricingClick={() => {
+          const pricingSection = document.getElementById('pricing');
+          pricingSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
         onCommunityClick={() => {
           const communitySection = document.getElementById('community');
           communitySection?.scrollIntoView({ behavior: 'smooth' });
@@ -286,6 +291,7 @@ function AppContent() {
       <Pillars />
       <FeaturedPaths />
       <FluencySpectrum />
+      <PricingSection onGetStarted={() => setView('auth')} />
       <CTASection onStartJourney={() => setView('auth')} />
       <Footer
         onTermsClick={() => setView('terms')}

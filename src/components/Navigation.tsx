@@ -6,9 +6,10 @@ interface NavigationProps {
   onPathsClick?: () => void;
   onLabsClick?: () => void;
   onCommunityClick?: () => void;
+  onPricingClick?: () => void;
 }
 
-export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onCommunityClick }: NavigationProps) {
+export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onCommunityClick, onPricingClick }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -34,6 +35,12 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
               className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
             >
               LABS
+            </button>
+            <button
+              onClick={onPricingClick}
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+            >
+              PRICING
             </button>
             <button
               onClick={onCommunityClick}
@@ -87,6 +94,15 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
               className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
             >
               LABS
+            </button>
+            <button
+              onClick={() => {
+                onPricingClick?.();
+                setMobileMenuOpen(false);
+              }}
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+            >
+              PRICING
             </button>
             <button
               onClick={() => {
