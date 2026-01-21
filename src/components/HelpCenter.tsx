@@ -16,6 +16,7 @@ import {
 
 interface HelpCenterProps {
   onBack?: () => void;
+  onNavigate?: (view: 'about' | 'terms' | 'privacy') => void;
 }
 
 interface FAQItem {
@@ -145,7 +146,7 @@ const categories = [
   { name: 'Community & Network', icon: MessageCircle }
 ];
 
-export default function HelpCenter({ onBack }: HelpCenterProps) {
+export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
@@ -338,9 +339,9 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          <a
-            href="/about"
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          <button
+            onClick={() => onNavigate?.('about')}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <BookOpen size={20} strokeWidth={2} />
@@ -351,11 +352,11 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
             <p className="text-sm">
               Learn more about Project Sapiens and our mission
             </p>
-          </a>
+          </button>
 
-          <a
-            href="/terms"
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          <button
+            onClick={() => onNavigate?.('terms')}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <ExternalLink size={20} strokeWidth={2} />
@@ -366,11 +367,11 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
             <p className="text-sm">
               Read our terms and conditions
             </p>
-          </a>
+          </button>
 
-          <a
-            href="/privacy"
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          <button
+            onClick={() => onNavigate?.('privacy')}
+            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <ExternalLink size={20} strokeWidth={2} />
@@ -381,7 +382,7 @@ export default function HelpCenter({ onBack }: HelpCenterProps) {
             <p className="text-sm">
               Learn how we protect your data
             </p>
-          </a>
+          </button>
         </div>
       </div>
     </div>

@@ -32,9 +32,10 @@ import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
 import BillingPage from './components/BillingPage';
 import HelpCenter from './components/HelpCenter';
+import AboutPage from './components/AboutPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -65,9 +66,9 @@ function AppContent() {
   }, [user, loading, initialized]);
 
   // Save state whenever it changes (only for authenticated users)
-  // Don't save state for informational pages like terms/privacy/billing
+  // Don't save state for informational pages like terms/privacy/billing/about/help
   useEffect(() => {
-    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing') {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help') {
       saveAppState({
         view,
         selectedLab,
@@ -219,7 +220,11 @@ function AppContent() {
     }
 
     if (view === 'help') {
-      return <HelpCenter onBack={() => setView('dashboard')} />;
+      return <HelpCenter onBack={() => setView('dashboard')} onNavigate={(view) => setView(view)} />;
+    }
+
+    if (view === 'about') {
+      return <AboutPage onBack={() => setView('dashboard')} />;
     }
 
     return (
@@ -267,7 +272,11 @@ function AppContent() {
   }
 
   if (view === 'help') {
-    return <HelpCenter onBack={() => setView(user ? 'dashboard' : 'home')} />;
+    return <HelpCenter onBack={() => setView(user ? 'dashboard' : 'home')} onNavigate={(view) => setView(view)} />;
+  }
+
+  if (view === 'about') {
+    return <AboutPage onBack={() => setView('home')} />;
   }
 
   return (
