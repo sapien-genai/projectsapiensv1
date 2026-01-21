@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { BillingProvider } from './contexts/BillingContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -28,9 +29,10 @@ import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
+import BillingPage from './components/BillingPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'terms' | 'privacy';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -61,9 +63,9 @@ function AppContent() {
   }, [user, loading, initialized]);
 
   // Save state whenever it changes (only for authenticated users)
-  // Don't save state for informational pages like terms/privacy
+  // Don't save state for informational pages like terms/privacy/billing
   useEffect(() => {
-    if (user && initialized && view !== 'terms' && view !== 'privacy') {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing') {
       saveAppState({
         view,
         selectedLab,
@@ -210,6 +212,10 @@ function AppContent() {
       return <AdminPortal onBackToPlatform={() => setView('dashboard')} />;
     }
 
+    if (view === 'billing') {
+      return <BillingPage onBack={() => setView('dashboard')} />;
+    }
+
     return (
       <Dashboard
         onLabsClick={() => setView('labs')}
@@ -222,6 +228,7 @@ function AppContent() {
         onCommandCenterClick={() => setView('command-center')}
         onPathsListClick={() => setView('paths-list')}
         onAdminClick={() => setView('admin')}
+        onBillingClick={() => setView('billing')}
         onPathSelect={(pathId) => {
           setSelectedPath(pathId);
           setView('path');
@@ -293,9 +300,11 @@ function App() {
     <ErrorBoundary>
       <DarkModeProvider>
         <AuthProvider>
-          <ToastProvider>
-            <AppContent />
-          </ToastProvider>
+          <BillingProvider>
+            <ToastProvider>
+              <AppContent />
+            </ToastProvider>
+          </BillingProvider>
         </AuthProvider>
       </DarkModeProvider>
     </ErrorBoundary>

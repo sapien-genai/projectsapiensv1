@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle } from 'lucide-react';
+import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { logError, getErrorMessage } from '../utils/errorHandling';
@@ -37,6 +37,7 @@ interface DashboardProps {
   onLabSelect?: (labId: string) => void;
   onPathsListClick?: () => void;
   onAdminClick?: () => void;
+  onBillingClick?: () => void;
 }
 
 const fluencyLevels = [
@@ -59,7 +60,7 @@ const getIconComponent = (iconName: string): LucideIcon => {
   return iconMap[iconName] || Trophy;
 };
 
-export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick }: DashboardProps) {
+export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -251,12 +252,21 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                   Continue building your AI mastery.
                 </p>
               </div>
-              <button
-                onClick={onProfileClick}
-                className="bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                SETTINGS
-              </button>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={onBillingClick}
+                  className="bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
+                >
+                  <CreditCard className="w-4 h-4" strokeWidth={2} />
+                  BILLING
+                </button>
+                <button
+                  onClick={onProfileClick}
+                  className="bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                >
+                  SETTINGS
+                </button>
+              </div>
             </div>
 
             <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
