@@ -221,6 +221,15 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
             PROJECT SAPIENS
           </h1>
           <div className="flex items-center gap-4">
+            {isAdmin && (
+              <button
+                onClick={onAdminClick}
+                className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              >
+                <Shield className="w-4 h-4" strokeWidth={2} />
+                ADMIN
+              </button>
+            )}
             <button
               onClick={() => signOut()}
               className="flex items-center gap-2 bg-white text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
@@ -548,7 +557,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
           </div>
         </div>
 
-        <div className="mt-12 flex justify-center gap-4 pb-8 flex-wrap">
+        <div className="mt-12 flex justify-center gap-4 pb-8">
           <button
             onClick={onHelpClick}
             className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
@@ -569,15 +578,6 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
           >
             SETTINGS
           </button>
-          {isAdmin && (
-            <button
-              onClick={onAdminClick}
-              className="bg-[#FF6A00] border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
-            >
-              <Shield className="w-4 h-4" strokeWidth={2} />
-              ADMIN PORTAL
-            </button>
-          )}
         </div>
       </div>
     </div>
