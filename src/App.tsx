@@ -218,6 +218,10 @@ function AppContent() {
       return <BillingPage onBack={() => setView('dashboard')} />;
     }
 
+    if (view === 'help') {
+      return <HelpCenter onBack={() => setView('dashboard')} />;
+    }
+
     return (
       <Dashboard
         onLabsClick={() => setView('labs')}
