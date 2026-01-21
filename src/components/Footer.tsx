@@ -1,4 +1,9 @@
-export default function Footer() {
+interface FooterProps {
+  onTermsClick?: () => void;
+  onPrivacyClick?: () => void;
+}
+
+export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
   return (
     <footer className="bg-black text-[#F4F4F4] mt-24">
       <div className="max-w-7xl mx-auto px-8 py-16">
@@ -45,7 +50,25 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t-2 border-[#555555] pt-8">
+        <div className="border-t-2 border-[#555555] pt-8 space-y-4">
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            {onTermsClick && (
+              <button
+                onClick={onTermsClick}
+                className="hover:text-[#FF6A00] transition-colors"
+              >
+                Terms
+              </button>
+            )}
+            {onPrivacyClick && (
+              <button
+                onClick={onPrivacyClick}
+                className="hover:text-[#FF6A00] transition-colors"
+              >
+                Privacy
+              </button>
+            )}
+          </div>
           <p className="text-sm text-center">
             &copy; 2026 PROJECT SAPIENS
           </p>

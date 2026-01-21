@@ -26,9 +26,11 @@ import JournalPage from './components/JournalPage';
 import ProjectsPage from './components/ProjectsPage';
 import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
+import TermsPage from './components/TermsPage';
+import PrivacyPage from './components/PrivacyPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'terms' | 'privacy';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -59,8 +61,9 @@ function AppContent() {
   }, [user, loading, initialized]);
 
   // Save state whenever it changes (only for authenticated users)
+  // Don't save state for informational pages like terms/privacy
   useEffect(() => {
-    if (user && initialized) {
+    if (user && initialized && view !== 'terms' && view !== 'privacy') {
       saveAppState({
         view,
         selectedLab,
@@ -232,7 +235,21 @@ function AppContent() {
   }
 
   if (view === 'auth') {
-    return <AuthPage onSuccess={() => setView('home')} />;
+    return (
+      <AuthPage
+        onSuccess={() => setView('home')}
+        onTermsClick={() => setView('terms')}
+        onPrivacyClick={() => setView('privacy')}
+      />
+    );
+  }
+
+  if (view === 'terms') {
+    return <TermsPage onBack={() => setView('home')} />;
+  }
+
+  if (view === 'privacy') {
+    return <PrivacyPage onBack={() => setView('home')} />;
   }
 
   return (
@@ -263,7 +280,10 @@ function AppContent() {
       <FeaturedPaths />
       <FluencySpectrum />
       <CTASection onStartJourney={() => setView('auth')} />
-      <Footer />
+      <Footer
+        onTermsClick={() => setView('terms')}
+        onPrivacyClick={() => setView('privacy')}
+      />
     </div>
   );
 }
