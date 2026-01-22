@@ -127,7 +127,6 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
         user_profiles!inner(user_id, username, fluency_level)
       `)
       .eq('user_id', user.id)
-      .eq('status', 'draft')
       .order('updated_at', { ascending: false});
 
     setProjects(projectsData || []);
