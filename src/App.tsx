@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Lock } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { BillingProvider } from './contexts/BillingContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { useAdminStatus } from './hooks/useAdminStatus';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Pillars from './components/Pillars';
@@ -39,6 +41,7 @@ type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'l
 
 function AppContent() {
   const { user, loading } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdminStatus();
   const [initialized, setInitialized] = useState(false);
   const [view, setView] = useState<View>('home');
   const [selectedLab, setSelectedLab] = useState<string>('');
@@ -212,6 +215,42 @@ function AppContent() {
     }
 
     if (view === 'admin') {
+      // Admin route guard
+      if (adminLoading) {
+        return (
+          <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent"></div>
+              <p className="mt-4 text-[#57524D] font-semibold">Verifying access...</p>
+            </div>
+          </div>
+        );
+      }
+
+      if (!isAdmin) {
+        return (
+          <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+            <div className="max-w-md text-center p-8 bg-white border border-black shadow-[4px_4px_0px_#000000]">
+              <div className="mb-4">
+                <Lock className="w-16 h-16 mx-auto text-[#57524D]" />
+              </div>
+              <h1 className="font-extrabold text-2xl uppercase tracking-tight mb-2">
+                ACCESS DENIED
+              </h1>
+              <p className="text-[#57524D] mb-6">
+                You do not have permission to access the admin portal.
+              </p>
+              <button
+                onClick={() => setView('dashboard')}
+                className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              >
+                BACK TO DASHBOARD
+              </button>
+            </div>
+          </div>
+        );
+      }
+
       return <AdminPortal onBackToPlatform={() => setView('dashboard')} />;
     }
 
