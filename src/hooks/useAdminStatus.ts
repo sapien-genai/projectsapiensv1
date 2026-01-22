@@ -44,6 +44,10 @@ export function useAdminStatus(): AdminStatus {
         }
 
         // Call the is_admin RPC function
+        if (import.meta.env.DEV) {
+          console.log('[admin] Calling is_admin RPC for user:', session.user.id);
+        }
+
         const { data, error: rpcError } = await supabase.rpc('is_admin', {
           user_uuid: session.user.id,
         });
@@ -51,6 +55,7 @@ export function useAdminStatus(): AdminStatus {
         if (cancelled) return;
 
         if (rpcError) {
+          console.error('[admin] RPC Error:', rpcError);
           throw rpcError;
         }
 
@@ -59,7 +64,7 @@ export function useAdminStatus(): AdminStatus {
         setLoading(false);
 
         if (import.meta.env.DEV) {
-          console.log('[admin] status', { isAdmin: adminStatus, userId: session.user.id });
+          console.log('[admin] RPC response:', { data, adminStatus, userId: session.user.id });
         }
       } catch (err: any) {
         if (cancelled) return;

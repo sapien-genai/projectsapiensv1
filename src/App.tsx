@@ -41,7 +41,7 @@ type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'l
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const { isAdmin, loading: adminLoading } = useAdminStatus();
+  const { isAdmin, loading: adminLoading, error: adminError } = useAdminStatus();
   const [initialized, setInitialized] = useState(false);
   const [view, setView] = useState<View>('home');
   const [selectedLab, setSelectedLab] = useState<string>('');
@@ -229,7 +229,7 @@ function AppContent() {
 
       if (!isAdmin) {
         return (
-          <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+          <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center p-4">
             <div className="max-w-md text-center p-8 bg-white border border-black shadow-[4px_4px_0px_#000000]">
               <div className="mb-4">
                 <Lock className="w-16 h-16 mx-auto text-[#57524D]" />
@@ -237,9 +237,28 @@ function AppContent() {
               <h1 className="font-extrabold text-2xl uppercase tracking-tight mb-2">
                 ACCESS DENIED
               </h1>
-              <p className="text-[#57524D] mb-6">
+              <p className="text-[#57524D] mb-4">
                 You do not have permission to access the admin portal.
               </p>
+              {adminError && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 text-sm text-left rounded">
+                  <strong>Error:</strong> {adminError}
+                </div>
+              )}
+              {user && (
+                <div className="mb-6 p-3 bg-gray-50 border border-gray-200 text-gray-700 text-xs text-left rounded">
+                  <div className="font-mono break-all">
+                    <strong>User ID:</strong><br />
+                    {user.id}
+                  </div>
+                  <div className="mt-2">
+                    <strong>Email:</strong> {user.email}
+                  </div>
+                  <div className="mt-2 text-gray-500">
+                    Check browser console for detailed logs
+                  </div>
+                </div>
+              )}
               <button
                 onClick={() => setView('dashboard')}
                 className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
