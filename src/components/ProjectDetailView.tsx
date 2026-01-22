@@ -132,10 +132,14 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
   };
 
   const incrementViewCount = async () => {
-    await supabase
+    const { error } = await supabase
       .from('project_shares')
       .update({ views_count: (project?.views_count || 0) + 1 })
       .eq('id', projectId);
+
+    if (error) {
+      console.error('Error incrementing view count:', error);
+    }
   };
 
   const handleLike = async () => {
@@ -181,7 +185,9 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
         content: newComment.trim()
       });
 
-    if (!error) {
+    if (error) {
+      console.error('Error posting comment:', error);
+    } else {
       setNewComment('');
       await loadComments();
       if (project) {

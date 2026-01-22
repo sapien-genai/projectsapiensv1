@@ -73,6 +73,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
   useEffect(() => {
     loadProfile();
+    loadPreferences();
   }, [user]);
 
   useEffect(() => {
@@ -187,15 +188,58 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
     }
   };
 
+  const loadPreferences = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading preferences:', error);
+        return;
+      }
+
+      if (data) {
+        setEmailNotifications(data.email_notifications);
+        setProgressUpdates(data.progress_updates);
+        setWeeklyDigest(data.weekly_digest);
+      }
+    } catch (err) {
+      console.error('Error loading preferences:', err);
+    }
+  };
+
   const handleSavePreferences = async () => {
+    if (!user) return;
+
     setSavingPreferences(true);
     setPreferencesSuccess(false);
 
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from('user_preferences')
+        .upsert({
+          user_id: user.id,
+          email_notifications: emailNotifications,
+          progress_updates: progressUpdates,
+          weekly_digest: weeklyDigest,
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (error) throw error;
+
       setPreferencesSuccess(true);
-      setSavingPreferences(false);
       setTimeout(() => setPreferencesSuccess(false), 3000);
-    }, 500);
+    } catch (err: any) {
+      console.error('Error saving preferences:', err);
+    } finally {
+      setSavingPreferences(false);
+    }
   };
 
   const loadTickets = async () => {
@@ -655,13 +699,13 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                         <Globe className="w-6 h-6 mb-2" />
                         <h3 className="font-bold uppercase tracking-tight mb-1">Help Center</h3>
                         <p className="text-sm text-[#57524D] mb-2">Browse documentation</p>
-                        <a
-                          href="#"
+                        <button
+                          onClick={onBack}
                           className="text-sm font-bold text-[#E67E22] hover:underline flex items-center gap-1"
                         >
                           Visit Help Center
                           <ExternalLink className="w-3 h-3" />
-                        </a>
+                        </button>
                       </div>
                     </div>
 

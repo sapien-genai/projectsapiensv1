@@ -1,9 +1,12 @@
 interface FooterProps {
   onTermsClick?: () => void;
   onPrivacyClick?: () => void;
+  onPathsClick?: () => void;
+  onLabsClick?: () => void;
+  onCommunityClick?: () => void;
 }
 
-export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
+export default function Footer({ onTermsClick, onPrivacyClick, onPathsClick, onLabsClick, onCommunityClick }: FooterProps) {
   return (
     <footer className="bg-black text-[#F4F4F4] mt-24">
       <div className="max-w-7xl mx-auto px-8 py-16">
@@ -13,9 +16,21 @@ export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
               PLATFORM
             </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#paths" className="hover:text-[#FF6A00] transition-colors">Paths</a></li>
-              <li><a href="#labs" className="hover:text-[#FF6A00] transition-colors">Labs</a></li>
-              <li><a href="#community" className="hover:text-[#FF6A00] transition-colors">Community</a></li>
+              {onPathsClick ? (
+                <li><button onClick={onPathsClick} className="hover:text-[#FF6A00] transition-colors">Paths</button></li>
+              ) : (
+                <li><span className="text-[#777777]">Paths</span></li>
+              )}
+              {onLabsClick ? (
+                <li><button onClick={onLabsClick} className="hover:text-[#FF6A00] transition-colors">Labs</button></li>
+              ) : (
+                <li><span className="text-[#777777]">Labs</span></li>
+              )}
+              {onCommunityClick ? (
+                <li><button onClick={onCommunityClick} className="hover:text-[#FF6A00] transition-colors">Community</button></li>
+              ) : (
+                <li><span className="text-[#777777]">Community</span></li>
+              )}
             </ul>
           </div>
 
@@ -24,7 +39,7 @@ export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
               COMPANY
             </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#careers" className="hover:text-[#FF6A00] transition-colors">Careers</a></li>
+              <li><span className="text-[#777777]">Careers</span></li>
             </ul>
           </div>
 
@@ -33,8 +48,8 @@ export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
               RESOURCES
             </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#tools" className="hover:text-[#FF6A00] transition-colors">Tools</a></li>
-              <li><a href="#api" className="hover:text-[#FF6A00] transition-colors">API</a></li>
+              <li><span className="text-[#777777]">Tools</span></li>
+              <li><span className="text-[#777777]">API</span></li>
             </ul>
           </div>
 
@@ -43,9 +58,9 @@ export default function Footer({ onTermsClick, onPrivacyClick }: FooterProps) {
               SOCIAL
             </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#twitter" className="hover:text-[#FF6A00] transition-colors">Twitter</a></li>
-              <li><a href="#linkedin" className="hover:text-[#FF6A00] transition-colors">LinkedIn</a></li>
-              <li><a href="#github" className="hover:text-[#FF6A00] transition-colors">GitHub</a></li>
+              <li><span className="text-[#777777]">Twitter</span></li>
+              <li><span className="text-[#777777]">LinkedIn</span></li>
+              <li><span className="text-[#777777]">GitHub</span></li>
             </ul>
           </div>
         </div>

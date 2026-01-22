@@ -50,6 +50,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   useEffect(() => {
     if (activeTab === 'all') {
@@ -160,6 +161,32 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
         <ProjectForm
           onClose={() => setShowCreateForm(false)}
           onSuccess={() => {
+            if (activeTab === 'all') {
+              loadAllProjects();
+            } else if (activeTab === 'my-projects') {
+              loadMyProjects();
+            } else if (activeTab === 'drafts') {
+              loadDrafts();
+            }
+          }}
+        />
+      )}
+
+      {editingProject && (
+        <ProjectForm
+          projectId={editingProject.id}
+          initialData={{
+            title: editingProject.title,
+            description: editingProject.description,
+            project_type: editingProject.project_type,
+            tags: editingProject.tags || [],
+            github_url: editingProject.github_url,
+            demo_url: editingProject.demo_url,
+            is_public: editingProject.is_public
+          }}
+          onClose={() => setEditingProject(null)}
+          onSuccess={() => {
+            setEditingProject(null);
             if (activeTab === 'all') {
               loadAllProjects();
             } else if (activeTab === 'my-projects') {
@@ -446,7 +473,11 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
                   </div>
 
                   {user && project.user_id === user.id && (
-                    <button className="p-2 hover:bg-[#F4F4F4] rounded transition-colors">
+                    <button
+                      onClick={() => setEditingProject(project)}
+                      className="p-2 hover:bg-[#F4F4F4] rounded transition-colors"
+                      title="Edit project"
+                    >
                       <Edit className="w-4 h-4" strokeWidth={2} />
                     </button>
                   )}

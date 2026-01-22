@@ -6,21 +6,33 @@ import { supabase } from '../lib/supabase';
 interface ProjectFormProps {
   onClose: () => void;
   onSuccess: () => void;
+  projectId?: string;
+  initialData?: {
+    title: string;
+    description: string;
+    project_type: string;
+    tags: string[];
+    github_url: string | null;
+    demo_url: string | null;
+    is_public: boolean;
+  };
 }
 
-export default function ProjectForm({ onClose, onSuccess }: ProjectFormProps) {
+export default function ProjectForm({ onClose, onSuccess, projectId, initialData }: ProjectFormProps) {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    project_type: 'personal',
-    tags: '',
-    github_url: '',
-    demo_url: '',
-    is_public: false
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    project_type: initialData?.project_type || 'personal',
+    tags: initialData?.tags?.join(', ') || '',
+    github_url: initialData?.github_url || '',
+    demo_url: initialData?.demo_url || '',
+    is_public: initialData?.is_public || false
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const isEditMode = !!projectId;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +55,36 @@ export default function ProjectForm({ onClose, onSuccess }: ProjectFormProps) {
       .map(tag => tag.trim())
       .filter(tag => tag.length > 0);
 
-    const { error: insertError } = await supabase
-      .from('project_shares')
-      .insert({
-        user_id: user.id,
-        title: formData.title.trim(),
+    if (isEditMode && projectId) {
+      // Update existing project
+      const { error: updateError } = await supabase
+        .from('project_shares')
+        .update({
+          title: formData.title.trim(),
+          description: formData.description.trim(),
+          project_type: formData.project_type,
+          tags: tagsArray,
+          github_url: formData.github_url.trim() || null,
+          demo_url: formData.demo_url.trim() || null,
+          is_public: formData.is_public,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', projectId)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('Error updating project:', updateError);
+        setError('Failed to update project. Please try again.');
+        setLoading(false);
+        return;
+      }
+    } else {
+      // Create new project
+      const { error: insertError } = await supabase
+        .from('project_shares')
+        .insert({
+          user_id: user.id,
+          title: formData.title.trim(),
         description: formData.description.trim(),
         project_type: formData.project_type,
         tags: tagsArray,
@@ -57,11 +94,12 @@ export default function ProjectForm({ onClose, onSuccess }: ProjectFormProps) {
         is_public: formData.is_public
       });
 
-    if (insertError) {
-      console.error('Error creating project:', insertError);
-      setError('Failed to create project. Please try again.');
-      setLoading(false);
-      return;
+      if (insertError) {
+        console.error('Error creating project:', insertError);
+        setError('Failed to create project. Please try again.');
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(false);
@@ -76,7 +114,7 @@ export default function ProjectForm({ onClose, onSuccess }: ProjectFormProps) {
           <div className="flex items-center gap-3">
             <Rocket className="w-6 h-6" strokeWidth={2} />
             <h2 className="font-extrabold text-2xl uppercase tracking-tight">
-              CREATE PROJECT
+              {isEditMode ? 'EDIT PROJECT' : 'CREATE PROJECT'}
             </h2>
           </div>
           <button
@@ -206,7 +244,7 @@ export default function ProjectForm({ onClose, onSuccess }: ProjectFormProps) {
               disabled={loading}
               className="flex-1 bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'CREATING...' : 'CREATE PROJECT'}
+              {loading ? (isEditMode ? 'UPDATING...' : 'CREATING...') : (isEditMode ? 'UPDATE PROJECT' : 'CREATE PROJECT')}
             </button>
             <button
               type="button"

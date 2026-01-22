@@ -51,7 +51,9 @@ export default function JournalPage({ onBack }: JournalPageProps) {
       .delete()
       .eq('id', entryId);
 
-    if (!error) {
+    if (error) {
+      console.error('Error deleting journal entry:', error);
+    } else {
       setEntries(prev => prev.filter(e => e.id !== entryId));
     }
     setDeleting(null);

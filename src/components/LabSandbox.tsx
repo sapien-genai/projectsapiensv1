@@ -455,13 +455,18 @@ Feel free to ask follow-up questions or request modifications!`;
 
       // Save to database
       if (user) {
-        await supabase.from('lab_experiments').insert({
+        const { error: insertError } = await supabase.from('lab_experiments').insert({
           user_id: user.id,
           lab_id: labId,
           prompt: currentInput,
           output: aiResponse.content,
         });
-        loadHistory();
+
+        if (insertError) {
+          console.error('Error saving lab experiment:', insertError);
+        } else {
+          loadHistory();
+        }
       }
     } catch (error) {
       console.error('Error in handleSend:', error);
