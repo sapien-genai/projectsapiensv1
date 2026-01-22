@@ -3,7 +3,6 @@ import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, F
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { logError, getErrorMessage } from '../utils/errorHandling';
-import { useAdminStatus } from '../hooks/useAdminStatus';
 import OpenMoji from './OpenMoji';
 
 interface UserProfile {
@@ -64,12 +63,12 @@ const getIconComponent = (iconName: string): LucideIcon => {
 
 export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick, onHelpClick }: DashboardProps) {
   const { user, signOut } = useAuth();
-  const { isAdmin, loading: adminLoading } = useAdminStatus();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [commandCenterUnlocked, setCommandCenterUnlocked] = useState(false);
 
   useEffect(() => {
@@ -99,6 +98,16 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
 
         if (skillsData) {
           setSkills(skillsData);
+        }
+
+        const { data: adminData } = await supabase
+          .from('admin_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (adminData) {
+          setIsAdmin(true);
         }
 
         const { data: progressData } = await supabase
@@ -212,7 +221,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
             PROJECT SAPIENS
           </h1>
           <div className="flex items-center gap-4">
-            {!adminLoading && isAdmin && (
+            {isAdmin && (
               <button
                 onClick={onAdminClick}
                 className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
