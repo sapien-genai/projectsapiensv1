@@ -55,7 +55,6 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
     loadProject();
     loadComments();
     checkIfLiked();
-    incrementViewCount();
   }, [projectId]);
 
   const loadProject = async () => {
@@ -74,6 +73,18 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
     }
 
     if (projectData) {
+      const incrementedViews = (projectData.views_count ?? 0) + 1;
+      const { error: viewError } = await supabase
+        .from('project_shares')
+        .update({ views_count: incrementedViews })
+        .eq('id', projectId);
+
+      if (!viewError) {
+        projectData.views_count = incrementedViews;
+      } else {
+        console.error('Error incrementing view count:', viewError);
+      }
+
       const { data: profile } = await supabase
         .from('user_profiles')
         .select('username, fluency_level')
@@ -131,13 +142,6 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
     setHasLiked(!!data);
   };
 
-  const incrementViewCount = async () => {
-    await supabase
-      .from('project_shares')
-      .update({ views_count: (project?.views_count || 0) + 1 })
-      .eq('id', projectId);
-  };
-
   const handleLike = async () => {
     if (!user) return;
 
@@ -181,7 +185,9 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
         content: newComment.trim()
       });
 
-    if (!error) {
+    if (error) {
+      console.error('Error posting comment:', error);
+    } else {
       setNewComment('');
       await loadComments();
       if (project) {

@@ -6,6 +6,7 @@ export default {
     extend: {
       fontFamily: {
         'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        'serif': ['IBM Plex Serif', 'Playfair Display', 'Georgia', 'serif'],
       },
     },
   },

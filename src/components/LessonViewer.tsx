@@ -84,11 +84,16 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
   const loadJournalEntries = async () => {
     if (!user) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('lesson_journal_entries')
       .select('prompt_text, user_response')
       .eq('user_id', user.id)
       .eq('lesson_id', lessonId);
+
+    if (error) {
+      console.error('Error loading journal entries:', error);
+      return;
+    }
 
     if (data) {
       const entries: Record<number, string> = {};

@@ -1,23 +1,24 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-// Allowed origins for CORS
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
-  "https://YOUR_PRODUCTION_DOMAIN_HERE", // Replace with actual production domain
+  "https://YOUR_PRODUCTION_DOMAIN_HERE",
 ];
 
-// Simple in-memory rate limiter (reset on function cold start)
-// For production, consider using Redis or Supabase tables
 const rateLimiter = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 20; // 20 requests per minute
+const RATE_LIMIT_WINDOW_MS = 60000;
+const RATE_LIMIT_MAX_REQUESTS = 20;
+
+const PLAN_LIMITS: Record<string, number> = {
+  free: 15,
+  pro: 120,
+};
 
 function getCorsHeaders(origin: string | null): Record<string, string> {
-  // Check if origin is in allowlist
   const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
     ? origin
-    : ALLOWED_ORIGINS[0]; // Default to localhost for dev
+    : ALLOWED_ORIGINS[0];
 
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
@@ -31,7 +32,6 @@ function checkRateLimit(userId: string): boolean {
   const userLimit = rateLimiter.get(userId);
 
   if (!userLimit || now > userLimit.resetTime) {
-    // Reset window
     rateLimiter.set(userId, {
       count: 1,
       resetTime: now + RATE_LIMIT_WINDOW_MS,
@@ -45,6 +45,19 @@ function checkRateLimit(userId: string): boolean {
 
   userLimit.count++;
   return true;
+}
+
+function getTodayUTC(): string {
+  const now = new Date();
+  return now.toISOString().split('T')[0];
+}
+
+function getNextMidnightUTC(): string {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+  tomorrow.setUTCHours(0, 0, 0, 0);
+  return tomorrow.toISOString();
 }
 
 async function fetchWithTimeout(
@@ -79,21 +92,18 @@ async function fetchWithRetry(
     try {
       const response = await fetchWithTimeout(url, options, 20000);
 
-      // Only retry on transient errors (5xx)
       if (response.ok || response.status < 500) {
         return response;
       }
 
       lastError = new Error(`HTTP ${response.status}`);
 
-      // Exponential backoff: 1s, 2s
       if (attempt < maxRetries) {
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
       }
     } catch (error) {
       lastError = error as Error;
 
-      // Only retry on network errors, not on abort
       if (error instanceof Error && error.name === 'AbortError') {
         throw new Error('Request timeout');
       }
@@ -197,7 +207,6 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    // A) Require and validate Supabase JWT
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new Response(
@@ -211,11 +220,11 @@ Deno.serve(async (req: Request) => {
 
     const token = authHeader.replace("Bearer ", "");
 
-    // Initialize Supabase client to verify JWT
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
       console.error("Supabase configuration missing");
       return new Response(
         JSON.stringify({ error: "Service configuration error" }),
@@ -232,7 +241,8 @@ Deno.serve(async (req: Request) => {
       },
     });
 
-    // Verify the JWT and get user
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
+
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
@@ -248,7 +258,6 @@ Deno.serve(async (req: Request) => {
 
     const userId = user.id;
 
-    // C) Check rate limit
     if (!checkRateLimit(userId)) {
       console.warn(`Rate limit exceeded for user ${userId}`);
       return new Response(
@@ -260,7 +269,88 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Parse request body
+    // Fetch or create billing profile
+    let { data: billingProfile, error: billingError } = await supabaseAdmin
+      .from('billing_profiles')
+      .select('plan, plan_override')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (billingError) {
+      console.error("Error fetching billing profile:", billingError);
+      return new Response(
+        JSON.stringify({ error: "Unable to verify account status" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    if (!billingProfile) {
+      const { data: newProfile, error: insertError } = await supabaseAdmin
+        .from('billing_profiles')
+        .insert({ user_id: userId, plan: 'free' })
+        .select('plan, plan_override')
+        .single();
+
+      if (insertError) {
+        console.error("Error creating billing profile:", insertError);
+        return new Response(
+          JSON.stringify({ error: "Unable to initialize account" }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      billingProfile = newProfile;
+    }
+
+    const effectivePlan = billingProfile.plan_override || billingProfile.plan;
+    const dailyLimit = PLAN_LIMITS[effectivePlan] || PLAN_LIMITS.free;
+    const todayUTC = getTodayUTC();
+
+    const { data: usageData, error: usageError } = await supabaseAdmin
+      .from('ai_usage_daily')
+      .select('count')
+      .eq('user_id', userId)
+      .eq('day', todayUTC)
+      .maybeSingle();
+
+    if (usageError) {
+      console.error("Error fetching usage data:", usageError);
+      return new Response(
+        JSON.stringify({ error: "Unable to verify usage limits" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const currentCount = usageData?.count || 0;
+
+    if (currentCount >= dailyLimit) {
+      const resetsAt = getNextMidnightUTC();
+      console.warn(`Daily limit reached for user ${userId}: ${currentCount}/${dailyLimit}`);
+      return new Response(
+        JSON.stringify({
+          error: "limit_reached",
+          message: "You've reached today's AI practice limit.",
+          limit: dailyLimit,
+          used: currentCount,
+          resets_at: resetsAt,
+          plan: effectivePlan
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
     const { prompt, labId, conversationHistory = [] }: RequestBody = await req.json();
 
     if (!prompt || !labId) {
@@ -285,10 +375,8 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Build the conversation with system context
     const systemPrompt = labSystemPrompts[labId] || labSystemPrompts["writing-lab"];
 
-    // Format conversation for Gemini
     const contents = [
       {
         role: "user",
@@ -308,10 +396,9 @@ Deno.serve(async (req: Request) => {
       }
     ];
 
-    // E) Call Gemini API with timeout and retries
     const modelEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiApiKey}`;
 
-    console.log(`Processing request for user ${userId} with model: gemini-2.0-flash-exp`);
+    console.log(`Processing request for user ${userId} (${effectivePlan} plan: ${currentCount + 1}/${dailyLimit})`);
 
     let geminiResponse: Response;
     try {
@@ -332,10 +419,9 @@ Deno.serve(async (req: Request) => {
             },
           }),
         },
-        2 // max 2 retries
+        2
       );
     } catch (error) {
-      // D) Reduce error leakage - generic error to client, detailed log server-side
       console.error("Upstream AI call failed:", error);
       return new Response(
         JSON.stringify({ error: "Failed to process request. Please try again." }),
@@ -353,7 +439,6 @@ Deno.serve(async (req: Request) => {
         error: errorText
       });
 
-      // D) Generic error to client
       return new Response(
         JSON.stringify({ error: "Failed to generate response. Please try again." }),
         {
@@ -377,6 +462,24 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const { error: upsertError } = await supabaseAdmin
+      .from('ai_usage_daily')
+      .upsert(
+        {
+          user_id: userId,
+          day: todayUTC,
+          count: currentCount + 1,
+          last_request_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'user_id,day',
+        }
+      );
+
+    if (upsertError) {
+      console.error("Error updating usage count:", upsertError);
+    }
+
     return new Response(
       JSON.stringify({ response: responseText }),
       {
@@ -385,7 +488,6 @@ Deno.serve(async (req: Request) => {
       }
     );
   } catch (error) {
-    // D) Reduce error leakage
     console.error("Unexpected error in lab-ai-chat:", error);
     return new Response(
       JSON.stringify({ error: "An unexpected error occurred" }),

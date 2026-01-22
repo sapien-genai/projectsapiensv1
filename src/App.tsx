@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { BillingProvider } from './contexts/BillingContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Pillars from './components/Pillars';
 import FeaturedPaths from './components/FeaturedPaths';
 import FluencySpectrum from './components/FluencySpectrum';
+import PricingSection from './components/PricingSection';
 import CTASection from './components/CTASection';
 import Footer from './components/Footer';
 import AuthPage from './components/AuthPage';
@@ -26,9 +28,14 @@ import JournalPage from './components/JournalPage';
 import ProjectsPage from './components/ProjectsPage';
 import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
+import TermsPage from './components/TermsPage';
+import PrivacyPage from './components/PrivacyPage';
+import BillingPage from './components/BillingPage';
+import HelpCenter from './components/HelpCenter';
+import AboutPage from './components/AboutPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -59,8 +66,9 @@ function AppContent() {
   }, [user, loading, initialized]);
 
   // Save state whenever it changes (only for authenticated users)
+  // Don't save state for informational pages like terms/privacy/billing/about/help
   useEffect(() => {
-    if (user && initialized) {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help') {
       saveAppState({
         view,
         selectedLab,
@@ -207,6 +215,18 @@ function AppContent() {
       return <AdminPortal onBackToPlatform={() => setView('dashboard')} />;
     }
 
+    if (view === 'billing') {
+      return <BillingPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'help') {
+      return <HelpCenter onBack={() => setView('dashboard')} onNavigate={(view) => setView(view)} />;
+    }
+
+    if (view === 'about') {
+      return <AboutPage onBack={() => setView('dashboard')} />;
+    }
+
     return (
       <Dashboard
         onLabsClick={() => setView('labs')}
@@ -219,6 +239,8 @@ function AppContent() {
         onCommandCenterClick={() => setView('command-center')}
         onPathsListClick={() => setView('paths-list')}
         onAdminClick={() => setView('admin')}
+        onBillingClick={() => setView('billing')}
+        onHelpClick={() => setView('help')}
         onPathSelect={(pathId) => {
           setSelectedPath(pathId);
           setView('path');
@@ -232,7 +254,29 @@ function AppContent() {
   }
 
   if (view === 'auth') {
-    return <AuthPage onSuccess={() => setView('home')} />;
+    return (
+      <AuthPage
+        onSuccess={() => setView('home')}
+        onTermsClick={() => setView('terms')}
+        onPrivacyClick={() => setView('privacy')}
+      />
+    );
+  }
+
+  if (view === 'terms') {
+    return <TermsPage onBack={() => setView('home')} />;
+  }
+
+  if (view === 'privacy') {
+    return <PrivacyPage onBack={() => setView('home')} />;
+  }
+
+  if (view === 'help') {
+    return <HelpCenter onBack={() => setView(user ? 'dashboard' : 'home')} onNavigate={(view) => setView(view)} />;
+  }
+
+  if (view === 'about') {
+    return <AboutPage onBack={() => setView('home')} />;
   }
 
   return (
@@ -247,10 +291,15 @@ function AppContent() {
           const labsSection = document.getElementById('labs');
           labsSection?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onPricingClick={() => {
+          const pricingSection = document.getElementById('pricing');
+          pricingSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
         onCommunityClick={() => {
           const communitySection = document.getElementById('community');
           communitySection?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onHelpClick={() => setView('help')}
       />
       <Hero
         onStartJourney={() => setView('auth')}
@@ -262,8 +311,12 @@ function AppContent() {
       <Pillars />
       <FeaturedPaths />
       <FluencySpectrum />
+      <PricingSection onGetStarted={() => setView('auth')} />
       <CTASection onStartJourney={() => setView('auth')} />
-      <Footer />
+      <Footer
+        onTermsClick={() => setView('terms')}
+        onPrivacyClick={() => setView('privacy')}
+      />
     </div>
   );
 }
@@ -273,9 +326,11 @@ function App() {
     <ErrorBoundary>
       <DarkModeProvider>
         <AuthProvider>
-          <ToastProvider>
-            <AppContent />
-          </ToastProvider>
+          <BillingProvider>
+            <ToastProvider>
+              <AppContent />
+            </ToastProvider>
+          </BillingProvider>
         </AuthProvider>
       </DarkModeProvider>
     </ErrorBoundary>

@@ -1,4 +1,4 @@
-import { ArrowLeft, User, Rocket, Building2, Target, Sparkles } from 'lucide-react';
+import { ArrowLeft, User, Target, Lightbulb, Award, Users, Zap } from 'lucide-react';
 
 interface AboutPageProps {
   onBack?: () => void;
@@ -23,61 +23,91 @@ export default function AboutPage({ onBack }: AboutPageProps) {
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <Sparkles className="w-10 h-10" strokeWidth={2} />
-            <h1 className="font-extrabold text-3xl md:text-4xl uppercase tracking-tighter">About Project Sapiens</h1>
+          <h1 className="font-extrabold text-3xl md:text-5xl uppercase tracking-tighter mb-6">
+            Learning to Work With AI — Intentionally
+          </h1>
+          <div className="space-y-4 text-base md:text-lg leading-relaxed">
+            <p>
+              Artificial intelligence is moving fast. Most people are being handed powerful tools — without the understanding, confidence, or frameworks to use them well.
+            </p>
+            <p className="font-bold">
+              Project Sapiens exists to close that gap.
+            </p>
+            <p>
+              Project Sapiens is a modern learning platform designed to help people move beyond surface-level AI usage and develop real, transferable capability through guided lessons, hands-on labs, and intentional practice.
+            </p>
           </div>
-          <p className="text-lg leading-relaxed">
-            Your journey to AI fluency starts here.
-          </p>
         </div>
 
         <div className="space-y-8">
           <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
             <div className="flex items-center gap-3 mb-6">
               <Target className="w-8 h-8" strokeWidth={2} />
-              <h2 className="font-extrabold text-2xl uppercase tracking-tight">Our Mission</h2>
+              <h2 className="font-extrabold text-2xl uppercase tracking-tight">Why Project Sapiens Exists</h2>
             </div>
-            <p className="text-base leading-relaxed mb-4">
-              Project Sapiens empowers individuals, brands, and enterprises to master generative AI through
-              structured learning paths, hands-on experimentation, and community collaboration.
-            </p>
-            <p className="text-base leading-relaxed">
-              We believe that AI can transform the way we communicate, collaborate, and create. Our platform
-              democratizes access to cutting-edge AI technologies, helping learners of all levels develop
-              practical fluency with tools like ChatGPT, Claude, and beyond.
-            </p>
+            <div className="space-y-4 text-base leading-relaxed">
+              <p>
+                Most AI education today falls into one of two extremes:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>overly technical, built for engineers</li>
+                <li>overly abstract, built for hype</li>
+              </ul>
+              <p className="font-semibold">
+                Project Sapiens was built for the middle — for builders, professionals, creators, and leaders who want to integrate AI into their work without becoming AI researchers.
+              </p>
+              <p>We focus on:</p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>mental models, not shortcuts</li>
+                <li>learning-by-doing, not passive content</li>
+                <li>durable skills that outlast specific tools or models</li>
+              </ul>
+              <p className="font-bold text-lg mt-4">
+                AI will keep changing. Human capability is what compounds.
+              </p>
+            </div>
           </div>
 
           <div className="bg-[#0A74FF] border border-black p-8 shadow-[3px_3px_0px_#000000]">
             <div className="flex items-center gap-3 mb-6">
-              <Rocket className="w-8 h-8 text-white" strokeWidth={2} />
-              <h2 className="font-extrabold text-2xl uppercase tracking-tight text-white">What We Offer</h2>
+              <Lightbulb className="w-8 h-8 text-white" strokeWidth={2} />
+              <h2 className="font-extrabold text-2xl uppercase tracking-tight text-white">How Project Sapiens Is Different</h2>
+            </div>
+            <div className="space-y-4 text-white text-base leading-relaxed mb-6">
+              <p className="font-semibold text-lg">
+                Project Sapiens is not a course library or a chatbot wrapper.
+              </p>
+              <p>
+                It is a learning environment designed to help users:
+              </p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">STRUCTURED PATHS</h3>
-                <p className="text-sm">Curated learning journeys from foundations to advanced AI integration</p>
+                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">BUILD CONFIDENCE</h3>
+                <p className="text-sm">Through practice</p>
               </div>
               <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">HANDS-ON LABS</h3>
-                <p className="text-sm">Interactive sandbox environments for real-world experimentation</p>
+                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">DEVELOP WORKFLOWS</h3>
+                <p className="text-sm">Repeatable processes</p>
               </div>
               <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">PROMPT LIBRARY</h3>
-                <p className="text-sm">Community-curated collection of effective AI prompts and workflows</p>
+                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">UNDERSTAND AI</h3>
+                <p className="text-sm">How AI behaves</p>
               </div>
               <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">PEER NETWORK</h3>
-                <p className="text-sm">Connect with fellow learners, mentors, and AI practitioners</p>
+                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">GROW CAPABILITY</h3>
+                <p className="text-sm">From beginner to integrator</p>
               </div>
             </div>
+            <p className="text-white text-sm mt-4 leading-relaxed">
+              The platform combines structured learning paths, interactive labs, progress tracking, reflection, and an intentional network of peers and mentors.
+            </p>
           </div>
 
           <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
             <div className="flex items-center gap-3 mb-6">
               <User className="w-8 h-8" strokeWidth={2} />
-              <h2 className="font-extrabold text-2xl uppercase tracking-tight">Meet The Founder</h2>
+              <h2 className="font-extrabold text-2xl uppercase tracking-tight">Built by Someone Who's Been in the Arena</h2>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -88,35 +118,43 @@ export default function AboutPage({ onBack }: AboutPageProps) {
               <div className="flex-1 space-y-4">
                 <div>
                   <h3 className="font-extrabold text-xl uppercase tracking-tight mb-1">Tony Marks</h3>
-                  <p className="text-sm font-semibold uppercase tracking-wide">CEO & CO-FOUNDER, SAPIEN AI</p>
+                  <p className="text-sm font-semibold uppercase tracking-wide">FOUNDER, PROJECT SAPIENS</p>
                 </div>
 
                 <div className="space-y-4 text-base leading-relaxed">
                   <p>
-                    I am the CEO and Co-Founder of Sapien AI, a leading artificial intelligence company that
-                    builds high performing, secure, and scalable large language models (LLM) for enterprises.
-                    We also provide AI-driven site searches, conversational AI, and best in class ChatGPT
-                    services to enhance customer engagement and satisfaction.
+                    Project Sapiens was founded by Tony Marks, an AI technologist and product builder with over seven years of experience designing, deploying, and scaling real-world AI systems.
                   </p>
 
                   <p>
-                    With over seven years of experience in the AI industry, my team and I have delivered
-                    solutions for clients across various sectors, such as sports, entertainment, travel, and
-                    real estate. We have built in-flight chatbots for major airlines, voice AI SDKs for the
-                    NFL, NBA, and the Olympics, and data extraction for short-term rental listings.
+                    Before AI became mainstream, Tony worked hands-on building conversational AI, natural language systems, and applied machine learning solutions for high-stakes environments, including:
+                  </p>
+
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Official AI experiences for multiple Olympic Games</li>
+                    <li>AI-powered systems for professional NBA and NFL teams</li>
+                    <li>In-flight AI experiences for Virgin Atlantic Airlines</li>
+                    <li>Interactive AI-driven retail and event experiences for New Balance, including the Boston Marathon</li>
+                  </ul>
+
+                  <p>
+                    These were production systems used by millions, built with real constraints around performance, security, and trust.
+                  </p>
+
+                  <p className="font-semibold text-lg border-l-4 border-black pl-4">
+                    "Powerful AI is only valuable when humans know how to use it well."
                   </p>
 
                   <p>
-                    In 2021, we participated in OpenAI's developer beta, where we experimented with
-                    cutting-edge tools like ChatGPT, Whisper, and Dalle, and leveraged them to create more
-                    value for our customers and partners.
+                    After years of building AI for large organizations, a pattern became clear: the hardest problem wasn't the models — it was the humans.
                   </p>
 
                   <p>
-                    My goal is to empower individuals, brands and enterprises to get the most out of
-                    generative AI, and to democratize access to the latest AI technologies. I believe that
-                    AI can transform the way we communicate, collaborate, and create, and that Project Sapiens
-                    is at the forefront of this revolution.
+                    People struggled with knowing what to ask, how to structure problems, when to trust outputs, and how to integrate AI into real workflows.
+                  </p>
+
+                  <p className="font-semibold">
+                    Project Sapiens was created to solve that problem by helping people build true AI fluency.
                   </p>
                 </div>
               </div>
@@ -125,55 +163,29 @@ export default function AboutPage({ onBack }: AboutPageProps) {
 
           <div className="bg-[#FFD700] border border-black p-8 shadow-[3px_3px_0px_#000000]">
             <div className="flex items-center gap-3 mb-6">
-              <Building2 className="w-8 h-8" strokeWidth={2} />
-              <h2 className="font-extrabold text-2xl uppercase tracking-tight">About Sapien AI</h2>
+              <Zap className="w-8 h-8" strokeWidth={2} />
+              <h2 className="font-extrabold text-2xl uppercase tracking-tight">The Long-Term Vision</h2>
             </div>
-            <p className="text-base leading-relaxed mb-4">
-              Sapien AI is at the cutting edge of enterprise artificial intelligence. We build high-performing,
-              secure, and scalable large language models tailored for business needs.
-            </p>
-            <div className="space-y-3">
-              <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">ENTERPRISE AI SOLUTIONS</h3>
-                <p className="text-sm">
-                  Custom LLMs, AI-driven search, conversational AI, and ChatGPT integration for businesses
-                </p>
-              </div>
-              <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">PROVEN TRACK RECORD</h3>
-                <p className="text-sm">
-                  7+ years delivering AI solutions for sports, entertainment, travel, real estate, and aviation
-                </p>
-              </div>
-              <div className="bg-white border border-black p-4">
-                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">INNOVATION PARTNERS</h3>
-                <p className="text-sm">
-                  OpenAI developer beta participant since 2021, pioneering generative AI applications
-                </p>
-              </div>
+            <div className="space-y-4 text-base leading-relaxed">
+              <p className="font-semibold text-lg">
+                AI will become as fundamental as the internet or electricity.
+              </p>
+              <p>
+                Project Sapiens exists to help people adapt without panic, learn without intimidation, build without dependency, and lead without losing their humanity.
+              </p>
+              <p className="font-bold">
+                This is not about replacing people with AI.
+              </p>
+              <p className="font-bold">
+                It is about helping people become more capable with it.
+              </p>
             </div>
           </div>
 
-          <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
-            <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-4">Join The Revolution</h2>
-            <p className="text-base leading-relaxed mb-6">
-              Whether you're taking your first steps with AI or looking to integrate advanced capabilities
-              into your workflow, Project Sapiens provides the structure, tools, and community to help you succeed.
+          <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000] text-center">
+            <p className="text-2xl md:text-3xl font-bold tracking-tight leading-relaxed">
+              Learn AI. Build with AI. Lead with AI.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <div className="bg-[#F4F4F4] border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight">
-                Structured Learning
-              </div>
-              <div className="bg-[#F4F4F4] border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight">
-                Hands-On Practice
-              </div>
-              <div className="bg-[#F4F4F4] border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight">
-                Community Support
-              </div>
-              <div className="bg-[#F4F4F4] border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight">
-                Real-World Skills
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -4,9 +4,11 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface AuthPageProps {
   onSuccess?: () => void;
+  onTermsClick?: () => void;
+  onPrivacyClick?: () => void;
 }
 
-export default function AuthPage({ onSuccess }: AuthPageProps) {
+export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: AuthPageProps) {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -144,6 +146,27 @@ export default function AuthPage({ onSuccess }: AuthPageProps) {
                   )}
                 </button>
               </div>
+            </div>
+
+            <div className="text-xs text-[#888888] text-center leading-relaxed">
+              By continuing, you agree to our{' '}
+              {onTermsClick && (
+                <button
+                  onClick={onTermsClick}
+                  className="text-[#FF6A00] font-semibold hover:underline"
+                >
+                  Terms of Service
+                </button>
+              )}
+              {' '}and{' '}
+              {onPrivacyClick && (
+                <button
+                  onClick={onPrivacyClick}
+                  className="text-[#FF6A00] font-semibold hover:underline"
+                >
+                  Privacy Policy
+                </button>
+              )}.
             </div>
 
             <button

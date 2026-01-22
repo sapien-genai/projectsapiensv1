@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Menu, X, Sparkles, Clock, ChevronDown, Copy, CheckCircle2 } from 'lucide-react';
+import { Send, Menu, X, Sparkles, Clock, ChevronDown, Copy, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useBilling } from '../contexts/BillingContext';
 import { supabase } from '../lib/supabase';
 import OpenMoji from './OpenMoji';
+import UpgradeModal from './UpgradeModal';
 
 interface LabSandboxProps {
   labId: string;
@@ -102,6 +104,7 @@ const labs = [
 
 export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxProps) {
   const { user } = useAuth();
+  const { usageStatus, refreshUsageStatus } = useBilling();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -111,6 +114,9 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
+  const [limitReached, setLimitReached] = useState(false);
+  const [limitInfo, setLimitInfo] = useState<any>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -199,6 +205,14 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+
+        if (response.status === 429 && errorData.error === 'limit_reached') {
+          setLimitReached(true);
+          setLimitInfo(errorData);
+          await refreshUsageStatus();
+          throw new Error('LIMIT_REACHED');
+        }
+
         throw new Error(errorData.error || 'Failed to get AI response');
       }
 
@@ -206,8 +220,13 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
       return data.response;
     } catch (error) {
       console.error('Error calling AI:', error);
-      if (error instanceof Error && error.message === 'Authentication required') {
-        return "Please sign in to use the AI lab features.";
+      if (error instanceof Error) {
+        if (error.message === 'Authentication required') {
+          return "Please sign in to use the AI lab features.";
+        }
+        if (error.message === 'LIMIT_REACHED') {
+          return "LIMIT_REACHED";
+        }
       }
       return "I apologize, but I'm having trouble connecting right now. Please try again in a moment.";
     }
@@ -419,6 +438,13 @@ Feel free to ask follow-up questions or request modifications!`;
       // Get AI response with conversation history
       const responseContent = await generateResponse(currentInput, [...messages, userMessage]);
 
+      if (responseContent === "LIMIT_REACHED") {
+        // Don't add the message, just remove the user message
+        setMessages(prev => prev.slice(0, -1));
+        setLoading(false);
+        return;
+      }
+
       const aiResponse: Message = {
         role: 'assistant',
         content: responseContent,
@@ -429,13 +455,18 @@ Feel free to ask follow-up questions or request modifications!`;
 
       // Save to database
       if (user) {
-        await supabase.from('lab_experiments').insert({
+        const { error: insertError } = await supabase.from('lab_experiments').insert({
           user_id: user.id,
           lab_id: labId,
           prompt: currentInput,
           output: aiResponse.content,
         });
-        loadHistory();
+
+        if (insertError) {
+          console.error('Error saving lab experiment:', insertError);
+        } else {
+          loadHistory();
+        }
       }
     } catch (error) {
       console.error('Error in handleSend:', error);
@@ -608,8 +639,49 @@ Feel free to ask follow-up questions or request modifications!`;
               <p className="text-xs text-[#666666]">{config.description}</p>
             </div>
           </div>
-          <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+          <div className="flex items-center gap-3">
+            {usageStatus && usageStatus.plan === 'free' && (
+              <div className="text-xs font-semibold text-[#888888]">
+                {usageStatus.used} / {usageStatus.limit} today
+              </div>
+            )}
+            <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+          </div>
         </div>
+
+        {/* Limit Warning Banner */}
+        {limitReached && limitInfo && (
+          <div className="bg-[#FF6A00] border-b-2 border-black p-4">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                <div className="flex-1">
+                  <h3 className="font-extrabold text-sm uppercase mb-1">DAILY LIMIT REACHED</h3>
+                  <p className="text-sm leading-relaxed mb-3">
+                    You've used all {limitInfo.limit} of today's AI practice sessions. Your limit resets at midnight UTC.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {limitInfo.plan === 'free' && (
+                      <button
+                        onClick={() => setShowUpgradeModal(true)}
+                        className="bg-black text-white border-2 border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-black transition-colors inline-flex items-center gap-2"
+                      >
+                        <TrendingUp className="w-4 h-4" strokeWidth={2} />
+                        UPGRADE FOR MORE
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setLimitReached(false)}
+                      className="bg-white border-2 border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight hover:bg-[#F4F4F4] transition-colors"
+                    >
+                      DISMISS
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-4 py-6">
@@ -708,6 +780,14 @@ Feel free to ask follow-up questions or request modifications!`;
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentUsed={limitInfo?.used || usageStatus?.used}
+        currentLimit={limitInfo?.limit || usageStatus?.limit}
+      />
     </div>
   );
 }

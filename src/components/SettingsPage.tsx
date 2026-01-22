@@ -73,6 +73,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
   useEffect(() => {
     loadProfile();
+    loadPreferences();
   }, [user]);
 
   useEffect(() => {
@@ -187,15 +188,58 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
     }
   };
 
+  const loadPreferences = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading preferences:', error);
+        return;
+      }
+
+      if (data) {
+        setEmailNotifications(data.email_notifications);
+        setProgressUpdates(data.progress_updates);
+        setWeeklyDigest(data.weekly_digest);
+      }
+    } catch (err) {
+      console.error('Error loading preferences:', err);
+    }
+  };
+
   const handleSavePreferences = async () => {
+    if (!user) return;
+
     setSavingPreferences(true);
     setPreferencesSuccess(false);
 
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from('user_preferences')
+        .upsert({
+          user_id: user.id,
+          email_notifications: emailNotifications,
+          progress_updates: progressUpdates,
+          weekly_digest: weeklyDigest,
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (error) throw error;
+
       setPreferencesSuccess(true);
-      setSavingPreferences(false);
       setTimeout(() => setPreferencesSuccess(false), 3000);
-    }, 500);
+    } catch (err: any) {
+      console.error('Error saving preferences:', err);
+    } finally {
+      setSavingPreferences(false);
+    }
   };
 
   const loadTickets = async () => {
@@ -291,10 +335,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
         </button>
 
         <div className="mb-8">
-          <h1 className="font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-2">
+          <h1 className="font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-2 font-sans">
             SETTINGS
           </h1>
-          <p className="text-[#57524D] text-lg">
+          <p className="text-[#57524D] text-lg font-sans">
             Manage your account preferences and security settings
           </p>
         </div>
@@ -312,7 +356,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       onClick={() => setActiveSection(section.id as any)}
                       className={`w-full flex items-center gap-3 px-4 py-3 border-b border-black font-semibold text-left transition-colors ${
                         isActive
-                          ? 'bg-[#F4A261] text-black'
+                          ? 'bg-[#E67E22] text-black'
                           : 'bg-white text-[#57524D] hover:bg-[#E9E5E0]'
                       }`}
                     >
@@ -368,7 +412,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       type="text"
                       value={editedUsername}
                       onChange={(e) => setEditedUsername(e.target.value)}
-                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
                       placeholder="Enter username"
                     />
                   </div>
@@ -381,7 +425,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       type="text"
                       value={editedAvatarUrl}
                       onChange={(e) => setEditedAvatarUrl(e.target.value)}
-                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
                       placeholder="https://example.com/avatar.jpg"
                     />
                   </div>
@@ -541,7 +585,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                             </div>
                           </div>
                         </div>
-                        <div className={`w-12 h-6 border border-black relative transition-colors ${isDarkMode ? 'bg-[#F4A261]' : 'bg-[#E9E5E0]'}`}>
+                        <div className={`w-12 h-6 border border-black relative transition-colors ${isDarkMode ? 'bg-[#E67E22]' : 'bg-[#E9E5E0]'}`}>
                           <div className={`absolute top-0 w-6 h-full bg-black border-r border-black transition-transform ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                         </div>
                       </button>
@@ -564,7 +608,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={emailNotifications}
                           onChange={(e) => setEmailNotifications(e.target.checked)}
-                          className="w-5 h-5 text-[#F4A261] border border-black focus:ring-2 focus:ring-[#F4A261]"
+                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
 
@@ -579,7 +623,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={progressUpdates}
                           onChange={(e) => setProgressUpdates(e.target.checked)}
-                          className="w-5 h-5 text-[#F4A261] border border-black focus:ring-2 focus:ring-[#F4A261]"
+                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
 
@@ -594,7 +638,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={weeklyDigest}
                           onChange={(e) => setWeeklyDigest(e.target.checked)}
-                          className="w-5 h-5 text-[#F4A261] border border-black focus:ring-2 focus:ring-[#F4A261]"
+                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
                     </div>
@@ -645,7 +689,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                             setShowTicketForm(true);
                             setTicketError(null);
                           }}
-                          className="text-sm font-bold text-[#F4A261] hover:underline"
+                          className="text-sm font-bold text-[#E67E22] hover:underline"
                         >
                           Create Ticket →
                         </button>
@@ -655,13 +699,13 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                         <Globe className="w-6 h-6 mb-2" />
                         <h3 className="font-bold uppercase tracking-tight mb-1">Help Center</h3>
                         <p className="text-sm text-[#57524D] mb-2">Browse documentation</p>
-                        <a
-                          href="#"
-                          className="text-sm font-bold text-[#F4A261] hover:underline flex items-center gap-1"
+                        <button
+                          onClick={onBack}
+                          className="text-sm font-bold text-[#E67E22] hover:underline flex items-center gap-1"
                         >
                           Visit Help Center
                           <ExternalLink className="w-3 h-3" />
-                        </a>
+                        </button>
                       </div>
                     </div>
 
@@ -773,7 +817,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       {tickets.map((ticket) => {
                         const statusColors: Record<string, string> = {
                           open: 'bg-[#5B7DB1] text-white',
-                          in_progress: 'bg-[#F4A261] text-black',
+                          in_progress: 'bg-[#E67E22] text-black',
                           resolved: 'bg-[#98C9A3] text-black',
                           closed: 'bg-[#E9E5E0] text-[#57524D]'
                         };

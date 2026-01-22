@@ -1,0 +1,97 @@
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuth } from './AuthContext';
+import { supabase } from '../lib/supabase';
+
+interface UsageStatus {
+  plan: 'free' | 'pro';
+  limit: number;
+  used: number;
+  remaining: number;
+  resets_at: string;
+}
+
+interface BillingContextType {
+  usageStatus: UsageStatus | null;
+  loading: boolean;
+  error: string | null;
+  refreshUsageStatus: () => Promise<void>;
+  isAtLimit: boolean;
+  percentUsed: number;
+}
+
+const BillingContext = createContext<BillingContextType | undefined>(undefined);
+
+export function BillingProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const [usageStatus, setUsageStatus] = useState<UsageStatus | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchUsageStatus = async () => {
+    if (!user) {
+      setUsageStatus(null);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No active session');
+      }
+
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-usage-status`;
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch usage status');
+      }
+
+      const data = await response.json();
+      setUsageStatus(data);
+    } catch (err) {
+      console.error('Error fetching usage status:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch usage status');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsageStatus();
+  }, [user]);
+
+  const isAtLimit = usageStatus ? usageStatus.used >= usageStatus.limit : false;
+  const percentUsed = usageStatus ? (usageStatus.used / usageStatus.limit) * 100 : 0;
+
+  return (
+    <BillingContext.Provider
+      value={{
+        usageStatus,
+        loading,
+        error,
+        refreshUsageStatus: fetchUsageStatus,
+        isAtLimit,
+        percentUsed,
+      }}
+    >
+      {children}
+    </BillingContext.Provider>
+  );
+}
+
+export function useBilling() {
+  const context = useContext(BillingContext);
+  if (context === undefined) {
+    throw new Error('useBilling must be used within a BillingProvider');
+  }
+  return context;
+}
