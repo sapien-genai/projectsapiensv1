@@ -4,6 +4,7 @@ import {
   Calendar, Download, BarChart3
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { auditLog } from '../../utils/auditLog';
 
 interface AdminRole {
   role: string;
@@ -92,6 +93,8 @@ export default function AnalyticsDashboard({ adminRole }: { adminRole: AdminRole
   };
 
   const exportAnalytics = () => {
+    auditLog.logDataExport('analytics', 6, { time_range: timeRange });
+
     const csvData = [
       ['Metric', 'Value'],
       ['Total Users', analytics.totalUsers],

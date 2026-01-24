@@ -4,6 +4,7 @@ import {
   MoreVertical, Eye, Ban, UserCheck, Download
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { auditLog } from '../../utils/auditLog';
 
 interface AdminRole {
   role: string;
@@ -79,6 +80,11 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
   });
 
   const exportUsers = () => {
+    auditLog.logDataExport('users', filteredUsers.length, {
+      search_term: searchTerm,
+      filter_status: filterStatus,
+    });
+
     const csv = [
       ['ID', 'Name', 'Created', 'Last Active', 'Badges', 'Lessons'].join(','),
       ...filteredUsers.map(user => [
@@ -240,7 +246,12 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setSelectedUser(user)}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          auditLog.logUserAction('view', user.user_id, {
+                            display_name: user.display_name,
+                          });
+                        }}
                         className="p-2 border border-black hover:bg-black hover:text-white transition-all"
                         title="View Details"
                       >
