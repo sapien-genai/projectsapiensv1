@@ -4,6 +4,7 @@ import {
   Edit, Trash, Plus, Eye, Download
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { auditLog } from '../../utils/auditLog';
 
 interface AdminRole {
   role: string;
@@ -70,6 +71,11 @@ export default function AuditLog({ adminRole }: { adminRole: AdminRole }) {
   });
 
   const exportLogs = () => {
+    auditLog.logDataExport('audit_logs', filteredLogs.length, {
+      date_range: dateRange,
+      filter_action: filterAction,
+    });
+
     const csv = [
       ['Timestamp', 'Admin', 'Action', 'Target Type', 'Target ID', 'IP Address'].join(','),
       ...filteredLogs.map(log => [

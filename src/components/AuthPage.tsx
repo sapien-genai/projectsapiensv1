@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Lock, Mail, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { analytics } from '../utils/analytics';
 
 interface AuthPageProps {
   onSuccess?: () => void;
@@ -28,7 +29,9 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
         const { error: signInError } = await signIn(email, password);
         if (signInError) {
           setError(signInError.message);
+          analytics.trackError('Login failed', 'AUTH_ERROR', { error: signInError.message });
         } else {
+          analytics.trackUserLogin('email');
           onSuccess?.();
         }
       } else {
@@ -40,12 +43,15 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
         const { error: signUpError } = await signUp(email, password, username);
         if (signUpError) {
           setError(signUpError.message);
+          analytics.trackError('Signup failed', 'AUTH_ERROR', { error: signUpError.message });
         } else {
+          analytics.trackUserSignup('email');
           onSuccess?.();
         }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      analytics.trackError('Auth error', 'AUTH_ERROR', { error: err instanceof Error ? err.message : 'Unknown error' });
     } finally {
       setLoading(false);
     }
