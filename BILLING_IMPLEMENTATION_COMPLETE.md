@@ -24,6 +24,16 @@ A comprehensive pricing and usage limits system has been successfully implemente
   - Returns current usage status for authenticated users
   - Shows plan, limit, used, remaining, and reset time
 
+- `supabase/functions/create-checkout-session/index.ts` (new)
+  - Creates Stripe Checkout sessions server-side
+  - Ensures Stripe customers exist and stores `stripe_customer_id`
+  - Returns a redirect URL for the client
+
+- `supabase/functions/stripe-webhook/index.ts` (new)
+  - Verifies Stripe webhook signatures
+  - Syncs subscription status to `billing_profiles`
+  - Sets plan to Pro when subscription is active
+
 ### Frontend Components
 - `src/contexts/BillingContext.tsx`
   - React context for managing usage status
@@ -39,7 +49,7 @@ A comprehensive pricing and usage limits system has been successfully implemente
 - `src/components/UpgradeModal.tsx`
   - Modal explaining plan benefits
   - Comparison between Free and Pro
-  - Placeholder for future Stripe integration
+  - Integrated Stripe upgrade CTA and error handling
 
 ### Files Modified
 - `src/App.tsx`

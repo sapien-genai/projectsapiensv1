@@ -5,9 +5,22 @@ interface UpgradeModalProps {
   onClose: () => void;
   currentUsed?: number;
   currentLimit?: number;
+  onCheckout?: () => void;
+  checkoutLoading?: boolean;
+  checkoutError?: string | null;
+  onClearError?: () => void;
 }
 
-export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimit }: UpgradeModalProps) {
+export default function UpgradeModal({
+  isOpen,
+  onClose,
+  currentUsed,
+  currentLimit,
+  onCheckout,
+  checkoutLoading,
+  checkoutError,
+  onClearError,
+}: UpgradeModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -25,6 +38,19 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
         </div>
 
         <div className="p-4 sm:p-6 space-y-6">
+          {checkoutError && (
+            <div className="bg-[#FF6A00] border-2 border-black p-4 flex items-start justify-between gap-4">
+              <p className="text-sm font-semibold text-black">{checkoutError}</p>
+              {onClearError && (
+                <button
+                  onClick={onClearError}
+                  className="text-xs font-bold uppercase hover:text-white"
+                >
+                  Dismiss
+                </button>
+              )}
+            </div>
+          )}
           {currentUsed !== undefined && currentLimit !== undefined && (
             <div className="bg-[#F4F4F4] border-2 border-black p-4">
               <p className="text-sm font-semibold mb-2">CURRENT USAGE TODAY:</p>
@@ -122,16 +148,17 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
           <div className="border-2 border-black p-4 sm:p-6 bg-white text-center">
             <div className="inline-flex items-center gap-2 mb-4">
               <Users className="w-5 h-5" strokeWidth={2} />
-              <p className="font-extrabold text-sm uppercase">COMING SOON</p>
+              <p className="font-extrabold text-sm uppercase">UPGRADE TO PRO</p>
             </div>
             <p className="text-sm leading-relaxed mb-4">
-              Pro plan upgrades will be available soon. We are currently integrating payment processing to make upgrading seamless and secure.
+              Pro plan upgrades are handled securely through Stripe Checkout. You'll be redirected to complete your payment.
             </p>
             <button
-              disabled
-              className="bg-[#CCCCCC] text-black border-2 border-black px-6 sm:px-8 py-3 min-h-[44px] font-extrabold text-sm uppercase tracking-tight cursor-not-allowed"
+              onClick={onCheckout}
+              disabled={!onCheckout || checkoutLoading}
+              className="bg-black text-white border-2 border-black px-6 sm:px-8 py-3 min-h-[44px] font-extrabold text-sm uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
             >
-              UPGRADE TO PRO (COMING SOON)
+              {checkoutLoading ? 'REDIRECTING...' : 'UPGRADE TO PRO'}
             </button>
           </div>
 

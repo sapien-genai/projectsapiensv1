@@ -8,7 +8,18 @@ interface BillingPageProps {
 }
 
 export default function BillingPage({ onBack }: BillingPageProps) {
-  const { usageStatus, loading, error, refreshUsageStatus, isAtLimit, percentUsed } = useBilling();
+  const {
+    usageStatus,
+    loading,
+    error,
+    refreshUsageStatus,
+    isAtLimit,
+    percentUsed,
+    checkoutLoading,
+    checkoutError,
+    startCheckout,
+    clearCheckoutError,
+  } = useBilling();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -216,6 +227,10 @@ export default function BillingPage({ onBack }: BillingPageProps) {
         onClose={() => setShowUpgradeModal(false)}
         currentUsed={usageStatus?.used}
         currentLimit={usageStatus?.limit}
+        onCheckout={startCheckout}
+        checkoutLoading={checkoutLoading}
+        checkoutError={checkoutError}
+        onClearError={clearCheckoutError}
       />
     </div>
   );
