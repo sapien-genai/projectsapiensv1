@@ -18,7 +18,7 @@ This document describes the pricing plans, AI usage limits, and enforcement mech
 
 ### Pro Plan
 
-- **Cost:** Coming soon
+- **Cost:** $29/month
 - **AI Practice Sessions:** 120 per day (8x more than Free)
 - **Features:**
   - All Free plan features
