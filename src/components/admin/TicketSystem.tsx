@@ -201,7 +201,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                   placeholder="Search tickets..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="w-full pl-9 pr-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
                 />
               </div>
 
@@ -209,7 +209,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-2 border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="px-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
                 >
                   <option value="all">All Status</option>
                   <option value="open">Open</option>
@@ -221,7 +221,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                 <select
                   value={filterPriority}
                   onChange={(e) => setFilterPriority(e.target.value)}
-                  className="px-3 py-2 border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="px-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
                 >
                   <option value="all">All Priority</option>
                   <option value="urgent">Urgent</option>
@@ -315,25 +315,25 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'in_progress')}
                     disabled={selectedTicket.status === 'in_progress'}
-                    className="px-4 py-2 bg-[#F59E0B] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-[#F59E0B] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     In Progress
                   </button>
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'resolved')}
                     disabled={selectedTicket.status === 'resolved'}
-                    className="px-4 py-2 bg-[#10b981] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-[#10b981] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Resolve
                   </button>
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'closed')}
                     disabled={selectedTicket.status === 'closed'}
-                    className="px-4 py-2 bg-black text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-black text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Close
                   </button>
@@ -378,28 +378,28 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
               </div>
 
               {/* Reply Box */}
-              <div className="p-6 border-t-2 border-black">
+              <div className="p-4 md:p-6 border-t-2 border-black">
                 <textarea
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type your response..."
-                  className="w-full px-4 py-3 border-2 border-black resize-none focus:outline-none focus:ring-2 focus:ring-[#FF6A00] font-semibold"
+                  className="w-full px-4 py-3 min-h-[88px] border-2 border-black resize-none focus:outline-none focus:ring-2 focus:ring-[#FF6A00] font-semibold"
                   rows={3}
                 />
-                <div className="flex items-center justify-between mt-3">
-                  <label className="flex items-center gap-2 text-xs font-extrabold uppercase text-black cursor-pointer">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-3">
+                  <label className="flex items-center gap-2 text-xs font-extrabold uppercase text-black cursor-pointer min-h-[44px]">
                     <input
                       type="checkbox"
                       checked={isInternal}
                       onChange={(e) => setIsInternal(e.target.checked)}
-                      className="w-4 h-4 border-2 border-black"
+                      className="w-5 h-5 border-2 border-black"
                     />
                     Internal note (not visible to user)
                   </label>
                   <button
                     onClick={sendMessage}
                     disabled={!newMessage.trim()}
-                    className="flex items-center gap-2 px-6 py-2 bg-[#FF6A00] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] w-full sm:w-auto bg-[#FF6A00] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-4 h-4" strokeWidth={2} />
                     Send

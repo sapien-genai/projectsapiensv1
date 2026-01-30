@@ -109,23 +109,24 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-white border border-black shadow-[8px_8px_0px_#000000] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b-2 border-black p-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Rocket className="w-6 h-6" strokeWidth={2} />
-            <h2 className="font-extrabold text-2xl uppercase tracking-tight">
+      <div className="bg-white border border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b-2 border-black p-4 sm:p-6 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+            <Rocket className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={2} />
+            <h2 className="font-extrabold text-lg sm:text-xl md:text-2xl uppercase tracking-tight truncate">
               {isEditMode ? 'EDIT PROJECT' : 'CREATE PROJECT'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#F4F4F4] rounded transition-colors"
+            className="p-2 min-h-[44px] min-w-[44px] hover:bg-[#F4F4F4] rounded transition-colors flex items-center justify-center flex-shrink-0"
+            aria-label="Close form"
           >
             <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6">
           {error && (
             <div className="bg-red-50 border-2 border-red-500 p-4 text-red-700 text-sm font-semibold">
               {error}

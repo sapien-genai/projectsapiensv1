@@ -128,20 +128,21 @@ export default function EnhancedProjectShareForm({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-[#F8F5F2] border-4 border-black shadow-[12px_12px_0px_#000000] max-w-3xl w-full my-8">
-        <div className="bg-white border-b-4 border-black p-6 flex justify-between items-center">
-          <h2 className="font-extrabold text-2xl uppercase tracking-tight">
+      <div className="bg-[#F8F5F2] border-2 sm:border-4 border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] md:shadow-[12px_12px_0px_#000000] max-w-full sm:max-w-3xl w-full my-8">
+        <div className="bg-white border-b-2 sm:border-b-4 border-black p-4 sm:p-6 flex justify-between items-center gap-2">
+          <h2 className="font-extrabold text-lg sm:text-xl md:text-2xl uppercase tracking-tight">
             {existingProject ? 'Edit' : 'Share'} Project
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#E9E5E0] border-2 border-black transition-colors"
+            className="p-2 min-h-[44px] min-w-[44px] hover:bg-[#E9E5E0] border-2 border-black transition-colors flex items-center justify-center"
+            aria-label="Close form"
           >
             <X className="w-5 h-5" strokeWidth={2.5} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6">
           {error && (
             <div className="bg-red-100 border-2 border-red-500 p-4 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" strokeWidth={2.5} />

@@ -12,19 +12,19 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white border-2 border-black shadow-[8px_8px_0px_#000000] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b-2 border-black p-6 flex items-center justify-between">
-          <h2 className="font-extrabold text-3xl uppercase tracking-tighter">UPGRADE TO PRO</h2>
+      <div className="bg-white border-2 border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b-2 border-black p-4 sm:p-6 flex items-center justify-between gap-2">
+          <h2 className="font-extrabold text-xl sm:text-2xl md:text-3xl uppercase tracking-tighter">UPGRADE TO PRO</h2>
           <button
             onClick={onClose}
-            className="hover:text-[#FF6A00] transition-colors"
+            className="p-2 min-h-[44px] min-w-[44px] hover:text-[#FF6A00] transition-colors flex items-center justify-center"
             aria-label="Close modal"
           >
             <X className="w-6 h-6" strokeWidth={2} />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-6">
           {currentUsed !== undefined && currentLimit !== undefined && (
             <div className="bg-[#F4F4F4] border-2 border-black p-4">
               <p className="text-sm font-semibold mb-2">CURRENT USAGE TODAY:</p>
@@ -119,7 +119,7 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
             </div>
           </div>
 
-          <div className="border-2 border-black p-6 bg-white text-center">
+          <div className="border-2 border-black p-4 sm:p-6 bg-white text-center">
             <div className="inline-flex items-center gap-2 mb-4">
               <Users className="w-5 h-5" strokeWidth={2} />
               <p className="font-extrabold text-sm uppercase">COMING SOON</p>
@@ -129,7 +129,7 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
             </p>
             <button
               disabled
-              className="bg-[#CCCCCC] text-black border-2 border-black px-8 py-3 font-extrabold text-sm uppercase tracking-tight cursor-not-allowed"
+              className="bg-[#CCCCCC] text-black border-2 border-black px-6 sm:px-8 py-3 min-h-[44px] font-extrabold text-sm uppercase tracking-tight cursor-not-allowed"
             >
               UPGRADE TO PRO (COMING SOON)
             </button>
@@ -138,7 +138,7 @@ export default function UpgradeModal({ isOpen, onClose, currentUsed, currentLimi
           <div className="text-center">
             <button
               onClick={onClose}
-              className="text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+              className="px-6 py-3 min-h-[44px] text-sm font-semibold hover:text-[#FF6A00] transition-colors"
             >
               CLOSE
             </button>
