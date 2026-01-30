@@ -139,17 +139,33 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
             </li>
           </ul>
 
-          <button
-            onClick={handleUpgrade}
-            disabled={isPro}
-            className={`w-full border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight transition-all ${
-              isPro
-                ? 'bg-[#CCCCCC] text-black cursor-not-allowed'
-                : 'bg-black text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
-            }`}
-          >
-            {isPro ? 'CURRENT PLAN' : user ? 'GO PRO' : 'SIGN UP TO GO PRO'}
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={handleUpgrade}
+              disabled={isPro}
+              className={`w-full border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight transition-all ${
+                isPro
+                  ? 'bg-[#CCCCCC] text-black cursor-not-allowed'
+                  : 'bg-black text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+              }`}
+            >
+              {isPro ? 'CURRENT PLAN' : user ? 'GO PRO MONTHLY' : 'SIGN UP FOR PRO'}
+            </button>
+            {!isPro && user && (
+              <button
+                onClick={async () => {
+                  if (!user) {
+                    onGetStarted?.();
+                    return;
+                  }
+                  await startCheckout('yearly');
+                }}
+                className="w-full bg-white border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              >
+                GO PRO YEARLY (SAVE 20%)
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

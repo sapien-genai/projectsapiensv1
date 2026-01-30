@@ -8,6 +8,18 @@ interface UsageStatus {
   used: number;
   remaining: number;
   resets_at: string;
+  token_balance: number;
+  monthly_token_allowance: number;
+  token_reset_at: string | null;
+  features: {
+    labs: boolean;
+    exports: boolean;
+    priority_support: boolean;
+    network: boolean;
+  };
+  subscription_status: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
 }
 
 interface BillingContextType {
@@ -19,7 +31,7 @@ interface BillingContextType {
   percentUsed: number;
   checkoutLoading: boolean;
   checkoutError: string | null;
-  startCheckout: () => Promise<void>;
+  startCheckout: (plan?: 'monthly' | 'yearly') => Promise<void>;
   clearCheckoutError: () => void;
   portalLoading: boolean;
   portalError: string | null;
@@ -81,7 +93,7 @@ export function BillingProvider({ children }: { children: ReactNode }) {
     fetchUsageStatus();
   }, [user]);
 
-  const startCheckout = async () => {
+  const startCheckout = async (plan: 'monthly' | 'yearly' = 'monthly') => {
     if (!user) {
       setCheckoutError('You must be logged in to upgrade.');
       return;
@@ -103,6 +115,7 @@ export function BillingProvider({ children }: { children: ReactNode }) {
           'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ plan }),
       });
 
       if (!response.ok) {

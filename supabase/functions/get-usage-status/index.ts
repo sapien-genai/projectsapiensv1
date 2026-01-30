@@ -82,13 +82,19 @@ Deno.serve(async (req: Request) => {
 
     const userId = user.id;
 
-    const { data: billingProfile } = await supabase
-      .from('billing_profiles')
-      .select('plan, plan_override')
+    const { data: entitlement } = await supabase
+      .from('entitlements')
+      .select('plan, features, token_balance, monthly_token_allowance, token_reset_at')
       .eq('user_id', userId)
       .maybeSingle();
 
-    const effectivePlan = billingProfile?.plan_override || billingProfile?.plan || 'free';
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('status, current_period_end, cancel_at_period_end')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    const effectivePlan = entitlement?.plan || 'free';
     const dailyLimit = PLAN_LIMITS[effectivePlan] || PLAN_LIMITS.free;
     const todayUTC = getTodayUTC();
 
@@ -110,6 +116,13 @@ Deno.serve(async (req: Request) => {
         used: used,
         remaining: remaining,
         resets_at: resetsAt,
+        token_balance: entitlement?.token_balance || 0,
+        monthly_token_allowance: entitlement?.monthly_token_allowance || 0,
+        token_reset_at: entitlement?.token_reset_at || null,
+        features: entitlement?.features || { labs: true, exports: false, priority_support: false, network: false },
+        subscription_status: subscription?.status || null,
+        current_period_end: subscription?.current_period_end || null,
+        cancel_at_period_end: subscription?.cancel_at_period_end || false,
       }),
       {
         status: 200,

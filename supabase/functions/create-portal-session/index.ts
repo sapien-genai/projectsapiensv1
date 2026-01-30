@@ -141,16 +141,16 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { data: billingProfile, error: billingError } = await supabaseAdmin
-      .from("billing_profiles")
-      .select("stripe_customer_id, plan_override, plan")
-      .eq("user_id", user.id)
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .select("stripe_customer_id")
+      .eq("id", user.id)
       .maybeSingle();
 
-    if (billingError) {
-      console.error("Failed to fetch billing profile:", billingError.message);
+    if (profileError) {
+      console.error("Failed to fetch profile:", profileError.message);
       return new Response(
-        JSON.stringify({ error: "Failed to fetch billing profile" }),
+        JSON.stringify({ error: "Failed to fetch profile" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -158,23 +158,20 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    let stripeCustomerId = billingProfile?.stripe_customer_id ?? null;
+    let stripeCustomerId = profile?.stripe_customer_id ?? null;
 
     if (!stripeCustomerId) {
       stripeCustomerId = await createStripeCustomer(stripeSecretKey, user.email, user.id);
 
-      const { error: upsertError } = await supabaseAdmin
-        .from("billing_profiles")
-        .upsert({
-          user_id: user.id,
-          plan: billingProfile?.plan ?? "free",
-          stripe_customer_id: stripeCustomerId,
-        });
+      const { error: updateError } = await supabaseAdmin
+        .from("profiles")
+        .update({ stripe_customer_id: stripeCustomerId })
+        .eq("id", user.id);
 
-      if (upsertError) {
-        console.error("Failed to update billing profile:", upsertError.message);
+      if (updateError) {
+        console.error("Failed to update profile:", updateError.message);
         return new Response(
-          JSON.stringify({ error: "Failed to update billing profile" }),
+          JSON.stringify({ error: "Failed to update profile" }),
           {
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
