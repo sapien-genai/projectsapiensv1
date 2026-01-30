@@ -43,9 +43,9 @@ export default function Toast({ message, type = 'info', onClose, duration = 5000
 
   return (
     <div
-      className={`${styles.bg} ${styles.border} border-2 p-4 shadow-[4px_4px_0px_#000000] flex items-center justify-between gap-4 min-w-[300px] max-w-[500px] animate-slide-in`}
+      className={`${styles.bg} ${styles.border} border-2 p-4 shadow-[4px_4px_0px_#000000] flex items-center justify-between gap-4 w-full sm:min-w-[300px] sm:max-w-[500px] animate-slide-in`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
         {styles.icon}
         <p className={`font-semibold text-sm ${type === 'info' ? 'text-white' : 'text-black'}`}>
           {message}
@@ -53,7 +53,8 @@ export default function Toast({ message, type = 'info', onClose, duration = 5000
       </div>
       <button
         onClick={onClose}
-        className={`${type === 'info' ? 'text-white hover:text-gray-200' : 'text-black hover:text-gray-700'} transition-colors flex-shrink-0`}
+        className={`${type === 'info' ? 'text-white hover:text-gray-200' : 'text-black hover:text-gray-700'} transition-colors flex-shrink-0 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center`}
+        aria-label="Close notification"
       >
         <X className="w-5 h-5" strokeWidth={2} />
       </button>

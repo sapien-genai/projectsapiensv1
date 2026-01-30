@@ -8,7 +8,22 @@ interface BillingPageProps {
 }
 
 export default function BillingPage({ onBack }: BillingPageProps) {
-  const { usageStatus, loading, error, refreshUsageStatus, isAtLimit, percentUsed } = useBilling();
+  const {
+    usageStatus,
+    loading,
+    error,
+    refreshUsageStatus,
+    isAtLimit,
+    percentUsed,
+    checkoutLoading,
+    checkoutError,
+    startCheckout,
+    clearCheckoutError,
+    portalLoading,
+    portalError,
+    startPortal,
+    clearPortalError,
+  } = useBilling();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -54,9 +69,22 @@ export default function BillingPage({ onBack }: BillingPageProps) {
           </p>
         </div>
 
-        {error && (
+        {(error || portalError) && (
           <div className="bg-[#FF6A00] border-2 border-black p-4 mb-6 shadow-[4px_4px_0px_#000000]">
-            <p className="text-sm font-semibold text-black">{error}</p>
+            <div className="space-y-2 text-sm font-semibold text-black">
+              {error && <p>{error}</p>}
+              {portalError && (
+                <div className="flex items-center justify-between gap-4">
+                  <p>{portalError}</p>
+                  <button
+                    onClick={clearPortalError}
+                    className="text-xs font-bold uppercase hover:text-white"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -109,6 +137,16 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                       UPGRADE TO PRO
                     </button>
                   )}
+                  <button
+                    onClick={startPortal}
+                    disabled={portalLoading}
+                    className="w-full bg-white text-black border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {portalLoading ? 'OPENING STRIPE...' : 'REVIEW BILLING IN STRIPE'}
+                  </button>
+                  <p className="text-xs text-[#888888]">
+                    Update payment details, view invoices, or manage your subscription securely in Stripe.
+                  </p>
                 </div>
               </div>
 
@@ -216,6 +254,10 @@ export default function BillingPage({ onBack }: BillingPageProps) {
         onClose={() => setShowUpgradeModal(false)}
         currentUsed={usageStatus?.used}
         currentLimit={usageStatus?.limit}
+        onCheckout={startCheckout}
+        checkoutLoading={checkoutLoading}
+        checkoutError={checkoutError}
+        onClearError={clearCheckoutError}
       />
     </div>
   );

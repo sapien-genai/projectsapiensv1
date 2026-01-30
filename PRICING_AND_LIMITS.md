@@ -140,6 +140,8 @@ Both tables have RLS enabled:
 - API keys and tokens are NEVER exposed to the client
 - All AI interactions go through authenticated edge functions
 - Usage tracking happens server-side only
+- Stripe Checkout sessions are created server-side in an edge function
+- Stripe webhooks are verified with a signing secret before updating billing records
 
 ## Error Responses
 
@@ -186,9 +188,43 @@ AND day = CURRENT_DATE;
 
 Potential improvements for v2:
 
-- [ ] Stripe integration for paid subscriptions
 - [ ] Monthly/yearly billing cycles
 - [ ] Team plans with shared limits
 - [ ] Usage analytics dashboard
 - [ ] Rollover unused sessions
 - [ ] Temporary limit boosts for special events
+
+## Stripe Billing Portal
+
+Stripe Billing Portal is available for users to update payment methods, view invoices, and manage subscriptions. The client calls an edge function to create a portal session and redirects the user to Stripe.
+
+### Edge Functions
+
+- `POST /functions/v1/create-portal-session`
+
+### Portal Return URL
+
+Set `STRIPE_PORTAL_RETURN_URL` to the billing page or dashboard URL you want users to return to after they leave Stripe (for example, `https://your-domain.com/billing`).
+
+## Stripe IDs (Current)
+
+- Product ID: `prod_TpknRVzxfzMrGM`
+- Price ID: `price_1Ss5IGIuaA1V78FGdSJVyfkW`
+
+## Stripe Checkout Integration
+
+Stripe Checkout is used to upgrade from Free to Pro. The client calls an edge function to create a checkout session and redirects the user to Stripe. Webhooks update `billing_profiles` when the subscription becomes active or changes status.
+
+### Edge Functions
+
+- `POST /functions/v1/create-checkout-session`
+- `POST /functions/v1/stripe-webhook`
+
+### Required Environment Variables
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_PRICE_ID`
+- `STRIPE_SUCCESS_URL`
+- `STRIPE_CANCEL_URL`
+- `STRIPE_PORTAL_RETURN_URL`
+- `STRIPE_WEBHOOK_SECRET`

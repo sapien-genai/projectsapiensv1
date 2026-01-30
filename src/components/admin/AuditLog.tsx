@@ -146,16 +146,16 @@ export default function AuditLog({ adminRole }: { adminRole: AdminRole }) {
               placeholder="Search logs by action, target, or IP..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full pl-10 pr-4 py-3 min-h-[44px] border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Filter className="w-5 h-5 text-black" strokeWidth={2} />
             <select
               value={filterAction}
               onChange={(e) => setFilterAction(e.target.value)}
-              className="px-4 py-2 border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="px-4 py-3 min-h-[44px] border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
             >
               <option value="all">All Actions</option>
               <option value="create">Create</option>
@@ -167,7 +167,7 @@ export default function AuditLog({ adminRole }: { adminRole: AdminRole }) {
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value as any)}
-              className="px-4 py-2 border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="px-4 py-3 min-h-[44px] border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
             >
               <option value="today">Today</option>
               <option value="week">Last 7 Days</option>
@@ -204,8 +204,71 @@ export default function AuditLog({ adminRole }: { adminRole: AdminRole }) {
         </div>
       </div>
 
-      {/* Audit Log Table */}
-      <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredLogs.map((log) => {
+          const ActionIcon = getActionIcon(log.action);
+          const actionColor = getActionColor(log.action);
+
+          return (
+            <div key={log.id} className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <div className={`inline-flex items-center gap-2 px-2 py-1 border-2 border-black ${actionColor}`}>
+                  <ActionIcon className="w-4 h-4" strokeWidth={2} />
+                  <span className="text-xs font-extrabold uppercase">{log.action}</span>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-semibold text-black">
+                  <Calendar className="w-3 h-3" strokeWidth={2} />
+                  <span className="text-right">{new Date(log.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                {log.target_type && (
+                  <div>
+                    <div className="font-semibold mb-0.5">Target</div>
+                    <div className="font-extrabold uppercase">{log.target_type}</div>
+                    {log.target_id && (
+                      <div className="text-xs">ID: {log.target_id.slice(0, 8)}...</div>
+                    )}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="font-semibold mb-0.5">Admin</div>
+                    <div className="flex items-center gap-1">
+                      <Shield className="w-3 h-3" strokeWidth={2} />
+                      {log.admin_user_id ? log.admin_user_id.slice(0, 8) + '...' : 'System'}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="font-semibold mb-0.5">IP Address</div>
+                    <div>{log.ip_address || 'N/A'}</div>
+                  </div>
+                </div>
+
+                <button
+                  className="w-full min-h-[44px] px-4 py-2 border-2 border-black text-[#FF6A00] hover:bg-black hover:text-white font-extrabold text-xs uppercase transition-all"
+                  title={JSON.stringify(log.changes, null, 2)}
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          );
+        })}
+
+        {filteredLogs.length === 0 && (
+          <div className="bg-white border-2 border-black p-12 text-center">
+            <FileText className="w-16 h-16 text-black mx-auto mb-4" strokeWidth={2} />
+            <p className="font-semibold text-black">No audit logs found matching your criteria.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden md:block bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#F4F4F4] border-b-2 border-black">
@@ -274,7 +337,7 @@ export default function AuditLog({ adminRole }: { adminRole: AdminRole }) {
                     </td>
                     <td className="px-6 py-4">
                       <button
-                        className="text-sm text-[#FF6A00] hover:text-black font-extrabold uppercase"
+                        className="px-4 py-2 min-h-[44px] text-sm text-[#FF6A00] hover:text-black font-extrabold uppercase"
                         title={JSON.stringify(log.changes, null, 2)}
                       >
                         View

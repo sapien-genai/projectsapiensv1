@@ -177,7 +177,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-black p-6">
+      <div className="bg-white border border-black p-4 md:p-6">
         <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
           Time Tracking Tool
         </h3>
@@ -189,7 +189,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
               type="date"
               value={newEntry.date}
               onChange={(e) => setNewEntry({ ...newEntry, date: e.target.value })}
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             />
           </div>
           <div>
@@ -199,7 +199,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
               value={newEntry.activity}
               onChange={(e) => setNewEntry({ ...newEntry, activity: e.target.value })}
               placeholder="e.g., Write project proposal"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             />
           </div>
           <div>
@@ -208,7 +208,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
               type="time"
               value={newEntry.startTime}
               onChange={(e) => setNewEntry({ ...newEntry, startTime: e.target.value })}
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             />
           </div>
           <div>
@@ -217,7 +217,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
               type="time"
               value={newEntry.endTime}
               onChange={(e) => setNewEntry({ ...newEntry, endTime: e.target.value })}
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             />
           </div>
           <div>
@@ -225,7 +225,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
             <select
               value={newEntry.category}
               onChange={(e) => setNewEntry({ ...newEntry, category: e.target.value })}
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -237,7 +237,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
             <select
               value={newEntry.aiPotential}
               onChange={(e) => setNewEntry({ ...newEntry, aiPotential: Number(e.target.value) })}
-              className="w-full p-2 border border-black text-sm"
+              className="w-full px-3 py-2 min-h-[44px] border border-black text-sm"
             >
               <option value={1}>Tier 1 - High Impact</option>
               <option value={2}>Tier 2 - Medium Impact</option>
@@ -249,7 +249,7 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
 
         <button
           onClick={addEntry}
-          className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-3 min-h-[44px] font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           <Plus className="w-4 h-4" strokeWidth={2} />
           Add Entry
@@ -258,15 +258,15 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
 
       {entries.length > 0 && (
         <>
-          <div className="bg-white border border-black p-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-white border border-black p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
               <h3 className="font-extrabold text-lg uppercase tracking-tight">
                 Your Time Log ({entries.length} entries)
               </h3>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowAnalysis(!showAnalysis)}
-                  className="flex items-center gap-2 bg-[#0A74FF] text-white border border-black px-3 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                  className="flex items-center gap-2 bg-[#0A74FF] text-white border border-black px-4 py-3 min-h-[44px] font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                 >
                   <TrendingUp className="w-4 h-4" strokeWidth={2} />
                   {showAnalysis ? 'Hide' : 'Show'} Analysis
@@ -274,14 +274,14 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
                 <button
                   onClick={saveEntries}
                   disabled={saving}
-                  className="flex items-center gap-2 bg-black text-white border border-black px-3 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 bg-black text-white border border-black px-4 py-3 min-h-[44px] font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                 >
                   <Save className="w-4 h-4" strokeWidth={2} />
                   {saving ? 'Saving...' : 'Save Progress'}
                 </button>
                 <button
                   onClick={exportToCSV}
-                  className="flex items-center gap-2 bg-[#10b981] text-black border border-black px-3 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                  className="flex items-center gap-2 bg-[#10b981] text-black border border-black px-4 py-3 min-h-[44px] font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                 >
                   <Download className="w-4 h-4" strokeWidth={2} />
                   Export CSV
@@ -289,7 +289,50 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
               </div>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Mobile Card Layout */}
+            <div className="md:hidden space-y-3">
+              {entries.map(entry => (
+                <div key={entry.id} className="border border-black p-3 bg-[#F8F5F2]">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex-1">
+                      <div className="font-extrabold text-sm mb-1">{entry.activity}</div>
+                      <div className="text-xs text-gray-600">{new Date(entry.date).toLocaleDateString()}</div>
+                    </div>
+                    <button
+                      onClick={() => deleteEntry(entry.id)}
+                      className="p-2 min-h-[44px] min-w-[44px] hover:bg-red-100 border border-black flex items-center justify-center"
+                      aria-label="Delete entry"
+                    >
+                      <Trash2 className="w-4 h-4" strokeWidth={2} />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="font-semibold">Time:</span> {entry.startTime} - {entry.endTime}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Duration:</span> {entry.duration} min
+                    </div>
+                    <div>
+                      <span className="font-semibold">Category:</span> {entry.category}
+                    </div>
+                    <div>
+                      <span className={`inline-block px-2 py-1 text-xs font-bold ${
+                        entry.aiPotential === 1 ? 'bg-[#10b981] text-white' :
+                        entry.aiPotential === 2 ? 'bg-[#0A74FF] text-white' :
+                        entry.aiPotential === 3 ? 'bg-[#F59E0B] text-black' :
+                        'bg-gray-300 text-black'
+                      }`}>
+                        Tier {entry.aiPotential}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table Layout */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b-2 border-black">
@@ -323,7 +366,8 @@ export default function BaselineTracker({ lessonId, pathId }: BaselineTrackerPro
                       <td className="p-2">
                         <button
                           onClick={() => deleteEntry(entry.id)}
-                          className="p-1 hover:bg-red-100 border border-black"
+                          className="p-2 min-h-[44px] min-w-[44px] hover:bg-red-100 border border-black"
+                          aria-label="Delete entry"
                         >
                           <Trash2 className="w-4 h-4" strokeWidth={2} />
                         </button>

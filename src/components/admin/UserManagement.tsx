@@ -138,7 +138,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
               placeholder="Search users by name or ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border-2 border-black focus:outline-none font-medium"
+              className="w-full pl-10 pr-4 py-3 min-h-[44px] border-2 border-black focus:outline-none font-medium"
             />
           </div>
 
@@ -147,7 +147,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
-              className="px-4 py-2 border-2 border-black focus:outline-none font-semibold"
+              className="px-4 py-3 min-h-[44px] border-2 border-black focus:outline-none font-semibold"
             >
               <option value="all">All Users</option>
               <option value="active">Active (30d)</option>
@@ -174,7 +174,87 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
         </div>
       </div>
 
-      <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredUsers.map((user) => (
+          <div key={user.id} className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-12 h-12 border-2 border-black bg-[#FF6A00] bg-opacity-20 flex items-center justify-center flex-shrink-0">
+                <span className="text-[#FF6A00] font-extrabold text-lg">
+                  {(user.display_name || 'U')[0].toUpperCase()}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-extrabold text-sm truncate">
+                  {user.display_name || 'Unknown User'}
+                </div>
+                <div className="text-xs">
+                  ID: {user.user_id.slice(0, 8)}...
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+              <div>
+                <div className="flex items-center gap-1 font-semibold mb-1">
+                  <Calendar className="w-3 h-3" strokeWidth={2} />
+                  <span>Joined</span>
+                </div>
+                <div>{new Date(user.created_at).toLocaleDateString()}</div>
+              </div>
+              <div>
+                <div className="font-semibold mb-1">Last Active</div>
+                <div className={user.last_active ? "text-[#10b981]" : "opacity-50"}>
+                  {user.last_active ? new Date(user.last_active).toLocaleDateString() : 'Never'}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-1 font-semibold">
+                  <Award className="w-3 h-3" strokeWidth={2} />
+                  <span>Badges: {user.total_badges || 0}</span>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-1 font-semibold">
+                  <TrendingUp className="w-3 h-3" strokeWidth={2} />
+                  <span>Lessons: {user.total_lessons || 0}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setSelectedUser(user);
+                  auditLog.logUserAction('view', user.user_id, {
+                    display_name: user.display_name,
+                  });
+                }}
+                className="flex-1 flex items-center justify-center gap-2 min-h-[44px] px-4 py-2 border-2 border-black hover:bg-black hover:text-white transition-all font-extrabold text-xs uppercase"
+                aria-label="View Details"
+              >
+                <Eye className="w-4 h-4" strokeWidth={2} />
+                View
+              </button>
+              <button
+                className="px-4 min-h-[44px] min-w-[44px] border-2 border-black hover:bg-black hover:text-white transition-all"
+                aria-label="More Actions"
+              >
+                <MoreVertical className="w-4 h-4" strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {filteredUsers.length === 0 && (
+          <div className="bg-white border-2 border-black p-12 text-center">
+            <p className="font-semibold">No users found matching your criteria.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden md:block bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#F4F4F4] border-b-2 border-black">
@@ -252,13 +332,13 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                             display_name: user.display_name,
                           });
                         }}
-                        className="p-2 border border-black hover:bg-black hover:text-white transition-all"
+                        className="p-2 min-h-[44px] min-w-[44px] border border-black hover:bg-black hover:text-white transition-all"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" strokeWidth={2} />
                       </button>
                       <button
-                        className="p-2 border border-black hover:bg-black hover:text-white transition-all"
+                        className="p-2 min-h-[44px] min-w-[44px] border border-black hover:bg-black hover:text-white transition-all"
                         title="More Actions"
                       >
                         <MoreVertical className="w-4 h-4" strokeWidth={2} />

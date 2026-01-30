@@ -216,7 +216,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
   return (
     <div className="min-h-screen bg-[#F4F4F4]">
       <nav className="bg-[#F4F4F4] border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
           <h1 className="font-extrabold text-xl uppercase tracking-tight">
             PROJECT SAPIENS
           </h1>
