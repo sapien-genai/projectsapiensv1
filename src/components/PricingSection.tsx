@@ -8,17 +8,17 @@ interface PricingSectionProps {
 
 export default function PricingSection({ onGetStarted }: PricingSectionProps) {
   const { user } = useAuth();
-  const { subscription, createCheckoutSession } = useBilling();
+  const { usageStatus, startCheckout } = useBilling();
 
   const handleUpgrade = async () => {
     if (!user) {
       onGetStarted?.();
       return;
     }
-    await createCheckoutSession();
+    await startCheckout();
   };
 
-  const isPro = subscription?.tier === 'pro';
+  const isPro = usageStatus?.plan === 'pro';
   return (
     <section id="pricing" className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <div className="text-center mb-12">
