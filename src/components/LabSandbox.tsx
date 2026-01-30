@@ -104,7 +104,7 @@ const labs = [
 
 export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxProps) {
   const { user } = useAuth();
-  const { usageStatus, refreshUsageStatus } = useBilling();
+  const { usageStatus, refreshUsageStatus, checkoutLoading, checkoutError, startCheckout, clearCheckoutError } = useBilling();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -787,6 +787,10 @@ Feel free to ask follow-up questions or request modifications!`;
         onClose={() => setShowUpgradeModal(false)}
         currentUsed={limitInfo?.used || usageStatus?.used}
         currentLimit={limitInfo?.limit || usageStatus?.limit}
+        onCheckout={startCheckout}
+        checkoutLoading={checkoutLoading}
+        checkoutError={checkoutError}
+        onClearError={clearCheckoutError}
       />
     </div>
   );

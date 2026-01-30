@@ -17,6 +17,10 @@ interface BillingContextType {
   refreshUsageStatus: () => Promise<void>;
   isAtLimit: boolean;
   percentUsed: number;
+  checkoutLoading: boolean;
+  checkoutError: string | null;
+  startCheckout: () => Promise<void>;
+  clearCheckoutError: () => void;
 }
 
 const BillingContext = createContext<BillingContextType | undefined>(undefined);
@@ -26,6 +30,8 @@ export function BillingProvider({ children }: { children: ReactNode }) {
   const [usageStatus, setUsageStatus] = useState<UsageStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const fetchUsageStatus = async () => {
     if (!user) {
@@ -69,6 +75,49 @@ export function BillingProvider({ children }: { children: ReactNode }) {
     fetchUsageStatus();
   }, [user]);
 
+  const startCheckout = async () => {
+    if (!user) {
+      setCheckoutError('You must be logged in to upgrade.');
+      return;
+    }
+
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No active session');
+      }
+
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to start checkout');
+      }
+
+      const data = await response.json();
+      if (!data?.url) {
+        throw new Error('Checkout URL missing');
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      console.error('Error starting checkout:', err);
+      setCheckoutError(err instanceof Error ? err.message : 'Failed to start checkout');
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   const isAtLimit = usageStatus ? usageStatus.used >= usageStatus.limit : false;
   const percentUsed = usageStatus ? (usageStatus.used / usageStatus.limit) * 100 : 0;
 
@@ -81,6 +130,10 @@ export function BillingProvider({ children }: { children: ReactNode }) {
         refreshUsageStatus: fetchUsageStatus,
         isAtLimit,
         percentUsed,
+        checkoutLoading,
+        checkoutError,
+        startCheckout,
+        clearCheckoutError: () => setCheckoutError(null),
       }}
     >
       {children}
