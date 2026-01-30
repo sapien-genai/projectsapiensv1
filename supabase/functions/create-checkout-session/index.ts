@@ -94,34 +94,13 @@ Deno.serve(async (req: Request) => {
 
     const token = authHeader.replace("Bearer ", "");
 
-    let requestBody: { plan?: string } = {};
-    try {
-      requestBody = await req.json();
-    } catch {
-      // If no body, default to monthly
-    }
-
-    const plan = requestBody.plan || "monthly";
-    if (plan !== "monthly" && plan !== "yearly") {
-      return new Response(
-        JSON.stringify({ error: "Invalid plan. Must be 'monthly' or 'yearly'" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
     const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
-    const stripePriceIdMonthly = Deno.env.get("STRIPE_PRICE_ID_PRO_MONTHLY");
-    const stripePriceIdYearly = Deno.env.get("STRIPE_PRICE_ID_PRO_YEARLY");
+    const stripePriceId = Deno.env.get("STRIPE_PRICE_ID");
     const successUrl = Deno.env.get("STRIPE_SUCCESS_URL");
     const cancelUrl = Deno.env.get("STRIPE_CANCEL_URL");
-
-    const stripePriceId = plan === "yearly" ? stripePriceIdYearly : stripePriceIdMonthly;
 
     if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
       console.error("Supabase configuration missing");
@@ -135,7 +114,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (!stripeSecretKey || !stripePriceId || !successUrl || !cancelUrl) {
-      console.error("Stripe configuration missing", { plan, stripePriceId });
+      console.error("Stripe configuration missing");
       return new Response(
         JSON.stringify({ error: "Payment configuration error" }),
         {
@@ -164,16 +143,16 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { data: profile, error: profileError } = await supabaseAdmin
-      .from("profiles")
-      .select("stripe_customer_id")
-      .eq("id", user.id)
+    const { data: billingProfile, error: billingError } = await supabaseAdmin
+      .from("billing_profiles")
+      .select("stripe_customer_id, plan_override, plan")
+      .eq("user_id", user.id)
       .maybeSingle();
 
-    if (profileError) {
-      console.error("Failed to fetch profile:", profileError.message);
+    if (billingError) {
+      console.error("Failed to fetch billing profile:", billingError.message);
       return new Response(
-        JSON.stringify({ error: "Failed to fetch profile" }),
+        JSON.stringify({ error: "Failed to fetch billing profile" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -181,20 +160,23 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    let stripeCustomerId = profile?.stripe_customer_id ?? null;
+    let stripeCustomerId = billingProfile?.stripe_customer_id ?? null;
 
     if (!stripeCustomerId) {
       stripeCustomerId = await createStripeCustomer(stripeSecretKey, user.email, user.id);
 
-      const { error: updateError } = await supabaseAdmin
-        .from("profiles")
-        .update({ stripe_customer_id: stripeCustomerId })
-        .eq("id", user.id);
+      const { error: upsertError } = await supabaseAdmin
+        .from("billing_profiles")
+        .upsert({
+          user_id: user.id,
+          plan: billingProfile?.plan ?? "free",
+          stripe_customer_id: stripeCustomerId,
+        });
 
-      if (updateError) {
-        console.error("Failed to update profile:", updateError.message);
+      if (upsertError) {
+        console.error("Failed to update billing profile:", upsertError.message);
         return new Response(
-          JSON.stringify({ error: "Failed to update profile" }),
+          JSON.stringify({ error: "Failed to update billing profile" }),
           {
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" },

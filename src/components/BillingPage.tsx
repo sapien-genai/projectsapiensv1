@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, CreditCard, TrendingUp, RefreshCw, Zap, Clock, Coins, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, TrendingUp, RefreshCw, Zap, Clock } from 'lucide-react';
 import { useBilling } from '../contexts/BillingContext';
 import UpgradeModal from './UpgradeModal';
-import { formatTokens } from '../utils/entitlements';
 
 interface BillingPageProps {
   onBack: () => void;
@@ -182,80 +181,6 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
-                <div className="flex items-center gap-3 mb-4">
-                  <Coins className="w-5 h-5" strokeWidth={2} />
-                  <h2 className="font-extrabold text-lg uppercase">TOKEN BALANCE</h2>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-semibold mb-2">CURRENT BALANCE:</p>
-                    <p className="text-4xl font-extrabold">
-                      {formatTokens(usageStatus.token_balance)} <span className="text-lg text-[#888888]">tokens</span>
-                    </p>
-                  </div>
-                  {usageStatus.plan === 'pro' && usageStatus.monthly_token_allowance > 0 && (
-                    <div className="bg-[#F4F4F4] border-2 border-black p-4">
-                      <p className="text-xs font-semibold mb-1">MONTHLY ALLOWANCE:</p>
-                      <p className="text-xl font-extrabold">
-                        {formatTokens(usageStatus.monthly_token_allowance)}
-                      </p>
-                      {usageStatus.token_reset_at && (
-                        <p className="text-xs text-[#888888] mt-2">
-                          Next grant: {new Date(usageStatus.token_reset_at).toLocaleDateString()}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  <p className="text-xs text-[#888888]">
-                    Tokens are used for advanced AI features, exports, and special operations.
-                  </p>
-                </div>
-              </div>
-
-              {usageStatus.subscription_status && (
-                <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
-                  <div className="flex items-center gap-3 mb-4">
-                    <TrendingUp className="w-5 h-5" strokeWidth={2} />
-                    <h2 className="font-extrabold text-lg uppercase">SUBSCRIPTION</h2>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-sm font-semibold mb-2">STATUS:</p>
-                      <span className={`inline-block px-3 py-1 text-xs font-extrabold uppercase border-2 border-black ${
-                        usageStatus.subscription_status === 'active' || usageStatus.subscription_status === 'trialing'
-                          ? 'bg-green-400'
-                          : usageStatus.subscription_status === 'past_due'
-                          ? 'bg-yellow-400'
-                          : 'bg-[#FF6A00]'
-                      }`}>
-                        {usageStatus.subscription_status}
-                      </span>
-                    </div>
-                    {usageStatus.current_period_end && (
-                      <div>
-                        <p className="text-sm font-semibold mb-2">
-                          {usageStatus.cancel_at_period_end ? 'ENDS ON:' : 'RENEWS ON:'}
-                        </p>
-                        <p className="font-extrabold">
-                          {new Date(usageStatus.current_period_end).toLocaleDateString()}
-                        </p>
-                      </div>
-                    )}
-                    {usageStatus.cancel_at_period_end && (
-                      <div className="bg-[#FF6A00] border-2 border-black p-3 flex items-start gap-2">
-                        <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                        <p className="text-xs font-semibold">
-                          Your subscription will not renew. Access continues until the end date.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
