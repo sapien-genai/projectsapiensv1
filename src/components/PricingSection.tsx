@@ -1,10 +1,24 @@
 import { Check, Zap, TrendingUp } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useBilling } from '../contexts/BillingContext';
 
 interface PricingSectionProps {
   onGetStarted?: () => void;
 }
 
 export default function PricingSection({ onGetStarted }: PricingSectionProps) {
+  const { user } = useAuth();
+  const { usageStatus, startCheckout } = useBilling();
+
+  const handleUpgrade = async () => {
+    if (!user) {
+      onGetStarted?.();
+      return;
+    }
+    await startCheckout();
+  };
+
+  const isPro = usageStatus?.plan === 'pro';
   return (
     <section id="pricing" className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <div className="text-center mb-12">
@@ -126,10 +140,15 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
           </ul>
 
           <button
-            disabled
-            className="w-full bg-[#CCCCCC] text-black border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight cursor-not-allowed"
+            onClick={handleUpgrade}
+            disabled={isPro}
+            className={`w-full border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight transition-all ${
+              isPro
+                ? 'bg-[#CCCCCC] text-black cursor-not-allowed'
+                : 'bg-black text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+            }`}
           >
-            COMING SOON
+            {isPro ? 'CURRENT PLAN' : user ? 'GO PRO' : 'SIGN UP TO GO PRO'}
           </button>
         </div>
       </div>
