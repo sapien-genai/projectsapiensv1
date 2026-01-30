@@ -21,6 +21,10 @@ interface BillingContextType {
   checkoutError: string | null;
   startCheckout: () => Promise<void>;
   clearCheckoutError: () => void;
+  portalLoading: boolean;
+  portalError: string | null;
+  startPortal: () => Promise<void>;
+  clearPortalError: () => void;
 }
 
 const BillingContext = createContext<BillingContextType | undefined>(undefined);
@@ -32,6 +36,8 @@ export function BillingProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [portalError, setPortalError] = useState<string | null>(null);
 
   const fetchUsageStatus = async () => {
     if (!user) {
@@ -118,6 +124,49 @@ export function BillingProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const startPortal = async () => {
+    if (!user) {
+      setPortalError('You must be logged in to manage billing.');
+      return;
+    }
+
+    setPortalLoading(true);
+    setPortalError(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No active session');
+      }
+
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-portal-session`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to start billing portal');
+      }
+
+      const data = await response.json();
+      if (!data?.url) {
+        throw new Error('Billing portal URL missing');
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      console.error('Error starting billing portal:', err);
+      setPortalError(err instanceof Error ? err.message : 'Failed to open billing portal');
+    } finally {
+      setPortalLoading(false);
+    }
+  };
+
   const isAtLimit = usageStatus ? usageStatus.used >= usageStatus.limit : false;
   const percentUsed = usageStatus ? (usageStatus.used / usageStatus.limit) * 100 : 0;
 
@@ -134,6 +183,10 @@ export function BillingProvider({ children }: { children: ReactNode }) {
         checkoutError,
         startCheckout,
         clearCheckoutError: () => setCheckoutError(null),
+        portalLoading,
+        portalError,
+        startPortal,
+        clearPortalError: () => setPortalError(null),
       }}
     >
       {children}
