@@ -27,7 +27,7 @@ interface BillingContextType {
   clearPortalError: () => void;
 }
 
-const BillingContext = createContext<BillingContextType | undefined>(undefined);
+export const BillingContext = createContext<BillingContextType | undefined>(undefined);
 
 export function BillingProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();

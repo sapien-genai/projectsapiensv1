@@ -36,6 +36,7 @@ import AboutPage from './components/AboutPage';
 import PaymentSuccessPage from './components/PaymentSuccessPage';
 import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
+import DevPreviewRouter from './dev/DevPreviewRouter';
 
 type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel';
 
@@ -356,6 +357,18 @@ function AppContent() {
 }
 
 function App() {
+  if (import.meta.env.DEV && window.location.pathname.startsWith('/dev/')) {
+    return (
+      <ErrorBoundary>
+        <DarkModeProvider>
+          <ToastProvider>
+            <DevPreviewRouter />
+          </ToastProvider>
+        </DarkModeProvider>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <DarkModeProvider>
