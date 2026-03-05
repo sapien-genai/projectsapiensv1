@@ -33,9 +33,10 @@ import PrivacyPage from './components/PrivacyPage';
 import BillingPage from './components/BillingPage';
 import HelpCenter from './components/HelpCenter';
 import AboutPage from './components/AboutPage';
+import PaymentSuccessPage from './components/PaymentSuccessPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -50,6 +51,13 @@ function AppContent() {
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
     if (!loading && user && !initialized) {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('payment') === 'success') {
+        window.history.replaceState({}, '', window.location.pathname);
+        setView('payment-success');
+        setInitialized(true);
+        return;
+      }
       const savedState = loadAppState(user.id);
       if (savedState) {
         if (savedState.view) setView(savedState.view);
@@ -68,7 +76,7 @@ function AppContent() {
   // Save state whenever it changes (only for authenticated users)
   // Don't save state for informational pages like terms/privacy/billing/about/help
   useEffect(() => {
-    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help') {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help' && view !== 'payment-success') {
       saveAppState({
         view,
         selectedLab,
@@ -225,6 +233,20 @@ function AppContent() {
 
     if (view === 'about') {
       return <AboutPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'payment-success') {
+      return (
+        <PaymentSuccessPage
+          onGoToDashboard={() => setView('dashboard')}
+          onGoToLabs={() => {
+            setSelectedLab('writing-lab');
+            setView('lab-sandbox');
+          }}
+          onGoToPaths={() => setView('paths-list')}
+          onGoToPrompts={() => setView('prompts')}
+        />
+      );
     }
 
     return (
