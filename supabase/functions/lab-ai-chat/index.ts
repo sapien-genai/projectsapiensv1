@@ -1,10 +1,11 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const ALLOWED_ORIGINS = [
-  "http://localhost:5173",
-  "https://YOUR_PRODUCTION_DOMAIN_HERE",
-];
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+};
 
 const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60000;
@@ -14,18 +15,6 @@ const PLAN_LIMITS: Record<string, number> = {
   free: 15,
   pro: 120,
 };
-
-function getCorsHeaders(origin: string | null): Record<string, string> {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
-    ? origin
-    : ALLOWED_ORIGINS[0];
-
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-  };
-}
 
 function checkRateLimit(userId: string): boolean {
   const now = Date.now();
@@ -196,9 +185,6 @@ CRITICAL FORMATTING RULES:
 };
 
 Deno.serve(async (req: Request) => {
-  const origin = req.headers.get("Origin");
-  const corsHeaders = getCorsHeaders(origin);
-
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 200,
@@ -493,7 +479,7 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({ error: "An unexpected error occurred" }),
       {
         status: 500,
-        headers: { ...getCorsHeaders(req.headers.get("Origin")), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
