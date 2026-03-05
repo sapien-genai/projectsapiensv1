@@ -34,9 +34,10 @@ import BillingPage from './components/BillingPage';
 import HelpCenter from './components/HelpCenter';
 import AboutPage from './components/AboutPage';
 import PaymentSuccessPage from './components/PaymentSuccessPage';
+import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -52,9 +53,10 @@ function AppContent() {
   useEffect(() => {
     if (!loading && user && !initialized) {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('payment') === 'success') {
+      const paymentParam = params.get('payment');
+      if (paymentParam === 'success' || paymentParam === 'cancel') {
         window.history.replaceState({}, '', window.location.pathname);
-        setView('payment-success');
+        setView(paymentParam === 'success' ? 'payment-success' : 'billing-cancel');
         setInitialized(true);
         return;
       }
@@ -76,7 +78,7 @@ function AppContent() {
   // Save state whenever it changes (only for authenticated users)
   // Don't save state for informational pages like terms/privacy/billing/about/help
   useEffect(() => {
-    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help' && view !== 'payment-success') {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help' && view !== 'payment-success' && view !== 'billing-cancel') {
       saveAppState({
         view,
         selectedLab,
@@ -245,6 +247,16 @@ function AppContent() {
           }}
           onGoToPaths={() => setView('paths-list')}
           onGoToPrompts={() => setView('prompts')}
+        />
+      );
+    }
+
+    if (view === 'billing-cancel') {
+      return (
+        <BillingCancelPage
+          onTryAgain={() => setView('billing')}
+          onGoToDashboard={() => setView('dashboard')}
+          onGoToHelp={() => setView('help')}
         />
       );
     }
