@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Menu, X, Sparkles, Clock, ChevronDown, Copy, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBilling } from '../contexts/BillingContext';
@@ -23,6 +23,13 @@ interface Experiment {
   prompt: string;
   output: string;
   created_at: string;
+}
+
+interface LimitInfo {
+  error?: string;
+  limit: number;
+  used: number;
+  plan?: string;
 }
 
 const labConfigs: Record<string, {
@@ -115,35 +122,14 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
-  const [limitInfo, setLimitInfo] = useState<any>(null);
+  const [limitInfo, setLimitInfo] = useState<LimitInfo | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const config = labConfigs[labId] || labConfigs['writing-lab'];
 
-  useEffect(() => {
-    // Initialize with system message
-    setMessages([{
-      role: 'assistant',
-      content: config.systemMessage,
-      timestamp: new Date()
-    }]);
-    loadHistory();
-  }, [labId]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-    }
-  }, [input]);
-
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     if (!user) return;
 
     setHistoryLoading(true);
@@ -170,7 +156,28 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }, [labId, user]);
+
+  useEffect(() => {
+    // Initialize with system message
+    setMessages([{
+      role: 'assistant',
+      content: config.systemMessage,
+      timestamp: new Date()
+    }]);
+    loadHistory();
+  }, [config.systemMessage, loadHistory]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [input]);
 
   const generateResponse = async (
     userPrompt: string,
@@ -212,7 +219,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
         if (response.status === 429 && errorData.error === 'limit_reached') {
           setLimitReached(true);
-          setLimitInfo(errorData);
+          setLimitInfo(typeof errorData.limit === 'number' && typeof errorData.used === 'number' ? errorData : null);
           await refreshUsageStatus();
           throw new Error('LIMIT_REACHED');
         }
@@ -226,8 +233,40 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let buffer = '';
+      let eventBuffer = '';
       let fullText = '';
+
+      const processSseEvent = (rawEvent: string) => {
+        const lines = rawEvent
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(Boolean);
+
+        if (!lines.length) {
+          return;
+        }
+
+        const dataPayload = lines
+          .filter(line => line.startsWith('data: '))
+          .map(line => line.slice(6).trim())
+          .join('');
+
+        if (!dataPayload || dataPayload === '[DONE]') {
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(dataPayload);
+          const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+          if (typeof textChunk === 'string' && textChunk.length > 0) {
+            fullText += textChunk;
+            onPartialText(fullText);
+          }
+        } catch (parseError) {
+          console.warn('Unable to parse SSE event payload', parseError);
+        }
+      };
 
       while (true) {
         const { done, value } = await reader.read();
@@ -236,55 +275,20 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
           break;
         }
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        eventBuffer += decoder.decode(value, { stream: true });
 
-        for (const rawLine of lines) {
-          const line = rawLine.trim();
-          if (!line.startsWith('data: ')) {
-            continue;
-          }
+        const events = eventBuffer.split(/\r?\n\r?\n/);
+        eventBuffer = events.pop() || '';
 
-          const data = line.slice(6).trim();
-          if (!data || data === '[DONE]') {
-            continue;
-          }
-
-          try {
-            const parsed = JSON.parse(data);
-            const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-            if (typeof textChunk === 'string' && textChunk.length > 0) {
-              fullText += textChunk;
-              onPartialText(fullText);
-            }
-          } catch (parseError) {
-            console.warn('Unable to parse SSE chunk', parseError);
-          }
+        for (const rawEvent of events) {
+          processSseEvent(rawEvent);
         }
       }
 
-      const finalChunk = decoder.decode();
-      if (finalChunk) {
-        buffer += finalChunk;
-      }
+      eventBuffer += decoder.decode();
 
-      if (buffer.trim().startsWith('data: ')) {
-        const data = buffer.trim().slice(6).trim();
-        if (data && data !== '[DONE]') {
-          try {
-            const parsed = JSON.parse(data);
-            const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-            if (typeof textChunk === 'string' && textChunk.length > 0) {
-              fullText += textChunk;
-              onPartialText(fullText);
-            }
-          } catch (parseError) {
-            console.warn('Unable to parse final SSE chunk', parseError);
-          }
-        }
+      if (eventBuffer.trim()) {
+        processSseEvent(eventBuffer);
       }
 
       return fullText;
@@ -490,6 +494,27 @@ Let me help you with that. Based on your request, here's what I recommend:
 Feel free to ask follow-up questions or request modifications!`;
   };
 
+  const saveLabExperiment = async (prompt: string, output: string) => {
+    if (!user) {
+      return;
+    }
+
+    // Insert-only by design: lab_experiments currently has no unique constraint for safe upsert.
+    const { error: insertError } = await supabase.from('lab_experiments').insert({
+      user_id: user.id,
+      lab_id: labId,
+      prompt,
+      output,
+    });
+
+    if (insertError) {
+      console.error('Error saving lab experiment:', insertError);
+      return;
+    }
+
+    loadHistory();
+  };
+
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
@@ -541,21 +566,7 @@ Feel free to ask follow-up questions or request modifications!`;
         return msg;
       }));
 
-      // Save to database
-      if (user) {
-        const { error: insertError } = await supabase.from('lab_experiments').insert({
-          user_id: user.id,
-          lab_id: labId,
-          prompt: currentInput,
-          output: responseContent,
-        });
-
-        if (insertError) {
-          console.error('Error saving lab experiment:', insertError);
-        } else {
-          loadHistory();
-        }
-      }
+      await saveLabExperiment(currentInput, responseContent);
     } catch (error) {
       console.error('Error in handleSend:', error);
       setMessages(prev => prev.map((msg, index) => {
