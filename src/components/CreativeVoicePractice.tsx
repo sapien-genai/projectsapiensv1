@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Send, RotateCcw, Sparkles, Lightbulb } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { readSseStream } from '../utils/streamSse';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -289,8 +290,8 @@ What would you like to work on first?`
         throw new Error(errorData.error || 'Failed to get AI response');
       }
 
-      const data = await response.json();
-      return data.response;
+      const text = await readSseStream(response);
+      return text || generateMockResponse(userMessage);
     } catch (error) {
       console.error('Error calling AI:', error);
       if (error instanceof Error && error.message === 'Authentication required') {
