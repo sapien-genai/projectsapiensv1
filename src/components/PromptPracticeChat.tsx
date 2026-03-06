@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Copy, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { readSseStream } from '../utils/streamSse';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -164,26 +165,22 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
         })
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         console.error('AI API error:', {
           status: response.status,
           statusText: response.statusText,
-          error: data.error,
-          details: data.details
+          error: errorData.error,
         });
-
-        const errorMessage = data.error || 'Failed to get AI response';
-        throw new Error(errorMessage);
+        throw new Error(errorData.error || 'Failed to get AI response');
       }
 
-      if (!data.response) {
-        console.error('No response in data:', data);
+      const text = await readSseStream(response);
+      if (!text) {
         throw new Error('AI returned an empty response');
       }
 
-      return data.response;
+      return text;
     } catch (error) {
       console.error('Error calling AI:', error);
       if (error instanceof Error && error.message === 'Authentication required') {

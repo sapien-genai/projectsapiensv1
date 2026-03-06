@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Copy, CheckCircle2, RotateCcw, ChevronDown, Wand2, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { readSseStream } from '../utils/streamSse';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -207,13 +208,13 @@ FRIDAY
         })
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to get AI response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to get AI response');
       }
 
-      return data.response || generateMockResponse(userMessage);
+      const text = await readSseStream(response);
+      return text || generateMockResponse(userMessage);
     } catch (error) {
       console.error('Error calling AI:', error);
       if (error instanceof Error && error.message === 'Authentication required') {
