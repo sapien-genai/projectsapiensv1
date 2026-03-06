@@ -11,7 +11,7 @@ const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
-const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
+const DEFAULT_GEMINI_MODEL = "gemini-1.5-flash";
 const DEFAULT_GEMINI_FALLBACK_MODEL = "gemini-1.5-flash";
 
 type LabRunStatus = "pending" | "success" | "error";
@@ -89,7 +89,7 @@ function isConversationHistory(
 }
 
 function getGeminiEndpoint(model: string, apiKey: string): string {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
 }
 
 function shouldFallbackModel(status: number, providerText: string): boolean {
@@ -169,6 +169,22 @@ async function fetchWithRetry(
   }
 
   throw lastError || new Error("Request failed");
+}
+
+function extractTextFromSseData(data: string): string {
+  if (!data || data === "[DONE]") {
+    return "";
+  }
+
+  try {
+    const parsed = JSON.parse(data) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
+    const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+    return isNonEmptyString(text) ? text : "";
+  } catch {
+    return "";
+  }
 }
 
 interface RequestBody {
@@ -414,7 +430,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Fetch or create billing profile
-    let { data: billingProfile, error: billingError } = await supabaseAdmin
+    const { data: initialBillingProfile, error: billingError } = await supabaseAdmin
       .from("billing_profiles")
       .select("plan, plan_override")
       .eq("user_id", userId)
@@ -430,6 +446,8 @@ Deno.serve(async (req: Request) => {
         },
       );
     }
+
+    let billingProfile = initialBillingProfile;
 
     if (!billingProfile) {
       const { data: newProfile, error: insertError } = await supabaseAdmin
@@ -569,7 +587,7 @@ Deno.serve(async (req: Request) => {
     );
 
     let modelUsed = geminiModel;
-    let runId: string | null = await createLabRun(supabaseAdmin, {
+    const runId: string | null = await createLabRun(supabaseAdmin, {
       userId,
       labId: labId.trim(),
       mode: normalizedMode || null,
@@ -578,7 +596,7 @@ Deno.serve(async (req: Request) => {
       model: modelUsed,
     });
 
-    let geminiData: Record<string, unknown> | null = null;
+    let geminiResponseStream: Response | null = null;
 
     const modelCandidates = geminiModel === geminiFallbackModel
       ? [geminiModel]
@@ -659,7 +677,7 @@ Deno.serve(async (req: Request) => {
           );
         }
 
-        geminiData = await geminiResponse.json();
+        geminiResponseStream = geminiResponse;
         break;
       } catch (error) {
         const isTimeoutError = error instanceof Error && error.message === "Request timeout";
@@ -715,7 +733,7 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    if (!geminiData) {
+    if (!geminiResponseStream) {
       await updateLabRun(supabaseAdmin, {
         runId,
         status: "error",
@@ -737,17 +755,12 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const responseText =
-      (geminiData.candidates as Array<{ content?: { parts?: Array<{ text?: string }> } }> | undefined)?.[0]?.content
-        ?.parts?.[0]?.text;
-
-    if (!isNonEmptyString(responseText)) {
-      console.error(`Empty AI response for user=${userId} model=${modelUsed}`);
+    if (!geminiResponseStream.body) {
       await updateLabRun(supabaseAdmin, {
         runId,
         status: "error",
         model: modelUsed,
-        errorMessage: "Empty AI response",
+        errorMessage: "Empty AI response stream",
       });
 
       return new Response(
@@ -780,24 +793,84 @@ Deno.serve(async (req: Request) => {
       console.error("Error updating usage count:", upsertError);
     }
 
-    await updateLabRun(supabaseAdmin, {
-      runId,
-      status: "success",
-      model: modelUsed,
-      outputText: responseText,
-    });
+    const [clientStream, loggingStream] = geminiResponseStream.body.tee();
 
-    console.log(
-      `lab-ai-chat request complete userId=${userId} labId=${labId.trim()} mode=${normalizedMode || "none"} plan=${effectivePlan} modelUsed=${modelUsed}`,
-    );
+    (async () => {
+      const reader = loggingStream.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = "";
+      let sseBuffer = "";
 
-    return new Response(
-      JSON.stringify({ response: responseText }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+
+          sseBuffer += decoder.decode(value, { stream: true });
+          const lines = sseBuffer.split("\n");
+          sseBuffer = lines.pop() || "";
+
+          for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line.startsWith("data: ")) {
+              continue;
+            }
+
+            accumulatedText += extractTextFromSseData(line.slice(6).trim());
+          }
+        }
+
+        sseBuffer += decoder.decode();
+
+        const finalLine = sseBuffer.trim();
+        if (finalLine.startsWith("data: ")) {
+          accumulatedText += extractTextFromSseData(finalLine.slice(6).trim());
+        }
+
+        if (!isNonEmptyString(accumulatedText)) {
+          await updateLabRun(supabaseAdmin, {
+            runId,
+            status: "error",
+            model: modelUsed,
+            errorMessage: "Empty AI response",
+          });
+          return;
+        }
+
+        await updateLabRun(supabaseAdmin, {
+          runId,
+          status: "success",
+          model: modelUsed,
+          outputText: accumulatedText,
+        });
+
+        console.log(
+          `lab-ai-chat request complete userId=${userId} labId=${labId.trim()} mode=${normalizedMode || "none"} plan=${effectivePlan} modelUsed=${modelUsed}`,
+        );
+      } catch (streamError) {
+        console.error("Failed while reading Gemini stream", streamError);
+        await updateLabRun(supabaseAdmin, {
+          runId,
+          status: "error",
+          model: modelUsed,
+          errorMessage: streamError instanceof Error ? streamError.message.slice(0, 1000) : "Stream processing error",
+        });
+      } finally {
+        reader.releaseLock();
+      }
+    })();
+
+    return new Response(clientStream, {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
-    );
+    });
   } catch (error) {
     console.error("Unexpected error in lab-ai-chat:", error);
     return new Response(

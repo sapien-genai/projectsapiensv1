@@ -172,7 +172,11 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
     }
   };
 
-  const generateResponse = async (userPrompt: string, history: Message[]): Promise<string> => {
+  const generateResponse = async (
+    userPrompt: string,
+    history: Message[],
+    onPartialText: (partialText: string) => void
+  ): Promise<string> => {
     try {
       // Build conversation history for context (exclude system message)
       const conversationHistory = history
@@ -216,8 +220,74 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
         throw new Error(errorData.error || 'Failed to get AI response');
       }
 
-      const data = await response.json();
-      return data.response;
+      if (!response.body) {
+        throw new Error('Empty response stream');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line.startsWith('data: ')) {
+            continue;
+          }
+
+          const data = line.slice(6).trim();
+          if (!data || data === '[DONE]') {
+            continue;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+            const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (typeof textChunk === 'string' && textChunk.length > 0) {
+              fullText += textChunk;
+              onPartialText(fullText);
+            }
+          } catch (parseError) {
+            console.warn('Unable to parse SSE chunk', parseError);
+          }
+        }
+      }
+
+      const finalChunk = decoder.decode();
+      if (finalChunk) {
+        buffer += finalChunk;
+      }
+
+      if (buffer.trim().startsWith('data: ')) {
+        const data = buffer.trim().slice(6).trim();
+        if (data && data !== '[DONE]') {
+          try {
+            const parsed = JSON.parse(data);
+            const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (typeof textChunk === 'string' && textChunk.length > 0) {
+              fullText += textChunk;
+              onPartialText(fullText);
+            }
+          } catch (parseError) {
+            console.warn('Unable to parse final SSE chunk', parseError);
+          }
+        }
+      }
+
+      return fullText;
     } catch (error) {
       console.error('Error calling AI:', error);
       if (error instanceof Error) {
@@ -228,7 +298,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
           return "LIMIT_REACHED";
         }
       }
-      return "I apologize, but I'm having trouble connecting right now. Please try again in a moment.";
+      return generateMockResponse(userPrompt);
     }
   };
 
@@ -434,24 +504,42 @@ Feel free to ask follow-up questions or request modifications!`;
     setInput('');
     setLoading(true);
 
+    const assistantTimestamp = new Date();
+    let assistantIndex = -1;
+
+    setMessages(prev => {
+      assistantIndex = prev.length;
+      return [...prev, { role: 'assistant', content: '', timestamp: assistantTimestamp }];
+    });
+
     try {
-      // Get AI response with conversation history
-      const responseContent = await generateResponse(currentInput, [...messages, userMessage]);
+      // Get AI response with conversation history and stream partial updates into the last assistant message
+      const responseContent = await generateResponse(
+        currentInput,
+        [...messages, userMessage],
+        (partialText) => {
+          setMessages(prev => prev.map((msg, index) => {
+            if (index === assistantIndex) {
+              return { ...msg, content: partialText };
+            }
+            return msg;
+          }));
+        }
+      );
 
       if (responseContent === "LIMIT_REACHED") {
-        // Don't add the message, just remove the user message
-        setMessages(prev => prev.slice(0, -1));
+        // Don't add messages if user is rate-limited
+        setMessages(prev => prev.slice(0, -2));
         setLoading(false);
         return;
       }
 
-      const aiResponse: Message = {
-        role: 'assistant',
-        content: responseContent,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages(prev => prev.map((msg, index) => {
+        if (index === assistantIndex) {
+          return { ...msg, content: responseContent };
+        }
+        return msg;
+      }));
 
       // Save to database
       if (user) {
@@ -459,7 +547,7 @@ Feel free to ask follow-up questions or request modifications!`;
           user_id: user.id,
           lab_id: labId,
           prompt: currentInput,
-          output: aiResponse.content,
+          output: responseContent,
         });
 
         if (insertError) {
@@ -470,12 +558,16 @@ Feel free to ask follow-up questions or request modifications!`;
       }
     } catch (error) {
       console.error('Error in handleSend:', error);
-      const errorResponse: Message = {
-        role: 'assistant',
-        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorResponse]);
+      setMessages(prev => prev.map((msg, index) => {
+        if (index === assistantIndex) {
+          return {
+            ...msg,
+            content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
+            timestamp: new Date()
+          };
+        }
+        return msg;
+      }));
     } finally {
       setLoading(false);
     }
