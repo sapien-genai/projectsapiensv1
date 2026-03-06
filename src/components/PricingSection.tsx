@@ -96,7 +96,7 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
             </div>
             <div>
               <h3 className="font-extrabold text-2xl uppercase tracking-tight">PRO</h3>
-              <p className="text-sm font-semibold">Coming Soon</p>
+              <p className="text-sm font-semibold">$29 / month</p>
             </div>
           </div>
 
