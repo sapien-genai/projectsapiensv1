@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Menu, X, Sparkles, Clock, ChevronDown, Copy, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
+import {
+  Send, Menu, X, Clock, ChevronDown, Copy, CheckCircle2, TrendingUp,
+  AlertCircle, RefreshCw, AlignLeft, Minimize2, Briefcase, RotateCcw,
+  Brain, BarChart3, Palette, Lightbulb, Code2,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBilling } from '../contexts/BillingContext';
 import { supabase } from '../lib/supabase';
-import OpenMoji from './OpenMoji';
 import UpgradeModal from './UpgradeModal';
 
 interface LabSandboxProps {
@@ -12,10 +15,12 @@ interface LabSandboxProps {
   onLabSwitch?: (labId: string) => void;
 }
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
+interface OutputEntry {
+  id: string;
+  userPrompt: string;
+  text: string;
+  label: string;
+  mode?: string;
 }
 
 interface Experiment {
@@ -32,109 +37,149 @@ interface LimitInfo {
   plan?: string;
 }
 
+// ── Lab configs ────────────────────────────────────────────────
 const labConfigs: Record<string, {
   name: string;
   description: string;
   placeholder: string;
-  systemMessage: string;
+  systemContext: string;
   suggestions: string[];
+  isWritingLab: boolean;
 }> = {
   'writing-lab': {
     name: 'Writing Lab',
     description: 'Generate, edit, and refine written content',
-    placeholder: 'Write a compelling product description for...',
-    systemMessage: 'I can help you write, edit, and refine any type of content. Try asking me to draft emails, create marketing copy, write articles, or improve existing text.',
+    placeholder: 'Write a compelling product description for…',
+    systemContext: 'writing, editing, and refining content',
     suggestions: [
       'Write a professional email to a client about a project delay',
       'Create a compelling product description for a minimalist desk lamp',
       'Draft a social media post announcing a new feature',
       'Rewrite this paragraph to be more concise and engaging',
     ],
+    isWritingLab: true,
   },
   'analysis-lab': {
     name: 'Analysis Lab',
     description: 'Extract insights and analyze data',
-    placeholder: 'Analyze this data and identify trends...',
-    systemMessage: 'I can analyze data, identify patterns, and provide insights. Share your data, ask questions about trends, or request detailed analysis.',
+    placeholder: 'Analyze this data and identify trends…',
+    systemContext: 'data analysis, pattern recognition, and insights',
     suggestions: [
       'Analyze quarterly sales data and identify key trends',
       'Compare these two datasets and highlight the main differences',
       'Extract insights from customer feedback responses',
       'Identify patterns in this user behavior data',
     ],
+    isWritingLab: false,
   },
   'creative-lab': {
     name: 'Creative Lab',
     description: 'Explore creative ideas and concepts',
-    placeholder: 'Generate 3 brand concepts for...',
-    systemMessage: 'I can help you brainstorm creative ideas, develop concepts, and explore possibilities. Let\'s create something unique together.',
+    placeholder: 'Generate 3 brand concepts for…',
+    systemContext: 'creative brainstorming, concepts, and ideation',
     suggestions: [
       'Generate 5 unique brand names for a sustainable coffee company',
       'Brainstorm creative marketing campaign ideas for Gen Z',
       'Create three logo concepts for a fitness app',
       'Develop a content series theme for our social media',
     ],
+    isWritingLab: false,
   },
   'strategy-lab': {
     name: 'Strategy Lab',
     description: 'Build strategic frameworks and solve problems',
-    placeholder: 'Create a decision framework for...',
-    systemMessage: 'I can help you think strategically, build frameworks, and solve complex problems. Share your challenge and I\'ll help you work through it.',
+    placeholder: 'Create a decision framework for…',
+    systemContext: 'strategic thinking, frameworks, and problem solving',
     suggestions: [
       'Create a decision framework for hiring my first developer',
       'Build a go-to-market strategy for a B2B SaaS product',
       'Design a prioritization system for feature requests',
       'Develop a competitive analysis framework',
     ],
+    isWritingLab: false,
   },
   'code-lab': {
     name: 'Code Lab',
     description: 'Write, debug, and optimize code',
-    placeholder: 'Write a function that...',
-    systemMessage: 'I can help you write code, debug issues, optimize performance, and explain technical concepts. What are you building?',
+    placeholder: 'Write a function that…',
+    systemContext: 'code writing, debugging, and optimization',
     suggestions: [
       'Write a Python function to find the longest palindrome in a string',
       'Debug this React component that re-renders too often',
       'Optimize this SQL query for better performance',
       'Explain how async/await works in JavaScript',
     ],
+    isWritingLab: false,
   },
 };
 
-const labs = [
-  { id: 'writing-lab', name: 'Writing Lab', icon: '✍️' },
-  { id: 'analysis-lab', name: 'Analysis Lab', icon: '📊' },
-  { id: 'creative-lab', name: 'Creative Lab', icon: '🎨' },
-  { id: 'strategy-lab', name: 'Strategy Lab', icon: '💡' },
-  { id: 'code-lab', name: 'Code Lab', icon: '💻' },
+const labMeta: Record<string, { icon: React.ComponentType<any>; color: string }> = {
+  'writing-lab':   { icon: Brain,     color: '#FF6A00' },
+  'analysis-lab':  { icon: BarChart3, color: '#0A74FF' },
+  'creative-lab':  { icon: Palette,   color: '#FF6A00' },
+  'strategy-lab':  { icon: Lightbulb, color: '#0A74FF' },
+  'code-lab':      { icon: Code2,     color: '#FF6A00' },
+};
+
+const IMPROVE_ACTIONS = [
+  { mode: 'rewrite_clearer',           label: 'Clearer',       icon: AlignLeft  },
+  { mode: 'rewrite_shorter',           label: 'Shorter',       icon: Minimize2  },
+  { mode: 'rewrite_more_professional', label: 'Professional',  icon: Briefcase  },
+  { mode: 'rewrite_more_persuasive',   label: 'Persuasive',    icon: TrendingUp },
 ];
 
+const IMPROVE_PROMPTS: Record<string, string> = {
+  rewrite_clearer:           'Rewrite this to be clearer and easier to understand:\n\n',
+  rewrite_shorter:           'Rewrite this to be shorter while keeping the core message:\n\n',
+  rewrite_more_professional: 'Make this sound more professional and confident, while keeping the message intact:\n\n',
+  rewrite_more_persuasive:   'Rewrite this to be more persuasive and compelling:\n\n',
+};
+
+// ── Component ──────────────────────────────────────────────────
 export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxProps) {
   const { user } = useAuth();
-  const { usageStatus, refreshUsageStatus, checkoutLoading, checkoutError, startCheckout, clearCheckoutError } = useBilling();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [history, setHistory] = useState<Experiment[]>([]);
-  const [showHistory, setShowHistory] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyError, setHistoryError] = useState<string | null>(null);
-  const [limitReached, setLimitReached] = useState(false);
-  const [limitInfo, setLimitInfo] = useState<LimitInfo | null>(null);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const {
+    usageStatus, refreshUsageStatus,
+    checkoutLoading, checkoutError, startCheckout, clearCheckoutError,
+  } = useBilling();
 
   const config = labConfigs[labId] || labConfigs['writing-lab'];
+  const meta   = labMeta[labId]   || labMeta['writing-lab'];
+  const LabIcon = meta.icon;
 
+  // Thread of AI outputs
+  const [outputs,      setOutputs]      = useState<OutputEntry[]>([]);
+  const [streamingText, setStreamingText] = useState('');
+  const [input,        setInput]        = useState('');
+  const [loading,      setLoading]      = useState(false);
+
+  // Sidebar / history
+  const [sidebarOpen,    setSidebarOpen]    = useState(false);
+  const [history,        setHistory]        = useState<Experiment[]>([]);
+  const [showHistory,    setShowHistory]    = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError,   setHistoryError]   = useState<string | null>(null);
+
+  // Limit
+  const [limitReached,     setLimitReached]     = useState(false);
+  const [limitInfo,        setLimitInfo]        = useState<LimitInfo | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  // Copy
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const bottomRef  = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const bottomTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const latestOutput = outputs[outputs.length - 1]?.text ?? '';
+  const hasOutputs   = outputs.length > 0;
+
+  // ── Load history ──
   const loadHistory = useCallback(async () => {
     if (!user) return;
-
     setHistoryLoading(true);
     setHistoryError(null);
-
     try {
       const { data, error } = await supabase
         .from('lab_experiments')
@@ -143,537 +188,217 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
         .eq('lab_id', labId)
         .order('created_at', { ascending: false })
         .limit(20);
-
-      if (error) {
-        throw error;
-      }
-
+      if (error) throw error;
       setHistory(data || []);
-    } catch (error) {
-      console.error('Failed to load history:', error);
-      setHistoryError('Failed to load history. Please try again.');
-      setHistory([]);
+    } catch {
+      setHistoryError('Failed to load history.');
     } finally {
       setHistoryLoading(false);
     }
   }, [labId, user]);
 
-  useEffect(() => {
-    // Initialize with system message
-    setMessages([{
-      role: 'assistant',
-      content: config.systemMessage,
-      timestamp: new Date()
-    }]);
-    loadHistory();
-  }, [config.systemMessage, loadHistory]);
+  useEffect(() => { loadHistory(); }, [loadHistory]);
 
+  // auto-scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [streamingText, outputs.length]);
 
+  // auto-resize textareas
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-    }
+    [textareaRef, bottomTextareaRef].forEach(ref => {
+      if (ref.current) {
+        ref.current.style.height = 'auto';
+        ref.current.style.height = Math.min(ref.current.scrollHeight, 200) + 'px';
+      }
+    });
   }, [input]);
 
-  const generateResponse = async (
-    userPrompt: string,
-    history: Message[],
-    onPartialText: (partialText: string) => void
+  // ── SSE streaming ──
+  const streamAI = useCallback(async (
+    prompt: string,
+    mode: string | undefined,
+    conversationHistory: { role: string; content: string }[],
+    onChunk: (t: string) => void
   ): Promise<string> => {
-    try {
-      // Build conversation history for context (exclude system message)
-      const conversationHistory = history
-        .slice(1) // Skip the initial system message
-        .map(msg => ({
-          role: msg.role,
-          content: msg.content
-        }));
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) throw new Error('Authentication required');
 
-      // Get user's JWT token for authenticated edge function call
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session?.access_token) {
-        throw new Error('Authentication required');
-      }
-
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`;
-      const response = await fetch(apiUrl, {
+    const res = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`,
+      {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: userPrompt,
-          labId,
-          conversationHistory
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-
-        if (response.status === 429 && errorData.error === 'limit_reached') {
-          setLimitReached(true);
-          setLimitInfo(typeof errorData.limit === 'number' && typeof errorData.used === 'number' ? errorData : null);
-          await refreshUsageStatus();
-          throw new Error('LIMIT_REACHED');
-        }
-
-        throw new Error(errorData.error || 'Failed to get AI response');
+        headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, labId, mode, conversationHistory }),
       }
+    );
 
-      if (!response.body) {
-        throw new Error('Empty response stream');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      if (res.status === 429 && err.error === 'limit_reached') {
+        setLimitReached(true);
+        setLimitInfo(typeof err.limit === 'number' && typeof err.used === 'number' ? err : null);
+        await refreshUsageStatus();
+        throw new Error('LIMIT_REACHED');
       }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let eventBuffer = '';
-      let fullText = '';
-
-      const processSseEvent = (rawEvent: string) => {
-        const lines = rawEvent
-          .split(/\r?\n/)
-          .map(line => line.trim())
-          .filter(Boolean);
-
-        if (!lines.length) {
-          return;
-        }
-
-        const dataPayload = lines
-          .filter(line => line.startsWith('data: '))
-          .map(line => line.slice(6).trim())
-          .join('');
-
-        if (!dataPayload || dataPayload === '[DONE]') {
-          return;
-        }
-
-        try {
-          const parsed = JSON.parse(dataPayload);
-          const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-          if (typeof textChunk === 'string' && textChunk.length > 0) {
-            fullText += textChunk;
-            onPartialText(fullText);
-          }
-        } catch (parseError) {
-          console.warn('Unable to parse SSE event payload', parseError);
-        }
-      };
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) {
-          break;
-        }
-
-        eventBuffer += decoder.decode(value, { stream: true });
-
-        const events = eventBuffer.split(/\r?\n\r?\n/);
-        eventBuffer = events.pop() || '';
-
-        for (const rawEvent of events) {
-          processSseEvent(rawEvent);
-        }
-      }
-
-      eventBuffer += decoder.decode();
-
-      if (eventBuffer.trim()) {
-        processSseEvent(eventBuffer);
-      }
-
-      return fullText;
-    } catch (error) {
-      console.error('Error calling AI:', error);
-      if (error instanceof Error) {
-        if (error.message === 'Authentication required') {
-          return "Please sign in to use the AI lab features.";
-        }
-        if (error.message === 'LIMIT_REACHED') {
-          return "LIMIT_REACHED";
-        }
-      }
-      return generateMockResponse(userPrompt);
+      throw new Error(err.error || 'Failed to get AI response');
     }
-  };
 
-  const generateMockResponse = (userPrompt: string): string => {
-    const mockOutputs: Record<string, string> = {
-      'writing-lab': `Here's a compelling product description for your desk lamp:
+    if (!res.body) throw new Error('Empty stream');
 
-**Introducing the LUMEN Desk Lamp — where form meets function in perfect harmony.**
+    const reader = res.body.getReader();
+    const dec    = new TextDecoder();
+    let buf = '', full = '';
 
-This minimalist marvel combines precision engineering with timeless design. Its aluminum body houses a powerful LED array that delivers 800 lumens of adjustable light, while the intuitive touch controls let you dial in the perfect brightness with a simple gesture.
-
-The weighted base keeps it stable on any surface, and the flexible arm adjusts to any angle you need. Whether you're deep in a late-night work session or setting the mood for evening reading, LUMEN adapts to your life.
-
-**Key Features:**
-• Adjustable brightness (0-800 lumens)
-• Touch-sensitive controls
-• Flexible aluminum arm
-• Energy-efficient LED technology
-• Weighted base for stability
-
-Clean lines. Pure function. Zero compromises.`,
-      'analysis-lab': `**QUARTERLY SALES ANALYSIS**
-
-**Key Findings:**
-• Total Annual Revenue: $275,000
-• Average Quarterly Growth: 15.8%
-• Strongest Quarter: Q4 ($90k, +50% from Q3)
-• Weakest Quarter: Q1 ($50k, baseline)
-
-**Trend Analysis:**
-The data shows strong seasonal patterns with significant Q4 performance. The Q3 dip (-20%) suggests a mid-year slowdown, possibly due to seasonal factors or market conditions. However, the strong recovery in Q4 indicates resilient demand and effective year-end strategies.
-
-**Insights:**
-1. Q4 success factors should be documented and replicated
-2. Q3 slowdown warrants investigation into causes
-3. Overall trajectory is positive with 80% year-over-year growth
-
-**Recommendations:**
-• Investigate Q3 slowdown root causes
-• Develop strategies to minimize mid-year volatility
-• Set conservative Q1 target: $95k (5% growth)
-• Implement Q4 success strategies earlier in the year`,
-      'creative-lab': `Here are three unique brand concepts for your sustainable coffee company:
-
-**CONCEPT 1: "Grounds Up"**
-*Visual Identity:* Earthy browns, forest greens, handwritten typography
-*Core Message:* "Coffee that gives back to the ground"
-*Unique Angle:* Every bag includes seeds to plant at home. The package becomes a planter after use.
-*Gen Z Appeal:* Tangible environmental action + Instagram-worthy plant-growing journey
-
-**CONCEPT 2: "Honest Brew Co."**
-*Visual Identity:* Bold black, cream, geometric patterns
-*Core Message:* "No BS. Just good coffee."
-*Unique Angle:* Radical transparency — QR codes show farmer profile, roasting process, carbon footprint per cup.
-*Gen Z Appeal:* Authenticity + tech integration + education through storytelling
-
-**CONCEPT 3: "Cycle Coffee"**
-*Visual Identity:* Circular logo, sunset gradients, playful sans-serif
-*Core Message:* "What goes around, brews around"
-*Unique Angle:* Subscription with compostable packaging. Return empty bags = free drink credit.
-*Gen Z Appeal:* Circular economy model + gamified sustainability + community rewards
-
-Each concept balances sustainability with lifestyle appeal, targeting Gen Z's values while avoiding preachy messaging.`,
-      'strategy-lab': `**HIRING DECISION FRAMEWORK**
-
-Let me help you build a structured approach to this decision:
-
-**Evaluation Criteria:**
-
-| Factor | Full-Time Developer | Outsourcing |
-|--------|-------------------|-------------|
-| Upfront Cost | HIGH ($80-150k/year) | LOW (project-based) |
-| Long-term Value | HIGH (builds IP) | MEDIUM (limited knowledge transfer) |
-| Team Integration | EXCELLENT | LIMITED |
-| Flexibility | LOW (fixed cost) | HIGH (scale up/down) |
-| Quality Control | EXCELLENT | VARIES |
-| Time to Productivity | 1-3 months | Immediate |
-
-**Decision Tree:**
-
-**START HERE:** What's your project timeline?
-
-→ **> 12 months?**
-  ├─ YES → Is this core to your product?
-  │  ├─ YES → **Full-time developer**
-  │  └─ NO → Consider outsource with option to hire
-  └─ NO → **Outsource**
-
-**Budget Check:**
-- Can you afford $100k+ annually?
-  - NO → Start with outsource, revisit in 6 months
-  - YES → Continue to next question
-
-**Knowledge Requirements:**
-- Need deep company/product knowledge?
-  - YES → Full-time strongly recommended
-  - NO → Outsource works well
-
-**Recommended Approach:**
-1. Start with 3-month outsourced contract
-2. Use this time to validate product-market fit
-3. Evaluate contractor performance and needs
-4. If successful, offer full-time conversion
-5. If not, you've minimized risk and gained clarity
-
-This "trial-to-hire" approach gives you flexibility while reducing commitment risk.`,
-      'code-lab': `Here's a Python function to find the longest palindrome in a string:
-
-\`\`\`python
-def longest_palindrome(s: str) -> str:
-    """
-    Finds the longest palindrome substring using expand-around-center approach.
-
-    Time complexity: O(n²)
-    Space complexity: O(1)
-
-    Args:
-        s: Input string to search for palindromes
-
-    Returns:
-        The longest palindrome substring found
-    """
-    if not s:
-        return ""
-
-    def expand_around_center(left: int, right: int) -> str:
-        """Expand outward from center while characters match"""
-        while left >= 0 and right < len(s) and s[left] == s[right]:
-            left -= 1
-            right += 1
-        return s[left + 1:right]
-
-    longest = ""
-
-    for i in range(len(s)):
-        # Check for odd-length palindromes (single center)
-        palindrome1 = expand_around_center(i, i)
-
-        # Check for even-length palindromes (two centers)
-        palindrome2 = expand_around_center(i, i + 1)
-
-        # Update longest if we found a longer palindrome
-        current_longest = palindrome1 if len(palindrome1) > len(palindrome2) else palindrome2
-        if len(current_longest) > len(longest):
-            longest = current_longest
-
-    return longest
-
-
-# Test cases
-print(longest_palindrome("babad"))    # Output: "bab" or "aba"
-print(longest_palindrome("cbbd"))     # Output: "bb"
-print(longest_palindrome("racecar")) # Output: "racecar"
-\`\`\`
-
-**How it works:**
-1. For each character, we treat it as a potential palindrome center
-2. We expand outward while characters match
-3. We check both odd-length (single center) and even-length (double center) palindromes
-4. We keep track of the longest palindrome found
-
-**Why this approach?**
-- Simple and intuitive
-- Good balance of time and space complexity
-- Easy to understand and maintain
-
-Want me to explain any part in more detail or show alternative approaches?`,
+    const parseEvent = (raw: string) => {
+      const payload = raw.split(/\r?\n/).filter(l => l.startsWith('data: ')).map(l => l.slice(6).trim()).join('');
+      if (!payload || payload === '[DONE]') return;
+      try {
+        const p = JSON.parse(payload);
+        const chunk = p?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (typeof chunk === 'string' && chunk.length > 0) { full += chunk; onChunk(full); }
+      } catch { /* skip */ }
     };
 
-    return mockOutputs[labId] || `I understand you'd like help with: "${userPrompt}"
-
-Let me help you with that. Based on your request, here's what I recommend:
-
-1. **Key Considerations:**
-   - Define your specific goals and constraints
-   - Consider your target audience or use case
-   - Think about the desired format or structure
-
-2. **Recommended Approach:**
-   - Start with a clear outline or framework
-   - Iterate and refine based on feedback
-   - Test multiple variations if needed
-
-3. **Next Steps:**
-   - Could you provide more context about your specific needs?
-   - What's the intended use case or audience?
-   - Are there any constraints I should know about?
-
-Feel free to ask follow-up questions or request modifications!`;
-  };
-
-  const saveLabExperiment = async (prompt: string, output: string) => {
-    if (!user) {
-      return;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const events = buf.split(/\r?\n\r?\n/);
+      buf = events.pop() || '';
+      events.forEach(parseEvent);
     }
+    buf += dec.decode();
+    if (buf.trim()) parseEvent(buf);
+    return full;
+  }, [labId, refreshUsageStatus]);
 
-    // Insert-only by design: lab_experiments currently has no unique constraint for safe upsert.
-    const { error: insertError } = await supabase.from('lab_experiments').insert({
+  const saveExperiment = useCallback(async (prompt: string, output: string) => {
+    if (!user) return;
+    await supabase.from('lab_experiments').insert({
       user_id: user.id,
       lab_id: labId,
       prompt,
       output,
     });
-
-    if (insertError) {
-      console.error('Error saving lab experiment:', insertError);
-      return;
-    }
-
     loadHistory();
-  };
+  }, [user, labId, loadHistory]);
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
+  // ── Run AI ──
+  const run = async (prompt: string, label: string, mode?: string) => {
+    if (loading) return;
 
-    const userMessage: Message = {
-      role: 'user',
-      content: input,
-      timestamp: new Date()
-    };
+    // Build conversation context from previous outputs
+    const convHistory = outputs.flatMap(o => [
+      { role: 'user',      content: o.userPrompt },
+      { role: 'assistant', content: o.text       },
+    ]);
 
-    const currentInput = input;
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setLoading(true);
-
-    const assistantTimestamp = new Date();
-    let assistantIndex = -1;
-
-    setMessages(prev => {
-      assistantIndex = prev.length;
-      return [...prev, { role: 'assistant', content: '', timestamp: assistantTimestamp }];
-    });
+    setStreamingText('');
 
     try {
-      // Get AI response with conversation history and stream partial updates into the last assistant message
-      const responseContent = await generateResponse(
-        currentInput,
-        [...messages, userMessage],
-        (partialText) => {
-          setMessages(prev => prev.map((msg, index) => {
-            if (index === assistantIndex) {
-              return { ...msg, content: partialText };
-            }
-            return msg;
-          }));
-        }
-      );
-
-      if (responseContent === "LIMIT_REACHED") {
-        // Don't add messages if user is rate-limited
-        setMessages(prev => prev.slice(0, -2));
-        setLoading(false);
-        return;
+      const full = await streamAI(prompt, mode, convHistory, t => setStreamingText(t));
+      if (full && full !== 'LIMIT_REACHED') {
+        setOutputs(prev => [...prev, { id: `o${Date.now()}`, userPrompt: prompt, text: full, label, mode }]);
+        await saveExperiment(prompt, full);
       }
-
-      setMessages(prev => prev.map((msg, index) => {
-        if (index === assistantIndex) {
-          return { ...msg, content: responseContent };
-        }
-        return msg;
-      }));
-
-      await saveLabExperiment(currentInput, responseContent);
-    } catch (error) {
-      console.error('Error in handleSend:', error);
-      setMessages(prev => prev.map((msg, index) => {
-        if (index === assistantIndex) {
-          return {
-            ...msg,
-            content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
-            timestamp: new Date()
-          };
-        }
-        return msg;
-      }));
+    } catch (e) {
+      if (e instanceof Error && e.message === 'LIMIT_REACHED') setShowUpgradeModal(true);
     } finally {
       setLoading(false);
+      setStreamingText('');
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+  const handleSend = () => {
+    const text = input.trim();
+    if (!text || loading) return;
+    setInput('');
+    run(text, 'Response');
   };
 
-  const handleCopy = (text: string, index: number) => {
+  const handleImprove = (mode: string, label: string) => {
+    if (!latestOutput || loading) return;
+    run((IMPROVE_PROMPTS[mode] || '') + latestOutput, label, mode);
+  };
+
+  const handleReset = () => { setOutputs([]); setInput(''); };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  };
+
+  const copy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 2000);
   };
 
-  const loadExperiment = (experiment: Experiment) => {
-    setMessages([
-      {
-        role: 'assistant',
-        content: config.systemMessage,
-        timestamp: new Date()
-      },
-      {
-        role: 'user',
-        content: experiment.prompt,
-        timestamp: new Date(experiment.created_at)
-      },
-      {
-        role: 'assistant',
-        content: experiment.output,
-        timestamp: new Date(experiment.created_at)
-      }
-    ]);
+  const loadExperiment = (exp: Experiment) => {
+    setOutputs([{ id: `h${exp.id}`, userPrompt: exp.prompt, text: exp.output, label: 'Loaded' }]);
+    setInput('');
     setSidebarOpen(false);
   };
 
-  const switchLab = (newLabId: string) => {
-    if (onLabSwitch) {
-      onLabSwitch(newLabId);
-    }
-  };
-
+  // ── Render ─────────────────────────────────────────────────
   return (
-    <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#F4F4F4] border-r-2 border-black transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0`}>
+    <div className="flex h-screen bg-[#F4F4F4] overflow-hidden">
+
+      {/* ── Sidebar ── */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-64 bg-[#F4F4F4] border-r-2 border-black
+        transform transition-transform duration-200 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:relative lg:translate-x-0
+      `}>
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="p-4 border-b-2 border-black">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-extrabold text-sm uppercase tracking-tight">Labs</h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1 hover:bg-white transition-colors"
-              >
-                <X className="w-5 h-5" strokeWidth={2} />
-              </button>
-            </div>
-            {onBack && (
+
+          {/* Sidebar header */}
+          <div className="px-4 py-4 border-b-2 border-black flex items-center justify-between">
+            <h2 className="font-extrabold text-sm uppercase tracking-tight">Labs</h2>
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 hover:bg-white transition-colors">
+              <X className="w-5 h-5" strokeWidth={2} />
+            </button>
+          </div>
+
+          {onBack && (
+            <div className="px-4 py-3 border-b-2 border-black">
               <button
                 onClick={onBack}
-                className="w-full text-left text-xs font-semibold hover:text-[#FF6A00] transition-colors"
+                className="text-xs font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
               >
                 ← Back to Dashboard
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Lab List */}
+          {/* Lab list */}
           <div className="flex-1 overflow-y-auto p-2">
-            <div className="space-y-1">
-              {labs.map((lab) => (
+            {Object.entries(labConfigs).map(([id, cfg]) => {
+              const m = labMeta[id] || labMeta['writing-lab'];
+              const Icon = m.icon;
+              return (
                 <button
-                  key={lab.id}
-                  onClick={() => switchLab(lab.id)}
-                  className={`w-full text-left px-3 py-2 text-sm font-medium transition-colors flex items-center gap-2 ${
-                    labId === lab.id
-                      ? 'bg-white border border-black'
-                      : 'hover:bg-white'
+                  key={id}
+                  onClick={() => onLabSwitch?.(id)}
+                  className={`w-full text-left px-3 py-2.5 text-xs font-extrabold uppercase tracking-tight flex items-center gap-2.5 transition-colors mb-1 border ${
+                    labId === id
+                      ? 'bg-black text-white border-black'
+                      : 'bg-white border-black hover:bg-[#FF6A00] hover:text-black hover:border-[#FF6A00]'
                   }`}
                 >
-                  <OpenMoji emoji={lab.icon} size={18} />
-                  {lab.name}
+                  <Icon className="w-4 h-4 shrink-0" strokeWidth={2} />
+                  {cfg.name}
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* History Section */}
+          {/* History */}
           <div className="border-t-2 border-black">
             <button
-              onClick={() => setShowHistory(!showHistory)}
+              onClick={() => setShowHistory(s => !s)}
               className="w-full px-4 py-3 flex items-center justify-between hover:bg-white transition-colors"
             >
               <div className="flex items-center gap-2">
@@ -684,41 +409,31 @@ Feel free to ask follow-up questions or request modifications!`;
             </button>
 
             {showHistory && (
-              <div className="max-h-64 overflow-y-auto border-t-2 border-black">
+              <div className="max-h-56 overflow-y-auto border-t-2 border-black">
                 {historyLoading ? (
                   <div className="p-4 text-center">
-                    <div className="inline-block w-6 h-6 border-2 border-black border-t-[#FF6A00] rounded-full animate-spin"></div>
-                    <p className="mt-2 text-sm text-[#666666]">Loading history...</p>
+                    <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#FF6A00]" strokeWidth={2} />
                   </div>
                 ) : historyError ? (
-                  <div className="p-4 text-center">
-                    <p className="text-sm text-red-600 mb-2">{historyError}</p>
-                    <button
-                      onClick={loadHistory}
-                      className="text-xs text-[#FF6A00] hover:underline"
-                    >
-                      Try again
-                    </button>
+                  <div className="p-4">
+                    <p className="text-xs text-red-600 mb-2">{historyError}</p>
+                    <button onClick={loadHistory} className="text-xs text-[#FF6A00] hover:underline font-semibold">Try again</button>
                   </div>
                 ) : history.length > 0 ? (
                   <div className="p-2 space-y-1">
-                    {history.slice(0, 10).map((exp) => (
+                    {history.slice(0, 10).map(exp => (
                       <button
                         key={exp.id}
                         onClick={() => loadExperiment(exp)}
-                        className="w-full text-left px-2 py-2 text-xs hover:bg-white transition-colors"
+                        className="w-full text-left px-2 py-2 text-xs hover:bg-white transition-colors border border-transparent hover:border-black"
                       >
-                        <p className="font-semibold truncate mb-1">{exp.prompt}</p>
-                        <p className="text-[#666666]">
-                          {new Date(exp.created_at).toLocaleDateString()}
-                        </p>
+                        <p className="font-semibold truncate">{exp.prompt}</p>
+                        <p className="text-[#888888] mt-0.5">{new Date(exp.created_at).toLocaleDateString()}</p>
                       </button>
                     ))}
                   </div>
                 ) : (
-                  <p className="p-4 text-sm text-[#666666] text-center">
-                    No experiments saved yet. Your work will appear here after you save.
-                  </p>
+                  <p className="p-4 text-xs text-[#888888] text-center">No saved experiments yet.</p>
                 )}
               </div>
             )}
@@ -726,10 +441,11 @@ Feel free to ask follow-up questions or request modifications!`;
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
+      {/* ── Main workspace ── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -737,146 +453,239 @@ Feel free to ask follow-up questions or request modifications!`;
             >
               <Menu className="w-5 h-5" strokeWidth={2} />
             </button>
-            <div>
-              <h1 className="font-extrabold text-base uppercase tracking-tight">{config.name}</h1>
-              <p className="text-xs text-[#666666]">{config.description}</p>
+            <div className="flex items-center gap-2">
+              <LabIcon className="w-5 h-5" style={{ color: meta.color }} strokeWidth={2} />
+              <div>
+                <h1 className="font-extrabold text-sm uppercase tracking-tight leading-tight">{config.name}</h1>
+                <p className="text-xs text-[#666666] leading-tight">{config.description}</p>
+              </div>
             </div>
           </div>
+
           <div className="flex items-center gap-3">
-            {usageStatus && usageStatus.plan === 'free' && (
-              <div className="text-xs font-semibold text-[#888888]">
+            {usageStatus?.plan === 'free' && (
+              <span className="text-xs font-semibold text-[#888888]">
                 {usageStatus.used} / {usageStatus.limit} today
-              </div>
+              </span>
             )}
-            <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+            {hasOutputs && (
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-tight px-3 py-1.5 border-2 border-black hover:bg-black hover:text-white transition-colors"
+              >
+                <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
+                New
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Limit Warning Banner */}
+        {/* Limit banner */}
         {limitReached && limitInfo && (
-          <div className="bg-[#FF6A00] border-b-2 border-black p-4">
-            <div className="max-w-3xl mx-auto">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                <div className="flex-1">
-                  <h3 className="font-extrabold text-sm uppercase mb-1">DAILY LIMIT REACHED</h3>
-                  <p className="text-sm leading-relaxed mb-3">
-                    You've used all {limitInfo.limit} of today's AI practice sessions. Your limit resets at midnight UTC.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {limitInfo.plan === 'free' && (
-                      <button
-                        onClick={() => setShowUpgradeModal(true)}
-                        className="bg-black text-white border-2 border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-black transition-colors inline-flex items-center gap-2"
-                      >
-                        <TrendingUp className="w-4 h-4" strokeWidth={2} />
-                        UPGRADE FOR MORE
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setLimitReached(false)}
-                      className="bg-white border-2 border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight hover:bg-[#F4F4F4] transition-colors"
-                    >
-                      DISMISS
-                    </button>
-                  </div>
-                </div>
+          <div className="bg-[#FF6A00] border-b-2 border-black px-4 py-3 shrink-0">
+            <div className="max-w-3xl mx-auto flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" strokeWidth={2} />
+              <div className="flex-1">
+                <p className="font-extrabold text-sm uppercase tracking-tight">Daily Limit Reached</p>
+                <p className="text-xs mt-0.5">You've used all {limitInfo.limit} sessions today. Resets at midnight UTC.</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                {limitInfo.plan === 'free' && (
+                  <button
+                    onClick={() => setShowUpgradeModal(true)}
+                    className="px-3 py-1.5 bg-black text-white border-2 border-black text-xs font-extrabold uppercase tracking-tight hover:bg-white hover:text-black transition-colors"
+                  >
+                    Upgrade
+                  </button>
+                )}
+                <button
+                  onClick={() => setLimitReached(false)}
+                  className="px-3 py-1.5 bg-white border-2 border-black text-xs font-extrabold uppercase tracking-tight hover:bg-[#F4F4F4] transition-colors"
+                >
+                  Dismiss
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="max-w-3xl mx-auto space-y-6">
-            {messages.map((message, index) => (
-              <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-[#F4F4F4] border border-black' : 'bg-white'} p-4`}>
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <p className="text-xs font-extrabold uppercase tracking-tight">
-                      {message.role === 'user' ? 'You' : config.name}
-                    </p>
-                    {message.role === 'assistant' && (
-                      <button
-                        onClick={() => handleCopy(message.content, index)}
-                        className="flex-shrink-0 p-1 hover:bg-[#F4F4F4] transition-colors"
-                        title="Copy response"
-                      >
-                        {copiedIndex === index ? (
-                          <CheckCircle2 className="w-4 h-4 text-[#00D084]" strokeWidth={2} />
-                        ) : (
-                          <Copy className="w-4 h-4" strokeWidth={2} />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                  <div className="prose prose-sm max-w-none">
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* ── Thread ── */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 space-y-8">
 
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-white p-4">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+            {/* ── Initial input (no outputs yet) ── */}
+            {!hasOutputs && (
+              <>
+                {/* Welcome / suggestions */}
+                {!loading && (
+                  <div className="space-y-6">
+                    <div>
+                      <div className="flex items-center gap-3 mb-4">
+                        <LabIcon className="w-10 h-10" style={{ color: meta.color }} strokeWidth={1.5} />
+                        <div>
+                          <h2 className="font-extrabold text-2xl uppercase tracking-tighter leading-none">{config.name}</h2>
+                          <p className="text-sm text-[#666666]">{config.description}</p>
+                        </div>
+                      </div>
+                      <p className="text-xs font-extrabold uppercase tracking-tight text-[#888888] mb-3">Try asking:</p>
+                      <div className="grid sm:grid-cols-2 gap-2">
+                        {config.suggestions.map((s, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setInput(s)}
+                            className="text-left text-xs px-4 py-3 border-2 border-black bg-white hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors font-medium leading-snug shadow-[2px_2px_0px_#000] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Loading state for first output */}
+                {loading && (
+                  <div className="border-2 border-black bg-white p-6 shadow-[3px_3px_0px_#000]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                        <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
+                        Writing…
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap min-h-[40px]">
+                      {streamingText || <span className="text-[#999]">…</span>}
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* ── Output thread ── */}
+            {hasOutputs && (
+              <div className="space-y-5">
+                {outputs.map((o, oi) => {
+                  const isLatest = oi === outputs.length - 1;
+                  return (
+                    <div key={o.id}>
+                      {/* User prompt bubble */}
+                      <div className="flex justify-end mb-2">
+                        <div className="max-w-[80%] bg-[#F4F4F4] border-2 border-black px-4 py-3 text-sm font-medium text-right shadow-[2px_2px_0px_#000]">
+                          {o.userPrompt.length > 120 ? o.userPrompt.slice(0, 120) + '…' : o.userPrompt}
+                        </div>
+                      </div>
+
+                      {/* Version label */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-black ${
+                          isLatest ? 'bg-[#FF6A00] text-black border-[#FF6A00]' : 'bg-white text-[#888888]'
+                        }`}>
+                          {oi === 0 ? 'Response' : o.label}
+                        </span>
+                        {oi > 0 && (
+                          <span className="text-xs text-[#888888] font-semibold">← improved</span>
+                        )}
+                      </div>
+
+                      {/* Output text */}
+                      <div className={`relative group border-2 p-5 text-sm leading-relaxed whitespace-pre-wrap transition-colors ${
+                        isLatest
+                          ? 'border-black bg-white shadow-[3px_3px_0px_#000]'
+                          : 'border-black/20 bg-white text-[#777]'
+                      }`}>
+                        {o.text}
+                        <button
+                          onClick={() => copy(o.text, o.id)}
+                          className="absolute top-3 right-3 p-1.5 bg-[#F4F4F4] border border-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#FF6A00] hover:border-[#FF6A00]"
+                        >
+                          {copied === o.id
+                            ? <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />
+                            : <Copy className="w-3.5 h-3.5" strokeWidth={2} />
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Streaming next response */}
+                {loading && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                        <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
+                        Writing…
+                      </span>
+                    </div>
+                    <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
+                      {streamingText || <span className="text-[#999]">…</span>}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
-            <div ref={messagesEndRef} />
-          </div>
-        </div>
 
-        {/* Input Area */}
-        <div className="border-t-2 border-black bg-white p-4">
-          <div className="max-w-3xl mx-auto">
-            {/* Suggestion Pills */}
-            {messages.length === 1 && (
-              <div className="mb-4">
-                <p className="text-xs font-semibold text-[#666666] mb-2 uppercase tracking-tight">Try asking:</p>
+            {/* ── Improve actions (Writing Lab + after output) ── */}
+            {latestOutput && !loading && config.isWritingLab && (
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-tight text-[#888888] mb-2">Improve</p>
                 <div className="flex flex-wrap gap-2">
-                  {config.suggestions.map((suggestion, index) => (
+                  {IMPROVE_ACTIONS.map(a => (
                     <button
-                      key={index}
-                      onClick={() => setInput(suggestion)}
-                      className="text-xs px-3 py-2 bg-[#F4F4F4] border border-black hover:bg-[#FFE5D9] hover:border-[#FF6A00] transition-all"
+                      key={a.mode}
+                      onClick={() => handleImprove(a.mode, a.label)}
+                      disabled={loading}
+                      className="flex items-center gap-1.5 px-3 py-2 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors disabled:opacity-40 shadow-[2px_2px_0px_#000] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
                     >
-                      {suggestion}
+                      <a.icon className="w-3.5 h-3.5" strokeWidth={2} />
+                      {a.label}
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
+            <div ref={bottomRef} />
+          </div>
+        </div>
+
+        {/* ── Bottom input bar ── */}
+        <div className="border-t-2 border-black bg-white px-4 py-3 shrink-0">
+          <div className="max-w-3xl mx-auto">
+            {/* Suggestions when empty (non-writing labs) */}
+            {!hasOutputs && !loading && (
+              <div />
+            )}
+
             <div className="flex gap-2 items-end">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={config.placeholder}
-                className="flex-1 bg-[#F4F4F4] border border-black px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black max-h-32"
-                rows={1}
-              />
+              <div className="flex-1 border-2 border-black bg-[#F4F4F4] flex items-end">
+                <textarea
+                  ref={hasOutputs ? bottomTextareaRef : textareaRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={config.placeholder}
+                  className="flex-1 w-full resize-none px-4 py-3 text-sm bg-transparent focus:outline-none"
+                  style={{ minHeight: '44px', maxHeight: '200px' }}
+                  rows={1}
+                />
+              </div>
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
-                className="bg-black text-white border border-black p-3 hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+                className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black hover:border-[#FF6A00] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <Send className="w-5 h-5" strokeWidth={2} />
+                {loading
+                  ? <RefreshCw className="w-5 h-5 animate-spin" strokeWidth={2} />
+                  : <Send className="w-5 h-5" strokeWidth={2} />
+                }
               </button>
             </div>
-            <p className="text-xs text-[#666666] mt-2">Press Enter to send, Shift+Enter for new line</p>
+            <p className="text-xs text-[#888888] mt-1.5">Enter to send · Shift+Enter for new line</p>
           </div>
         </div>
       </div>
 
-      {/* Overlay for mobile sidebar */}
+      {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -884,12 +693,11 @@ Feel free to ask follow-up questions or request modifications!`;
         />
       )}
 
-      {/* Upgrade Modal */}
       <UpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
-        currentUsed={limitInfo?.used || usageStatus?.used}
-        currentLimit={limitInfo?.limit || usageStatus?.limit}
+        currentUsed={limitInfo?.used ?? usageStatus?.used}
+        currentLimit={limitInfo?.limit ?? usageStatus?.limit}
         onCheckout={startCheckout}
         checkoutLoading={checkoutLoading}
         checkoutError={checkoutError}
@@ -898,4 +706,3 @@ Feel free to ask follow-up questions or request modifications!`;
     </div>
   );
 }
-
