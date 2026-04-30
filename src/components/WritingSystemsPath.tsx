@@ -1,101 +1,114 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   ArrowLeft,
-  ChevronRight,
-  ChevronDown,
   Send,
   Copy,
   CheckCircle2,
-  Circle,
-  Lightbulb,
-  Target,
-  Zap,
   RefreshCw,
-  BookOpen,
+  Sparkles,
+  ChevronRight,
   PenLine,
+  AlignLeft,
+  Minimize2,
+  Briefcase,
+  TrendingUp,
+  RotateCcw,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBilling } from '../contexts/BillingContext';
 import { supabase } from '../lib/supabase';
 import UpgradeModal from './UpgradeModal';
-import { writingSystemsPath, modeLabels, WritingMission, WritingStep } from '../data/writingSystemsPath';
+import { writingSystemsPath, WritingMission } from '../data/writingSystemsPath';
 
 interface WritingSystemsPathProps {
   onBack?: () => void;
   onLabOpen?: (labId: string) => void;
 }
 
-interface StepResult {
-  stepId: string;
-  output: string;
+interface OutputVersion {
+  id: string;
+  label: string;
+  text: string;
+  mode: string;
+  stepTitle: string;
 }
 
+const IMPROVE_ACTIONS = [
+  { mode: 'rewrite_clearer', label: 'Clearer', icon: AlignLeft, color: '#5B7DB1' },
+  { mode: 'rewrite_shorter', label: 'Shorter', icon: Minimize2, color: '#2D6A42' },
+  { mode: 'rewrite_more_professional', label: 'Professional', icon: Briefcase, color: '#57524D' },
+  { mode: 'rewrite_more_persuasive', label: 'Persuasive', icon: TrendingUp, color: '#B85C1A' },
+];
 
-const modeColors: Record<string, string> = {
-  freeform: 'bg-[#F4A261]/15 text-[#B85C1A] border-[#F4A261]/40',
-  rewrite_clearer: 'bg-[#5B7DB1]/15 text-[#2E4E7A] border-[#5B7DB1]/40',
-  rewrite_shorter: 'bg-[#98C9A3]/20 text-[#2D6A42] border-[#98C9A3]/50',
-  rewrite_more_professional: 'bg-[#57524D]/10 text-[#57524D] border-[#57524D]/30',
-  rewrite_more_persuasive: 'bg-[#F4A261]/15 text-[#B85C1A] border-[#F4A261]/40',
-  summarize: 'bg-[#5B7DB1]/15 text-[#2E4E7A] border-[#5B7DB1]/40',
-  title_suggestions: 'bg-[#98C9A3]/20 text-[#2D6A42] border-[#98C9A3]/50',
+const IMPROVE_PROMPTS: Record<string, string> = {
+  rewrite_clearer: 'Rewrite this to be clearer and easier to understand:\n\n',
+  rewrite_shorter: 'Rewrite this to be shorter while keeping the core message:\n\n',
+  rewrite_more_professional: 'Make this sound more professional and confident, while keeping the message intact:\n\n',
+  rewrite_more_persuasive: 'Rewrite this to be more persuasive and compelling:\n\n',
 };
-
-function buildPrompt(template: string, userInput: string, previousOutput: string): string {
-  return template
-    .replace('{{user_input}}', userInput)
-    .replace('{{previous_output}}', previousOutput);
-}
 
 export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystemsPathProps) {
   const { user } = useAuth();
   const { refreshUsageStatus } = useBilling();
-  const { missions, skills } = writingSystemsPath;
+  const { missions } = writingSystemsPath;
 
   const [activeMissionIndex, setActiveMissionIndex] = useState(0);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
-  const [stepResults, setStepResults] = useState<Record<string, StepResult[]>>({});
+  const [completedMissionSteps, setCompletedMissionSteps] = useState<Set<string>>(new Set());
+
+  // The main text input
   const [userInput, setUserInput] = useState('');
+
+  // Streaming state
   const [streaming, setStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
+
+  // The ordered chain of outputs for this session
+  const [outputVersions, setOutputVersions] = useState<OutputVersion[]>([]);
+
+  // Current "working text" = latest output in chain
+  const latestOutput = outputVersions[outputVersions.length - 1]?.text ?? '';
+
   const [copied, setCopied] = useState<string | null>(null);
-  const [limitReached, setLimitReached] = useState(false);
   const [limitInfo, setLimitInfo] = useState<{ limit: number; used: number } | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [expandedMissions, setExpandedMissions] = useState<Set<number>>(new Set([0]));
 
-  const outputRef = useRef<HTMLDivElement>(null);
+  const workspaceBottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const activeMission: WritingMission = missions[activeMissionIndex];
-  const activeStep: WritingStep = activeMission.steps[activeStepIndex];
-  const missionKey = activeMission.missionId;
-  const missionResults = stepResults[missionKey] || [];
-
-  const previousOutput =
-    activeStepIndex > 0
-      ? (missionResults.find(r => r.stepId === activeMission.steps[activeStepIndex - 1].stepId)?.output ?? '')
-      : '';
+  const activeStep = activeMission.steps[activeStepIndex];
 
   const totalSteps = missions.reduce((sum, m) => sum + m.steps.length, 0);
-  const completedCount = completedSteps.size;
+  const completedCount = completedMissionSteps.size;
+  const progressPct = Math.round((completedCount / totalSteps) * 100);
+
+  const isOnLastStep =
+    activeMissionIndex === missions.length - 1 &&
+    activeStepIndex === activeMission.steps.length - 1;
+  const allDone = isOnLastStep && completedMissionSteps.has(
+    `${activeMission.missionId}:${activeStep.stepId}`
+  );
 
   useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight;
-    }
-  }, [streamingText]);
+    workspaceBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [streamingText, outputVersions]);
 
-  const callLabAiChat = useCallback(
+  // Adjust textarea height
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 240) + 'px';
+    }
+  }, [userInput]);
+
+  const callAI = useCallback(
     async (
       prompt: string,
       mode: string,
       onChunk: (text: string) => void
     ): Promise<string> => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) throw new Error('Authentication required');
 
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`;
@@ -116,7 +129,6 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         if (response.status === 429 && errorData.error === 'limit_reached') {
-          setLimitReached(true);
           setLimitInfo(
             typeof errorData.limit === 'number' && typeof errorData.used === 'number'
               ? errorData
@@ -128,112 +140,101 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
         throw new Error(errorData.error || 'Failed to get AI response');
       }
 
-      if (!response.body) throw new Error('Empty response stream');
+      if (!response.body) throw new Error('Empty stream');
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let eventBuffer = '';
-      let fullText = '';
+      let buf = '';
+      let full = '';
 
-      const processEvent = (rawEvent: string) => {
-        const lines = rawEvent
+      const processEvent = (raw: string) => {
+        const payload = raw
           .split(/\r?\n/)
-          .map(l => l.trim())
-          .filter(Boolean);
-        const dataPayload = lines
           .filter(l => l.startsWith('data: '))
           .map(l => l.slice(6).trim())
           .join('');
-        if (!dataPayload || dataPayload === '[DONE]') return;
+        if (!payload || payload === '[DONE]') return;
         try {
-          const parsed = JSON.parse(dataPayload);
+          const parsed = JSON.parse(payload);
           const chunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (typeof chunk === 'string' && chunk.length > 0) {
-            fullText += chunk;
-            onChunk(fullText);
+            full += chunk;
+            onChunk(full);
           }
-        } catch {
-          // ignore malformed SSE event
-        }
+        } catch { /* ignore */ }
       };
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        eventBuffer += decoder.decode(value, { stream: true });
-        const events = eventBuffer.split(/\r?\n\r?\n/);
-        eventBuffer = events.pop() || '';
+        buf += decoder.decode(value, { stream: true });
+        const events = buf.split(/\r?\n\r?\n/);
+        buf = events.pop() || '';
         for (const ev of events) processEvent(ev);
       }
+      buf += decoder.decode();
+      if (buf.trim()) processEvent(buf);
 
-      eventBuffer += decoder.decode();
-      if (eventBuffer.trim()) processEvent(eventBuffer);
-
-      return fullText;
+      return full;
     },
     [refreshUsageStatus]
   );
 
-  const handleRun = async () => {
+  const runStep = async (promptText: string, mode: string, versionLabel: string, stepTitle: string) => {
     if (streaming) return;
-
-    const isFirstStep = activeStepIndex === 0;
-    const inputText = isFirstStep ? userInput.trim() : previousOutput;
-
-    if (!inputText) return;
-
-    const prompt = buildPrompt(activeStep.promptTemplate, isFirstStep ? inputText : '', inputText);
-
     setStreaming(true);
     setStreamingText('');
-
     try {
-      const fullText = await callLabAiChat(prompt, activeStep.mode, text => {
-        setStreamingText(text);
-      });
-
-      if (fullText) {
-        const stepKey = `${missionKey}:${activeStep.stepId}`;
-        setCompletedSteps(prev => new Set([...prev, stepKey]));
-
-        setStepResults(prev => {
-          const existing = prev[missionKey] || [];
-          const filtered = existing.filter(r => r.stepId !== activeStep.stepId);
-          return {
-            ...prev,
-            [missionKey]: [...filtered, { stepId: activeStep.stepId, output: fullText }],
-          };
-        });
+      const full = await callAI(promptText, mode, text => setStreamingText(text));
+      if (full) {
+        const id = `v-${Date.now()}`;
+        setOutputVersions(prev => [...prev, { id, label: versionLabel, text: full, mode, stepTitle }]);
+        const stepKey = `${activeMission.missionId}:${activeStep.stepId}`;
+        setCompletedMissionSteps(prev => new Set([...prev, stepKey]));
       }
     } catch (err) {
-      if (err instanceof Error && err.message === 'LIMIT_REACHED') {
-        setShowUpgradeModal(true);
-      }
+      if (err instanceof Error && err.message === 'LIMIT_REACHED') setShowUpgradeModal(true);
     } finally {
       setStreaming(false);
       setStreamingText('');
     }
   };
 
-  const handleNextStep = () => {
+  const handleSend = async () => {
+    const text = userInput.trim();
+    if (!text || streaming) return;
+
+    // Build the prompt from the current step template
+    const prompt = activeStep.promptTemplate
+      .replace('{{user_input}}', text)
+      .replace('{{previous_output}}', latestOutput || text);
+
+    await runStep(prompt, activeStep.mode, activeStep.title, activeStep.title);
+  };
+
+  const handleImprove = async (mode: string, label: string) => {
+    const base = latestOutput;
+    if (!base || streaming) return;
+    const prompt = (IMPROVE_PROMPTS[mode] || '') + base;
+    await runStep(prompt, mode, label, label);
+  };
+
+  const handleNextMissionStep = () => {
     if (activeStepIndex < activeMission.steps.length - 1) {
       setActiveStepIndex(prev => prev + 1);
     } else if (activeMissionIndex < missions.length - 1) {
-      const nextMission = activeMissionIndex + 1;
-      setActiveMissionIndex(nextMission);
+      const next = activeMissionIndex + 1;
+      setActiveMissionIndex(next);
       setActiveStepIndex(0);
+      setOutputVersions([]);
       setUserInput('');
-      setExpandedMissions(prev => new Set([...prev, nextMission]));
     }
   };
 
-  const currentStepOutput =
-    missionResults.find(r => r.stepId === activeStep.stepId)?.output ?? '';
-
-  const stepIsComplete = (missionIndex: number, stepIndex: number) => {
-    const mission = missions[missionIndex];
-    const step = mission.steps[stepIndex];
-    return completedSteps.has(`${mission.missionId}:${step.stepId}`);
+  const handleReset = () => {
+    setOutputVersions([]);
+    setUserInput('');
+    setStreamingText('');
   };
 
   const copyText = async (text: string, key: string) => {
@@ -247,553 +248,522 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     inputRef.current?.focus();
   };
 
-  const toggleMission = (index: number) => {
-    setExpandedMissions(prev => {
-      const next = new Set(prev);
-      if (next.has(index)) next.delete(index);
-      else next.add(index);
-      return next;
-    });
-  };
-
-  const isLastStep =
-    activeMissionIndex === missions.length - 1 &&
-    activeStepIndex === activeMission.steps.length - 1;
+  // Determine what the input area should say/do
+  const isFirstUserInput = outputVersions.length === 0;
+  const currentStepDone = completedMissionSteps.has(`${activeMission.missionId}:${activeStep.stepId}`);
 
   return (
     <>
-      <div className="min-h-screen" style={{ background: '#F8F5F2' }}>
-        {/* Header */}
-        <div
-          className="border-b px-4 md:px-8 py-4 flex items-center justify-between"
+      <div className="min-h-screen flex flex-col" style={{ background: '#F8F5F2' }}>
+
+        {/* ── Top bar ── */}
+        <header
+          className="sticky top-0 z-20 flex items-center gap-4 px-4 md:px-6 py-3 border-b"
           style={{ background: '#F8F5F2', borderColor: '#E9E5E0' }}
         >
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+            className="flex items-center gap-1.5 text-sm transition-colors shrink-0"
             style={{ color: '#57524D' }}
             onMouseEnter={e => (e.currentTarget.style.color = '#1C1A17')}
             onMouseLeave={e => (e.currentTarget.style.color = '#57524D')}
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Paths
+            <span className="hidden sm:inline">Paths</span>
           </button>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-medium px-3 py-1 rounded-full border" style={{ color: '#57524D', borderColor: '#E9E5E0', background: '#E9E5E0' }}>
-              {completedCount} / {totalSteps} steps
-            </span>
-            {onLabOpen && (
-              <button
-                onClick={() => onLabOpen('writing-lab')}
-                className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg border transition-all"
-                style={{ background: '#1C1A17', color: '#F8F5F2', borderColor: '#1C1A17' }}
-                onMouseEnter={e => { (e.currentTarget.style.background = '#F4A261'); (e.currentTarget.style.borderColor = '#F4A261'); (e.currentTarget.style.color = '#1C1A17'); }}
-                onMouseLeave={e => { (e.currentTarget.style.background = '#1C1A17'); (e.currentTarget.style.borderColor = '#1C1A17'); (e.currentTarget.style.color = '#F8F5F2'); }}
-              >
-                <PenLine className="w-3.5 h-3.5" />
-                Open Writing Lab
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12">
-          {/* Path header */}
-          <div className="mb-10">
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span
-                className="text-xs font-semibold px-3 py-1 rounded-full border"
-                style={{ color: '#57524D', borderColor: '#E9E5E0', background: '#E9E5E0' }}
-              >
-                Learning Path
+          {/* Path title + progress */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold truncate" style={{ color: '#1C1A17' }}>
+                AI Writing Systems
               </span>
-              <span
-                className="text-xs font-semibold px-3 py-1 rounded-full border"
-                style={{ color: '#5B7DB1', borderColor: '#5B7DB1', background: '#5B7DB1/10' }}
-              >
-                {writingSystemsPath.level}
-              </span>
-              <span
-                className="text-xs font-semibold px-3 py-1 rounded-full border"
-                style={{ color: '#57524D', borderColor: '#E9E5E0', background: '#E9E5E0' }}
-              >
-                {writingSystemsPath.estimatedTime}
+              <span className="text-xs hidden sm:inline" style={{ color: '#57524D' }}>
+                Mission {activeMissionIndex + 1} of {missions.length}
               </span>
             </div>
-
-            <h1
-              className="font-serif text-3xl sm:text-4xl md:text-5xl mb-3 leading-tight"
-              style={{ color: '#1C1A17', fontFamily: "'Playfair Display', serif" }}
-            >
-              {writingSystemsPath.title}
-            </h1>
-            <p className="text-lg leading-relaxed max-w-2xl" style={{ color: '#57524D' }}>
-              {writingSystemsPath.subtitle}
-            </p>
-
-            {/* Skills */}
-            <div className="flex flex-wrap gap-2 mt-5">
-              {skills.map(skill => (
-                <span
-                  key={skill}
-                  className="text-xs font-medium px-3 py-1.5 rounded-md border"
-                  style={{ color: '#57524D', borderColor: '#E9E5E0', background: '#E9E5E0' }}
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          <div className="mb-10">
-            <div className="flex justify-between text-xs font-medium mb-2" style={{ color: '#57524D' }}>
-              <span>Overall Progress</span>
-              <span>{Math.round((completedCount / totalSteps) * 100)}%</span>
-            </div>
-            <div
-              className="h-2 rounded-full overflow-hidden"
-              style={{ background: '#E9E5E0' }}
-            >
+            {/* Thin progress bar */}
+            <div className="mt-1.5 h-1 rounded-full overflow-hidden w-40 sm:w-64" style={{ background: '#E9E5E0' }}>
               <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${(completedCount / totalSteps) * 100}%`,
-                  background: '#F4A261',
-                }}
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${progressPct}%`, background: '#F4A261' }}
               />
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-[320px_1fr] gap-8">
-            {/* Left: Mission navigator */}
-            <div className="space-y-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: '#57524D' }}>
+          <span className="text-xs font-medium shrink-0" style={{ color: '#57524D' }}>
+            {progressPct}%
+          </span>
+        </header>
+
+        {/* ── Body: context rail + workspace ── */}
+        <div className="flex flex-1 min-h-0">
+
+          {/* ── Left context rail (desktop only) ── */}
+          <aside
+            className="hidden lg:flex flex-col w-64 xl:w-72 shrink-0 border-r px-5 py-6 gap-6 sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto"
+            style={{ background: '#F8F5F2', borderColor: '#E9E5E0' }}
+          >
+            {/* Mission list */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#C5C0BB' }}>
                 Missions
-              </h2>
-
-              {missions.map((mission, mIndex) => {
-                const isActive = mIndex === activeMissionIndex;
-                const missionComplete = mission.steps.every((_, sIndex) =>
-                  stepIsComplete(mIndex, sIndex)
-                );
-                const expanded = expandedMissions.has(mIndex);
-
-                return (
-                  <div
-                    key={mission.missionId}
-                    className="rounded-xl border overflow-hidden transition-all"
-                    style={{
-                      borderColor: isActive ? '#F4A261' : '#E9E5E0',
-                      background: isActive ? '#FFF9F5' : '#fff',
-                    }}
-                  >
+              </p>
+              <div className="space-y-1">
+                {missions.map((m, mi) => {
+                  const mDone = m.steps.every((s) =>
+                    completedMissionSteps.has(`${m.missionId}:${s.stepId}`)
+                  );
+                  const mActive = mi === activeMissionIndex;
+                  return (
                     <button
-                      className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                      key={m.missionId}
                       onClick={() => {
-                        setActiveMissionIndex(mIndex);
+                        setActiveMissionIndex(mi);
                         setActiveStepIndex(0);
+                        setOutputVersions([]);
                         setUserInput('');
-                        toggleMission(mIndex);
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors"
+                      style={{
+                        background: mActive ? '#F4A261/10' : 'transparent',
                       }}
                     >
                       <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
+                        className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-colors"
                         style={{
-                          background: missionComplete
-                            ? '#98C9A3'
-                            : isActive
-                            ? '#F4A261'
-                            : '#E9E5E0',
-                          color: missionComplete || isActive ? '#fff' : '#57524D',
+                          background: mDone ? '#98C9A3' : mActive ? '#F4A261' : '#E9E5E0',
+                          color: mDone || mActive ? '#fff' : '#57524D',
                         }}
                       >
-                        {missionComplete ? <CheckCircle2 className="w-4 h-4" /> : mIndex + 1}
+                        {mDone ? <CheckCircle2 className="w-3 h-3" /> : mi + 1}
                       </div>
                       <span
-                        className="flex-1 text-sm font-semibold leading-snug"
-                        style={{ color: '#1C1A17' }}
+                        className="text-xs font-medium leading-tight"
+                        style={{ color: mActive ? '#1C1A17' : '#57524D' }}
                       >
-                        {mission.title}
+                        {m.title}
                       </span>
-                      <ChevronDown
-                        className="w-4 h-4 flex-shrink-0 transition-transform"
-                        style={{
-                          color: '#57524D',
-                          transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                        }}
-                      />
                     </button>
-
-                    {expanded && (
-                      <div className="px-4 pb-3 space-y-1 border-t" style={{ borderColor: '#F4EDE6' }}>
-                        {mission.steps.map((step, sIndex) => {
-                          const done = stepIsComplete(mIndex, sIndex);
-                          const isCurrentStep = isActive && sIndex === activeStepIndex;
-
-                          return (
-                            <button
-                              key={step.stepId}
-                              onClick={() => {
-                                setActiveMissionIndex(mIndex);
-                                setActiveStepIndex(sIndex);
-                                setUserInput('');
-                              }}
-                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors"
-                              style={{
-                                background: isCurrentStep ? '#F4A261/10' : 'transparent',
-                              }}
-                            >
-                              <div className="flex-shrink-0">
-                                {done ? (
-                                  <CheckCircle2
-                                    className="w-4 h-4"
-                                    style={{ color: '#98C9A3' }}
-                                    fill="currentColor"
-                                  />
-                                ) : (
-                                  <Circle
-                                    className="w-4 h-4"
-                                    style={{ color: isCurrentStep ? '#F4A261' : '#C5C0BB' }}
-                                  />
-                                )}
-                              </div>
-                              <span
-                                className="text-xs font-medium"
-                                style={{
-                                  color: isCurrentStep ? '#1C1A17' : '#57524D',
-                                }}
-                              >
-                                {step.title}
-                              </span>
-                              <span
-                                className={`ml-auto text-xs px-2 py-0.5 rounded-md border ${modeColors[step.mode] || modeColors.freeform}`}
-                              >
-                                {modeLabels[step.mode] || step.mode}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Right: Active step workspace */}
-            <div className="space-y-6">
-              {/* Mission context banner */}
-              <div
-                className="rounded-xl p-5 border"
-                style={{ background: '#FFF9F5', borderColor: '#F4EDE6' }}
-              >
-                <div className="flex flex-wrap items-start gap-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#F4A261' }}>
-                      Mission {activeMissionIndex + 1}
-                    </p>
-                    <h2 className="text-xl font-bold mb-2" style={{ color: '#1C1A17', fontFamily: "'Playfair Display', serif" }}>
-                      {activeMission.title}
-                    </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: '#57524D' }}>
-                      {activeMission.intro}
-                    </p>
-                  </div>
-                  <div
-                    className="rounded-lg px-3 py-2 text-xs border flex items-center gap-2"
-                    style={{ background: '#E9E5E0', borderColor: '#E9E5E0', color: '#57524D' }}
-                  >
-                    <Target className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>{activeMission.goal}</span>
-                  </div>
-                </div>
+            {/* Current mission guidance */}
+            <div
+              className="rounded-xl p-4 border"
+              style={{ background: '#fff', borderColor: '#E9E5E0' }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#F4A261' }}>
+                Now
+              </p>
+              <p className="text-sm font-semibold mb-2" style={{ color: '#1C1A17' }}>
+                {activeStep.title}
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: '#57524D' }}>
+                {activeStep.instruction}
+              </p>
+            </div>
+
+            {/* Next step hint */}
+            {!currentStepDone && (
+              <div className="flex items-start gap-2">
+                <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#F4A261' }} />
+                <p className="text-xs leading-relaxed" style={{ color: '#57524D' }}>
+                  {activeMission.goal}
+                </p>
               </div>
+            )}
 
-              {/* Step card */}
+            {/* Key lesson after step is done */}
+            {currentStepDone && (
               <div
-                className="rounded-xl border overflow-hidden"
-                style={{ background: '#fff', borderColor: '#E9E5E0' }}
+                className="rounded-xl p-4 border"
+                style={{ background: '#EEF3FA', borderColor: '#C8D8EF' }}
               >
-                {/* Step header */}
-                <div
-                  className="px-6 py-4 border-b flex items-center justify-between"
-                  style={{ background: '#F8F5F2', borderColor: '#E9E5E0' }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                      style={{ background: '#F4A261', color: '#fff' }}
-                    >
-                      {activeStepIndex + 1}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#57524D' }}>
-                        Step {activeStepIndex + 1} of {activeMission.steps.length}
-                      </p>
-                      <h3 className="font-bold text-base" style={{ color: '#1C1A17' }}>
-                        {activeStep.title}
-                      </h3>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-md border ${modeColors[activeStep.mode] || modeColors.freeform}`}
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#5B7DB1' }}>
+                  Key lesson
+                </p>
+                <p className="text-xs leading-relaxed" style={{ color: '#1C1A17' }}>
+                  {activeMission.keyLesson}
+                </p>
+              </div>
+            )}
+          </aside>
+
+          {/* ── Main workspace ── */}
+          <main className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 overflow-y-auto px-4 md:px-6 lg:px-10 xl:px-16 py-8 md:py-10">
+              <div className="max-w-2xl mx-auto space-y-8">
+
+                {/* Mission heading */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#F4A261' }}>
+                    Mission {activeMissionIndex + 1}
+                  </p>
+                  <h1
+                    className="text-2xl md:text-3xl font-bold leading-tight mb-2"
+                    style={{ color: '#1C1A17', fontFamily: "'Playfair Display', 'Georgia', serif" }}
                   >
-                    {modeLabels[activeStep.mode] || activeStep.mode}
-                  </span>
+                    {activeMission.title}
+                  </h1>
+                  <p className="text-sm leading-relaxed" style={{ color: '#57524D' }}>
+                    {activeMission.intro}
+                  </p>
                 </div>
 
-                <div className="p-6 space-y-5">
-                  {/* Instruction */}
+                {/* ── Input area (shown when no output yet, or for new input) ── */}
+                {isFirstUserInput && (
                   <div
-                    className="flex gap-3 p-4 rounded-lg border"
-                    style={{ background: '#F8F5F2', borderColor: '#E9E5E0' }}
+                    className="rounded-2xl border overflow-hidden transition-shadow"
+                    style={{ borderColor: '#E9E5E0', background: '#fff' }}
                   >
-                    <Lightbulb className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#F4A261' }} />
-                    <p className="text-sm leading-relaxed" style={{ color: '#57524D' }}>
-                      {activeStep.instruction}
-                    </p>
-                  </div>
-
-                  {/* Input area — only for first step */}
-                  {activeStepIndex === 0 ? (
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold" style={{ color: '#1C1A17' }}>
-                          Your Input
-                        </label>
-                        <button
-                          onClick={useExample}
-                          className="text-xs font-medium flex items-center gap-1.5 transition-colors"
-                          style={{ color: '#F4A261' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = '#B85C1A')}
-                          onMouseLeave={e => (e.currentTarget.style.color = '#F4A261')}
+                    {/* Current step pill */}
+                    <div
+                      className="flex items-center justify-between px-5 pt-4 pb-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
+                          style={{ background: '#F4A261', color: '#fff' }}
                         >
-                          <BookOpen className="w-3.5 h-3.5" />
-                          Use example
-                        </button>
+                          {activeStepIndex + 1}
+                        </div>
+                        <span className="text-xs font-semibold" style={{ color: '#1C1A17' }}>
+                          {activeStep.title}
+                        </span>
                       </div>
-                      <textarea
-                        ref={inputRef}
-                        value={userInput}
-                        onChange={e => setUserInput(e.target.value)}
-                        placeholder={activeMission.exampleInput}
-                        rows={4}
-                        className="w-full resize-none rounded-lg border px-4 py-3 text-sm leading-relaxed outline-none transition-colors"
-                        style={{
-                          background: '#F8F5F2',
-                          borderColor: '#E9E5E0',
-                          color: '#1C1A17',
-                        }}
-                        onFocus={e => (e.currentTarget.style.borderColor = '#F4A261')}
-                        onBlur={e => (e.currentTarget.style.borderColor = '#E9E5E0')}
-                      />
+                      <button
+                        onClick={useExample}
+                        className="text-xs transition-colors"
+                        style={{ color: '#F4A261' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#B85C1A')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#F4A261')}
+                      >
+                        Try example
+                      </button>
                     </div>
-                  ) : (
-                    /* Show previous output as context for subsequent steps */
-                    previousOutput && (
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <label className="text-sm font-semibold" style={{ color: '#1C1A17' }}>
-                            Previous Output (will be refined)
-                          </label>
-                          <button
-                            onClick={() => copyText(previousOutput, 'prev')}
-                            className="text-xs font-medium flex items-center gap-1.5 transition-colors"
-                            style={{ color: '#57524D' }}
-                          >
-                            {copied === 'prev' ? (
-                              <CheckCircle2 className="w-3.5 h-3.5" style={{ color: '#98C9A3' }} />
-                            ) : (
-                              <Copy className="w-3.5 h-3.5" />
+
+                    <textarea
+                      ref={inputRef}
+                      value={userInput}
+                      onChange={e => setUserInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend();
+                      }}
+                      placeholder={activeStep.instruction + '…'}
+                      className="w-full resize-none px-5 py-3 text-sm leading-relaxed outline-none"
+                      style={{
+                        background: 'transparent',
+                        color: '#1C1A17',
+                        minHeight: '96px',
+                        maxHeight: '240px',
+                      }}
+                    />
+
+                    <div
+                      className="flex items-center justify-between px-4 py-3 border-t"
+                      style={{ borderColor: '#F4EDE6' }}
+                    >
+                      <span className="text-xs" style={{ color: '#C5C0BB' }}>
+                        ⌘↵ to send
+                      </span>
+                      <button
+                        onClick={handleSend}
+                        disabled={!userInput.trim() || streaming}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-40"
+                        style={{ background: '#1C1A17', color: '#F8F5F2' }}
+                        onMouseEnter={e => {
+                          if (!streaming && userInput.trim()) e.currentTarget.style.background = '#F4A261';
+                        }}
+                        onMouseLeave={e => (e.currentTarget.style.background = '#1C1A17')}
+                      >
+                        {streaming ? (
+                          <RefreshCw className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Output thread ── */}
+                {outputVersions.length > 0 && (
+                  <div className="space-y-6">
+                    {outputVersions.map((v, vi) => {
+                      const isLatest = vi === outputVersions.length - 1;
+                      return (
+                        <div key={v.id}>
+                          {/* Version label */}
+                          <div className="flex items-center gap-2 mb-3">
+                            {vi > 0 && (
+                              <div
+                                className="w-px h-4 self-center"
+                                style={{ background: '#E9E5E0', marginLeft: '10px' }}
+                              />
                             )}
-                            {copied === 'prev' ? 'Copied' : 'Copy'}
-                          </button>
+                            <div
+                              className="flex items-center gap-2 text-xs font-semibold"
+                              style={{ color: isLatest ? '#F4A261' : '#C5C0BB' }}
+                            >
+                              <span
+                                className="w-5 h-5 rounded-full flex items-center justify-center text-xs"
+                                style={{
+                                  background: isLatest ? '#F4A261' : '#E9E5E0',
+                                  color: isLatest ? '#fff' : '#57524D',
+                                }}
+                              >
+                                {vi + 1}
+                              </span>
+                              {v.label}
+                            </div>
+                          </div>
+
+                          {/* Output text */}
+                          <div
+                            className="rounded-2xl p-5 text-sm leading-relaxed whitespace-pre-wrap relative group"
+                            style={{
+                              background: isLatest ? '#fff' : '#F8F5F2',
+                              color: isLatest ? '#1C1A17' : '#7A756F',
+                              borderLeft: isLatest ? '3px solid #F4A261' : '3px solid transparent',
+                            }}
+                          >
+                            {v.text}
+
+                            <button
+                              onClick={() => copyText(v.text, v.id)}
+                              className="absolute top-3 right-3 p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                              style={{ background: '#F8F5F2' }}
+                            >
+                              {copied === v.id ? (
+                                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: '#98C9A3' }} />
+                              ) : (
+                                <Copy className="w-3.5 h-3.5" style={{ color: '#57524D' }} />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* ── Streaming bubble ── */}
+                    {streaming && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div
+                            className="flex items-center gap-2 text-xs font-semibold"
+                            style={{ color: '#F4A261' }}
+                          >
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            Writing…
+                          </div>
                         </div>
                         <div
-                          className="rounded-lg border p-4 text-sm leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap"
+                          className="rounded-2xl p-5 text-sm leading-relaxed whitespace-pre-wrap"
                           style={{
-                            background: '#F8F5F2',
-                            borderColor: '#E9E5E0',
-                            color: '#57524D',
+                            background: '#fff',
+                            color: '#1C1A17',
+                            borderLeft: '3px solid #F4A261',
                           }}
                         >
-                          {previousOutput}
+                          {streamingText || (
+                            <span style={{ color: '#C5C0BB' }}>…</span>
+                          )}
                         </div>
                       </div>
-                    )
-                  )}
-
-                  {/* Run button */}
-                  <button
-                    onClick={handleRun}
-                    disabled={streaming || (activeStepIndex === 0 && !userInput.trim()) || (activeStepIndex > 0 && !previousOutput)}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-lg font-semibold text-sm transition-all"
-                    style={{
-                      background: streaming ? '#E9E5E0' : '#1C1A17',
-                      color: streaming ? '#57524D' : '#F8F5F2',
-                    }}
-                    onMouseEnter={e => {
-                      if (!streaming) {
-                        (e.currentTarget.style.background = '#F4A261');
-                        (e.currentTarget.style.color = '#1C1A17');
-                      }
-                    }}
-                    onMouseLeave={e => {
-                      if (!streaming) {
-                        (e.currentTarget.style.background = '#1C1A17');
-                        (e.currentTarget.style.color = '#F8F5F2');
-                      }
-                    }}
-                  >
-                    {streaming ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        Run this step
-                      </>
                     )}
-                  </button>
+                  </div>
+                )}
 
-                  {/* Streaming / output */}
-                  {(streaming || currentStepOutput) && (
-                    <div ref={outputRef}>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-semibold" style={{ color: '#1C1A17' }}>
-                          {streaming ? 'Generating...' : 'Output'}
-                        </label>
-                        {!streaming && currentStepOutput && (
+                {/* ── Post-output actions ── */}
+                {latestOutput && !streaming && (
+                  <div className="space-y-4">
+                    {/* Improve inline actions */}
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#C5C0BB' }}>
+                        Improve
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {IMPROVE_ACTIONS.map(action => (
                           <button
-                            onClick={() => copyText(currentStepOutput, activeStep.stepId)}
-                            className="text-xs font-medium flex items-center gap-1.5 transition-colors"
-                            style={{ color: '#57524D' }}
+                            key={action.mode}
+                            onClick={() => handleImprove(action.mode, action.label)}
+                            disabled={streaming}
+                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold border transition-all disabled:opacity-40"
+                            style={{
+                              background: '#fff',
+                              color: action.color,
+                              borderColor: '#E9E5E0',
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.borderColor = action.color;
+                              e.currentTarget.style.background = `${action.color}10`;
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.borderColor = '#E9E5E0';
+                              e.currentTarget.style.background = '#fff';
+                            }}
                           >
-                            {copied === activeStep.stepId ? (
-                              <CheckCircle2 className="w-3.5 h-3.5" style={{ color: '#98C9A3' }} />
-                            ) : (
-                              <Copy className="w-3.5 h-3.5" />
-                            )}
-                            {copied === activeStep.stepId ? 'Copied' : 'Copy'}
+                            <action.icon className="w-3.5 h-3.5" />
+                            {action.label}
                           </button>
-                        )}
-                      </div>
-                      <div
-                        className="rounded-lg border p-4 text-sm leading-relaxed min-h-[80px] whitespace-pre-wrap"
-                        style={{
-                          background: '#fff',
-                          borderColor: streaming ? '#F4A261' : '#E9E5E0',
-                          color: '#1C1A17',
-                          borderLeftWidth: '3px',
-                          borderLeftColor: '#F4A261',
-                        }}
-                      >
-                        {streaming ? streamingText || '...' : currentStepOutput}
+                        ))}
+                        <button
+                          onClick={handleReset}
+                          className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold border transition-all"
+                          style={{ background: '#fff', color: '#C5C0BB', borderColor: '#E9E5E0' }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.borderColor = '#C5C0BB';
+                            e.currentTarget.style.color = '#57524D';
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.borderColor = '#E9E5E0';
+                            e.currentTarget.style.color = '#C5C0BB';
+                          }}
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          Start over
+                        </button>
                       </div>
                     </div>
-                  )}
 
-                  {/* Navigation */}
-                  {currentStepOutput && !streaming && (
-                    <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: '#E9E5E0' }}>
-                      <div className="text-xs" style={{ color: '#98C9A3' }}>
-                        <CheckCircle2 className="w-4 h-4 inline mr-1.5" fill="currentColor" />
-                        Step complete
-                      </div>
-                      {!isLastStep && (
+                    {/* Next step in the mission */}
+                    {!isOnLastStep && !allDone && (
+                      <div
+                        className="flex items-center justify-between rounded-xl p-4 border"
+                        style={{ background: '#fff', borderColor: '#E9E5E0' }}
+                      >
+                        <div>
+                          <p className="text-xs font-semibold" style={{ color: '#57524D' }}>
+                            Next step
+                          </p>
+                          <p className="text-sm font-medium" style={{ color: '#1C1A17' }}>
+                            {activeStepIndex < activeMission.steps.length - 1
+                              ? activeMission.steps[activeStepIndex + 1].title
+                              : missions[activeMissionIndex + 1]?.title}
+                          </p>
+                        </div>
                         <button
-                          onClick={handleNextStep}
-                          className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg border transition-all"
-                          style={{
-                            background: '#F4A261',
-                            color: '#1C1A17',
-                            borderColor: '#F4A261',
-                          }}
+                          onClick={handleNextMissionStep}
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
+                          style={{ background: '#F4A261', color: '#1C1A17' }}
                           onMouseEnter={e => (e.currentTarget.style.background = '#E8863A')}
                           onMouseLeave={e => (e.currentTarget.style.background = '#F4A261')}
                         >
-                          Next Step
+                          Continue
                           <ChevronRight className="w-4 h-4" />
                         </button>
-                      )}
+                      </div>
+                    )}
+
+                    {/* Challenge card — appears after latest step */}
+                    {currentStepDone && (
+                      <div
+                        className="rounded-xl p-4 border"
+                        style={{ background: '#F0F7F2', borderColor: '#BEE0C9' }}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#2D6A42' }}>
+                          Your challenge
+                        </p>
+                        <p className="text-sm leading-relaxed" style={{ color: '#1C1A17' }}>
+                          {activeMission.challenge}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── All done ── */}
+                {allDone && (
+                  <div
+                    className="rounded-2xl p-8 border text-center"
+                    style={{ background: '#fff', borderColor: '#E9E5E0' }}
+                  >
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+                      style={{ background: '#F4A261' }}
+                    >
+                      <CheckCircle2 className="w-6 h-6 text-white" />
                     </div>
-                  )}
-                </div>
+                    <h3
+                      className="text-xl font-bold mb-2"
+                      style={{ color: '#1C1A17', fontFamily: "'Playfair Display', 'Georgia', serif" }}
+                    >
+                      Path Complete
+                    </h3>
+                    <p className="text-sm leading-relaxed mb-6 max-w-sm mx-auto" style={{ color: '#57524D' }}>
+                      You have completed all three missions and built a real AI writing system. Now take it further in the Writing Lab.
+                    </p>
+                    {onLabOpen && (
+                      <button
+                        onClick={() => onLabOpen('writing-lab')}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all"
+                        style={{ background: '#1C1A17', color: '#F8F5F2' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = '#F4A261')}
+                        onMouseLeave={e => (e.currentTarget.style.background = '#1C1A17')}
+                      >
+                        <PenLine className="w-4 h-4" />
+                        Open Writing Lab
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Scroll anchor */}
+                <div ref={workspaceBottomRef} />
               </div>
+            </div>
 
-              {/* Key lesson + challenge */}
-              {completedSteps.size > 0 && (
-                <div className="grid sm:grid-cols-2 gap-4">
+            {/* ── Sticky bottom input (after first send) ── */}
+            {!isFirstUserInput && !allDone && (
+              <div
+                className="border-t px-4 md:px-6 lg:px-10 xl:px-16 py-4"
+                style={{ background: '#F8F5F2', borderColor: '#E9E5E0' }}
+              >
+                <div className="max-w-2xl mx-auto">
                   <div
-                    className="rounded-xl p-5 border"
-                    style={{ background: '#5B7DB1/08', borderColor: '#5B7DB1/30' }}
+                    className="flex items-end gap-3 rounded-2xl border px-4 py-3"
+                    style={{ background: '#fff', borderColor: '#E9E5E0' }}
                   >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Zap className="w-4 h-4" style={{ color: '#5B7DB1' }} />
-                      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#5B7DB1' }}>
-                        Key Lesson
-                      </span>
-                    </div>
-                    <p className="text-sm leading-relaxed" style={{ color: '#1C1A17' }}>
-                      {activeMission.keyLesson}
-                    </p>
-                  </div>
-
-                  <div
-                    className="rounded-xl p-5 border"
-                    style={{ background: '#98C9A3/10', borderColor: '#98C9A3/40' }}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Target className="w-4 h-4" style={{ color: '#2D6A42' }} />
-                      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#2D6A42' }}>
-                        Challenge
-                      </span>
-                    </div>
-                    <p className="text-sm leading-relaxed" style={{ color: '#1C1A17' }}>
-                      {activeMission.challenge}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* All done */}
-              {isLastStep && currentStepOutput && (
-                <div
-                  className="rounded-xl p-6 border text-center"
-                  style={{ background: '#F4A261/10', borderColor: '#F4A261/40' }}
-                >
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                    style={{ background: '#F4A261' }}
-                  >
-                    <CheckCircle2 className="w-6 h-6" style={{ color: '#fff' }} />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1C1A17', fontFamily: "'Playfair Display', serif" }}>
-                    Path Complete
-                  </h3>
-                  <p className="text-sm leading-relaxed mb-4" style={{ color: '#57524D' }}>
-                    You have completed all three missions. You now have the foundation for a real AI writing system.
-                  </p>
-                  {onLabOpen && (
+                    <textarea
+                      value={userInput}
+                      onChange={e => setUserInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend();
+                      }}
+                      placeholder="Add more context or try a new input…"
+                      rows={1}
+                      className="flex-1 resize-none text-sm leading-relaxed outline-none"
+                      style={{
+                        background: 'transparent',
+                        color: '#1C1A17',
+                        maxHeight: '120px',
+                      }}
+                    />
                     <button
-                      onClick={() => onLabOpen('writing-lab')}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all"
+                      onClick={handleSend}
+                      disabled={!userInput.trim() || streaming}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0 transition-all disabled:opacity-40"
                       style={{ background: '#1C1A17', color: '#F8F5F2' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#F4A261')}
+                      onMouseEnter={e => {
+                        if (!streaming && userInput.trim()) e.currentTarget.style.background = '#F4A261';
+                      }}
                       onMouseLeave={e => (e.currentTarget.style.background = '#1C1A17')}
                     >
-                      <PenLine className="w-4 h-4" />
-                      Continue in Writing Lab
+                      {streaming ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Send className="w-3.5 h-3.5" />
+                      )}
                     </button>
-                  )}
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            )}
+          </main>
         </div>
       </div>
 
