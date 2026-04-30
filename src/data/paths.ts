@@ -22,6 +22,48 @@ interface PathInfo {
 }
 
 export const paths: Record<string, PathInfo> = {
+  'ai-writing-systems': {
+    id: 'ai-writing-systems',
+    title: 'AI WRITING SYSTEMS',
+    description: 'Turn rough ideas into clear, compelling, high-impact writing using AI.',
+    level: 'Beginner to Intermediate',
+    totalTime: '45–60 min',
+    finalProject: 'Build repeatable AI writing workflows for emails, content, messaging, and professional communication — and walk away with a content engine you can use every day.',
+    modules: [
+      {
+        id: 'writing-mission-1',
+        title: 'MISSION 1: TURN RAW IDEAS INTO CLEAR WRITING',
+        description: 'Turn messy thoughts into clean, organized writing',
+        lessons: [
+          { id: 'writing-step-1-1', title: 'Dump Your Thoughts', duration: '5 min' },
+          { id: 'writing-step-1-2', title: 'Make It Clearer', duration: '5 min' },
+          { id: 'writing-step-1-3', title: 'Polish the Tone', duration: '5 min' },
+        ],
+      },
+      {
+        id: 'writing-mission-2',
+        title: 'MISSION 2: REWRITE FOR IMPACT',
+        description: 'Learn how tone, length, and persuasion change the effect of your writing',
+        lessons: [
+          { id: 'writing-step-2-1', title: 'Make It Clearer', duration: '5 min' },
+          { id: 'writing-step-2-2', title: 'Make It Shorter', duration: '5 min' },
+          { id: 'writing-step-2-3', title: 'Make It More Persuasive', duration: '5 min' },
+          { id: 'writing-step-2-4', title: 'Generate Variations', duration: '10 min' },
+        ],
+      },
+      {
+        id: 'writing-mission-3',
+        title: 'MISSION 3: BUILD A CONTENT ENGINE',
+        description: 'Create a repeatable system for generating content at scale',
+        lessons: [
+          { id: 'writing-step-3-1', title: 'Start With an Idea', duration: '5 min' },
+          { id: 'writing-step-3-2', title: 'Improve the Draft', duration: '5 min' },
+          { id: 'writing-step-3-3', title: 'Polish the Voice', duration: '5 min' },
+          { id: 'writing-step-3-4', title: 'Repurpose the Content', duration: '10 min' },
+        ],
+      },
+    ],
+  },
   'ai-everyday-life': {
     id: 'ai-everyday-life',
     title: 'AI FOR EVERYDAY LIFE',

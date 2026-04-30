@@ -1,4 +1,4 @@
-import { ArrowLeft, Home, Palette, Briefcase, Zap } from 'lucide-react';
+import { ArrowLeft, Home, Palette, Briefcase, Zap, PenLine } from 'lucide-react';
 import { paths } from '../data/paths';
 
 interface PathsListPageProps {
@@ -7,6 +7,7 @@ interface PathsListPageProps {
 }
 
 const pathIcons: Record<string, React.ComponentType<any>> = {
+  'ai-writing-systems': PenLine,
   'ai-everyday-life': Home,
   'ai-for-creators': Palette,
   'ai-for-small-business': Briefcase,

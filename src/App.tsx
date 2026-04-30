@@ -28,6 +28,7 @@ import JournalPage from './components/JournalPage';
 import ProjectsPage from './components/ProjectsPage';
 import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
+import WritingSystemsPath from './components/WritingSystemsPath';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
 import BillingPage from './components/BillingPage';
@@ -120,6 +121,17 @@ function AppContent() {
     }
 
     if (view === 'path') {
+      if (selectedPath === 'ai-writing-systems') {
+        return (
+          <WritingSystemsPath
+            onBack={() => setView('paths-list')}
+            onLabOpen={(labId) => {
+              setSelectedLab(labId);
+              setView('lab-sandbox');
+            }}
+          />
+        );
+      }
       return (
         <PathPage
           key={pathRefreshKey}
