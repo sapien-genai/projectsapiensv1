@@ -12,7 +12,7 @@ import {
   TrendingUp,
   RotateCcw,
   Sparkles,
-  Lock,
+  ChevronDown,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBilling } from '../contexts/BillingContext';
@@ -33,10 +33,10 @@ interface OutputVersion {
 }
 
 const IMPROVE_ACTIONS = [
-  { mode: 'rewrite_clearer',          label: 'Clearer',       icon: AlignLeft  },
-  { mode: 'rewrite_shorter',          label: 'Shorter',       icon: Minimize2  },
-  { mode: 'rewrite_more_professional', label: 'Professional', icon: Briefcase  },
-  { mode: 'rewrite_more_persuasive',  label: 'Persuasive',    icon: TrendingUp },
+  { mode: 'rewrite_clearer',           label: 'Clearer',       icon: AlignLeft  },
+  { mode: 'rewrite_shorter',           label: 'Shorter',       icon: Minimize2  },
+  { mode: 'rewrite_more_professional', label: 'Professional',  icon: Briefcase  },
+  { mode: 'rewrite_more_persuasive',   label: 'Persuasive',    icon: TrendingUp },
 ];
 
 const IMPROVE_PROMPTS: Record<string, string> = {
@@ -55,28 +55,29 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
   const [activeStepIndex,    setActiveStepIndex]    = useState(0);
   const [completedStepKeys,  setCompletedStepKeys]  = useState<Set<string>>(new Set());
 
-  const [userInput,    setUserInput]    = useState('');
-  const [streaming,    setStreaming]    = useState(false);
+  const [userInput,     setUserInput]     = useState('');
+  const [streaming,     setStreaming]     = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [outputVersions, setOutputVersions] = useState<OutputVersion[]>([]);
   const [copied,  setCopied]  = useState<string | null>(null);
   const [limitInfo, setLimitInfo] = useState<{ limit: number; used: number } | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [missionMenuOpen, setMissionMenuOpen] = useState(false);
 
-  const bottomRef  = useRef<HTMLDivElement>(null);
-  const inputRef   = useRef<HTMLTextAreaElement>(null);
-  const bottomInputRef = useRef<HTMLTextAreaElement>(null);
+  const bottomRef      = useRef<HTMLDivElement>(null);
+  const inputRef       = useRef<HTMLTextAreaElement>(null);
+  const stickyInputRef = useRef<HTMLTextAreaElement>(null);
 
   const activeMission: WritingMission = missions[activeMissionIndex];
-  const activeStep = activeMission.steps[activeStepIndex];
+  const activeStep   = activeMission.steps[activeStepIndex];
   const latestOutput = outputVersions[outputVersions.length - 1]?.text ?? '';
-  const isFirstInput = outputVersions.length === 0;
+  const hasOutput    = outputVersions.length > 0;
 
-  const totalSteps    = missions.reduce((sum, m) => sum + m.steps.length, 0);
+  const totalSteps     = missions.reduce((sum, m) => sum + m.steps.length, 0);
   const completedCount = completedStepKeys.size;
-  const progressPct   = Math.round((completedCount / totalSteps) * 100);
+  const progressPct    = Math.round((completedCount / totalSteps) * 100);
 
-  const currentStepKey = `${activeMission.missionId}:${activeStep.stepId}`;
+  const currentStepKey  = `${activeMission.missionId}:${activeStep.stepId}`;
   const currentStepDone = completedStepKeys.has(currentStepKey);
 
   const isLastStep =
@@ -84,21 +85,34 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     activeStepIndex === activeMission.steps.length - 1;
   const allDone = isLastStep && currentStepDone;
 
-  // auto-scroll to bottom after each output
+  // Next label for the "continue" hint
+  const nextLabel =
+    activeStepIndex < activeMission.steps.length - 1
+      ? activeMission.steps[activeStepIndex + 1].title
+      : missions[activeMissionIndex + 1]?.title ?? '';
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [streamingText, outputVersions.length]);
 
-  // auto-resize textarea
+  // Auto-resize both textareas
   useEffect(() => {
-    [inputRef, bottomInputRef].forEach(ref => {
-      if (ref.current) {
-        ref.current.style.height = 'auto';
-        ref.current.style.height = Math.min(ref.current.scrollHeight, 200) + 'px';
-      }
+    [inputRef, stickyInputRef].forEach(ref => {
+      if (!ref.current) return;
+      ref.current.style.height = 'auto';
+      ref.current.style.height = Math.min(ref.current.scrollHeight, 160) + 'px';
     });
   }, [userInput]);
 
+  // Close mission menu on outside click
+  useEffect(() => {
+    if (!missionMenuOpen) return;
+    const close = () => setMissionMenuOpen(false);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [missionMenuOpen]);
+
+  // ── AI streaming ──────────────────────────────────────────────
   const callAI = useCallback(
     async (prompt: string, mode: string, onChunk: (t: string) => void): Promise<string> => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -108,7 +122,10 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`,
         {
           method: 'POST',
-          headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             prompt,
             labId: 'writing-lab',
@@ -137,7 +154,11 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
       let buf = '', full = '';
 
       const parseEvent = (raw: string) => {
-        const payload = raw.split(/\r?\n/).filter(l => l.startsWith('data: ')).map(l => l.slice(6).trim()).join('');
+        const payload = raw
+          .split(/\r?\n/)
+          .filter(l => l.startsWith('data: '))
+          .map(l => l.slice(6).trim())
+          .join('');
         if (!payload || payload === '[DONE]') return;
         try {
           const parsed = JSON.parse(payload);
@@ -178,7 +199,10 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     try {
       const full = await callAI(prompt, mode, t => setStreamingText(t));
       if (full) {
-        setOutputVersions(prev => [...prev, { id: `v${Date.now()}`, label, text: full, mode }]);
+        setOutputVersions(prev => [
+          ...prev,
+          { id: `v${Date.now()}`, label, text: full, mode },
+        ]);
         setCompletedStepKeys(prev => new Set([...prev, currentStepKey]));
         await saveExperiment(prompt, full);
       }
@@ -196,6 +220,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     const prompt = activeStep.promptTemplate
       .replace('{{user_input}}', text)
       .replace('{{previous_output}}', latestOutput || text);
+    setUserInput('');
     runAI(prompt, activeStep.mode, activeStep.title);
   };
 
@@ -215,7 +240,10 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     setUserInput('');
   };
 
-  const handleReset = () => { setOutputVersions([]); setUserInput(''); };
+  const handleReset = () => {
+    setOutputVersions([]);
+    setUserInput('');
+  };
 
   const copy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -225,17 +253,24 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
   const useExample = () => {
     setUserInput(activeMission.exampleInput);
-    (isFirstInput ? inputRef : bottomInputRef).current?.focus();
+    (hasOutput ? stickyInputRef : inputRef).current?.focus();
   };
 
+  const switchMission = (mi: number) => {
+    setActiveMissionIndex(mi);
+    setActiveStepIndex(0);
+    setOutputVersions([]);
+    setUserInput('');
+    setMissionMenuOpen(false);
+  };
+
+  // ── Render ────────────────────────────────────────────────────
   return (
     <>
-      <div className="flex h-screen bg-[#F4F4F4] overflow-hidden">
+      <div className="flex h-[100dvh] bg-[#F4F4F4] overflow-hidden">
 
-        {/* ── Left context rail ── */}
+        {/* ── Desktop sidebar (lg+) ── */}
         <aside className="hidden lg:flex flex-col w-64 xl:w-72 shrink-0 h-full border-r-2 border-black bg-[#F4F4F4] overflow-y-auto">
-
-          {/* Back */}
           <div className="px-4 py-4 border-b-2 border-black">
             <button
               onClick={onBack}
@@ -246,13 +281,13 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             </button>
           </div>
 
-          {/* Path title */}
           <div className="px-4 pt-5 pb-4 border-b-2 border-black">
-            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Writing Path</p>
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">
+              Writing Path
+            </p>
             <h2 className="font-extrabold text-base uppercase tracking-tight leading-tight">
               AI Writing Systems
             </h2>
-            {/* Progress bar */}
             <div className="mt-3 h-1.5 bg-white border border-black overflow-hidden">
               <div
                 className="h-full bg-[#FF6A00] transition-all duration-700"
@@ -262,9 +297,10 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             <p className="text-xs text-[#666666] mt-1.5">{completedCount} / {totalSteps} steps</p>
           </div>
 
-          {/* Mission list */}
           <div className="px-4 pt-4 pb-2">
-            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-3">Missions</p>
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-3">
+              Missions
+            </p>
             <div className="space-y-1">
               {missions.map((m, mi) => {
                 const done   = m.steps.every(s => completedStepKeys.has(`${m.missionId}:${s.stepId}`));
@@ -272,23 +308,16 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                 return (
                   <button
                     key={m.missionId}
-                    onClick={() => {
-                      setActiveMissionIndex(mi);
-                      setActiveStepIndex(0);
-                      setOutputVersions([]);
-                      setUserInput('');
-                    }}
+                    onClick={() => switchMission(mi)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
                       active ? 'bg-black text-white' : 'hover:bg-white'
                     }`}
                   >
-                    <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-black ${
-                        done  ? 'bg-[#FF6A00] text-black border-[#FF6A00]' :
-                        active ? 'bg-white text-black' :
-                                 'bg-[#F4F4F4] text-black'
-                      }`}
-                    >
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-black ${
+                      done   ? 'bg-[#FF6A00] text-black border-[#FF6A00]' :
+                      active ? 'bg-white text-black' :
+                               'bg-[#F4F4F4] text-black'
+                    }`}>
                       {done ? <CheckCircle2 className="w-3 h-3" strokeWidth={2.5} /> : mi + 1}
                     </div>
                     <span className="text-xs font-extrabold uppercase tracking-tight leading-tight line-clamp-2">
@@ -300,7 +329,6 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             </div>
           </div>
 
-          {/* Current step */}
           <div className="mx-4 mt-4 border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
             <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">
               Step {activeStepIndex + 1} of {activeMission.steps.length}
@@ -311,7 +339,6 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             <p className="text-xs text-[#555555] leading-relaxed">{activeStep.instruction}</p>
           </div>
 
-          {/* Next hint */}
           {!currentStepDone && (
             <div className="mx-4 mt-3 flex items-start gap-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FF6A00] mt-0.5 shrink-0" strokeWidth={2} />
@@ -319,20 +346,21 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             </div>
           )}
 
-          {/* Key lesson after completion */}
           {currentStepDone && (
             <div className="mx-4 mt-3 border-2 border-black bg-[#FFE5D9] p-3 shadow-[2px_2px_0px_#000]">
-              <p className="text-xs font-extrabold uppercase tracking-tight text-black mb-1">Key Lesson</p>
+              <p className="text-xs font-extrabold uppercase tracking-tight text-black mb-1">
+                Key Lesson
+              </p>
               <p className="text-xs leading-relaxed text-[#333]">{activeMission.keyLesson}</p>
             </div>
           )}
 
-          {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Skills footer */}
           <div className="px-4 py-4 border-t-2 border-black">
-            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-2">Skills</p>
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-2">
+              Skills
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {writingSystemsPath.skills.map(s => (
                 <span key={s} className="text-xs font-semibold px-2 py-1 bg-white border border-black">
@@ -346,53 +374,119 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
         {/* ── Main workspace ── */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-          {/* Top bar — mobile only */}
-          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
-            <button onClick={onBack} className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors">
-              <ArrowLeft className="w-4 h-4" strokeWidth={2} />
-              Back
-            </button>
-            <div className="text-center">
-              <p className="text-xs font-extrabold uppercase tracking-tight">AI Writing Systems</p>
-              <p className="text-xs text-[#666666]">Mission {activeMissionIndex + 1} · Step {activeStepIndex + 1}</p>
-            </div>
-            <span className="text-xs font-extrabold text-[#FF6A00]">{progressPct}%</span>
-          </div>
+          {/* ── Mobile top bar ── */}
+          <header className="lg:hidden shrink-0 bg-white border-b-2 border-black">
+            {/* Row 1: back + title + progress% */}
+            <div className="flex items-center gap-3 px-4 py-3">
+              <button
+                onClick={onBack}
+                className="p-1 -ml-1 shrink-0"
+                aria-label="Back"
+              >
+                <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
+              </button>
 
-          {/* Scrollable thread */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 space-y-8">
-
-              {/* Mission heading */}
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-1 border-2 border-black bg-[#FF6A00]">
-                    Mission {activeMissionIndex + 1}
-                  </span>
-                  <span className="text-xs font-semibold text-[#666666]">{writingSystemsPath.estimatedTime}</span>
-                </div>
-                <h1 className="font-extrabold text-2xl md:text-3xl uppercase tracking-tighter leading-none mb-3">
-                  {activeMission.title}
-                </h1>
-                <p className="text-sm leading-relaxed text-[#555555] max-w-xl">
-                  {activeMission.intro}
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-extrabold uppercase tracking-tight leading-none truncate">
+                  AI Writing Systems
                 </p>
+                {/* Thin progress bar */}
+                <div className="mt-1.5 h-1 bg-[#F4F4F4] border border-black/20 overflow-hidden w-full">
+                  <div
+                    className="h-full bg-[#FF6A00] transition-all duration-700"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
               </div>
 
-              {/* ── Initial input card ── */}
-              {isFirstInput && (
-                <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000]">
-                  {/* Step label */}
-                  <div className="flex items-center justify-between px-5 py-3 border-b-2 border-black bg-[#F4F4F4]">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center justify-center w-5 h-5 bg-[#FF6A00] border border-black text-xs font-extrabold">
-                        {activeStepIndex + 1}
-                      </span>
-                      <span className="text-xs font-extrabold uppercase tracking-tight">{activeStep.title}</span>
-                    </div>
+              <span className="text-xs font-extrabold text-[#FF6A00] shrink-0">
+                {progressPct}%
+              </span>
+            </div>
+
+            {/* Row 2: mission pill + dropdown trigger */}
+            <div className="flex items-center gap-2 px-4 pb-3">
+              <span className="text-xs px-2 py-1 bg-[#FF6A00] border border-black font-extrabold uppercase tracking-tight shrink-0">
+                M{activeMissionIndex + 1}
+              </span>
+
+              {/* Mission selector */}
+              <div className="relative flex-1 min-w-0" onClick={e => e.stopPropagation()}>
+                <button
+                  onClick={() => setMissionMenuOpen(o => !o)}
+                  className="w-full flex items-center justify-between gap-1 text-xs font-extrabold uppercase tracking-tight truncate"
+                >
+                  <span className="truncate">{activeMission.title}</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 shrink-0 transition-transform ${missionMenuOpen ? 'rotate-180' : ''}`}
+                    strokeWidth={2.5}
+                  />
+                </button>
+
+                {missionMenuOpen && (
+                  <div className="absolute top-full left-0 mt-1 z-50 w-64 bg-white border-2 border-black shadow-[3px_3px_0px_#000]">
+                    {missions.map((m, mi) => {
+                      const done   = m.steps.every(s => completedStepKeys.has(`${m.missionId}:${s.stepId}`));
+                      const active = mi === activeMissionIndex;
+                      return (
+                        <button
+                          key={m.missionId}
+                          onClick={() => switchMission(mi)}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-black/10 last:border-0 ${
+                            active ? 'bg-black text-white' : 'hover:bg-[#F4F4F4]'
+                          }`}
+                        >
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-black ${
+                            done   ? 'bg-[#FF6A00] text-black border-[#FF6A00]' :
+                            active ? 'bg-white text-black' :
+                                     'bg-[#F4F4F4] text-black'
+                          }`}>
+                            {done ? <CheckCircle2 className="w-3 h-3" strokeWidth={2.5} /> : mi + 1}
+                          </div>
+                          <span className="text-xs font-extrabold uppercase tracking-tight leading-tight">
+                            {m.title}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </header>
+
+          {/* ── Scrollable thread ── */}
+          <div className="flex-1 overflow-y-auto overscroll-y-contain">
+            <div className="max-w-2xl mx-auto px-4 md:px-6 pt-5 pb-4 space-y-5">
+
+              {/* ── Contextual step hint (replaces full mission intro on mobile) ── */}
+              <div className="flex items-start gap-2.5">
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-[#FF6A00] border border-black text-xs font-extrabold shrink-0 mt-0.5">
+                  {activeStepIndex + 1}
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold uppercase tracking-tight leading-snug">
+                    {activeStep.title}
+                  </p>
+                  <p className="text-xs text-[#666666] mt-0.5 leading-relaxed">
+                    {activeStep.instruction}
+                  </p>
+                </div>
+              </div>
+
+              {/* Mission intro — collapsed on mobile, visible on desktop via CSS */}
+              <p className="hidden md:block text-sm text-[#555555] leading-relaxed border-l-2 border-[#FF6A00] pl-3">
+                {activeMission.intro}
+              </p>
+
+              {/* ── Initial input (no output yet) ── */}
+              {!hasOutput && (
+                <div className="bg-white border-2 border-black shadow-[3px_3px_0px_#000]">
+                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/10 bg-[#F4F4F4]">
+                    <span className="text-xs text-[#888888]">Type your text below</span>
                     <button
                       onClick={useExample}
-                      className="text-xs font-semibold text-[#FF6A00] hover:underline"
+                      className="text-xs font-semibold text-[#FF6A00] hover:underline active:opacity-70"
                     >
                       Use example
                     </button>
@@ -402,20 +496,26 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                     ref={inputRef}
                     value={userInput}
                     onChange={e => setUserInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend(); }}
-                    placeholder={activeStep.instruction + '…'}
-                    className="w-full resize-none px-5 py-4 text-sm leading-relaxed bg-white focus:outline-none"
-                    style={{ minHeight: '100px', maxHeight: '200px' }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend();
+                    }}
+                    placeholder={activeMission.exampleInput}
+                    className="w-full resize-none px-4 py-3 text-sm leading-relaxed bg-white focus:outline-none"
+                    style={{ minHeight: '80px', maxHeight: '160px' }}
                   />
 
-                  <div className="flex items-center justify-between px-4 py-3 border-t-2 border-black bg-[#F4F4F4]">
-                    <span className="text-xs text-[#888888]">⌘↵ to send</span>
+                  {/* Send row */}
+                  <div className="flex items-center justify-between gap-2 px-3 py-2.5 border-t border-black/10">
+                    <span className="text-xs text-[#aaa] hidden sm:block">⌘↵ to send</span>
                     <button
                       onClick={handleSend}
                       disabled={!userInput.trim() || streaming}
-                      className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="ml-auto flex items-center gap-2 px-4 py-2 bg-black text-white text-xs font-extrabold uppercase tracking-tight active:scale-95 hover:bg-[#FF6A00] hover:text-black transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                      {streaming ? <RefreshCw className="w-3.5 h-3.5 animate-spin" strokeWidth={2} /> : <Send className="w-3.5 h-3.5" strokeWidth={2} />}
+                      {streaming
+                        ? <RefreshCw className="w-3.5 h-3.5 animate-spin" strokeWidth={2} />
+                        : <Send className="w-3.5 h-3.5" strokeWidth={2} />
+                      }
                       Send
                     </button>
                   </div>
@@ -424,34 +524,38 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
               {/* ── Output thread ── */}
               {outputVersions.length > 0 && (
-                <div className="space-y-5">
+                <div className="space-y-4">
                   {outputVersions.map((v, vi) => {
                     const isLatest = vi === outputVersions.length - 1;
                     return (
                       <div key={v.id}>
-                        {/* Version label row */}
-                        <div className="flex items-center gap-2 mb-2">
-                          {vi > 0 && <div className="ml-2 w-px h-4 bg-black/20" />}
+                        <div className="flex items-center gap-2 mb-1.5">
+                          {vi > 0 && (
+                            <div className="ml-1 w-px h-3 bg-black/20" />
+                          )}
                           <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-black ${
-                            isLatest ? 'bg-[#FF6A00] text-black' : 'bg-white text-[#888888]'
+                            isLatest
+                              ? 'bg-[#FF6A00] text-black border-[#FF6A00]'
+                              : 'bg-white text-[#999]'
                           }`}>
                             {vi === 0 ? 'Original' : v.label}
                           </span>
                         </div>
 
-                        {/* Output bubble */}
-                        <div className={`relative group border-2 p-5 text-sm leading-relaxed whitespace-pre-wrap ${
+                        <div className={`relative border-2 p-4 text-sm leading-relaxed whitespace-pre-wrap ${
                           isLatest
                             ? 'border-black bg-white shadow-[3px_3px_0px_#000] text-black'
-                            : 'border-black/25 bg-[#F4F4F4] text-[#777]'
+                            : 'border-black/20 bg-[#F4F4F4] text-[#888]'
                         }`}>
                           {v.text}
+                          {/* Copy — always visible on mobile, hover on desktop */}
                           <button
                             onClick={() => copy(v.text, v.id)}
-                            className="absolute top-3 right-3 p-1.5 bg-[#F4F4F4] border border-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#FF6A00] hover:border-[#FF6A00]"
+                            className="absolute top-2.5 right-2.5 p-1.5 bg-[#F4F4F4] border border-black active:scale-90 transition-transform md:opacity-0 md:group-hover:opacity-100"
+                            aria-label="Copy"
                           >
                             {copied === v.id
-                              ? <CheckCircle2 className="w-3.5 h-3.5 text-black" strokeWidth={2} />
+                              ? <CheckCircle2 className="w-3.5 h-3.5 text-[#FF6A00]" strokeWidth={2} />
                               : <Copy className="w-3.5 h-3.5" strokeWidth={2} />
                             }
                           </button>
@@ -463,93 +567,105 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                   {/* Streaming bubble */}
                   {streaming && (
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-1.5">
                         <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
                           <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
                           Writing…
                         </span>
                       </div>
-                      <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
-                        {streamingText || <span className="text-[#999]">…</span>}
+                      <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-4 text-sm leading-relaxed whitespace-pre-wrap min-h-[48px]">
+                        {streamingText || <span className="text-[#bbb]">…</span>}
                       </div>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* ── Post-output actions ── */}
+              {/* ── Improve actions (horizontally scrollable on mobile) ── */}
               {latestOutput && !streaming && (
-                <div className="space-y-4">
-
-                  {/* Improve actions */}
-                  <div>
-                    <p className="text-xs font-extrabold uppercase tracking-tight text-[#888888] mb-2">Improve</p>
-                    <div className="flex flex-wrap gap-2">
-                      {IMPROVE_ACTIONS.map(a => (
-                        <button
-                          key={a.mode}
-                          onClick={() => handleImprove(a.mode, a.label)}
-                          disabled={streaming}
-                          className="flex items-center gap-1.5 px-3 py-2 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors disabled:opacity-40"
-                        >
-                          <a.icon className="w-3.5 h-3.5" strokeWidth={2} />
-                          {a.label}
-                        </button>
-                      ))}
+                <div>
+                  <p className="text-xs font-extrabold uppercase tracking-tight text-[#888888] mb-2">
+                    Improve
+                  </p>
+                  {/* Scrollable row */}
+                  <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap snap-x snap-mandatory">
+                    {IMPROVE_ACTIONS.map(a => (
                       <button
-                        onClick={handleReset}
-                        className="flex items-center gap-1.5 px-3 py-2 border-2 border-black/30 bg-[#F4F4F4] text-xs font-extrabold uppercase tracking-tight text-[#888888] hover:border-black hover:text-black transition-colors"
+                        key={a.mode}
+                        onClick={() => handleImprove(a.mode, a.label)}
+                        disabled={streaming}
+                        className="flex items-center gap-2 px-4 py-3 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight whitespace-nowrap shrink-0 snap-start active:scale-95 active:bg-[#FF6A00] hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-all disabled:opacity-40 touch-manipulation"
+                        style={{ minWidth: '96px' }}
                       >
-                        <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
-                        Reset
+                        <a.icon className="w-4 h-4" strokeWidth={2} />
+                        {a.label}
                       </button>
-                    </div>
+                    ))}
+                    <button
+                      onClick={handleReset}
+                      className="flex items-center gap-2 px-4 py-3 border-2 border-black/30 bg-[#F4F4F4] text-xs font-extrabold uppercase tracking-tight whitespace-nowrap shrink-0 snap-start active:scale-95 hover:border-black hover:text-black text-[#888] transition-all touch-manipulation"
+                      style={{ minWidth: '80px' }}
+                    >
+                      <RotateCcw className="w-4 h-4" strokeWidth={2} />
+                      Reset
+                    </button>
                   </div>
+                </div>
+              )}
 
-                  {/* Next step row */}
-                  {!allDone && (
-                    <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
-                      <div>
-                        <p className="text-xs text-[#666666] font-semibold uppercase tracking-tight">Next</p>
-                        <p className="text-sm font-extrabold uppercase tracking-tight">
-                          {activeStepIndex < activeMission.steps.length - 1
-                            ? activeMission.steps[activeStepIndex + 1].title
-                            : missions[activeMissionIndex + 1]?.title ?? ''}
-                        </p>
-                      </div>
-                      <button
-                        onClick={handleNextStep}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#FF6A00] border-2 border-black text-black text-xs font-extrabold uppercase tracking-tight hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_#000] hover:shadow-none"
-                      >
-                        Continue
-                        <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-                      </button>
-                    </div>
-                  )}
+              {/* ── Next step / Continue ── */}
+              {latestOutput && !streaming && !allDone && (
+                <div className="flex items-center justify-between bg-white border-2 border-black p-3.5 shadow-[2px_2px_0px_#000]">
+                  <div className="min-w-0 mr-3">
+                    <p className="text-xs text-[#888] font-semibold uppercase tracking-tight">Up next</p>
+                    <p className="text-xs font-extrabold uppercase tracking-tight truncate">{nextLabel}</p>
+                  </div>
+                  <button
+                    onClick={handleNextStep}
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-[#FF6A00] border-2 border-black text-black text-xs font-extrabold uppercase tracking-tight shrink-0 active:scale-95 hover:bg-black hover:text-white transition-all touch-manipulation shadow-[2px_2px_0px_#000] hover:shadow-none"
+                  >
+                    Continue
+                    <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  </button>
+                </div>
+              )}
 
-                  {/* Challenge */}
-                  {currentStepDone && (
-                    <div className="border-2 border-black bg-[#FFE5D9] p-4 shadow-[2px_2px_0px_#000]">
-                      <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Your Challenge</p>
-                      <p className="text-sm leading-relaxed">{activeMission.challenge}</p>
-                    </div>
-                  )}
+              {/* ── Challenge card ── */}
+              {currentStepDone && (
+                <div className="border-2 border-black bg-[#FFE5D9] p-4">
+                  <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">
+                    Your Challenge
+                  </p>
+                  <p className="text-sm leading-relaxed">{activeMission.challenge}</p>
+                </div>
+              )}
+
+              {/* ── Key lesson (mobile — shown inline) ── */}
+              {currentStepDone && (
+                <div className="lg:hidden border-2 border-black bg-white p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-3.5 h-3.5 text-[#FF6A00]" strokeWidth={2} />
+                    <p className="text-xs font-extrabold uppercase tracking-tight">Key Lesson</p>
+                  </div>
+                  <p className="text-xs leading-relaxed text-[#444]">{activeMission.keyLesson}</p>
                 </div>
               )}
 
               {/* ── All done ── */}
               {allDone && (
-                <div className="border-2 border-black bg-black text-white p-8 shadow-[4px_4px_0px_#FF6A00] text-center">
-                  <CheckCircle2 className="w-8 h-8 text-[#FF6A00] mx-auto mb-4" strokeWidth={2} />
-                  <h3 className="font-extrabold text-2xl uppercase tracking-tighter mb-3">Path Complete</h3>
-                  <p className="text-sm text-[#CCCCCC] leading-relaxed mb-6 max-w-sm mx-auto">
+                <div className="border-2 border-black bg-black text-white p-6 shadow-[4px_4px_0px_#FF6A00] text-center">
+                  <CheckCircle2 className="w-8 h-8 text-[#FF6A00] mx-auto mb-3" strokeWidth={2} />
+                  <h3 className="font-extrabold text-xl uppercase tracking-tighter mb-2">
+                    Path Complete
+                  </h3>
+                  <p className="text-sm text-[#CCCCCC] leading-relaxed mb-5 max-w-xs mx-auto">
                     All three missions done. You now have a repeatable AI writing system.
                   </p>
-                  <div className="flex flex-wrap gap-3 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     {onLabOpen && (
                       <button
                         onClick={() => onLabOpen('writing-lab')}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#FF6A00] border-2 border-[#FF6A00] text-black font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:border-white transition-colors"
+                        className="flex items-center justify-center gap-2 px-5 py-3 bg-[#FF6A00] border-2 border-[#FF6A00] text-black font-extrabold text-xs uppercase tracking-tight active:scale-95 hover:bg-white hover:border-white transition-all touch-manipulation"
                       >
                         Open Writing Lab
                         <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
@@ -557,7 +673,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                     )}
                     <button
                       onClick={onBack}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-transparent border-2 border-white text-white font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-black transition-colors"
+                      className="flex items-center justify-center gap-2 px-5 py-3 border-2 border-white text-white font-extrabold text-xs uppercase tracking-tight active:scale-95 hover:bg-white hover:text-black transition-all touch-manipulation"
                     >
                       All Paths
                     </button>
@@ -569,32 +685,38 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
             </div>
           </div>
 
-          {/* ── Sticky bottom input (after first send) ── */}
-          {!isFirstInput && !allDone && (
-            <div className="border-t-2 border-black bg-white px-4 md:px-6 py-3">
+          {/* ── Sticky bottom input bar (after first send) ── */}
+          {hasOutput && !allDone && (
+            <div className="shrink-0 bg-white border-t-2 border-black px-3 py-2.5 safe-bottom">
               <div className="max-w-2xl mx-auto flex items-end gap-2">
-                <div className="flex-1 border-2 border-black bg-[#F4F4F4] flex items-end">
+                <div className="flex-1 flex items-end bg-[#F4F4F4] border-2 border-black focus-within:border-[#FF6A00] transition-colors">
                   <textarea
-                    ref={bottomInputRef}
+                    ref={stickyInputRef}
                     value={userInput}
                     onChange={e => setUserInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend(); }}
-                    placeholder="Add context or try a new input…"
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey && window.innerWidth > 640) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    placeholder="Add more context or a new input…"
                     rows={1}
-                    className="flex-1 w-full resize-none px-4 py-3 text-sm bg-transparent focus:outline-none"
+                    className="flex-1 w-full resize-none px-3 py-2.5 text-sm bg-transparent focus:outline-none"
                     style={{ maxHeight: '120px' }}
                   />
                   <button
                     onClick={useExample}
-                    className="self-end px-3 py-3 text-xs font-semibold text-[#888888] hover:text-[#FF6A00] transition-colors whitespace-nowrap border-l-2 border-black"
+                    className="self-end px-3 py-2.5 text-xs font-semibold text-[#aaa] hover:text-[#FF6A00] transition-colors whitespace-nowrap border-l-2 border-black/10 active:text-[#FF6A00]"
                   >
-                    Example
+                    eg.
                   </button>
                 </div>
                 <button
                   onClick={handleSend}
                   disabled={!userInput.trim() || streaming}
-                  className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation shrink-0"
+                  aria-label="Send"
                 >
                   {streaming
                     ? <RefreshCw className="w-4 h-4 animate-spin" strokeWidth={2} />
