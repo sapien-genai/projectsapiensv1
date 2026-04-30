@@ -616,6 +616,3 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
     </>
   );
 }
-
-
-export default WritingSystemsPath
