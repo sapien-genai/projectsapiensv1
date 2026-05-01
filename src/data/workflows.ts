@@ -1,4 +1,5 @@
 import { PenLine, ListTodo, Scale, Eye, Sun, CheckSquare, Moon, FolderTree, Video as LucideIcon } from 'lucide-react';
+import type { GuidanceCategory } from './guidanceLibrary';
 
 export type WorkflowId =
   | 'write'
@@ -29,6 +30,7 @@ export interface Workflow {
   promptTemplate: (input: string) => string;
   improveActions: ImproveAction[];
   category: WorkflowCategory;
+  guidanceCategory: GuidanceCategory;
 }
 
 const REWRITE_CLEARER: ImproveAction = {
@@ -65,6 +67,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       `Take the following rough thoughts and turn them into a clear, structured message. Return only the rewritten message:\n\n${input}`,
     improveActions: [REWRITE_CLEARER, REWRITE_SHORTER, REWRITE_PROFESSIONAL, REWRITE_PERSUASIVE],
     category: 'thinking',
+    guidanceCategory: 'writing',
   },
 
   plan: {
@@ -100,6 +103,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'thinking',
+    guidanceCategory: 'planning',
   },
 
   decide: {
@@ -135,6 +139,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'thinking',
+    guidanceCategory: 'decision',
   },
 
   review: {
@@ -170,6 +175,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'thinking',
+    guidanceCategory: 'review',
   },
 
   plan_day: {
@@ -205,6 +211,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'daily',
+    guidanceCategory: 'planning',
   },
 
   manage_tasks: {
@@ -240,6 +247,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'daily',
+    guidanceCategory: 'planning',
   },
 
   review_day: {
@@ -275,6 +283,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'daily',
+    guidanceCategory: 'review',
   },
 
   organize_life: {
@@ -310,6 +319,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
       },
     ],
     category: 'daily',
+    guidanceCategory: 'planning',
   },
 };
 

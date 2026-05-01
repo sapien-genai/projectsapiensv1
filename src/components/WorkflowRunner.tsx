@@ -5,6 +5,7 @@ import { useBilling } from '../contexts/BillingContext';
 import { supabase } from '../lib/supabase';
 import UpgradeModal from './UpgradeModal';
 import { Workflow } from '../data/workflows';
+import { getTip, getWhyBullets, getNextMoves } from '../data/guidanceLibrary';
 
 interface WorkflowRunnerProps {
   workflow: Workflow;
@@ -28,8 +29,9 @@ export default function WorkflowRunner({
   const [improves,   setImproves]   = useState(0);
   const [hasRan,     setHasRan]     = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
-  const [guidance,   setGuidance]   = useState<{ why: string[]; next: string[] } | null>(null);
-  const [loadingGuidance, setLoadingGuidance] = useState(false);
+  const [guidance, setGuidance] = useState<{ why: string[]; next: string[] } | null>(null);
+
+  const tip = workflow.inputTip || getTip(workflow.guidanceCategory);
 
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
@@ -115,39 +117,12 @@ export default function WorkflowRunner({
     [refreshUsageStatus, workflow.id]
   );
 
-  const fetchGuidance = useCallback(
-    async (result: string) => {
-      setLoadingGuidance(true);
-      setGuidance(null);
-      try {
-        const prompt =
-          `You are coaching a user on the "${workflow.label}" workflow (${workflow.tagline}).\n` +
-          `Given the AI output below, return STRICT JSON with two fields:\n` +
-          `{"why": string[], "next": string[]}\n` +
-          `- "why": 2 to 3 short bullets (max 12 words each) explaining what makes this output work — tone, structure, specificity. No lecture.\n` +
-          `- "next": 3 short action labels (max 5 words each) the user could do next to push it further. Imperative voice. Examples: "Make it more persuasive", "Shorten it", "Adapt for a new audience".\n` +
-          `Output ONLY JSON. No prose, no markdown.\n\n` +
-          `AI output:\n${result}`;
-
-        let full = '';
-        await callAI(prompt, t => { full = t; });
-
-        const match  = full.match(/\{[\s\S]*\}/);
-        const parsed = match ? JSON.parse(match[0]) : null;
-        if (parsed && Array.isArray(parsed.why) && Array.isArray(parsed.next)) {
-          setGuidance({
-            why:  parsed.why.slice(0, 3).map(String),
-            next: parsed.next.slice(0, 3).map(String),
-          });
-        }
-      } catch {
-        /* guidance is optional; fail silently */
-      } finally {
-        setLoadingGuidance(false);
-      }
-    },
-    [callAI, workflow.label, workflow.tagline]
-  );
+  const loadGuidance = useCallback(() => {
+    setGuidance({
+      why:  getWhyBullets(workflow.guidanceCategory, 3),
+      next: getNextMoves(workflow.guidanceCategory, 3),
+    });
+  }, [workflow.guidanceCategory]);
 
   const saveExperiment = useCallback(
     async (prompt: string, result: string) => {
@@ -174,7 +149,7 @@ export default function WorkflowRunner({
           if (kind === 'run')     setHasRan(true);
           if (kind === 'improve') setImproves(n => n + 1);
           await saveExperiment(prompt, full);
-          fetchGuidance(full);
+          loadGuidance();
         }
       } catch (e) {
         if (e instanceof Error && e.message === 'LIMIT_REACHED') setShowUpgrade(true);
@@ -182,7 +157,7 @@ export default function WorkflowRunner({
         setStreaming(false);
       }
     },
-    [callAI, saveExperiment, streaming, fetchGuidance]
+    [callAI, saveExperiment, streaming, loadGuidance]
   );
 
   const handleSend = useCallback(() => {
@@ -265,11 +240,11 @@ export default function WorkflowRunner({
             {workflow.tagline}.
           </p>
 
-          {!output && !streaming && workflow.inputTip && (
+          {!output && !streaming && tip && (
             <p className="mt-6 text-[13px] text-neutral-500 leading-relaxed">
               <span className="text-[#FF6A00] font-medium">Tip</span>
               <span className="mx-2 text-neutral-300">·</span>
-              {workflow.inputTip}
+              {tip}
             </p>
           )}
 
@@ -308,9 +283,9 @@ export default function WorkflowRunner({
                 )}
               </div>
 
-              {output && !streaming && (loadingGuidance || guidance) && (
+              {output && !streaming && guidance && (
                 <div className="mt-7 space-y-4">
-                  {guidance && guidance.why.length > 0 && (
+                  {guidance.why.length > 0 && (
                     <div>
                       <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
                         Why this works
@@ -329,7 +304,7 @@ export default function WorkflowRunner({
                     </div>
                   )}
 
-                  {guidance && guidance.next.length > 0 && (
+                  {guidance.next.length > 0 && (
                     <div>
                       <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
                         Next move
@@ -351,13 +326,6 @@ export default function WorkflowRunner({
                     </div>
                   )}
 
-                  {loadingGuidance && !guidance && (
-                    <div className="flex items-center gap-2 text-[13px] text-neutral-400">
-                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
-                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse [animation-delay:150ms]" />
-                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse [animation-delay:300ms]" />
-                    </div>
-                  )}
                 </div>
               )}
 
