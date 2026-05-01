@@ -1,24 +1,23 @@
-interface Module {
+export interface Step {
+  id: string;
+  title: string;
+}
+
+export interface Mission {
   id: string;
   title: string;
   description: string;
-  lessons: Lesson[];
+  outcome: string;
+  steps: Step[];
 }
 
-interface Lesson {
-  id: string;
-  title: string;
-  duration: string;
-}
-
-interface PathInfo {
+export interface PathInfo {
   id: string;
   title: string;
   description: string;
   level: string;
-  totalTime: string;
-  finalProject: string;
-  modules: Module[];
+  outcome: string;
+  missions: Mission[];
 }
 
 export const paths: Record<string, PathInfo> = {
@@ -27,357 +26,389 @@ export const paths: Record<string, PathInfo> = {
     title: 'AI WRITING SYSTEMS',
     description: 'Turn rough ideas into clear, compelling, high-impact writing using AI.',
     level: 'Beginner to Intermediate',
-    totalTime: '45–60 min',
-    finalProject: 'Build repeatable AI writing workflows for emails, content, messaging, and professional communication — and walk away with a content engine you can use every day.',
-    modules: [
+    outcome:
+      'By the end, you will have repeatable AI writing workflows for emails, content, messaging, and professional communication — and a content engine you can use every day.',
+    missions: [
       {
         id: 'writing-mission-1',
-        title: 'MISSION 1: TURN RAW IDEAS INTO CLEAR WRITING',
-        description: 'Turn messy thoughts into clean, organized writing',
-        lessons: [
-          { id: 'writing-step-1-1', title: 'Dump Your Thoughts', duration: '5 min' },
-          { id: 'writing-step-1-2', title: 'Make It Clearer', duration: '5 min' },
-          { id: 'writing-step-1-3', title: 'Polish the Tone', duration: '5 min' },
+        title: 'Mission 1: Turn Raw Ideas into Clear Writing',
+        description: 'Turn messy thoughts into clean, organized writing.',
+        outcome: 'By the end, you will have a repeatable workflow for turning scattered thoughts into polished, on-brand writing.',
+        steps: [
+          { id: 'writing-step-1-1', title: 'Dump Your Thoughts' },
+          { id: 'writing-step-1-2', title: 'Make It Clearer' },
+          { id: 'writing-step-1-3', title: 'Polish the Tone' },
         ],
       },
       {
         id: 'writing-mission-2',
-        title: 'MISSION 2: REWRITE FOR IMPACT',
-        description: 'Learn how tone, length, and persuasion change the effect of your writing',
-        lessons: [
-          { id: 'writing-step-2-1', title: 'Make It Clearer', duration: '5 min' },
-          { id: 'writing-step-2-2', title: 'Make It Shorter', duration: '5 min' },
-          { id: 'writing-step-2-3', title: 'Make It More Persuasive', duration: '5 min' },
-          { id: 'writing-step-2-4', title: 'Generate Variations', duration: '10 min' },
+        title: 'Mission 2: Rewrite for Impact',
+        description: 'Learn how tone, length, and persuasion change the effect of your writing.',
+        outcome: 'By the end, you will have multiple polished versions of the same message tuned for different audiences and situations.',
+        steps: [
+          { id: 'writing-step-2-1', title: 'Make It Clearer' },
+          { id: 'writing-step-2-2', title: 'Make It Shorter' },
+          { id: 'writing-step-2-3', title: 'Make It More Persuasive' },
+          { id: 'writing-step-2-4', title: 'Generate Variations' },
         ],
       },
       {
         id: 'writing-mission-3',
-        title: 'MISSION 3: BUILD A CONTENT ENGINE',
-        description: 'Create a repeatable system for generating content at scale',
-        lessons: [
-          { id: 'writing-step-3-1', title: 'Start With an Idea', duration: '5 min' },
-          { id: 'writing-step-3-2', title: 'Improve the Draft', duration: '5 min' },
-          { id: 'writing-step-3-3', title: 'Polish the Voice', duration: '5 min' },
-          { id: 'writing-step-3-4', title: 'Repurpose the Content', duration: '10 min' },
+        title: 'Mission 3: Build a Content Engine',
+        description: 'Create a repeatable system for generating content at scale.',
+        outcome: 'By the end, you will have a full post, social variations, title options, and a short summary — all from a single idea.',
+        steps: [
+          { id: 'writing-step-3-1', title: 'Start With an Idea' },
+          { id: 'writing-step-3-2', title: 'Improve the Draft' },
+          { id: 'writing-step-3-3', title: 'Polish the Voice' },
+          { id: 'writing-step-3-4', title: 'Repurpose the Content' },
         ],
       },
     ],
   },
+
   'ai-everyday-life': {
     id: 'ai-everyday-life',
     title: 'AI FOR EVERYDAY LIFE',
     description: 'Use AI for personal growth, daily decisions, and life optimization. No technical background needed.',
     level: 'Beginner',
-    totalTime: '~8 hours',
-    finalProject: 'By the end of this path, you\'ll have created your own Personal AI Dashboard — a custom collection of AI workflows that help you with meal planning, scheduling, learning, decision-making, and more.',
-    modules: [
+    outcome:
+      'By the end, you will have your own Personal AI Dashboard — a custom collection of AI workflows for meal planning, scheduling, learning, and decision-making.',
+    missions: [
       {
         id: 'module-1',
-        title: 'MODULE 1: AI FUNDAMENTALS',
-        description: 'Understanding AI in your daily context',
-        lessons: [
-          { id: 'lesson-1-1', title: 'What AI Actually Is (No Jargon)', duration: '10 min' },
-          { id: 'lesson-1-2', title: 'Your First Prompt: Talk to AI Like a Human', duration: '15 min' },
-          { id: 'lesson-1-3', title: 'The 3 Types of AI You Use Every Day', duration: '12 min' },
-          { id: 'lesson-1-4', title: 'Practice Lab: Write 5 Different Prompts', duration: '20 min' },
+        title: 'Mission 1: AI Fundamentals',
+        description: 'Understand AI in your daily context.',
+        outcome: 'By the end, you will be able to talk to any AI like a human and get consistently useful responses.',
+        steps: [
+          { id: 'lesson-1-1', title: 'What AI Actually Is (No Jargon)' },
+          { id: 'lesson-1-2', title: 'Your First Prompt: Talk to AI Like a Human' },
+          { id: 'lesson-1-3', title: 'The 3 Types of AI You Use Every Day' },
+          { id: 'lesson-1-4', title: 'Write 5 Different Prompts' },
         ],
       },
       {
         id: 'module-2',
-        title: 'MODULE 2: PERSONAL PRODUCTIVITY',
-        description: 'Use AI to organize, plan, and decide',
-        lessons: [
-          { id: 'lesson-2-1', title: 'Meal Planning with AI', duration: '15 min' },
-          { id: 'lesson-2-2', title: 'Travel Itinerary Generator', duration: '18 min' },
-          { id: 'lesson-2-3', title: 'Daily Schedule Optimizer', duration: '20 min' },
-          { id: 'lesson-2-4', title: 'Decision-Making Framework', duration: '25 min' },
-          { id: 'lesson-2-5', title: 'Practice Lab: Plan Your Week', duration: '30 min' },
+        title: 'Mission 2: Personal Productivity',
+        description: 'Use AI to organize, plan, and decide.',
+        outcome: 'By the end, you will have AI workflows that run your meal planning, travel, schedule, and big decisions.',
+        steps: [
+          { id: 'lesson-2-1', title: 'Meal Planning with AI' },
+          { id: 'lesson-2-2', title: 'Travel Itinerary Generator' },
+          { id: 'lesson-2-3', title: 'Daily Schedule Optimizer' },
+          { id: 'lesson-2-4', title: 'Decision-Making Framework' },
+          { id: 'lesson-2-5', title: 'Plan Your Week' },
         ],
       },
       {
         id: 'module-3',
-        title: 'MODULE 3: LEARNING & GROWTH',
-        description: 'Accelerate your personal development',
-        lessons: [
-          { id: 'lesson-3-1', title: 'Create Your Personal Learning Path', duration: '20 min' },
-          { id: 'lesson-3-2', title: 'AI as Your Study Partner', duration: '18 min' },
-          { id: 'lesson-3-3', title: 'Skill Gap Analysis', duration: '22 min' },
-          { id: 'lesson-3-4', title: 'Practice Lab: Build a Study Plan', duration: '30 min' },
+        title: 'Mission 3: Learning & Growth',
+        description: 'Accelerate your personal development.',
+        outcome: 'By the end, you will have a personalized AI study system and a custom learning plan.',
+        steps: [
+          { id: 'lesson-3-1', title: 'Create Your Personal Learning Path' },
+          { id: 'lesson-3-2', title: 'AI as Your Study Partner' },
+          { id: 'lesson-3-3', title: 'Skill Gap Analysis' },
+          { id: 'lesson-3-4', title: 'Build a Study Plan' },
         ],
       },
       {
         id: 'module-4',
-        title: 'MODULE 4: CREATIVITY & EXPRESSION',
-        description: 'Unlock your creative potential',
-        lessons: [
-          { id: 'lesson-4-1', title: 'Writing Better Emails & Messages', duration: '15 min' },
-          { id: 'lesson-4-2', title: 'Storytelling with AI', duration: '20 min' },
-          { id: 'lesson-4-3', title: 'Personal Journaling Assistant', duration: '18 min' },
-          { id: 'lesson-4-4', title: 'Practice Lab: Write Your Story', duration: '30 min' },
+        title: 'Mission 4: Creativity & Expression',
+        description: 'Unlock your creative potential.',
+        outcome: 'By the end, you will have AI workflows for emails, storytelling, and journaling that sound like you.',
+        steps: [
+          { id: 'lesson-4-1', title: 'Writing Better Emails & Messages' },
+          { id: 'lesson-4-2', title: 'Storytelling with AI' },
+          { id: 'lesson-4-3', title: 'Personal Journaling Assistant' },
+          { id: 'lesson-4-4', title: 'Write Your Story' },
         ],
       },
       {
         id: 'module-5',
-        title: 'MODULE 5: FINAL PROJECT',
-        description: 'Build your personal AI dashboard',
-        lessons: [
-          { id: 'lesson-5-1', title: 'Building Your AI Command Center', duration: '30 min' },
-          { id: 'lesson-5-2', title: 'Integrating Your AI Workflows', duration: '25 min' },
-          { id: 'lesson-5-3', title: 'Automation & Smart Routines', duration: '20 min' },
-          { id: 'lesson-5-4', title: 'Testing & Optimization', duration: '25 min' },
-          { id: 'lesson-5-5', title: 'Launch Your Command Center', duration: '30 min' },
+        title: 'Mission 5: Launch Your Command Center',
+        description: 'Build your personal AI dashboard.',
+        outcome: 'By the end, you will have a live AI Command Center running your routines, decisions, and daily flow.',
+        steps: [
+          { id: 'lesson-5-1', title: 'Building Your AI Command Center' },
+          { id: 'lesson-5-2', title: 'Integrating Your AI Workflows' },
+          { id: 'lesson-5-3', title: 'Automation & Smart Routines' },
+          { id: 'lesson-5-4', title: 'Testing & Optimization' },
+          { id: 'lesson-5-5', title: 'Launch Your Command Center' },
         ],
       },
     ],
   },
+
   'ai-for-creators': {
     id: 'ai-for-creators',
     title: 'AI FOR CREATORS',
     description: 'Create content, art, and experiences with AI. Master the tools that amplify your creative vision.',
     level: 'Beginner to Intermediate',
-    totalTime: '~10 hours',
-    finalProject: 'Launch your own AI-Powered Creative Project — a portfolio piece that showcases your unique creative process enhanced by AI, whether it\'s content, art, music, or multimedia.',
-    modules: [
+    outcome:
+      'By the end, you will have launched your own AI-powered creative project — a portfolio piece that showcases your unique creative process enhanced by AI.',
+    missions: [
       {
         id: 'creator-module-1',
-        title: 'MODULE 1: THE CREATOR\'S MINDSET',
-        description: 'AI as your creative collaborator',
-        lessons: [
-          { id: 'creator-lesson-1-1', title: 'AI Won\'t Replace You. Here\'s Why.', duration: '12 min' },
-          { id: 'creator-lesson-1-2', title: 'Finding Your Creative Voice with AI', duration: '15 min' },
-          { id: 'creator-lesson-1-3', title: 'The 5 Creative AI Tools Every Creator Needs', duration: '18 min' },
-          { id: 'creator-lesson-1-4', title: 'Practice Lab: Create Your First AI-Assisted Piece', duration: '25 min' },
+        title: 'Mission 1: The Creator\'s Mindset',
+        description: 'AI as your creative collaborator.',
+        outcome: 'By the end, you will have created your first AI-assisted piece in your own voice.',
+        steps: [
+          { id: 'creator-lesson-1-1', title: 'AI Won\'t Replace You. Here\'s Why.' },
+          { id: 'creator-lesson-1-2', title: 'Finding Your Creative Voice with AI' },
+          { id: 'creator-lesson-1-3', title: 'The 5 Creative AI Tools Every Creator Needs' },
+          { id: 'creator-lesson-1-4', title: 'Create Your First AI-Assisted Piece' },
         ],
       },
       {
         id: 'creator-module-2',
-        title: 'MODULE 2: CONTENT CREATION MASTERY',
-        description: 'Write better, faster, and more consistently',
-        lessons: [
-          { id: 'creator-lesson-2-1', title: 'The Content Brief: Teaching AI Your Style', duration: '20 min' },
-          { id: 'creator-lesson-2-2', title: 'Blog Posts That Convert', duration: '25 min' },
-          { id: 'creator-lesson-2-3', title: 'Social Media Content Factory', duration: '22 min' },
-          { id: 'creator-lesson-2-4', title: 'Video Scripts & Storyboards', duration: '28 min' },
-          { id: 'creator-lesson-2-5', title: 'Practice Lab: 30 Days of Content in 30 Minutes', duration: '35 min' },
+        title: 'Mission 2: Content Creation Mastery',
+        description: 'Write better, faster, and more consistently.',
+        outcome: 'By the end, you will have 30 days of content planned and ready to ship.',
+        steps: [
+          { id: 'creator-lesson-2-1', title: 'The Content Brief: Teaching AI Your Style' },
+          { id: 'creator-lesson-2-2', title: 'Blog Posts That Convert' },
+          { id: 'creator-lesson-2-3', title: 'Social Media Content Factory' },
+          { id: 'creator-lesson-2-4', title: 'Video Scripts & Storyboards' },
+          { id: 'creator-lesson-2-5', title: '30 Days of Content in 30 Minutes' },
         ],
       },
       {
         id: 'creator-module-3',
-        title: 'MODULE 3: VISUAL STORYTELLING',
-        description: 'Design, illustration, and visual concepts',
-        lessons: [
-          { id: 'creator-lesson-3-1', title: 'Prompt Engineering for Visual Art', duration: '25 min' },
-          { id: 'creator-lesson-3-2', title: 'Creating Consistent Brand Assets', duration: '30 min' },
-          { id: 'creator-lesson-3-3', title: 'Concept Art & Mood Boards', duration: '28 min' },
-          { id: 'creator-lesson-3-4', title: 'Combining AI Art with Traditional Tools', duration: '32 min' },
-          { id: 'creator-lesson-3-5', title: 'Practice Lab: Build a Visual Identity', duration: '40 min' },
+        title: 'Mission 3: Visual Storytelling',
+        description: 'Design, illustration, and visual concepts.',
+        outcome: 'By the end, you will have a complete visual identity built with AI — logos, moodboards, and brand assets.',
+        steps: [
+          { id: 'creator-lesson-3-1', title: 'Prompt Engineering for Visual Art' },
+          { id: 'creator-lesson-3-2', title: 'Creating Consistent Brand Assets' },
+          { id: 'creator-lesson-3-3', title: 'Concept Art & Mood Boards' },
+          { id: 'creator-lesson-3-4', title: 'Combining AI Art with Traditional Tools' },
+          { id: 'creator-lesson-3-5', title: 'Build a Visual Identity' },
         ],
       },
       {
         id: 'creator-module-4',
-        title: 'MODULE 4: ADVANCED WORKFLOWS',
-        description: 'Chain AI tools for powerful results',
-        lessons: [
-          { id: 'creator-lesson-4-1', title: 'The Creative Workflow Stack', duration: '30 min' },
-          { id: 'creator-lesson-4-2', title: 'Idea Generation to Final Product', duration: '35 min' },
-          { id: 'creator-lesson-4-3', title: 'Quality Control & Human Touch', duration: '25 min' },
-          { id: 'creator-lesson-4-4', title: 'Practice Lab: Build Your Signature Workflow', duration: '45 min' },
+        title: 'Mission 4: Advanced Workflows',
+        description: 'Chain AI tools for powerful results.',
+        outcome: 'By the end, you will have a signature creative workflow you can run from idea to finished product.',
+        steps: [
+          { id: 'creator-lesson-4-1', title: 'The Creative Workflow Stack' },
+          { id: 'creator-lesson-4-2', title: 'Idea Generation to Final Product' },
+          { id: 'creator-lesson-4-3', title: 'Quality Control & Human Touch' },
+          { id: 'creator-lesson-4-4', title: 'Build Your Signature Workflow' },
         ],
       },
       {
         id: 'creator-module-5',
-        title: 'MODULE 5: LAUNCH YOUR PROJECT',
-        description: 'Create and share your masterpiece',
-        lessons: [
-          { id: 'creator-lesson-5-1', title: 'Choosing Your Project', duration: '20 min' },
-          { id: 'creator-lesson-5-2', title: 'Production Week: Build It', duration: '90 min' },
-          { id: 'creator-lesson-5-3', title: 'Polish & Perfect', duration: '45 min' },
-          { id: 'creator-lesson-5-4', title: 'Launch Strategy & Community Feedback', duration: '30 min' },
+        title: 'Mission 5: Launch Your Project',
+        description: 'Create and share your masterpiece.',
+        outcome: 'By the end, you will have shipped a public creative project built with your AI workflow.',
+        steps: [
+          { id: 'creator-lesson-5-1', title: 'Choosing Your Project' },
+          { id: 'creator-lesson-5-2', title: 'Production Week: Build It' },
+          { id: 'creator-lesson-5-3', title: 'Polish & Perfect' },
+          { id: 'creator-lesson-5-4', title: 'Launch Strategy & Community Feedback' },
         ],
       },
     ],
   },
+
   'ai-for-small-business': {
     id: 'ai-for-small-business',
     title: 'AI FOR SMALL BUSINESS',
     description: 'Automate operations, marketing, and decisions. Scale your business without scaling your team.',
     level: 'Beginner to Intermediate',
-    totalTime: '~12 hours',
-    finalProject: 'Build your Mini AI Ops Stack — an integrated system of AI workflows that automate customer support, marketing, operations, and decision-making for your business.',
-    modules: [
+    outcome:
+      'By the end, you will have built your Mini AI Ops Stack — integrated workflows that automate customer support, marketing, operations, and decision-making for your business.',
+    missions: [
       {
         id: 'business-module-1',
-        title: 'MODULE 1: AI FOR BUSINESS BASICS',
-        description: 'Understanding AI ROI and business applications',
-        lessons: [
-          { id: 'business-lesson-1-1', title: 'Where AI Actually Saves You Money', duration: '15 min' },
-          { id: 'business-lesson-1-2', title: 'The Small Business AI Stack', duration: '18 min' },
-          { id: 'business-lesson-1-3', title: 'ROI Calculator: Measure AI Impact', duration: '20 min' },
-          { id: 'business-lesson-1-4', title: 'Practice Lab: Audit Your Business Processes', duration: '30 min' },
+        title: 'Mission 1: AI for Business Basics',
+        description: 'Understand AI ROI and business applications.',
+        outcome: 'By the end, you will have audited your business processes and identified where AI will save you the most time and money.',
+        steps: [
+          { id: 'business-lesson-1-1', title: 'Where AI Actually Saves You Money' },
+          { id: 'business-lesson-1-2', title: 'The Small Business AI Stack' },
+          { id: 'business-lesson-1-3', title: 'ROI Calculator: Measure AI Impact' },
+          { id: 'business-lesson-1-4', title: 'Audit Your Business Processes' },
         ],
       },
       {
         id: 'business-module-2',
-        title: 'MODULE 2: CUSTOMER-FACING AI',
-        description: 'Support, sales, and communication automation',
-        lessons: [
-          { id: 'business-lesson-2-1', title: 'AI-Powered Customer Support', duration: '25 min' },
-          { id: 'business-lesson-2-2', title: 'Sales Email Sequences That Convert', duration: '30 min' },
-          { id: 'business-lesson-2-3', title: 'Chatbots & FAQ Automation', duration: '28 min' },
-          { id: 'business-lesson-2-4', title: 'Personalization at Scale', duration: '25 min' },
-          { id: 'business-lesson-2-5', title: 'Practice Lab: Build Your First Support Bot', duration: '45 min' },
+        title: 'Mission 2: Customer-Facing AI',
+        description: 'Support, sales, and communication automation.',
+        outcome: 'By the end, you will have a working AI support bot and a converting sales email sequence.',
+        steps: [
+          { id: 'business-lesson-2-1', title: 'AI-Powered Customer Support' },
+          { id: 'business-lesson-2-2', title: 'Sales Email Sequences That Convert' },
+          { id: 'business-lesson-2-3', title: 'Chatbots & FAQ Automation' },
+          { id: 'business-lesson-2-4', title: 'Personalization at Scale' },
+          { id: 'business-lesson-2-5', title: 'Build Your First Support Bot' },
         ],
       },
       {
         id: 'business-module-3',
-        title: 'MODULE 3: MARKETING AUTOMATION',
-        description: 'Content, social media, and campaign management',
-        lessons: [
-          { id: 'business-lesson-3-1', title: 'Content Calendar in 30 Minutes', duration: '25 min' },
-          { id: 'business-lesson-3-2', title: 'Social Media Post Factory', duration: '28 min' },
-          { id: 'business-lesson-3-3', title: 'Email Marketing with AI', duration: '30 min' },
-          { id: 'business-lesson-3-4', title: 'Ad Copy & Landing Page Optimization', duration: '32 min' },
-          { id: 'business-lesson-3-5', title: 'Practice Lab: 90-Day Marketing Plan', duration: '45 min' },
+        title: 'Mission 3: Marketing Automation',
+        description: 'Content, social media, and campaign management.',
+        outcome: 'By the end, you will have a 90-day marketing plan and a social media content engine running on AI.',
+        steps: [
+          { id: 'business-lesson-3-1', title: 'Content Calendar in 30 Minutes' },
+          { id: 'business-lesson-3-2', title: 'Social Media Post Factory' },
+          { id: 'business-lesson-3-3', title: 'Email Marketing with AI' },
+          { id: 'business-lesson-3-4', title: 'Ad Copy & Landing Page Optimization' },
+          { id: 'business-lesson-3-5', title: '90-Day Marketing Plan' },
         ],
       },
       {
         id: 'business-module-4',
-        title: 'MODULE 4: OPERATIONS & ANALYTICS',
-        description: 'Process automation and data-driven decisions',
-        lessons: [
-          { id: 'business-lesson-4-1', title: 'Automating Repetitive Tasks', duration: '30 min' },
-          { id: 'business-lesson-4-2', title: 'Financial Forecasting & Budgeting', duration: '35 min' },
-          { id: 'business-lesson-4-3', title: 'Inventory & Supply Chain Optimization', duration: '30 min' },
-          { id: 'business-lesson-4-4', title: 'Data Analysis for Business Decisions', duration: '35 min' },
-          { id: 'business-lesson-4-5', title: 'Practice Lab: Build Your Dashboard', duration: '45 min' },
+        title: 'Mission 4: Operations & Analytics',
+        description: 'Process automation and data-driven decisions.',
+        outcome: 'By the end, you will have an AI-powered dashboard that turns raw data into business decisions.',
+        steps: [
+          { id: 'business-lesson-4-1', title: 'Automating Repetitive Tasks' },
+          { id: 'business-lesson-4-2', title: 'Financial Forecasting & Budgeting' },
+          { id: 'business-lesson-4-3', title: 'Inventory & Supply Chain Optimization' },
+          { id: 'business-lesson-4-4', title: 'Data Analysis for Business Decisions' },
+          { id: 'business-lesson-4-5', title: 'Build Your Dashboard' },
         ],
       },
       {
         id: 'business-module-5',
-        title: 'MODULE 5: INTEGRATION & SCALING',
-        description: 'Build your complete AI operations system',
-        lessons: [
-          { id: 'business-lesson-5-1', title: 'Mapping Your AI Ops Stack', duration: '30 min' },
-          { id: 'business-lesson-5-2', title: 'Connecting Tools & Workflows', duration: '60 min' },
-          { id: 'business-lesson-5-3', title: 'Training Your Team on AI Tools', duration: '40 min' },
-          { id: 'business-lesson-5-4', title: 'Measuring Success & Iterating', duration: '35 min' },
-          { id: 'business-lesson-5-5', title: 'Final Project: Present Your AI Stack', duration: '45 min' },
+        title: 'Mission 5: Integration & Scaling',
+        description: 'Build your complete AI operations system.',
+        outcome: 'By the end, you will have a fully integrated AI Ops Stack and the team trained to run it.',
+        steps: [
+          { id: 'business-lesson-5-1', title: 'Mapping Your AI Ops Stack' },
+          { id: 'business-lesson-5-2', title: 'Connecting Tools & Workflows' },
+          { id: 'business-lesson-5-3', title: 'Training Your Team on AI Tools' },
+          { id: 'business-lesson-5-4', title: 'Measuring Success & Iterating' },
+          { id: 'business-lesson-5-5', title: 'Present Your AI Stack' },
         ],
       },
     ],
   },
+
   'ai-for-productivity': {
     id: 'ai-for-productivity',
     title: 'AI FOR PRODUCTIVITY',
     description: 'Master time management, focus, and personal systems. Build workflows that multiply your output.',
     level: 'Beginner',
-    totalTime: '~9 hours',
-    finalProject: 'Create your Personal Command Center — an AI-powered system that manages your calendar, tasks, notes, goals, and decision-making in one integrated workflow.',
-    modules: [
+    outcome:
+      'By the end, you will have your Personal Command Center — an AI-powered system that manages your calendar, tasks, notes, goals, and decisions in one integrated workflow.',
+    missions: [
       {
         id: 'productivity-module-1',
-        title: 'MODULE 1: PRODUCTIVITY FOUNDATIONS',
-        description: 'Understanding how AI amplifies your work',
-        lessons: [
-          { id: 'productivity-lesson-1-1', title: 'The AI Productivity Multiplier', duration: '12 min' },
-          { id: 'productivity-lesson-1-2', title: 'Audit Your Time: Find Your Leaks', duration: '15 min' },
-          { id: 'productivity-lesson-1-3', title: 'The 80/20 of AI Productivity', duration: '18 min' },
-          { id: 'productivity-lesson-1-4', title: 'Practice Lab: Build Your Baseline', duration: '25 min' },
+        title: 'Mission 1: Productivity Foundations',
+        description: 'Understand how AI amplifies your work.',
+        outcome: 'By the end, you will know exactly where your time goes and which AI workflows will return it to you.',
+        steps: [
+          { id: 'productivity-lesson-1-1', title: 'The AI Productivity Multiplier' },
+          { id: 'productivity-lesson-1-2', title: 'Audit Your Time: Find Your Leaks' },
+          { id: 'productivity-lesson-1-3', title: 'The 80/20 of AI Productivity' },
+          { id: 'productivity-lesson-1-4', title: 'Build Your Baseline' },
         ],
       },
       {
         id: 'productivity-module-2',
-        title: 'MODULE 2: TASK & PROJECT MANAGEMENT',
-        description: 'Organize work that actually gets done',
-        lessons: [
-          { id: 'productivity-lesson-2-1', title: 'The Smart Task Capture System', duration: '20 min' },
-          { id: 'productivity-lesson-2-2', title: 'AI-Powered Project Planning', duration: '25 min' },
-          { id: 'productivity-lesson-2-3', title: 'Priority Matrix: What to Do First', duration: '22 min' },
-          { id: 'productivity-lesson-2-4', title: 'Weekly Review Automation', duration: '20 min' },
-          { id: 'productivity-lesson-2-5', title: 'Practice Lab: Set Up Your Task System', duration: '30 min' },
+        title: 'Mission 2: Task & Project Management',
+        description: 'Organize work that actually gets done.',
+        outcome: 'By the end, you will have a task and project system that captures, prioritizes, and reviews your work automatically.',
+        steps: [
+          { id: 'productivity-lesson-2-1', title: 'The Smart Task Capture System' },
+          { id: 'productivity-lesson-2-2', title: 'AI-Powered Project Planning' },
+          { id: 'productivity-lesson-2-3', title: 'Priority Matrix: What to Do First' },
+          { id: 'productivity-lesson-2-4', title: 'Weekly Review Automation' },
+          { id: 'productivity-lesson-2-5', title: 'Set Up Your Task System' },
         ],
       },
       {
         id: 'productivity-module-3',
-        title: 'MODULE 3: KNOWLEDGE MANAGEMENT',
-        description: 'Remember and retrieve everything',
-        lessons: [
-          { id: 'productivity-lesson-3-1', title: 'Building a Second Brain with AI', duration: '25 min' },
-          { id: 'productivity-lesson-3-2', title: 'Smart Note-Taking Systems', duration: '22 min' },
-          { id: 'productivity-lesson-3-3', title: 'AI-Powered Research & Learning', duration: '28 min' },
-          { id: 'productivity-lesson-3-4', title: 'Meeting Notes to Action Items', duration: '20 min' },
-          { id: 'productivity-lesson-3-5', title: 'Practice Lab: Create Your Knowledge Base', duration: '35 min' },
+        title: 'Mission 3: Knowledge Management',
+        description: 'Remember and retrieve everything.',
+        outcome: 'By the end, you will have a searchable second brain that turns notes and meetings into action.',
+        steps: [
+          { id: 'productivity-lesson-3-1', title: 'Building a Second Brain with AI' },
+          { id: 'productivity-lesson-3-2', title: 'Smart Note-Taking Systems' },
+          { id: 'productivity-lesson-3-3', title: 'AI-Powered Research & Learning' },
+          { id: 'productivity-lesson-3-4', title: 'Meeting Notes to Action Items' },
+          { id: 'productivity-lesson-3-5', title: 'Create Your Knowledge Base' },
         ],
       },
       {
         id: 'productivity-module-4',
-        title: 'MODULE 4: FOCUS & DEEP WORK',
-        description: 'Eliminate distractions and multiply output',
-        lessons: [
-          { id: 'productivity-lesson-4-1', title: 'The Attention Management System', duration: '20 min' },
-          { id: 'productivity-lesson-4-2', title: 'AI Email & Message Triage', duration: '25 min' },
-          { id: 'productivity-lesson-4-3', title: 'Deep Work Blocks with AI Support', duration: '22 min' },
-          { id: 'productivity-lesson-4-4', title: 'Decision Fatigue: Automate Small Choices', duration: '18 min' },
-          { id: 'productivity-lesson-4-5', title: 'Practice Lab: Your Focus Protocol', duration: '30 min' },
+        title: 'Mission 4: Focus & Deep Work',
+        description: 'Eliminate distractions and multiply output.',
+        outcome: 'By the end, you will have a personal focus protocol and AI-assisted email triage that protects your deep work.',
+        steps: [
+          { id: 'productivity-lesson-4-1', title: 'The Attention Management System' },
+          { id: 'productivity-lesson-4-2', title: 'AI Email & Message Triage' },
+          { id: 'productivity-lesson-4-3', title: 'Deep Work Blocks with AI Support' },
+          { id: 'productivity-lesson-4-4', title: 'Decision Fatigue: Automate Small Choices' },
+          { id: 'productivity-lesson-4-5', title: 'Your Focus Protocol' },
         ],
       },
       {
         id: 'productivity-module-5',
-        title: 'MODULE 5: COMMAND CENTER BUILD',
-        description: 'Integrate everything into one system',
-        lessons: [
-          { id: 'productivity-lesson-5-1', title: 'Designing Your Command Center', duration: '30 min' },
-          { id: 'productivity-lesson-5-2', title: 'Connecting Your Tools', duration: '45 min' },
-          { id: 'productivity-lesson-5-3', title: 'Daily, Weekly, Monthly Routines', duration: '35 min' },
-          { id: 'productivity-lesson-5-4', title: 'Optimization & Iteration', duration: '25 min' },
-          { id: 'productivity-lesson-5-5', title: 'Final Project: Launch Your System', duration: '40 min' },
+        title: 'Mission 5: Command Center Build',
+        description: 'Integrate everything into one system.',
+        outcome: 'By the end, you will have launched your Personal Command Center running your daily, weekly, and monthly routines.',
+        steps: [
+          { id: 'productivity-lesson-5-1', title: 'Designing Your Command Center' },
+          { id: 'productivity-lesson-5-2', title: 'Connecting Your Tools' },
+          { id: 'productivity-lesson-5-3', title: 'Daily, Weekly, Monthly Routines' },
+          { id: 'productivity-lesson-5-4', title: 'Optimization & Iteration' },
+          { id: 'productivity-lesson-5-5', title: 'Launch Your System' },
         ],
       },
     ],
   },
+
   'ai-prompting-mastery': {
     id: 'ai-prompting-mastery',
     title: 'AI PROMPTING MASTERY',
     description: 'Transform from basic user to AI expert. Master the frameworks that unlock 10x better results from any AI model.',
     level: 'Intermediate',
-    totalTime: '~6 hours',
-    finalProject: 'Build your Personal Prompting System — a collection of battle-tested prompt templates and frameworks that consistently deliver exceptional results across all your AI interactions.',
-    modules: [
+    outcome:
+      'By the end, you will have your Personal Prompting System — battle-tested prompt templates and frameworks that consistently deliver exceptional results across all your AI interactions.',
+    missions: [
       {
         id: 'mastery-module-1',
-        title: 'WEEK 1: MACHINE ENGLISH FUNDAMENTALS',
-        description: 'Learn to communicate with AI at a professional level',
-        lessons: [
-          { id: 'mastery-lesson-1-1', title: 'Learn Machine English: The AIM Framework', duration: '18 min' },
-          { id: 'mastery-lesson-1-2', title: 'Pick Your Instrument and Go Deep', duration: '15 min' },
+        title: 'Mission 1: Machine English Fundamentals',
+        description: 'Communicate with AI at a professional level.',
+        outcome: 'By the end, you will have internalized the AIM framework and be able to craft prompts that consistently land.',
+        steps: [
+          { id: 'mastery-lesson-1-1', title: 'Learn Machine English: The AIM Framework' },
+          { id: 'mastery-lesson-1-2', title: 'Pick Your Instrument and Go Deep' },
         ],
       },
       {
         id: 'mastery-module-2',
-        title: 'WEEK 2: CONTEXT & ITERATION',
-        description: 'Feed AI the right context and debug your thinking',
-        lessons: [
-          { id: 'mastery-lesson-2-1', title: 'Feed It Context: The MAP Framework', duration: '20 min' },
-          { id: 'mastery-lesson-2-2', title: 'Debug Your Thinking: Iterative Prompting', duration: '22 min' },
+        title: 'Mission 2: Context & Iteration',
+        description: 'Feed AI the right context and debug your thinking.',
+        outcome: 'By the end, you will use the MAP framework to give AI the context it needs and iterate precisely to what you want.',
+        steps: [
+          { id: 'mastery-lesson-2-1', title: 'Feed It Context: The MAP Framework' },
+          { id: 'mastery-lesson-2-2', title: 'Debug Your Thinking: Iterative Prompting' },
         ],
       },
       {
         id: 'mastery-module-3',
-        title: 'WEEK 3: DEPTH & VERIFICATION',
-        description: 'Move from mediocrity to mastery',
-        lessons: [
-          { id: 'mastery-lesson-3-1', title: 'Steer to Experts', duration: '20 min' },
-          { id: 'mastery-lesson-3-2', title: 'Verify Everything: Critique, Don\'t Consume', duration: '25 min' },
+        title: 'Mission 3: Depth & Verification',
+        description: 'Move from mediocrity to mastery.',
+        outcome: 'By the end, you will know how to steer AI toward expert-level output and verify every claim it makes.',
+        steps: [
+          { id: 'mastery-lesson-3-1', title: 'Steer to Experts' },
+          { id: 'mastery-lesson-3-2', title: 'Verify Everything: Critique, Don\'t Consume' },
         ],
       },
       {
         id: 'mastery-module-4',
-        title: 'WEEK 4: DEVELOPING YOUR VOICE',
-        description: 'Create your unique AI collaboration style',
-        lessons: [
-          { id: 'mastery-lesson-4-1', title: 'Develop Taste: The OCEAN Framework', duration: '22 min' },
-          { id: 'mastery-lesson-4-2', title: 'Training Yourself Through AI', duration: '18 min' },
+        title: 'Mission 4: Developing Your Voice',
+        description: 'Create your unique AI collaboration style.',
+        outcome: 'By the end, you will have your own OCEAN-based prompting voice and a training loop that sharpens it over time.',
+        steps: [
+          { id: 'mastery-lesson-4-1', title: 'Develop Taste: The OCEAN Framework' },
+          { id: 'mastery-lesson-4-2', title: 'Training Yourself Through AI' },
         ],
       },
     ],
