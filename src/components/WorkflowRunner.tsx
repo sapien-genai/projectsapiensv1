@@ -28,6 +28,8 @@ export default function WorkflowRunner({
   const [improves,   setImproves]   = useState(0);
   const [hasRan,     setHasRan]     = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [guidance,   setGuidance]   = useState<{ why: string[]; next: string[] } | null>(null);
+  const [loadingGuidance, setLoadingGuidance] = useState(false);
 
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
@@ -113,6 +115,40 @@ export default function WorkflowRunner({
     [refreshUsageStatus, workflow.id]
   );
 
+  const fetchGuidance = useCallback(
+    async (result: string) => {
+      setLoadingGuidance(true);
+      setGuidance(null);
+      try {
+        const prompt =
+          `You are coaching a user on the "${workflow.label}" workflow (${workflow.tagline}).\n` +
+          `Given the AI output below, return STRICT JSON with two fields:\n` +
+          `{"why": string[], "next": string[]}\n` +
+          `- "why": 2 to 3 short bullets (max 12 words each) explaining what makes this output work — tone, structure, specificity. No lecture.\n` +
+          `- "next": 3 short action labels (max 5 words each) the user could do next to push it further. Imperative voice. Examples: "Make it more persuasive", "Shorten it", "Adapt for a new audience".\n` +
+          `Output ONLY JSON. No prose, no markdown.\n\n` +
+          `AI output:\n${result}`;
+
+        let full = '';
+        await callAI(prompt, t => { full = t; });
+
+        const match  = full.match(/\{[\s\S]*\}/);
+        const parsed = match ? JSON.parse(match[0]) : null;
+        if (parsed && Array.isArray(parsed.why) && Array.isArray(parsed.next)) {
+          setGuidance({
+            why:  parsed.why.slice(0, 3).map(String),
+            next: parsed.next.slice(0, 3).map(String),
+          });
+        }
+      } catch {
+        /* guidance is optional; fail silently */
+      } finally {
+        setLoadingGuidance(false);
+      }
+    },
+    [callAI, workflow.label, workflow.tagline]
+  );
+
   const saveExperiment = useCallback(
     async (prompt: string, result: string) => {
       if (!user) return;
@@ -131,12 +167,14 @@ export default function WorkflowRunner({
       if (streaming) return;
       setStreaming(true);
       setOutput('');
+      setGuidance(null);
       try {
         const full = await callAI(prompt, t => setOutput(t));
         if (full) {
           if (kind === 'run')     setHasRan(true);
           if (kind === 'improve') setImproves(n => n + 1);
           await saveExperiment(prompt, full);
+          fetchGuidance(full);
         }
       } catch (e) {
         if (e instanceof Error && e.message === 'LIMIT_REACHED') setShowUpgrade(true);
@@ -144,7 +182,7 @@ export default function WorkflowRunner({
         setStreaming(false);
       }
     },
-    [callAI, saveExperiment, streaming]
+    [callAI, saveExperiment, streaming, fetchGuidance]
   );
 
   const handleSend = useCallback(() => {
@@ -171,6 +209,14 @@ export default function WorkflowRunner({
   const handleImprove = (action: Workflow['improveActions'][number]) => {
     if (!output || streaming) return;
     runAI(action.promptTemplate(output), 'improve');
+  };
+
+  const handleNextMove = (label: string) => {
+    if (!output || streaming) return;
+    const prompt =
+      `Apply this change to the content below: "${label}". ` +
+      `Return only the rewritten content, same format.\n\n${output}`;
+    runAI(prompt, 'improve');
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -253,6 +299,59 @@ export default function WorkflowRunner({
                   <span className="inline-block w-[2px] h-[1.1em] align-[-2px] ml-[1px] bg-neutral-900 animate-pulse" />
                 )}
               </div>
+
+              {output && !streaming && (loadingGuidance || guidance) && (
+                <div className="mt-7 space-y-4">
+                  {guidance && guidance.why.length > 0 && (
+                    <div>
+                      <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
+                        Why this works
+                      </p>
+                      <ul className="space-y-1.5">
+                        {guidance.why.map((w, i) => (
+                          <li
+                            key={i}
+                            className="text-[14px] leading-relaxed text-neutral-600 pl-4 relative"
+                          >
+                            <span className="absolute left-0 top-[10px] w-1 h-1 rounded-full bg-neutral-400" />
+                            {w}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {guidance && guidance.next.length > 0 && (
+                    <div>
+                      <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
+                        Next move
+                      </p>
+                      <div className="-mx-4 px-4 overflow-x-auto">
+                        <div className="flex gap-2 w-max">
+                          {guidance.next.map((n, i) => (
+                            <button
+                              key={i}
+                              onClick={() => handleNextMove(n)}
+                              disabled={streaming}
+                              className="shrink-0 px-4 py-2 rounded-full text-[13px] font-medium text-[#FF6A00] hover:bg-[#FF6A00]/10 active:bg-[#FF6A00]/15 transition-colors disabled:opacity-50"
+                            >
+                              {n}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {loadingGuidance && !guidance && (
+                    <div className="flex items-center gap-2 text-[13px] text-neutral-400">
+                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
+                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse [animation-delay:150ms]" />
+                      <span className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse [animation-delay:300ms]" />
+                    </div>
+                  )}
+                </div>
+              )}
 
               {output && !streaming && (
                 <div className="mt-8">
