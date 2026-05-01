@@ -23,15 +23,16 @@ interface DashboardProps {
   onBillingClick?: () => void;
   onHelpClick?: () => void;
   onStartWriting?: (text: string, autoSend?: boolean) => void;
+  onRunWorkflow?: (workflowId: 'write' | 'plan' | 'decide' | 'review', text: string, autoSend?: boolean) => void;
 }
 
 type QuickAction = 'write' | 'plan' | 'decide' | 'review';
 
-const QUICK_ACTIONS: { id: QuickAction; label: string; icon: typeof PenLine; seed: string }[] = [
-  { id: 'write',  label: 'Write',  icon: PenLine,  seed: '' },
-  { id: 'plan',   label: 'Plan',   icon: ListTodo, seed: 'Help me break this goal into clear next steps:\n\n' },
-  { id: 'decide', label: 'Decide', icon: Scale,    seed: 'Help me decide between these options. Weigh the tradeoffs:\n\n' },
-  { id: 'review', label: 'Review', icon: Eye,      seed: 'Review this and tell me what\'s strong, weak, and how to improve it:\n\n' },
+const QUICK_ACTIONS: { id: QuickAction; label: string; icon: typeof PenLine }[] = [
+  { id: 'write',  label: 'Write',  icon: PenLine },
+  { id: 'plan',   label: 'Plan',   icon: ListTodo },
+  { id: 'decide', label: 'Decide', icon: Scale },
+  { id: 'review', label: 'Review', icon: Eye },
 ];
 
 function getGreeting(): string {
@@ -47,6 +48,7 @@ interface Suggestion {
   context: string;
   prefill: string;
   autoSend: boolean;
+  workflow: QuickAction;
 }
 
 function relativeTime(iso: string): string {
@@ -71,21 +73,24 @@ function truncate(text: string, n: number): string {
 const DEFAULT_SUGGESTIONS: Suggestion[] = [
   {
     title: 'Draft a message you\'ve been putting off',
-    context: 'Suggested to get you started',
-    prefill: 'A message I\'ve been putting off: ',
+    context: 'Runs the Write workflow',
+    prefill: '',
     autoSend: false,
+    workflow: 'write',
   },
   {
     title: 'Turn a rough idea into a structured plan',
-    context: 'Suggested based on most-used workflow',
-    prefill: 'Rough idea I want to turn into a plan: ',
+    context: 'Runs the Plan workflow',
+    prefill: '',
     autoSend: false,
+    workflow: 'plan',
   },
   {
-    title: 'Rewrite something to sound more professional',
-    context: 'Suggested for quick wins',
-    prefill: 'Rewrite this to sound more professional:\n\n',
+    title: 'Get sharp feedback on something you wrote',
+    context: 'Runs the Review workflow',
+    prefill: '',
     autoSend: false,
+    workflow: 'review',
   },
 ];
 
@@ -98,6 +103,7 @@ export default function Dashboard({
   onHelpClick,
   onAdminClick,
   onStartWriting,
+  onRunWorkflow,
 }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [username, setUsername]       = useState<string>('');
@@ -147,12 +153,12 @@ export default function Dashboard({
           personalized.push({
             title: 'Refine your last writing draft',
             context: `From your last session · ${relativeTime(last.created_at)}`,
-            prefill: `Continue refining this. Make it sharper and more compelling:\n\n${last.output}`,
+            prefill: last.output,
             autoSend: true,
+            workflow: 'write',
           });
         }
 
-        // If there was activity yesterday-or-older, offer a follow-up
         const olderThanToday = recent.find(r => {
           const d = new Date(r.created_at);
           return Date.now() - d.getTime() > 18 * 60 * 60 * 1000;
@@ -162,18 +168,19 @@ export default function Dashboard({
           personalized.push({
             title: 'Follow up on yesterday\'s idea',
             context: `Picked up from "${snippet}"`,
-            prefill: `Pick up where I left off with this and push it further:\n\n${olderThanToday.output || olderThanToday.prompt}`,
+            prefill: olderThanToday.output || olderThanToday.prompt || '',
             autoSend: true,
+            workflow: 'write',
           });
         }
 
-        // If the user has 3+ recent drafts, suggest continuing a plan
         if (recent.length >= 3 && personalized.length < 3) {
           personalized.push({
-            title: 'Continue building on your recent work',
+            title: 'Turn your recent work into a weekly plan',
             context: `Suggested based on your activity · ${recent.length} recent drafts`,
-            prefill: `Based on this, help me turn it into a short action plan I can execute this week:\n\n${recent[0].output || recent[0].prompt}`,
+            prefill: recent[0].output || recent[0].prompt || '',
             autoSend: true,
+            workflow: 'plan',
           });
         }
       }
@@ -198,18 +205,20 @@ export default function Dashboard({
 
   const firstName = username ? username.split(/[ _.]/)[0] : '';
 
+  const runWorkflow = (id: QuickAction, text: string, autoSend: boolean) => {
+    if (onRunWorkflow) onRunWorkflow(id, text, autoSend);
+    else onStartWriting?.(text, autoSend); // legacy fallback
+  };
+
   const handleQuickAction = (a: typeof QUICK_ACTIONS[number]) => {
-    if (a.id === 'write') {
-      onStartWriting?.(input.trim(), !!input.trim());
-    } else {
-      onStartWriting?.((a.seed + (input.trim() || '')).trim(), !!input.trim());
-    }
+    const text = input.trim();
+    runWorkflow(a.id, text, !!text);
   };
 
   const handleSend = () => {
     const text = input.trim();
     if (!text) return;
-    onStartWriting?.(text, true);
+    runWorkflow('write', text, true);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -220,7 +229,7 @@ export default function Dashboard({
   };
 
   const handleSuggestion = (s: Suggestion) => {
-    onStartWriting?.(s.prefill, s.autoSend);
+    runWorkflow(s.workflow, s.prefill, s.autoSend);
   };
 
   return (
