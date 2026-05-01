@@ -1,135 +1,94 @@
-import { ArrowLeft, Home, Palette, Briefcase, Zap, PenLine } from 'lucide-react';
-import { paths } from '../data/paths';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { workflowList, WorkflowId, Workflow } from '../data/workflows';
 
 interface PathsListPageProps {
   onBack?: () => void;
+  onWorkflowSelect?: (id: WorkflowId) => void;
   onPathSelect?: (pathId: string) => void;
 }
 
-const pathIcons: Record<string, React.ComponentType<any>> = {
-  'ai-writing-systems': PenLine,
-  'ai-everyday-life': Home,
-  'ai-for-creators': Palette,
-  'ai-for-small-business': Briefcase,
-  'ai-for-productivity': Zap,
-};
+export default function PathsListPage({ onBack, onWorkflowSelect, onPathSelect }: PathsListPageProps) {
+  const handleSelect = (id: WorkflowId) => {
+    if (onWorkflowSelect) onWorkflowSelect(id);
+    else onPathSelect?.(id);
+  };
 
-export default function PathsListPage({ onBack, onPathSelect }: PathsListPageProps) {
-  const pathList = Object.values(paths);
+  const thinking = workflowList.filter(w => w.category === 'thinking');
+  const daily    = workflowList.filter(w => w.category === 'daily');
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        {onBack && (
+    <div className="min-h-[100dvh] bg-white flex flex-col">
+      <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm">
+        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+            aria-label="Back"
+            className="p-2 -ml-2 rounded-full hover:bg-neutral-100 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" strokeWidth={2} />
-            BACK TO DASHBOARD
+            <ArrowLeft className="w-5 h-5" strokeWidth={2} />
           </button>
-        )}
-
-        <div className="mb-12">
-          <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-none mb-4">
-            CHOOSE YOUR PATH
-          </h1>
-          <p className="text-base md:text-lg leading-relaxed max-w-3xl">
-            Mission-based paths built around real-world AI workflows. Each mission delivers a concrete outcome you can use immediately.
-          </p>
+          <h1 className="flex-1 text-[15px] font-semibold tracking-tight">Workflows</h1>
         </div>
+      </header>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          {pathList.map((path) => {
-            const Icon = pathIcons[path.id] || Zap;
-            return (
-              <div
-                key={path.id}
-                className="bg-white border border-black p-6 md:p-8 shadow-[3px_3px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] transition-shadow"
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <Icon className="w-12 h-12" strokeWidth={2} />
-                  <div className="text-xs font-semibold px-3 py-1 border border-black bg-[#F4F4F4]">
-                    {path.level}
-                  </div>
-                </div>
+      <main className="flex-1 w-full max-w-2xl mx-auto px-4 pt-8 pb-24">
+        <h2 className="text-[28px] leading-tight font-semibold tracking-tight text-neutral-900">
+          What do you want to do?
+        </h2>
+        <p className="mt-2 text-[17px] text-neutral-500">
+          Every capability lives here. Run it, iterate, move on.
+        </p>
 
-                <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-4">
-                  {path.title}
-                </h2>
-
-                <p className="text-sm leading-relaxed mb-6">
-                  {path.description}
-                </p>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold">Missions:</span>
-                    <span>{path.missions.length}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold">Steps:</span>
-                    <span>
-                      {path.missions.reduce((sum, m) => sum + m.steps.length, 0)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="bg-[#F4F4F4] border border-black p-4 mb-6">
-                  <p className="text-xs font-extrabold uppercase tracking-tight mb-2">
-                    YOU WILL WALK AWAY WITH:
-                  </p>
-                  <p className="text-xs leading-relaxed">
-                    {path.outcome}
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => onPathSelect?.(path.id)}
-                  className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-                >
-                  START PATH
-                </button>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-12 bg-white border border-black p-6 md:p-8 shadow-[3px_3px_0px_#000000]">
-          <h3 className="font-extrabold text-xl uppercase tracking-tight mb-6">
-            HOW PATHS WORK
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">01</div>
-              <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                MISSIONS
-              </h4>
-              <p className="text-sm leading-relaxed">
-                Each mission is a real-world workflow. No lectures — you build as you go.
-              </p>
-            </div>
-            <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">02</div>
-              <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                STEPS
-              </h4>
-              <p className="text-sm leading-relaxed">
-                Actionable steps tied directly to AI interaction. Learning happens through use.
-              </p>
-            </div>
-            <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">03</div>
-              <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                OUTCOMES
-              </h4>
-              <p className="text-sm leading-relaxed">
-                Every mission ends with something concrete you can apply immediately.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <Section title="Think & create" items={thinking} onSelect={handleSelect} />
+        <Section title="Run your day"   items={daily}    onSelect={handleSelect} />
+      </main>
     </div>
+  );
+}
+
+function Section({
+  title,
+  items,
+  onSelect,
+}: {
+  title: string;
+  items: Workflow[];
+  onSelect: (id: WorkflowId) => void;
+}) {
+  return (
+    <section className="mt-10">
+      <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-3">
+        {title}
+      </p>
+      <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
+        {items.map(w => {
+          const Icon = w.icon;
+          return (
+            <li key={w.id}>
+              <button
+                onClick={() => onSelect(w.id)}
+                className="w-full flex items-center gap-4 py-5 text-left group"
+              >
+                <span className="w-10 h-10 rounded-full bg-neutral-100 group-hover:bg-neutral-200 transition-colors flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-neutral-900" strokeWidth={2} />
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block text-[17px] font-medium text-neutral-900">
+                    {w.label}
+                  </span>
+                  <span className="block text-[14px] text-neutral-500 mt-0.5 truncate">
+                    {w.tagline}
+                  </span>
+                </span>
+                <ArrowRight
+                  className="w-4 h-4 text-neutral-400 group-hover:text-[#FF6A00] group-hover:translate-x-0.5 transition-all shrink-0"
+                  strokeWidth={2}
+                />
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

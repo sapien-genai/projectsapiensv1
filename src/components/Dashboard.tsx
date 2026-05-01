@@ -1,28 +1,11 @@
-import { useEffect, useState } from 'react';
-import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard, HelpCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ArrowUp, PenLine, ListTodo, Scale, Eye,
+  Menu, X, LogOut, Settings, CreditCard, HelpCircle,
+  Compass, History, Shield, ArrowRight, Sparkles,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { logError, getErrorMessage } from '../utils/errorHandling';
-import OpenMoji from './OpenMoji';
-
-interface UserProfile {
-  username: string;
-  fluency_level: number;
-  xp: number;
-}
-
-interface Skill {
-  skill_name: string;
-  progress_percentage: number;
-}
-
-interface Badge {
-  badge_id: string;
-  name: string;
-  icon: string;
-  color: string;
-  rarity: string;
-}
 
 interface DashboardProps {
   onLabsClick?: () => void;
@@ -39,547 +22,439 @@ interface DashboardProps {
   onAdminClick?: () => void;
   onBillingClick?: () => void;
   onHelpClick?: () => void;
+  onStartWriting?: (text: string, autoSend?: boolean) => void;
+  onRunWorkflow?: (workflowId: 'write' | 'plan' | 'decide' | 'review', text: string, autoSend?: boolean) => void;
+  onReviewClick?: () => void;
 }
 
-const fluencyLevels = [
-  { level: 1, title: 'COLLABORATOR', subtitle: 'AI Fundamentals', xpRequired: 0 },
-  { level: 2, title: 'PRACTITIONER', subtitle: 'Workflow Designer', xpRequired: 1000 },
-  { level: 3, title: 'INTEGRATOR', subtitle: 'System Builder', xpRequired: 4000 },
-  { level: 4, title: 'LEADER', subtitle: 'Solution Architect', xpRequired: 10000 },
+type QuickAction = 'write' | 'plan' | 'decide' | 'review';
+
+const QUICK_ACTIONS: { id: QuickAction; label: string; icon: typeof PenLine }[] = [
+  { id: 'write',  label: 'Write',  icon: PenLine },
+  { id: 'plan',   label: 'Plan',   icon: ListTodo },
+  { id: 'decide', label: 'Decide', icon: Scale },
+  { id: 'review', label: 'Review', icon: Eye },
 ];
 
-const getIconComponent = (iconName: string): LucideIcon => {
-  const iconMap: Record<string, LucideIcon> = {
-    'Footprints': Footprints,
-    'Flame': Flame,
-    'Compass': Compass,
-    'Flask': Beaker,
-    'Network': NetworkIcon,
-    'Sparkles': Sparkles,
-    'Trophy': Trophy,
-  };
-  return iconMap[iconName] || Trophy;
-};
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 5)  return 'Working late';
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
 
-export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick, onHelpClick }: DashboardProps) {
+interface Suggestion {
+  title: string;
+  context: string;
+  prefill: string;
+  autoSend: boolean;
+  workflow: QuickAction;
+}
+
+function relativeTime(iso: string): string {
+  const d = new Date(iso).getTime();
+  const diff = Date.now() - d;
+  const m = Math.floor(diff / 60000);
+  if (m < 1)    return 'just now';
+  if (m < 60)   return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24)   return `${h}h ago`;
+  const days = Math.floor(h / 24);
+  if (days === 1) return 'yesterday';
+  if (days < 7)   return `${days}d ago`;
+  return new Date(iso).toLocaleDateString();
+}
+
+function truncate(text: string, n: number): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > n ? clean.slice(0, n - 1) + '…' : clean;
+}
+
+const DEFAULT_SUGGESTIONS: Suggestion[] = [
+  {
+    title: 'Draft a message you\'ve been putting off',
+    context: 'Runs the Write workflow',
+    prefill: '',
+    autoSend: false,
+    workflow: 'write',
+  },
+  {
+    title: 'Turn a rough idea into a structured plan',
+    context: 'Runs the Plan workflow',
+    prefill: '',
+    autoSend: false,
+    workflow: 'plan',
+  },
+  {
+    title: 'Get sharp feedback on something you wrote',
+    context: 'Runs the Review workflow',
+    prefill: '',
+    autoSend: false,
+    workflow: 'review',
+  },
+];
+
+export default function Dashboard({
+  onPathsListClick,
+  onBillingClick,
+  onProfileClick,
+  onHelpClick,
+  onAdminClick,
+  onStartWriting,
+  onRunWorkflow,
+  onReviewClick,
+}: DashboardProps) {
   const { user, signOut } = useAuth();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [badges, setBadges] = useState<Badge[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [commandCenterUnlocked, setCommandCenterUnlocked] = useState(false);
+  const [username, setUsername]       = useState<string>('');
+  const [menuOpen, setMenuOpen]       = useState(false);
+  const [isAdmin,  setIsAdmin]        = useState(false);
+  const [input,    setInput]          = useState('');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(DEFAULT_SUGGESTIONS);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(true);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    async function loadUserData() {
-      if (!user) return;
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('username')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (data?.username) setUsername(data.username);
 
-      try {
-        setError(null);
-        const { data: profileData, error: profileError } = await supabase
-          .from('user_profiles')
-          .select('username, fluency_level, xp')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (profileError) throw profileError;
-
-        if (profileData) {
-          setProfile(profileData);
-        }
-
-        const { data: skillsData, error: skillsError } = await supabase
-          .from('user_skills')
-          .select('skill_name, progress_percentage')
-          .eq('user_id', user.id);
-
-        if (skillsError) throw skillsError;
-
-        if (skillsData) {
-          setSkills(skillsData);
-        }
-
-        const { data: adminData } = await supabase
-          .from('admin_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (adminData) {
-          setIsAdmin(true);
-        }
-
-        const { data: progressData } = await supabase
-          .from('user_path_progress')
-          .select('completed_lessons')
-          .eq('user_id', user.id);
-
-        if (progressData) {
-          const allCompletedLessons = progressData.flatMap(p => p.completed_lessons || []);
-          const hasModule5Access = allCompletedLessons.some((lessonId: string) =>
-            lessonId.startsWith('lesson-5-') || lessonId.startsWith('productivity-lesson-5-')
-          );
-          setCommandCenterUnlocked(hasModule5Access);
-        }
-
-        try {
-          await supabase.rpc('check_and_award_badges', { p_user_id: user.id });
-        } catch (badgeError) {
-          logError(badgeError, 'Dashboard - check_and_award_badges');
-        }
-
-        const { data: badgesData } = await supabase
-          .from('user_badges')
-          .select(`
-            badge_id,
-            badges (
-              name,
-              icon,
-              color,
-              rarity
-            )
-          `)
-          .eq('user_id', user.id)
-          .limit(6);
-
-        if (badgesData) {
-          const formattedBadges = badgesData
-            .filter(item => item.badges)
-            .map(item => ({
-              badge_id: item.badge_id,
-              name: (item.badges as any).name,
-              icon: (item.badges as any).icon,
-              color: (item.badges as any).color,
-              rarity: (item.badges as any).rarity
-            }));
-          setBadges(formattedBadges);
-        }
-
-        setLoading(false);
-      } catch (err) {
-        logError(err, 'Dashboard - loadUserData');
-        const errorInfo = getErrorMessage(err);
-        setError(errorInfo.message);
-        setLoading(false);
-      }
-    }
-
-    loadUserData();
+      const { data: admin } = await supabase
+        .from('admin_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (admin) setIsAdmin(true);
+    })();
   }, [user]);
 
-  const currentLevel = fluencyLevels.find(l => l.level === profile?.fluency_level) || fluencyLevels[0];
-  const nextLevel = fluencyLevels.find(l => l.level === (profile?.fluency_level || 0) + 1);
-  const xpProgress = nextLevel
-    ? ((profile?.xp || 0) - currentLevel.xpRequired) / (nextLevel.xpRequired - currentLevel.xpRequired) * 100
-    : 100;
+  // Load recent activity from Supabase to build contextual suggestions.
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      setLoadingSuggestions(true);
+      const { data: recent } = await supabase
+        .from('lab_experiments')
+        .select('prompt, output, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
-          <p className="mt-4 font-semibold">LOADING...</p>
-        </div>
-      </div>
-    );
-  }
+      const personalized: Suggestion[] = [];
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="bg-red-500 border-2 border-black p-3">
-              <AlertCircle className="w-8 h-8 text-white" strokeWidth={2.5} />
-            </div>
-            <div>
-              <h2 className="font-extrabold text-xl uppercase tracking-tight mb-2">
-                Unable to Load Dashboard
-              </h2>
-              <p className="text-base leading-relaxed text-gray-700">
-                {error}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="w-full px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
+      if (recent && recent.length > 0) {
+        const last = recent[0];
+        if (last.output) {
+          personalized.push({
+            title: 'Refine your last writing draft',
+            context: `From your last session · ${relativeTime(last.created_at)}`,
+            prefill: last.output,
+            autoSend: true,
+            workflow: 'write',
+          });
+        }
+
+        const olderThanToday = recent.find(r => {
+          const d = new Date(r.created_at);
+          return Date.now() - d.getTime() > 18 * 60 * 60 * 1000;
+        });
+        if (olderThanToday && personalized.length < 3) {
+          const snippet = truncate(olderThanToday.prompt || olderThanToday.output || '', 70);
+          personalized.push({
+            title: 'Follow up on yesterday\'s idea',
+            context: `Picked up from "${snippet}"`,
+            prefill: olderThanToday.output || olderThanToday.prompt || '',
+            autoSend: true,
+            workflow: 'write',
+          });
+        }
+
+        if (recent.length >= 3 && personalized.length < 3) {
+          personalized.push({
+            title: 'Turn your recent work into a weekly plan',
+            context: `Suggested based on your activity · ${recent.length} recent drafts`,
+            prefill: recent[0].output || recent[0].prompt || '',
+            autoSend: true,
+            workflow: 'plan',
+          });
+        }
+      }
+
+      // Always fill to 3 using defaults for slots not taken
+      const filled = [...personalized];
+      for (const d of DEFAULT_SUGGESTIONS) {
+        if (filled.length >= 3) break;
+        filled.push(d);
+      }
+
+      setSuggestions(filled.slice(0, 3));
+      setLoadingSuggestions(false);
+    })();
+  }, [user]);
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+    inputRef.current.style.height = 'auto';
+    inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 220) + 'px';
+  }, [input]);
+
+  const firstName = username ? username.split(/[ _.]/)[0] : '';
+
+  const runWorkflow = (id: QuickAction, text: string, autoSend: boolean) => {
+    if (onRunWorkflow) onRunWorkflow(id, text, autoSend);
+    else onStartWriting?.(text, autoSend); // legacy fallback
+  };
+
+  const handleQuickAction = (a: typeof QUICK_ACTIONS[number]) => {
+    const text = input.trim();
+    runWorkflow(a.id, text, !!text);
+  };
+
+  const handleSend = () => {
+    const text = input.trim();
+    if (!text) return;
+    runWorkflow('write', text, true);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleSuggestion = (s: Suggestion) => {
+    runWorkflow(s.workflow, s.prefill, s.autoSend);
+  };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
-      <nav className="bg-[#F4F4F4] border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
-          <h1 className="font-extrabold text-xl uppercase tracking-tight">
-            PROJECT SAPIENS
-          </h1>
-          <div className="flex items-center gap-4">
-            {isAdmin && (
-              <button
-                onClick={onAdminClick}
-                className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                <Shield className="w-4 h-4" strokeWidth={2} />
-                ADMIN
-              </button>
-            )}
+    <div className="min-h-[100dvh] bg-white flex flex-col">
+
+      {/* ─── Top bar ──────────────────────────────────────────── */}
+      <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm">
+        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-3">
+          <span className="text-[15px] font-semibold tracking-tight">Today</span>
+          <span className="flex-1" />
+          <button
+            onClick={() => setMenuOpen(true)}
+            aria-label="Menu"
+            className="p-2 -mr-2 rounded-full hover:bg-neutral-100 transition-colors"
+          >
+            <Menu className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+      </header>
+
+      {/* ─── Today body ───────────────────────────────────────── */}
+      <main className="flex-1 w-full max-w-2xl mx-auto px-4 pt-8 pb-40">
+
+        {/* Greeting */}
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-neutral-900">
+          {getGreeting()}{firstName ? `, ${firstName}` : ''}.
+        </h1>
+        <p className="mt-2 text-[17px] text-neutral-500">
+          Here's what matters today.
+        </p>
+
+        {/* Primary input — elevated as the main action */}
+        <section className="mt-8">
+          <div className="relative flex items-end gap-2 border-b-2 border-neutral-900 focus-within:border-[#FF6A00] transition-colors">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              rows={1}
+              placeholder="What do you want to move forward right now?"
+              className="flex-1 bg-transparent resize-none outline-none py-4 pr-14 text-[19px] leading-relaxed placeholder:text-neutral-400"
+            />
             <button
-              onClick={() => signOut()}
-              className="flex items-center gap-2 bg-white text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              onClick={handleSend}
+              disabled={!input.trim()}
+              aria-label="Send"
+              className="absolute right-0 bottom-2.5 w-11 h-11 flex items-center justify-center rounded-full bg-[#FF6A00] text-white disabled:bg-neutral-200 disabled:text-neutral-400 transition-colors hover:bg-[#e95f00] shadow-sm"
             >
-              <LogOut className="w-4 h-4" strokeWidth={2} />
-              SIGN OUT
+              <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
             </button>
           </div>
-        </div>
-      </nav>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div>
-              <h2 className="font-extrabold text-2xl md:text-3xl lg:text-4xl uppercase tracking-tighter mb-2">
-                WELCOME BACK, {profile?.username || 'SAPIENS'}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed">
-                Continue building your AI mastery.
-              </p>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
-                    MY LEARNING PATH
-                  </h3>
-                  <p className="text-sm">Start your AI learning journey</p>
-                </div>
-                <BookOpen className="w-8 h-8" strokeWidth={2} />
-              </div>
-
-              <button
-                onClick={onPathsListClick}
-                className="bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                CHOOSE A PATH
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Code className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY LABS
-                </h3>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-4 mb-4">
-                {[
-                  { name: 'WRITING LAB', id: 'writing-lab' },
-                  { name: 'ANALYSIS LAB', id: 'analysis-lab' },
-                  { name: 'CREATIVE LAB', id: 'creative-lab' }
-                ].map((lab) => (
+          {/* Quick start */}
+          <div className="mt-4 -mx-4 px-4 overflow-x-auto">
+            <div className="flex gap-2 w-max">
+              {QUICK_ACTIONS.map(a => {
+                const Icon = a.icon;
+                return (
                   <button
-                    key={lab.id}
-                    onClick={() => onLabSelect?.(lab.id)}
-                    className="bg-white text-black border border-black px-4 py-3 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                    key={a.id}
+                    onClick={() => handleQuickAction(a)}
+                    className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-[14px] font-medium text-neutral-900 transition-colors"
                   >
-                    {lab.name}
+                    <Icon className="w-4 h-4" strokeWidth={2} />
+                    {a.label}
                   </button>
-                ))}
-              </div>
-
-              <button
-                onClick={onLabsClick}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW ALL LABS
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Users className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  THE NETWORK
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Connect with peers, share projects, and find mentors.
-              </p>
-              <button
-                onClick={onNetworkClick}
-                className="w-full bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                EXPLORE NETWORK
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <BookmarkPlus className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  PROMPT LIBRARY
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Discover powerful prompts, create your own, and organize your favorites.
-              </p>
-              <button
-                onClick={onPromptsClick}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                BROWSE PROMPTS
-              </button>
-            </div>
-
-            <div className={`border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] ${commandCenterUnlocked ? 'bg-gradient-to-br from-[#FFF9E6] to-[#FFE4B5]' : 'bg-gray-100 opacity-75'}`}>
-              <div className="flex items-center gap-3 mb-6">
-                <Target className={`w-8 h-8 ${commandCenterUnlocked ? 'text-[#F4A261]' : 'text-gray-400'}`} strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  COMMAND CENTER
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                {commandCenterUnlocked
-                  ? 'Your AI-powered hub for managing work, learning, and life. Built in Module 5!'
-                  : 'Unlock this feature by reaching Module 5 in either "AI for Everyday Life" or "AI for Productivity" path.'}
-              </p>
-              <button
-                onClick={commandCenterUnlocked ? onCommandCenterClick : undefined}
-                disabled={!commandCenterUnlocked}
-                className={`w-full border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] transition-all ${
-                  commandCenterUnlocked
-                    ? 'bg-[#F4A261] text-white hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] cursor-pointer'
-                    : 'bg-gray-300 text-gray-600 cursor-not-allowed opacity-60'
-                }`}
-              >
-                {commandCenterUnlocked ? (
-                  'OPEN COMMAND CENTER'
-                ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    <Lock className="w-4 h-4" strokeWidth={2} />
-                    LOCKED - REACH MODULE 5
-                  </span>
-                )}
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Rocket className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  PROJECTS
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Build AI-powered projects, showcase your work, and learn from the community.
-              </p>
-              <button
-                onClick={onProjectsClick}
-                className="w-full bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW PROJECTS
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Trophy className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY BADGES
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Track your achievements, earn badges, and showcase your AI fluency journey.
-              </p>
-              <button
-                onClick={onBadgesClick}
-                className="w-full bg-[#F59E0B] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW BADGES
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <BookOpen className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY JOURNAL
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Review your reflections and insights from completed lessons.
-              </p>
-              <button
-                onClick={onJournalClick}
-                className="w-full bg-[#10b981] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW JOURNAL
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Zap className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  COMMUNITY FEED
-                </h3>
-              </div>
-
-              <div className="space-y-4">
-                <div className="border border-black p-4">
-                  <p className="text-sm font-semibold mb-1">NEW CHALLENGE LIVE</p>
-                  <p className="text-sm">Build an AI-powered content pipeline. 7 days left.</p>
-                </div>
-                <div className="border border-black p-4">
-                  <p className="text-sm font-semibold mb-1">WEEKLY PROMPT DROP</p>
-                  <p className="text-sm">Check out the latest community-shared workflows.</p>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
+        </section>
 
-          <div className="space-y-6">
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
-                AI FLUENCY
-              </h3>
-
-              <div className="mb-6">
-                <div className="text-3xl font-extrabold uppercase mb-1">
-                  LEVEL {currentLevel.level}: {currentLevel.title}
-                </div>
-                <p className="text-sm">{currentLevel.subtitle}</p>
-              </div>
-
-              {nextLevel && (
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-2">
-                    <span>{profile?.xp || 0} XP</span>
-                    <span>{nextLevel.xpRequired} XP TO LEVEL {nextLevel.level}</span>
-                  </div>
-                  <div className="h-6 bg-[#F4F4F4] border border-black relative overflow-hidden">
-                    <div
-                      className="absolute inset-y-0 left-0 bg-[#FF6A00]"
-                      style={{ width: `${Math.min(xpProgress, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
-                SKILL PROGRESS
-              </h3>
-
-              {skills.length > 0 ? (
-                <div className="space-y-4">
-                  {skills.map((skill) => (
-                    <div key={skill.skill_name}>
-                      <div className="flex justify-between text-xs font-semibold mb-2">
-                        <span className="uppercase">{skill.skill_name}</span>
-                        <span>{skill.progress_percentage}%</span>
-                      </div>
-                      <div className="h-4 bg-[#F4F4F4] border border-black relative overflow-hidden">
-                        <div
-                          className="absolute inset-y-0 left-0 bg-[#0A74FF]"
-                          style={{ width: `${skill.progress_percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm">No skills tracked yet. Start a learning path to begin.</p>
-              )}
-            </div>
-
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-4">
-                <Trophy className="w-6 h-6" strokeWidth={2} />
-                <h3 className="font-extrabold text-lg uppercase tracking-tight">
-                  MY BADGES
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                {badges.length > 0 ? (
-                  <>
-                    {badges.map((badge) => {
-                      const IconComponent = getIconComponent(badge.icon);
-                      return (
-                        <div
-                          key={badge.badge_id}
-                          className="aspect-square border border-black flex items-center justify-center"
-                          style={{ backgroundColor: badge.color + '20' }}
-                          title={badge.name}
-                        >
-                          {IconComponent && (
-                            <IconComponent
-                              className="w-8 h-8"
-                              strokeWidth={2}
-                              style={{ color: badge.color }}
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
-                    {Array.from({ length: Math.max(0, 6 - badges.length) }).map((_, i) => (
-                      <div
-                        key={`empty-${i}`}
-                        className="aspect-square border border-black bg-[#F4F4F4] flex items-center justify-center"
-                      >
-                        <span className="text-2xl opacity-30">?</span>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <div
-                      key={`empty-${i}`}
-                      className="aspect-square border border-black bg-[#F4F4F4] flex items-center justify-center"
-                    >
-                      <span className="text-2xl opacity-30">?</span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+        {/* Suggestions — personalized, contextual */}
+        <section className="mt-10">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF6A00]" strokeWidth={2} />
+            <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400">
+              Suggested for you
+            </p>
           </div>
-        </div>
 
-        <div className="mt-12 flex justify-center gap-4 pb-8">
-          <button
-            onClick={onHelpClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
+          {loadingSuggestions ? (
+            <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
+              {[0,1,2].map(i => (
+                <li key={i} className="py-5">
+                  <div className="h-4 w-3/4 bg-neutral-100 rounded animate-pulse" />
+                  <div className="h-3 w-1/3 bg-neutral-100 rounded mt-2 animate-pulse" />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
+              {suggestions.map((s, i) => (
+                <li key={i}>
+                  <button
+                    onClick={() => handleSuggestion(s)}
+                    className="w-full flex items-center gap-3 py-4 text-left group"
+                  >
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[16px] text-neutral-900 leading-snug">
+                        {s.title}
+                      </span>
+                      <span className="block text-[12px] text-neutral-500 mt-1">
+                        {s.context}
+                      </span>
+                    </span>
+                    <ArrowRight
+                      className="w-4 h-4 text-neutral-400 group-hover:text-[#FF6A00] group-hover:translate-x-0.5 transition-all shrink-0"
+                      strokeWidth={2}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Secondary nav */}
+        <section className="mt-12">
+          <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
+            Elsewhere
+          </p>
+          <ul className="divide-y divide-neutral-100">
+            <SecondaryRow icon={Compass} label="Workflows" hint="All capabilities in one place" onClick={onPathsListClick} />
+            <SecondaryRow icon={History} label="Review"    hint="Your past sessions and drafts" onClick={onReviewClick} />
+          </ul>
+        </section>
+
+      </main>
+
+      {/* ─── Side menu (secondary nav) ────────────────────────── */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/30"
+          onClick={() => setMenuOpen(false)}
+        >
+          <aside
+            onClick={e => e.stopPropagation()}
+            className="absolute top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-xl flex flex-col"
           >
-            <HelpCircle className="w-4 h-4" strokeWidth={2} />
-            HELP
-          </button>
-          <button
-            onClick={onBillingClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
-          >
-            <CreditCard className="w-4 h-4" strokeWidth={2} />
-            BILLING
-          </button>
-          <button
-            onClick={onProfileClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-          >
-            SETTINGS
-          </button>
+            <div className="h-14 px-4 flex items-center gap-3 border-b border-neutral-100">
+              <span className="flex-1 text-[15px] font-semibold tracking-tight">Menu</span>
+              <button
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="p-2 -mr-2 rounded-full hover:bg-neutral-100"
+              >
+                <X className="w-5 h-5" strokeWidth={2} />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-2 py-2">
+              {username && (
+                <div className="px-3 py-3 text-[13px] text-neutral-500">
+                  Signed in as <span className="text-neutral-900 font-medium">{username}</span>
+                </div>
+              )}
+              <MenuRow icon={Compass}    label="Workflows" onClick={() => { setMenuOpen(false); onPathsListClick?.(); }} />
+              <MenuRow icon={History}    label="Review"    onClick={() => { setMenuOpen(false); onReviewClick?.(); }} />
+              <MenuRow icon={Settings}   label="Settings"  onClick={() => { setMenuOpen(false); onProfileClick?.(); }} />
+              <MenuRow icon={CreditCard} label="Billing"   onClick={() => { setMenuOpen(false); onBillingClick?.(); }} />
+              <MenuRow icon={HelpCircle} label="Help"      onClick={() => { setMenuOpen(false); onHelpClick?.(); }} />
+              {isAdmin && (
+                <MenuRow icon={Shield} label="Admin" onClick={() => { setMenuOpen(false); onAdminClick?.(); }} />
+              )}
+            </nav>
+
+            <div className="px-2 py-2 border-t border-neutral-100">
+              <MenuRow icon={LogOut} label="Sign out" onClick={() => signOut()} />
+            </div>
+          </aside>
         </div>
-      </div>
+      )}
     </div>
+  );
+}
+
+function SecondaryRow({
+  icon: Icon,
+  label,
+  hint,
+  onClick,
+}: {
+  icon: typeof Compass;
+  label: string;
+  hint: string;
+  onClick?: () => void;
+}) {
+  return (
+    <li>
+      <button
+        onClick={onClick}
+        className="w-full flex items-center gap-3 py-4 text-left group"
+      >
+        <Icon className="w-5 h-5 text-neutral-500 group-hover:text-neutral-900 transition-colors shrink-0" strokeWidth={2} />
+        <span className="flex-1 min-w-0">
+          <span className="block text-[16px] text-neutral-900">{label}</span>
+          <span className="block text-[13px] text-neutral-500 truncate">{hint}</span>
+        </span>
+        <ArrowRight
+          className="w-4 h-4 text-neutral-300 group-hover:text-[#FF6A00] transition-colors shrink-0"
+          strokeWidth={2}
+        />
+      </button>
+    </li>
+  );
+}
+
+function MenuRow({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: typeof Compass;
+  label: string;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-neutral-100 text-left transition-colors"
+    >
+      <Icon className="w-[18px] h-[18px] text-neutral-600" strokeWidth={2} />
+      <span className="text-[15px] text-neutral-900">{label}</span>
+    </button>
   );
 }

@@ -29,6 +29,9 @@ import ProjectsPage from './components/ProjectsPage';
 import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
 import WritingSystemsPath from './components/WritingSystemsPath';
+import WorkflowRunner from './components/WorkflowRunner';
+import ReviewPage from './components/ReviewPage';
+import { workflows, WorkflowId } from './data/workflows';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
 import BillingPage from './components/BillingPage';
@@ -39,7 +42,7 @@ import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 import DevPreviewRouter from './dev/DevPreviewRouter';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel' | 'workflow' | 'review';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -50,6 +53,15 @@ function AppContent() {
   const [selectedModule, setSelectedModule] = useState<string>('');
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+  const [writingSeed, setWritingSeed] = useState<{ text: string; autoSend: boolean; nonce: number } | null>(null);
+  const [activeWorkflow, setActiveWorkflow] = useState<WorkflowId>('write');
+  const [workflowSeed, setWorkflowSeed] = useState<{ text: string; autoSend: boolean; nonce: number } | null>(null);
+
+  const startWorkflow = (id: WorkflowId, text: string, autoSend: boolean) => {
+    setActiveWorkflow(id);
+    setWorkflowSeed({ text, autoSend, nonce: Date.now() });
+    setView('workflow');
+  };
 
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
@@ -124,11 +136,14 @@ function AppContent() {
       if (selectedPath === 'ai-writing-systems') {
         return (
           <WritingSystemsPath
-            onBack={() => setView('paths-list')}
+            key={writingSeed?.nonce ?? 'default'}
+            onBack={() => { setWritingSeed(null); setView('dashboard'); }}
             onLabOpen={(labId) => {
               setSelectedLab(labId);
               setView('lab-sandbox');
             }}
+            initialInput={writingSeed?.text}
+            autoSend={writingSeed?.autoSend}
           />
         );
       }
@@ -150,10 +165,28 @@ function AppContent() {
       return (
         <PathsListPage
           onBack={() => setView('dashboard')}
-          onPathSelect={(pathId) => {
-            setSelectedPath(pathId);
-            setView('path');
-          }}
+          onWorkflowSelect={(id) => startWorkflow(id, '', false)}
+        />
+      );
+    }
+
+    if (view === 'review') {
+      return (
+        <ReviewPage
+          onBack={() => setView('dashboard')}
+          onReopen={(id, text) => startWorkflow(id, text, false)}
+        />
+      );
+    }
+
+    if (view === 'workflow') {
+      return (
+        <WorkflowRunner
+          key={workflowSeed?.nonce ?? activeWorkflow}
+          workflow={workflows[activeWorkflow]}
+          onBack={() => { setWorkflowSeed(null); setView('dashboard'); }}
+          initialInput={workflowSeed?.text}
+          autoSend={workflowSeed?.autoSend}
         />
       );
     }
@@ -296,6 +329,13 @@ function AppContent() {
           setSelectedLab(labId);
           setView('lab-sandbox');
         }}
+        onStartWriting={(text, autoSend) => {
+          setWritingSeed({ text, autoSend: !!autoSend, nonce: Date.now() });
+          setSelectedPath('ai-writing-systems');
+          setView('path');
+        }}
+        onRunWorkflow={(id, text, autoSend) => startWorkflow(id, text, !!autoSend)}
+        onReviewClick={() => setView('review')}
       />
     );
   }

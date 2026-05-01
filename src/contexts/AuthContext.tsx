@@ -40,42 +40,106 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, username: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanUsername = username.trim();
+
+    if (cleanUsername.length < 3) {
+      return {
+        error: {
+          message: 'Username must be at least 3 characters.',
+          name: 'ValidationError',
+          status: 400,
+        } as AuthError,
+      };
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
+      return {
+        error: {
+          message: 'Username can only contain letters, numbers, and underscores.',
+          name: 'ValidationError',
+          status: 400,
+        } as AuthError,
+      };
+    }
+    if (password.length < 6) {
+      return {
+        error: {
+          message: 'Password must be at least 6 characters.',
+          name: 'ValidationError',
+          status: 400,
+        } as AuthError,
+      };
+    }
+
+    // Pre-check username availability to avoid creating an orphaned auth user
+    const { data: existing, error: checkError } = await supabase
+      .from('user_profiles')
+      .select('user_id')
+      .eq('username', cleanUsername)
+      .maybeSingle();
+
+    if (checkError) {
+      logError(checkError, 'AuthContext - signUp username check');
+    }
+    if (existing) {
+      return {
+        error: {
+          message: 'That username is already taken. Please choose another.',
+          name: 'UsernameTakenError',
+          status: 409,
+        } as AuthError,
+      };
+    }
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: cleanEmail,
       password,
       options: {
-        data: {
-          username,
-        },
+        data: { username: cleanUsername },
       },
     });
 
-    if (!error && data.user) {
-      // Create user profile - this must succeed for the user to proceed
-      const { error: profileError } = await supabase.from('user_profiles').insert({
-        user_id: data.user.id,
-        username,
-        email,
-        fluency_level: 1,
-        xp: 0,
-      });
-
-      if (profileError) {
-        logError(profileError, 'AuthContext - signUp profile creation');
-        await supabase.auth.signOut();
-
-        const errorInfo = getErrorMessage(profileError);
-        return {
-          error: {
-            message: errorInfo.message || 'Failed to complete registration. Please try again.',
-            name: 'ProfileCreationError',
-            status: 500
-          } as any
-        };
-      }
+    if (error) return { error };
+    if (!data.user) {
+      return {
+        error: {
+          message: 'Signup failed. Please try again.',
+          name: 'SignupError',
+          status: 500,
+        } as AuthError,
+      };
     }
 
-    return { error };
+    // Create the user profile. A concurrent signup could have claimed the
+    // username between our pre-check and now, so still handle that case.
+    const { error: profileError } = await supabase.from('user_profiles').insert({
+      user_id: data.user.id,
+      username: cleanUsername,
+      email: cleanEmail,
+      fluency_level: 1,
+      xp: 0,
+    });
+
+    if (profileError) {
+      logError(profileError, 'AuthContext - signUp profile creation');
+      await supabase.auth.signOut();
+
+      const isDuplicate =
+        typeof profileError.code === 'string' && profileError.code === '23505';
+      const errorInfo = getErrorMessage(profileError);
+
+      return {
+        error: {
+          message: isDuplicate
+            ? 'That username was just taken. Please try another.'
+            : errorInfo.message || 'Failed to complete registration. Please try again.',
+          name: 'ProfileCreationError',
+          status: isDuplicate ? 409 : 500,
+        } as AuthError,
+      };
+    }
+
+    return { error: null };
   };
 
   const signIn = async (email: string, password: string) => {
