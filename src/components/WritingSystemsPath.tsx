@@ -1,68 +1,103 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, ArrowUp, ArrowRight } from 'lucide-react';
+import {
+  ArrowLeft,
+  Send,
+  Copy,
+  CheckCircle2,
+  RefreshCw,
+  ChevronRight,
+  AlignLeft,
+  Minimize2,
+  Briefcase,
+  TrendingUp,
+  RotateCcw,
+  Sparkles,
+  Lock,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useBilling } from '../contexts/BillingContext';
 import { supabase } from '../lib/supabase';
 import UpgradeModal from './UpgradeModal';
+import { writingSystemsPath, WritingMission } from '../data/writingSystemsPath';
 
 interface WritingSystemsPathProps {
   onBack?: () => void;
   onLabOpen?: (labId: string) => void;
-  initialInput?: string;
-  autoSend?: boolean;
 }
 
-type ImproveMode =
-  | 'rewrite_clearer'
-  | 'rewrite_shorter'
-  | 'rewrite_more_professional'
-  | 'rewrite_more_persuasive';
+interface OutputVersion {
+  id: string;
+  label: string;
+  text: string;
+  mode: string;
+}
 
-const IMPROVE_ACTIONS: { mode: ImproveMode; label: string }[] = [
-  { mode: 'rewrite_clearer',           label: 'Clearer' },
-  { mode: 'rewrite_shorter',           label: 'Shorter' },
-  { mode: 'rewrite_more_professional', label: 'Professional' },
-  { mode: 'rewrite_more_persuasive',   label: 'Persuasive' },
+const IMPROVE_ACTIONS = [
+  { mode: 'rewrite_clearer',          label: 'Clearer',       icon: AlignLeft  },
+  { mode: 'rewrite_shorter',          label: 'Shorter',       icon: Minimize2  },
+  { mode: 'rewrite_more_professional', label: 'Professional', icon: Briefcase  },
+  { mode: 'rewrite_more_persuasive',  label: 'Persuasive',    icon: TrendingUp },
 ];
 
-const IMPROVE_PROMPTS: Record<ImproveMode, string> = {
-  rewrite_clearer:           'Rewrite this to be clearer and easier to understand. Return only the rewritten text:\n\n',
-  rewrite_shorter:           'Rewrite this to be shorter while keeping the core message. Return only the rewritten text:\n\n',
-  rewrite_more_professional: 'Rewrite this to sound more professional and confident, while keeping the message intact. Return only the rewritten text:\n\n',
-  rewrite_more_persuasive:   'Rewrite this to be more persuasive and compelling. Return only the rewritten text:\n\n',
+const IMPROVE_PROMPTS: Record<string, string> = {
+  rewrite_clearer:           'Rewrite this to be clearer and easier to understand:\n\n',
+  rewrite_shorter:           'Rewrite this to be shorter while keeping the core message:\n\n',
+  rewrite_more_professional: 'Make this sound more professional and confident, while keeping the message intact:\n\n',
+  rewrite_more_persuasive:   'Rewrite this to be more persuasive and compelling:\n\n',
 };
 
-const MISSION_TITLE = 'Mission 1 — Turn Raw Ideas into Clear Writing';
-const MISSION_TIP   = 'Dump messy thoughts first — refine after.';
-
-export default function WritingSystemsPath({ onBack, initialInput, autoSend }: WritingSystemsPathProps) {
+export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystemsPathProps) {
   const { user } = useAuth();
   const { refreshUsageStatus } = useBilling();
+  const { missions } = writingSystemsPath;
 
-  const [input,         setInput]         = useState(initialInput ?? '');
-  const [output,        setOutput]        = useState('');
-  const [streaming,     setStreaming]     = useState(false);
-  const [improvesUsed,  setImprovesUsed]  = useState(0);
-  const [hasDumped,     setHasDumped]     = useState(false);
-  const [showUpgrade,   setShowUpgrade]   = useState(false);
+  const [activeMissionIndex, setActiveMissionIndex] = useState(0);
+  const [activeStepIndex,    setActiveStepIndex]    = useState(0);
+  const [completedStepKeys,  setCompletedStepKeys]  = useState<Set<string>>(new Set());
 
-  const outputRef = useRef<HTMLDivElement>(null);
-  const inputRef  = useRef<HTMLTextAreaElement>(null);
+  const [userInput,    setUserInput]    = useState('');
+  const [streaming,    setStreaming]    = useState(false);
+  const [streamingText, setStreamingText] = useState('');
+  const [outputVersions, setOutputVersions] = useState<OutputVersion[]>([]);
+  const [copied,  setCopied]  = useState<string | null>(null);
+  const [limitInfo, setLimitInfo] = useState<{ limit: number; used: number } | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  // Progress: first dump = 25%, each improve +25%, cap 100%.
-  const progressPct = Math.min(100, (hasDumped ? 25 : 0) + improvesUsed * 25);
+  const bottomRef  = useRef<HTMLDivElement>(null);
+  const inputRef   = useRef<HTMLTextAreaElement>(null);
+  const bottomInputRef = useRef<HTMLTextAreaElement>(null);
 
+  const activeMission: WritingMission = missions[activeMissionIndex];
+  const activeStep = activeMission.steps[activeStepIndex];
+  const latestOutput = outputVersions[outputVersions.length - 1]?.text ?? '';
+  const isFirstInput = outputVersions.length === 0;
+
+  const totalSteps    = missions.reduce((sum, m) => sum + m.steps.length, 0);
+  const completedCount = completedStepKeys.size;
+  const progressPct   = Math.round((completedCount / totalSteps) * 100);
+
+  const currentStepKey = `${activeMission.missionId}:${activeStep.stepId}`;
+  const currentStepDone = completedStepKeys.has(currentStepKey);
+
+  const isLastStep =
+    activeMissionIndex === missions.length - 1 &&
+    activeStepIndex === activeMission.steps.length - 1;
+  const allDone = isLastStep && currentStepDone;
+
+  // auto-scroll to bottom after each output
   useEffect(() => {
-    if (!inputRef.current) return;
-    inputRef.current.style.height = 'auto';
-    inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 200) + 'px';
-  }, [input]);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [streamingText, outputVersions.length]);
 
+  // auto-resize textarea
   useEffect(() => {
-    if (output && outputRef.current) {
-      outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }
-  }, [output]);
+    [inputRef, bottomInputRef].forEach(ref => {
+      if (ref.current) {
+        ref.current.style.height = 'auto';
+        ref.current.style.height = Math.min(ref.current.scrollHeight, 200) + 'px';
+      }
+    });
+  }, [userInput]);
 
   const callAI = useCallback(
     async (prompt: string, mode: string, onChunk: (t: string) => void): Promise<string> => {
@@ -73,10 +108,7 @@ export default function WritingSystemsPath({ onBack, initialInput, autoSend }: W
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lab-ai-chat`,
         {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
+          headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             prompt,
             labId: 'writing-lab',
@@ -89,6 +121,9 @@ export default function WritingSystemsPath({ onBack, initialInput, autoSend }: W
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         if (res.status === 429 && err.error === 'limit_reached') {
+          setLimitInfo(
+            typeof err.limit === 'number' && typeof err.used === 'number' ? err : null
+          );
           await refreshUsageStatus();
           throw new Error('LIMIT_REACHED');
         }
@@ -102,15 +137,11 @@ export default function WritingSystemsPath({ onBack, initialInput, autoSend }: W
       let buf = '', full = '';
 
       const parseEvent = (raw: string) => {
-        const payload = raw
-          .split(/\r?\n/)
-          .filter(l => l.startsWith('data: '))
-          .map(l => l.slice(6).trim())
-          .join('');
+        const payload = raw.split(/\r?\n/).filter(l => l.startsWith('data: ')).map(l => l.slice(6).trim()).join('');
         if (!payload || payload === '[DONE]') return;
         try {
-          const p     = JSON.parse(payload);
-          const chunk = p?.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parsed = JSON.parse(payload);
+          const chunk  = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (typeof chunk === 'string' && chunk.length > 0) { full += chunk; onChunk(full); }
         } catch { /* skip */ }
       };
@@ -130,189 +161,458 @@ export default function WritingSystemsPath({ onBack, initialInput, autoSend }: W
     [refreshUsageStatus]
   );
 
-  const saveExperiment = useCallback(async (prompt: string, result: string) => {
+  const saveExperiment = useCallback(async (prompt: string, output: string) => {
     if (!user) return;
     await supabase.from('lab_experiments').insert({
       user_id: user.id,
-      lab_id:  'writing-lab',
+      lab_id: 'writing-lab',
       prompt,
-      output:  result,
+      output,
     });
   }, [user]);
 
-  const autoSentRef = useRef(false);
-  useEffect(() => {
-    if (autoSentRef.current) return;
-    if (!autoSend) return;
-    if (!initialInput || !initialInput.trim()) return;
-    autoSentRef.current = true;
-    const text = initialInput.trim();
-    const prompt =
-      'Take the following rough thoughts and turn them into a clear, structured message. Return only the rewritten message:\n\n' +
-      text;
-    setInput('');
-    runAI(prompt, 'freeform', 'dump');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoSend, initialInput]);
-
-  const runAI = async (prompt: string, mode: string, kind: 'dump' | 'improve') => {
+  const runAI = async (prompt: string, mode: string, label: string) => {
     if (streaming) return;
     setStreaming(true);
-    setOutput('');
+    setStreamingText('');
     try {
-      const full = await callAI(prompt, mode, t => setOutput(t));
+      const full = await callAI(prompt, mode, t => setStreamingText(t));
       if (full) {
-        if (kind === 'dump')    setHasDumped(true);
-        if (kind === 'improve') setImprovesUsed(n => n + 1);
+        setOutputVersions(prev => [...prev, { id: `v${Date.now()}`, label, text: full, mode }]);
+        setCompletedStepKeys(prev => new Set([...prev, currentStepKey]));
         await saveExperiment(prompt, full);
       }
     } catch (e) {
-      if (e instanceof Error && e.message === 'LIMIT_REACHED') setShowUpgrade(true);
+      if (e instanceof Error && e.message === 'LIMIT_REACHED') setShowUpgradeModal(true);
     } finally {
       setStreaming(false);
+      setStreamingText('');
     }
   };
 
   const handleSend = () => {
-    const text = input.trim();
+    const text = userInput.trim();
     if (!text || streaming) return;
-    const prompt =
-      'Take the following rough thoughts and turn them into a clear, structured message. Return only the rewritten message:\n\n' +
-      text;
-    setInput('');
-    runAI(prompt, 'freeform', 'dump');
+    const prompt = activeStep.promptTemplate
+      .replace('{{user_input}}', text)
+      .replace('{{previous_output}}', latestOutput || text);
+    runAI(prompt, activeStep.mode, activeStep.title);
   };
 
-  const handleImprove = (mode: ImproveMode) => {
-    if (!output || streaming) return;
-    runAI(IMPROVE_PROMPTS[mode] + output, mode, 'improve');
+  const handleImprove = (mode: string, label: string) => {
+    if (!latestOutput || streaming) return;
+    runAI((IMPROVE_PROMPTS[mode] || '') + latestOutput, mode, label);
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+  const handleNextStep = () => {
+    if (activeStepIndex < activeMission.steps.length - 1) {
+      setActiveStepIndex(s => s + 1);
+    } else if (activeMissionIndex < missions.length - 1) {
+      setActiveMissionIndex(m => m + 1);
+      setActiveStepIndex(0);
     }
+    setOutputVersions([]);
+    setUserInput('');
+  };
+
+  const handleReset = () => { setOutputVersions([]); setUserInput(''); };
+
+  const copy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  const useExample = () => {
+    setUserInput(activeMission.exampleInput);
+    (isFirstInput ? inputRef : bottomInputRef).current?.focus();
   };
 
   return (
     <>
-      <div className="min-h-[100dvh] bg-white flex flex-col">
+      <div className="flex h-screen bg-[#F4F4F4] overflow-hidden">
 
-        {/* ─── Sticky top bar ──────────────────────────────────── */}
-        <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm">
-          <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-3">
+        {/* ── Left context rail ── */}
+        <aside className="hidden lg:flex flex-col w-64 xl:w-72 shrink-0 h-full border-r-2 border-black bg-[#F4F4F4] overflow-y-auto">
+
+          {/* Back */}
+          <div className="px-4 py-4 border-b-2 border-black">
             <button
               onClick={onBack}
-              aria-label="Back"
-              className="p-2 -ml-2 rounded-full hover:bg-neutral-100 transition-colors"
+              className="flex items-center gap-2 text-sm font-semibold hover:text-[#FF6A00] transition-colors uppercase tracking-tight"
             >
-              <ArrowLeft className="w-5 h-5" strokeWidth={2} />
+              <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+              Back
             </button>
-            <h1 className="flex-1 text-[15px] font-semibold tracking-tight truncate">
+          </div>
+
+          {/* Path title */}
+          <div className="px-4 pt-5 pb-4 border-b-2 border-black">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Writing Path</p>
+            <h2 className="font-extrabold text-base uppercase tracking-tight leading-tight">
               AI Writing Systems
-            </h1>
-            <span className="text-xs font-medium text-neutral-500 tabular-nums">
-              {progressPct}%
-            </span>
-          </div>
-          <div className="h-[2px] bg-neutral-100">
-            <div
-              className="h-full bg-[#FF6A00] transition-all duration-500"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-        </header>
-
-        {/* ─── Workspace ───────────────────────────────────────── */}
-        <main className="flex-1 w-full max-w-2xl mx-auto px-4 pt-6 pb-40">
-
-          {/* Compact mission title + one-line tip */}
-          <p className="text-[13px] font-medium text-neutral-500">
-            {MISSION_TITLE}
-          </p>
-          <p className="mt-1 text-[15px] text-neutral-700">
-            {MISSION_TIP}
-          </p>
-
-          {/* Input — large, minimal, no heavy border */}
-          <div className="mt-6">
-            <div className="relative flex items-end gap-2 border-b border-neutral-300 focus-within:border-neutral-900 transition-colors">
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={onKeyDown}
-                disabled={streaming}
-                rows={1}
-                placeholder="Start typing your thoughts…"
-                className="flex-1 bg-transparent resize-none outline-none py-3 pr-12 text-[17px] leading-relaxed placeholder:text-neutral-400 disabled:opacity-60"
+            </h2>
+            {/* Progress bar */}
+            <div className="mt-3 h-1.5 bg-white border border-black overflow-hidden">
+              <div
+                className="h-full bg-[#FF6A00] transition-all duration-700"
+                style={{ width: `${progressPct}%` }}
               />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || streaming}
-                aria-label="Send"
-                className="absolute right-0 bottom-2 w-9 h-9 flex items-center justify-center rounded-full bg-[#FF6A00] text-white disabled:bg-neutral-200 disabled:text-neutral-400 transition-colors hover:bg-[#e95f00]"
-              >
-                <ArrowUp className="w-[18px] h-[18px]" strokeWidth={2.5} />
-              </button>
+            </div>
+            <p className="text-xs text-[#666666] mt-1.5">{completedCount} / {totalSteps} steps</p>
+          </div>
+
+          {/* Mission list */}
+          <div className="px-4 pt-4 pb-2">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-3">Missions</p>
+            <div className="space-y-1">
+              {missions.map((m, mi) => {
+                const done   = m.steps.every(s => completedStepKeys.has(`${m.missionId}:${s.stepId}`));
+                const active = mi === activeMissionIndex;
+                return (
+                  <button
+                    key={m.missionId}
+                    onClick={() => {
+                      setActiveMissionIndex(mi);
+                      setActiveStepIndex(0);
+                      setOutputVersions([]);
+                      setUserInput('');
+                    }}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+                      active ? 'bg-black text-white' : 'hover:bg-white'
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-black ${
+                        done  ? 'bg-[#FF6A00] text-black border-[#FF6A00]' :
+                        active ? 'bg-white text-black' :
+                                 'bg-[#F4F4F4] text-black'
+                      }`}
+                    >
+                      {done ? <CheckCircle2 className="w-3 h-3" strokeWidth={2.5} /> : mi + 1}
+                    </div>
+                    <span className="text-xs font-extrabold uppercase tracking-tight leading-tight line-clamp-2">
+                      {m.title}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* AI output — clean, no container */}
-          {(output || streaming) && (
-            <div ref={outputRef} className="mt-10">
-              <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-3">
-                Response
-              </p>
-              <div className="text-[17px] leading-[1.7] text-neutral-900 whitespace-pre-wrap">
-                {output}
-                {streaming && (
-                  <span className="inline-block w-[2px] h-[1.1em] align-[-2px] ml-[1px] bg-neutral-900 animate-pulse" />
-                )}
+          {/* Current step */}
+          <div className="mx-4 mt-4 border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">
+              Step {activeStepIndex + 1} of {activeMission.steps.length}
+            </p>
+            <p className="text-sm font-extrabold uppercase tracking-tight mb-2">
+              {activeStep.title}
+            </p>
+            <p className="text-xs text-[#555555] leading-relaxed">{activeStep.instruction}</p>
+          </div>
+
+          {/* Next hint */}
+          {!currentStepDone && (
+            <div className="mx-4 mt-3 flex items-start gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF6A00] mt-0.5 shrink-0" strokeWidth={2} />
+              <p className="text-xs text-[#666666] leading-relaxed">{activeMission.goal}</p>
+            </div>
+          )}
+
+          {/* Key lesson after completion */}
+          {currentStepDone && (
+            <div className="mx-4 mt-3 border-2 border-black bg-[#FFE5D9] p-3 shadow-[2px_2px_0px_#000]">
+              <p className="text-xs font-extrabold uppercase tracking-tight text-black mb-1">Key Lesson</p>
+              <p className="text-xs leading-relaxed text-[#333]">{activeMission.keyLesson}</p>
+            </div>
+          )}
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Skills footer */}
+          <div className="px-4 py-4 border-t-2 border-black">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-2">Skills</p>
+            <div className="flex flex-wrap gap-1.5">
+              {writingSystemsPath.skills.map(s => (
+                <span key={s} className="text-xs font-semibold px-2 py-1 bg-white border border-black">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        {/* ── Main workspace ── */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+          {/* Top bar — mobile only */}
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
+            <button onClick={onBack} className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors">
+              <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+              Back
+            </button>
+            <div className="text-center">
+              <p className="text-xs font-extrabold uppercase tracking-tight">AI Writing Systems</p>
+              <p className="text-xs text-[#666666]">Mission {activeMissionIndex + 1} · Step {activeStepIndex + 1}</p>
+            </div>
+            <span className="text-xs font-extrabold text-[#FF6A00]">{progressPct}%</span>
+          </div>
+
+          {/* Scrollable thread */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 space-y-8">
+
+              {/* Mission heading */}
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-1 border-2 border-black bg-[#FF6A00]">
+                    Mission {activeMissionIndex + 1}
+                  </span>
+                  <span className="text-xs font-semibold text-[#666666]">{writingSystemsPath.estimatedTime}</span>
+                </div>
+                <h1 className="font-extrabold text-2xl md:text-3xl uppercase tracking-tighter leading-none mb-3">
+                  {activeMission.title}
+                </h1>
+                <p className="text-sm leading-relaxed text-[#555555] max-w-xl">
+                  {activeMission.intro}
+                </p>
               </div>
 
-              {/* Improve actions */}
-              {output && !streaming && (
-                <div className="mt-8">
-                  <p className="text-[13px] text-neutral-500 mb-3">
-                    Improve this:
-                  </p>
-                  <div className="-mx-4 px-4 overflow-x-auto">
-                    <div className="flex gap-2 w-max">
+              {/* ── Initial input card ── */}
+              {isFirstInput && (
+                <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000]">
+                  {/* Step label */}
+                  <div className="flex items-center justify-between px-5 py-3 border-b-2 border-black bg-[#F4F4F4]">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-[#FF6A00] border border-black text-xs font-extrabold">
+                        {activeStepIndex + 1}
+                      </span>
+                      <span className="text-xs font-extrabold uppercase tracking-tight">{activeStep.title}</span>
+                    </div>
+                    <button
+                      onClick={useExample}
+                      className="text-xs font-semibold text-[#FF6A00] hover:underline"
+                    >
+                      Use example
+                    </button>
+                  </div>
+
+                  <textarea
+                    ref={inputRef}
+                    value={userInput}
+                    onChange={e => setUserInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend(); }}
+                    placeholder={activeStep.instruction + '…'}
+                    className="w-full resize-none px-5 py-4 text-sm leading-relaxed bg-white focus:outline-none"
+                    style={{ minHeight: '100px', maxHeight: '200px' }}
+                  />
+
+                  <div className="flex items-center justify-between px-4 py-3 border-t-2 border-black bg-[#F4F4F4]">
+                    <span className="text-xs text-[#888888]">⌘↵ to send</span>
+                    <button
+                      onClick={handleSend}
+                      disabled={!userInput.trim() || streaming}
+                      className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {streaming ? <RefreshCw className="w-3.5 h-3.5 animate-spin" strokeWidth={2} /> : <Send className="w-3.5 h-3.5" strokeWidth={2} />}
+                      Send
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Output thread ── */}
+              {outputVersions.length > 0 && (
+                <div className="space-y-5">
+                  {outputVersions.map((v, vi) => {
+                    const isLatest = vi === outputVersions.length - 1;
+                    return (
+                      <div key={v.id}>
+                        {/* Version label row */}
+                        <div className="flex items-center gap-2 mb-2">
+                          {vi > 0 && <div className="ml-2 w-px h-4 bg-black/20" />}
+                          <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-black ${
+                            isLatest ? 'bg-[#FF6A00] text-black' : 'bg-white text-[#888888]'
+                          }`}>
+                            {vi === 0 ? 'Original' : v.label}
+                          </span>
+                        </div>
+
+                        {/* Output bubble */}
+                        <div className={`relative group border-2 p-5 text-sm leading-relaxed whitespace-pre-wrap ${
+                          isLatest
+                            ? 'border-black bg-white shadow-[3px_3px_0px_#000] text-black'
+                            : 'border-black/25 bg-[#F4F4F4] text-[#777]'
+                        }`}>
+                          {v.text}
+                          <button
+                            onClick={() => copy(v.text, v.id)}
+                            className="absolute top-3 right-3 p-1.5 bg-[#F4F4F4] border border-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#FF6A00] hover:border-[#FF6A00]"
+                          >
+                            {copied === v.id
+                              ? <CheckCircle2 className="w-3.5 h-3.5 text-black" strokeWidth={2} />
+                              : <Copy className="w-3.5 h-3.5" strokeWidth={2} />
+                            }
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Streaming bubble */}
+                  {streaming && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                          <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
+                          Writing…
+                        </span>
+                      </div>
+                      <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
+                        {streamingText || <span className="text-[#999]">…</span>}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Post-output actions ── */}
+              {latestOutput && !streaming && (
+                <div className="space-y-4">
+
+                  {/* Improve actions */}
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-tight text-[#888888] mb-2">Improve</p>
+                    <div className="flex flex-wrap gap-2">
                       {IMPROVE_ACTIONS.map(a => (
                         <button
                           key={a.mode}
-                          onClick={() => handleImprove(a.mode)}
+                          onClick={() => handleImprove(a.mode, a.label)}
                           disabled={streaming}
-                          className="shrink-0 px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-[15px] font-medium text-neutral-900 transition-colors disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-2 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors disabled:opacity-40"
                         >
+                          <a.icon className="w-3.5 h-3.5" strokeWidth={2} />
                           {a.label}
                         </button>
                       ))}
+                      <button
+                        onClick={handleReset}
+                        className="flex items-center gap-1.5 px-3 py-2 border-2 border-black/30 bg-[#F4F4F4] text-xs font-extrabold uppercase tracking-tight text-[#888888] hover:border-black hover:text-black transition-colors"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
+                        Reset
+                      </button>
                     </div>
                   </div>
 
-                  {/* Inline next hint */}
-                  <button
-                    onClick={() => handleImprove('rewrite_clearer')}
-                    disabled={streaming}
-                    className="mt-6 inline-flex items-center gap-1.5 text-[14px] text-neutral-500 hover:text-[#FF6A00] transition-colors group disabled:opacity-50"
-                  >
-                    Next: Make it clearer
-                    <ArrowRight
-                      className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-                      strokeWidth={2}
-                    />
-                  </button>
+                  {/* Next step row */}
+                  {!allDone && (
+                    <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
+                      <div>
+                        <p className="text-xs text-[#666666] font-semibold uppercase tracking-tight">Next</p>
+                        <p className="text-sm font-extrabold uppercase tracking-tight">
+                          {activeStepIndex < activeMission.steps.length - 1
+                            ? activeMission.steps[activeStepIndex + 1].title
+                            : missions[activeMissionIndex + 1]?.title ?? ''}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleNextStep}
+                        className="flex items-center gap-2 px-4 py-2 bg-[#FF6A00] border-2 border-black text-black text-xs font-extrabold uppercase tracking-tight hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_#000] hover:shadow-none"
+                      >
+                        Continue
+                        <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Challenge */}
+                  {currentStepDone && (
+                    <div className="border-2 border-black bg-[#FFE5D9] p-4 shadow-[2px_2px_0px_#000]">
+                      <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Your Challenge</p>
+                      <p className="text-sm leading-relaxed">{activeMission.challenge}</p>
+                    </div>
+                  )}
                 </div>
               )}
+
+              {/* ── All done ── */}
+              {allDone && (
+                <div className="border-2 border-black bg-black text-white p-8 shadow-[4px_4px_0px_#FF6A00] text-center">
+                  <CheckCircle2 className="w-8 h-8 text-[#FF6A00] mx-auto mb-4" strokeWidth={2} />
+                  <h3 className="font-extrabold text-2xl uppercase tracking-tighter mb-3">Path Complete</h3>
+                  <p className="text-sm text-[#CCCCCC] leading-relaxed mb-6 max-w-sm mx-auto">
+                    All three missions done. You now have a repeatable AI writing system.
+                  </p>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    {onLabOpen && (
+                      <button
+                        onClick={() => onLabOpen('writing-lab')}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-[#FF6A00] border-2 border-[#FF6A00] text-black font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:border-white transition-colors"
+                      >
+                        Open Writing Lab
+                        <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+                      </button>
+                    )}
+                    <button
+                      onClick={onBack}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-transparent border-2 border-white text-white font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-black transition-colors"
+                    >
+                      All Paths
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
+            </div>
+          </div>
+
+          {/* ── Sticky bottom input (after first send) ── */}
+          {!isFirstInput && !allDone && (
+            <div className="border-t-2 border-black bg-white px-4 md:px-6 py-3">
+              <div className="max-w-2xl mx-auto flex items-end gap-2">
+                <div className="flex-1 border-2 border-black bg-[#F4F4F4] flex items-end">
+                  <textarea
+                    ref={bottomInputRef}
+                    value={userInput}
+                    onChange={e => setUserInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend(); }}
+                    placeholder="Add context or try a new input…"
+                    rows={1}
+                    className="flex-1 w-full resize-none px-4 py-3 text-sm bg-transparent focus:outline-none"
+                    style={{ maxHeight: '120px' }}
+                  />
+                  <button
+                    onClick={useExample}
+                    className="self-end px-3 py-3 text-xs font-semibold text-[#888888] hover:text-[#FF6A00] transition-colors whitespace-nowrap border-l-2 border-black"
+                  >
+                    Example
+                  </button>
+                </div>
+                <button
+                  onClick={handleSend}
+                  disabled={!userInput.trim() || streaming}
+                  className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {streaming
+                    ? <RefreshCw className="w-4 h-4 animate-spin" strokeWidth={2} />
+                    : <Send className="w-4 h-4" strokeWidth={2} />
+                  }
+                </button>
+              </div>
             </div>
           )}
-        </main>
+        </div>
       </div>
 
-      <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} />
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentUsed={limitInfo?.used}
+        currentLimit={limitInfo?.limit}
+      />
     </>
   );
 }

@@ -24,11 +24,9 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
     setError('');
     setLoading(true);
 
-    const cleanEmail = email.trim();
-
     try {
       if (isLogin) {
-        const { error: signInError } = await signIn(cleanEmail, password);
+        const { error: signInError } = await signIn(email, password);
         if (signInError) {
           setError(signInError.message);
           analytics.trackError('Login failed', 'AUTH_ERROR', { error: signInError.message });
@@ -37,28 +35,12 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
           onSuccess?.();
         }
       } else {
-        const cleanUsername = username.trim();
-        if (!cleanUsername) {
+        if (!username.trim()) {
           setError('Username is required');
           setLoading(false);
           return;
         }
-        if (cleanUsername.length < 3) {
-          setError('Username must be at least 3 characters.');
-          setLoading(false);
-          return;
-        }
-        if (!/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
-          setError('Username can only contain letters, numbers, and underscores.');
-          setLoading(false);
-          return;
-        }
-        if (password.length < 6) {
-          setError('Password must be at least 6 characters.');
-          setLoading(false);
-          return;
-        }
-        const { error: signUpError } = await signUp(cleanEmail, password, cleanUsername);
+        const { error: signUpError } = await signUp(email, password, username);
         if (signUpError) {
           setError(signUpError.message);
           analytics.trackError('Signup failed', 'AUTH_ERROR', { error: signUpError.message });

@@ -194,7 +194,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
 
       // Calculate total lessons for this path
       const pathData = paths[pathId];
-      const totalLessons = pathData?.missions.reduce((total, m) => total + m.steps.length, 0) || 21;
+      const totalLessons = pathData?.modules.reduce((total, module) => total + module.lessons.length, 0) || 21;
 
       // Use upsert to create or update the progress record
       const { error: updateError } = await supabase
