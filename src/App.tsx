@@ -30,6 +30,7 @@ import CommandCenter from './components/CommandCenter';
 import AdminPortal from './components/AdminPortal';
 import WritingSystemsPath from './components/WritingSystemsPath';
 import WorkflowRunner from './components/WorkflowRunner';
+import ReviewPage from './components/ReviewPage';
 import { workflows, WorkflowId } from './data/workflows';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
@@ -41,7 +42,7 @@ import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 import DevPreviewRouter from './dev/DevPreviewRouter';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel' | 'workflow';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel' | 'workflow' | 'review';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -165,6 +166,15 @@ function AppContent() {
         <PathsListPage
           onBack={() => setView('dashboard')}
           onWorkflowSelect={(id) => startWorkflow(id, '', false)}
+        />
+      );
+    }
+
+    if (view === 'review') {
+      return (
+        <ReviewPage
+          onBack={() => setView('dashboard')}
+          onReopen={(id, text) => startWorkflow(id, text, false)}
         />
       );
     }
@@ -325,6 +335,7 @@ function AppContent() {
           setView('path');
         }}
         onRunWorkflow={(id, text, autoSend) => startWorkflow(id, text, !!autoSend)}
+        onReviewClick={() => setView('review')}
       />
     );
   }

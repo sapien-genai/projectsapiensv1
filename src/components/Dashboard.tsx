@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUp, PenLine, ListTodo, Scale, Eye,
   Menu, X, LogOut, Settings, CreditCard, HelpCircle,
-  Compass, Beaker, Layers, Shield, ArrowRight, Sparkles,
+  Compass, History, Shield, ArrowRight, Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -24,6 +24,7 @@ interface DashboardProps {
   onHelpClick?: () => void;
   onStartWriting?: (text: string, autoSend?: boolean) => void;
   onRunWorkflow?: (workflowId: 'write' | 'plan' | 'decide' | 'review', text: string, autoSend?: boolean) => void;
+  onReviewClick?: () => void;
 }
 
 type QuickAction = 'write' | 'plan' | 'decide' | 'review';
@@ -95,15 +96,14 @@ const DEFAULT_SUGGESTIONS: Suggestion[] = [
 ];
 
 export default function Dashboard({
-  onLabsClick,
   onPathsListClick,
-  onCommandCenterClick,
   onBillingClick,
   onProfileClick,
   onHelpClick,
   onAdminClick,
   onStartWriting,
   onRunWorkflow,
+  onReviewClick,
 }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [username, setUsername]       = useState<string>('');
@@ -348,15 +348,14 @@ export default function Dashboard({
           )}
         </section>
 
-        {/* Secondary workspace links */}
+        {/* Secondary nav */}
         <section className="mt-12">
           <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
-            Workspaces
+            Elsewhere
           </p>
           <ul className="divide-y divide-neutral-100">
-            <SecondaryRow icon={Compass} label="Workflows"      hint="AI-powered learning paths"       onClick={onPathsListClick} />
-            <SecondaryRow icon={Beaker}  label="Writing Lab"    hint="Open the AI writing workspace"   onClick={onLabsClick} />
-            <SecondaryRow icon={Layers}  label="Command Center" hint="Projects, tasks, calendar"       onClick={onCommandCenterClick} />
+            <SecondaryRow icon={Compass} label="Workflows" hint="All capabilities in one place" onClick={onPathsListClick} />
+            <SecondaryRow icon={History} label="Review"    hint="Your past sessions and drafts" onClick={onReviewClick} />
           </ul>
         </section>
 
@@ -389,12 +388,11 @@ export default function Dashboard({
                   Signed in as <span className="text-neutral-900 font-medium">{username}</span>
                 </div>
               )}
-              <MenuRow icon={Compass}    label="Workflows"      onClick={() => { setMenuOpen(false); onPathsListClick?.(); }} />
-              <MenuRow icon={Beaker}     label="Writing Lab"    onClick={() => { setMenuOpen(false); onLabsClick?.(); }} />
-              <MenuRow icon={Layers}     label="Command Center" onClick={() => { setMenuOpen(false); onCommandCenterClick?.(); }} />
-              <MenuRow icon={Settings}   label="Settings"       onClick={() => { setMenuOpen(false); onProfileClick?.(); }} />
-              <MenuRow icon={CreditCard} label="Billing"        onClick={() => { setMenuOpen(false); onBillingClick?.(); }} />
-              <MenuRow icon={HelpCircle} label="Help"           onClick={() => { setMenuOpen(false); onHelpClick?.(); }} />
+              <MenuRow icon={Compass}    label="Workflows" onClick={() => { setMenuOpen(false); onPathsListClick?.(); }} />
+              <MenuRow icon={History}    label="Review"    onClick={() => { setMenuOpen(false); onReviewClick?.(); }} />
+              <MenuRow icon={Settings}   label="Settings"  onClick={() => { setMenuOpen(false); onProfileClick?.(); }} />
+              <MenuRow icon={CreditCard} label="Billing"   onClick={() => { setMenuOpen(false); onBillingClick?.(); }} />
+              <MenuRow icon={HelpCircle} label="Help"      onClick={() => { setMenuOpen(false); onHelpClick?.(); }} />
               {isAdmin && (
                 <MenuRow icon={Shield} label="Admin" onClick={() => { setMenuOpen(false); onAdminClick?.(); }} />
               )}
