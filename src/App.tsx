@@ -187,6 +187,7 @@ function AppContent() {
           onBack={() => { setWorkflowSeed(null); setView('dashboard'); }}
           initialInput={workflowSeed?.text}
           autoSend={workflowSeed?.autoSend}
+          onExploreTemplates={() => setView('prompts')}
         />
       );
     }

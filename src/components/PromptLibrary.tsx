@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Search, Filter, Star, Heart, Copy, Plus, ArrowLeft,
-  BookmarkPlus, Share2, TrendingUp, Clock, PenTool,
-  BarChart3, Sparkles, Code, Target, GraduationCap, Download, Zap, LucideIcon
-} from 'lucide-react';
+import { Search, Filter, Star, Heart, Copy, Plus, ArrowLeft, BookmarkPlus, Share2, TrendingUp, Clock, PenTool, BarChart3, Sparkles, Code, Target, GraduationCap, Download, Zap, Video as LucideIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { useDebounce } from '../hooks/useDebounce';
@@ -282,10 +278,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl uppercase tracking-tighter leading-none mb-4">
-                PROMPT LIBRARY
+                TEMPLATES
               </h1>
               <p className="text-base md:text-lg leading-relaxed max-w-3xl">
-                Discover, create, and share powerful AI prompts. Build your personal collection and learn from the community.
+                Start with a proven approach. Browse the full library of workflow templates built by the community and adapt them to your work.
               </p>
             </div>
             <div className="flex gap-3">

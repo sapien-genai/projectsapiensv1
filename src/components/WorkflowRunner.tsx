@@ -6,12 +6,14 @@ import { supabase } from '../lib/supabase';
 import UpgradeModal from './UpgradeModal';
 import { Workflow } from '../data/workflows';
 import { getTip, getWhyBullets, getNextMoves } from '../data/guidanceLibrary';
+import { getTemplatesForWorkflow, WorkflowTemplate } from '../data/workflowTemplates';
 
 interface WorkflowRunnerProps {
   workflow: Workflow;
   onBack?: () => void;
   initialInput?: string;
   autoSend?: boolean;
+  onExploreTemplates?: () => void;
 }
 
 export default function WorkflowRunner({
@@ -19,6 +21,7 @@ export default function WorkflowRunner({
   onBack,
   initialInput,
   autoSend,
+  onExploreTemplates,
 }: WorkflowRunnerProps) {
   const { user } = useAuth();
   const { refreshUsageStatus } = useBilling();
@@ -32,6 +35,7 @@ export default function WorkflowRunner({
   const [guidance, setGuidance] = useState<{ why: string[]; next: string[] } | null>(null);
 
   const tip = workflow.inputTip || getTip(workflow.guidanceCategory);
+  const templates = getTemplatesForWorkflow(workflow.id, 5);
 
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
@@ -186,6 +190,18 @@ export default function WorkflowRunner({
     runAI(action.promptTemplate(output), 'improve');
   };
 
+  const handleTemplate = (t: WorkflowTemplate) => {
+    if (streaming) return;
+    setInput(t.inputText);
+    if (t.autoRun) {
+      const prompt = workflow.promptTemplate(t.inputText);
+      setInput('');
+      runAI(prompt, 'run');
+    } else {
+      setTimeout(() => inputRef.current?.focus(), 0);
+    }
+  };
+
   const handleNextMove = (label: string) => {
     if (!output || streaming) return;
     const prompt =
@@ -270,6 +286,40 @@ export default function WorkflowRunner({
               </button>
             </div>
           </div>
+
+          {!output && !streaming && templates.length > 0 && (
+            <div className="mt-8">
+              <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-3">
+                Start with a proven approach
+              </p>
+              <ul className="divide-y divide-neutral-100">
+                {templates.map(t => (
+                  <li key={t.id}>
+                    <button
+                      onClick={() => handleTemplate(t)}
+                      disabled={streaming}
+                      className="w-full text-left py-3 flex items-baseline gap-3 group disabled:opacity-50"
+                    >
+                      <span className="text-[15px] font-medium text-neutral-900 group-hover:text-[#FF6A00] transition-colors">
+                        {t.label}
+                      </span>
+                      <span className="text-[13px] text-neutral-500 truncate">
+                        {t.description}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {onExploreTemplates && (
+                <button
+                  onClick={onExploreTemplates}
+                  className="mt-3 text-[13px] text-neutral-500 hover:text-[#FF6A00] transition-colors"
+                >
+                  Explore more templates →
+                </button>
+              )}
+            </div>
+          )}
 
           {(output || streaming) && (
             <div ref={outputRef} className="mt-10">
