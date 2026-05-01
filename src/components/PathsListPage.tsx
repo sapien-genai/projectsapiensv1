@@ -1,4 +1,4 @@
-import { ArrowLeft, Home, Palette, Briefcase, Zap } from 'lucide-react';
+import { ArrowLeft, Home, Palette, Briefcase, Zap, PenLine } from 'lucide-react';
 import { paths } from '../data/paths';
 
 interface PathsListPageProps {
@@ -7,6 +7,7 @@ interface PathsListPageProps {
 }
 
 const pathIcons: Record<string, React.ComponentType<any>> = {
+  'ai-writing-systems': PenLine,
   'ai-everyday-life': Home,
   'ai-for-creators': Palette,
   'ai-for-small-business': Briefcase,
@@ -31,10 +32,10 @@ export default function PathsListPage({ onBack, onPathSelect }: PathsListPagePro
 
         <div className="mb-12">
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-none mb-4">
-            CHOOSE YOUR LEARNING PATH
+            CHOOSE YOUR PATH
           </h1>
           <p className="text-base md:text-lg leading-relaxed max-w-3xl">
-            Goal-based, role-specific learning paths designed to take you from beginner to master. Each path includes lessons, labs, and a capstone project.
+            Mission-based paths built around real-world AI workflows. Each mission delivers a concrete outcome you can use immediately.
           </p>
         </div>
 
@@ -63,27 +64,23 @@ export default function PathsListPage({ onBack, onPathSelect }: PathsListPagePro
 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold">Modules:</span>
-                    <span>{path.modules.length}</span>
+                    <span className="font-semibold">Missions:</span>
+                    <span>{path.missions.length}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold">Total Time:</span>
-                    <span>{path.totalTime}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold">Total Lessons:</span>
+                    <span className="font-semibold">Steps:</span>
                     <span>
-                      {path.modules.reduce((sum, module) => sum + module.lessons.length, 0)}
+                      {path.missions.reduce((sum, m) => sum + m.steps.length, 0)}
                     </span>
                   </div>
                 </div>
 
                 <div className="bg-[#F4F4F4] border border-black p-4 mb-6">
                   <p className="text-xs font-extrabold uppercase tracking-tight mb-2">
-                    FINAL PROJECT:
+                    YOU WILL WALK AWAY WITH:
                   </p>
                   <p className="text-xs leading-relaxed">
-                    {path.finalProject.substring(0, 150)}...
+                    {path.outcome}
                   </p>
                 </div>
 
@@ -100,34 +97,34 @@ export default function PathsListPage({ onBack, onPathSelect }: PathsListPagePro
 
         <div className="mt-12 bg-white border border-black p-6 md:p-8 shadow-[3px_3px_0px_#000000]">
           <h3 className="font-extrabold text-xl uppercase tracking-tight mb-6">
-            HOW LEARNING PATHS WORK
+            HOW PATHS WORK
           </h3>
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             <div>
               <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">01</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                STRUCTURED LEARNING
+                MISSIONS
               </h4>
               <p className="text-sm leading-relaxed">
-                Follow a carefully designed curriculum that builds knowledge progressively.
+                Each mission is a real-world workflow. No lectures — you build as you go.
               </p>
             </div>
             <div>
               <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">02</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                HANDS-ON PRACTICE
+                STEPS
               </h4>
               <p className="text-sm leading-relaxed">
-                Apply what you learn with interactive labs and real-world exercises.
+                Actionable steps tied directly to AI interaction. Learning happens through use.
               </p>
             </div>
             <div>
               <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">03</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
-                BUILD & SHARE
+                OUTCOMES
               </h4>
               <p className="text-sm leading-relaxed">
-                Complete a capstone project that demonstrates your new AI skills.
+                Every mission ends with something concrete you can apply immediately.
               </p>
             </div>
           </div>
