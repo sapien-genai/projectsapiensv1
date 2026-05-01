@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUp, PenLine, ListTodo, Scale, Eye,
   Menu, X, LogOut, Settings, CreditCard, HelpCircle,
-  Compass, Beaker, Layers, Shield, ArrowRight,
+  Compass, Beaker, Layers, Shield, ArrowRight, Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -22,15 +22,16 @@ interface DashboardProps {
   onAdminClick?: () => void;
   onBillingClick?: () => void;
   onHelpClick?: () => void;
+  onStartWriting?: (text: string, autoSend?: boolean) => void;
 }
 
 type QuickAction = 'write' | 'plan' | 'decide' | 'review';
 
-const QUICK_ACTIONS: { id: QuickAction; label: string; icon: typeof PenLine; hint: string }[] = [
-  { id: 'write',  label: 'Write',  icon: PenLine, hint: 'Turn thoughts into clear writing' },
-  { id: 'plan',   label: 'Plan',   icon: ListTodo, hint: 'Break a goal into steps' },
-  { id: 'decide', label: 'Decide', icon: Scale,    hint: 'Weigh options with AI' },
-  { id: 'review', label: 'Review', icon: Eye,      hint: 'Get feedback on something' },
+const QUICK_ACTIONS: { id: QuickAction; label: string; icon: typeof PenLine; seed: string }[] = [
+  { id: 'write',  label: 'Write',  icon: PenLine,  seed: '' },
+  { id: 'plan',   label: 'Plan',   icon: ListTodo, seed: 'Help me break this goal into clear next steps:\n\n' },
+  { id: 'decide', label: 'Decide', icon: Scale,    seed: 'Help me decide between these options. Weigh the tradeoffs:\n\n' },
+  { id: 'review', label: 'Review', icon: Eye,      seed: 'Review this and tell me what\'s strong, weak, and how to improve it:\n\n' },
 ];
 
 function getGreeting(): string {
@@ -41,6 +42,53 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
+interface Suggestion {
+  title: string;
+  context: string;
+  prefill: string;
+  autoSend: boolean;
+}
+
+function relativeTime(iso: string): string {
+  const d = new Date(iso).getTime();
+  const diff = Date.now() - d;
+  const m = Math.floor(diff / 60000);
+  if (m < 1)    return 'just now';
+  if (m < 60)   return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24)   return `${h}h ago`;
+  const days = Math.floor(h / 24);
+  if (days === 1) return 'yesterday';
+  if (days < 7)   return `${days}d ago`;
+  return new Date(iso).toLocaleDateString();
+}
+
+function truncate(text: string, n: number): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > n ? clean.slice(0, n - 1) + '…' : clean;
+}
+
+const DEFAULT_SUGGESTIONS: Suggestion[] = [
+  {
+    title: 'Draft a message you\'ve been putting off',
+    context: 'Suggested to get you started',
+    prefill: 'A message I\'ve been putting off: ',
+    autoSend: false,
+  },
+  {
+    title: 'Turn a rough idea into a structured plan',
+    context: 'Suggested based on most-used workflow',
+    prefill: 'Rough idea I want to turn into a plan: ',
+    autoSend: false,
+  },
+  {
+    title: 'Rewrite something to sound more professional',
+    context: 'Suggested for quick wins',
+    prefill: 'Rewrite this to sound more professional:\n\n',
+    autoSend: false,
+  },
+];
+
 export default function Dashboard({
   onLabsClick,
   onPathsListClick,
@@ -49,13 +97,15 @@ export default function Dashboard({
   onProfileClick,
   onHelpClick,
   onAdminClick,
-  onPathSelect,
+  onStartWriting,
 }: DashboardProps) {
   const { user, signOut } = useAuth();
-  const [username,     setUsername]     = useState<string>('');
-  const [menuOpen,     setMenuOpen]     = useState(false);
-  const [isAdmin,      setIsAdmin]      = useState(false);
-  const [input,        setInput]        = useState('');
+  const [username, setUsername]       = useState<string>('');
+  const [menuOpen, setMenuOpen]       = useState(false);
+  const [isAdmin,  setIsAdmin]        = useState(false);
+  const [input,    setInput]          = useState('');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(DEFAULT_SUGGESTIONS);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(true);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -77,29 +127,89 @@ export default function Dashboard({
     })();
   }, [user]);
 
+  // Load recent activity from Supabase to build contextual suggestions.
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      setLoadingSuggestions(true);
+      const { data: recent } = await supabase
+        .from('lab_experiments')
+        .select('prompt, output, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      const personalized: Suggestion[] = [];
+
+      if (recent && recent.length > 0) {
+        const last = recent[0];
+        if (last.output) {
+          personalized.push({
+            title: 'Refine your last writing draft',
+            context: `From your last session · ${relativeTime(last.created_at)}`,
+            prefill: `Continue refining this. Make it sharper and more compelling:\n\n${last.output}`,
+            autoSend: true,
+          });
+        }
+
+        // If there was activity yesterday-or-older, offer a follow-up
+        const olderThanToday = recent.find(r => {
+          const d = new Date(r.created_at);
+          return Date.now() - d.getTime() > 18 * 60 * 60 * 1000;
+        });
+        if (olderThanToday && personalized.length < 3) {
+          const snippet = truncate(olderThanToday.prompt || olderThanToday.output || '', 70);
+          personalized.push({
+            title: 'Follow up on yesterday\'s idea',
+            context: `Picked up from "${snippet}"`,
+            prefill: `Pick up where I left off with this and push it further:\n\n${olderThanToday.output || olderThanToday.prompt}`,
+            autoSend: true,
+          });
+        }
+
+        // If the user has 3+ recent drafts, suggest continuing a plan
+        if (recent.length >= 3 && personalized.length < 3) {
+          personalized.push({
+            title: 'Continue building on your recent work',
+            context: `Suggested based on your activity · ${recent.length} recent drafts`,
+            prefill: `Based on this, help me turn it into a short action plan I can execute this week:\n\n${recent[0].output || recent[0].prompt}`,
+            autoSend: true,
+          });
+        }
+      }
+
+      // Always fill to 3 using defaults for slots not taken
+      const filled = [...personalized];
+      for (const d of DEFAULT_SUGGESTIONS) {
+        if (filled.length >= 3) break;
+        filled.push(d);
+      }
+
+      setSuggestions(filled.slice(0, 3));
+      setLoadingSuggestions(false);
+    })();
+  }, [user]);
+
   useEffect(() => {
     if (!inputRef.current) return;
     inputRef.current.style.height = 'auto';
-    inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 200) + 'px';
+    inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 220) + 'px';
   }, [input]);
 
   const firstName = username ? username.split(/[ _.]/)[0] : '';
 
-  const suggestions = [
-    'Draft a follow-up email I\'ve been putting off',
-    'Turn a rough idea into a structured plan',
-    'Rewrite something I wrote to sound more professional',
-  ];
-
-  const handleQuickAction = (id: QuickAction) => {
-    if (id === 'write') onPathSelect?.('ai-writing-systems');
-    else onPathsListClick?.();
+  const handleQuickAction = (a: typeof QUICK_ACTIONS[number]) => {
+    if (a.id === 'write') {
+      onStartWriting?.(input.trim(), !!input.trim());
+    } else {
+      onStartWriting?.((a.seed + (input.trim() || '')).trim(), !!input.trim());
+    }
   };
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    // Route the raw intent into the writing workspace for now.
-    onPathSelect?.('ai-writing-systems');
+    const text = input.trim();
+    if (!text) return;
+    onStartWriting?.(text, true);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -109,9 +219,8 @@ export default function Dashboard({
     }
   };
 
-  const handleSuggestion = (s: string) => {
-    setInput(s);
-    inputRef.current?.focus();
+  const handleSuggestion = (s: Suggestion) => {
+    onStartWriting?.(s.prefill, s.autoSend);
   };
 
   return (
@@ -143,68 +252,38 @@ export default function Dashboard({
           Here's what matters today.
         </p>
 
-        {/* Suggested actions */}
+        {/* Primary input — elevated as the main action */}
         <section className="mt-8">
-          <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-3">
-            Suggested
-          </p>
-          <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
-            {suggestions.map((s, i) => (
-              <li key={i}>
-                <button
-                  onClick={() => handleSuggestion(s)}
-                  className="w-full flex items-center gap-3 py-4 text-left group"
-                >
-                  <span className="flex-1 text-[16px] text-neutral-800 leading-snug">
-                    {s}
-                  </span>
-                  <ArrowRight
-                    className="w-4 h-4 text-neutral-400 group-hover:text-[#FF6A00] transition-colors shrink-0"
-                    strokeWidth={2}
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Input */}
-        <section className="mt-10">
-          <div className="relative flex items-end gap-2 border-b border-neutral-300 focus-within:border-neutral-900 transition-colors">
+          <div className="relative flex items-end gap-2 border-b-2 border-neutral-900 focus-within:border-[#FF6A00] transition-colors">
             <textarea
               ref={inputRef}
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               rows={1}
-              placeholder="What do you want to move forward today?"
-              className="flex-1 bg-transparent resize-none outline-none py-3 pr-12 text-[17px] leading-relaxed placeholder:text-neutral-400"
+              placeholder="What do you want to move forward right now?"
+              className="flex-1 bg-transparent resize-none outline-none py-4 pr-14 text-[19px] leading-relaxed placeholder:text-neutral-400"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim()}
               aria-label="Send"
-              className="absolute right-0 bottom-2 w-9 h-9 flex items-center justify-center rounded-full bg-[#FF6A00] text-white disabled:bg-neutral-200 disabled:text-neutral-400 transition-colors hover:bg-[#e95f00]"
+              className="absolute right-0 bottom-2.5 w-11 h-11 flex items-center justify-center rounded-full bg-[#FF6A00] text-white disabled:bg-neutral-200 disabled:text-neutral-400 transition-colors hover:bg-[#e95f00] shadow-sm"
             >
-              <ArrowUp className="w-[18px] h-[18px]" strokeWidth={2.5} />
+              <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
             </button>
           </div>
-        </section>
 
-        {/* Quick start */}
-        <section className="mt-8">
-          <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-3">
-            Quick start
-          </p>
-          <div className="-mx-4 px-4 overflow-x-auto">
+          {/* Quick start */}
+          <div className="mt-4 -mx-4 px-4 overflow-x-auto">
             <div className="flex gap-2 w-max">
               {QUICK_ACTIONS.map(a => {
                 const Icon = a.icon;
                 return (
                   <button
                     key={a.id}
-                    onClick={() => handleQuickAction(a.id)}
-                    className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-[15px] font-medium text-neutral-900 transition-colors"
+                    onClick={() => handleQuickAction(a)}
+                    className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-[14px] font-medium text-neutral-900 transition-colors"
                   >
                     <Icon className="w-4 h-4" strokeWidth={2} />
                     {a.label}
@@ -215,30 +294,60 @@ export default function Dashboard({
           </div>
         </section>
 
+        {/* Suggestions — personalized, contextual */}
+        <section className="mt-10">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF6A00]" strokeWidth={2} />
+            <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400">
+              Suggested for you
+            </p>
+          </div>
+
+          {loadingSuggestions ? (
+            <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
+              {[0,1,2].map(i => (
+                <li key={i} className="py-5">
+                  <div className="h-4 w-3/4 bg-neutral-100 rounded animate-pulse" />
+                  <div className="h-3 w-1/3 bg-neutral-100 rounded mt-2 animate-pulse" />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="divide-y divide-neutral-100 border-y border-neutral-100">
+              {suggestions.map((s, i) => (
+                <li key={i}>
+                  <button
+                    onClick={() => handleSuggestion(s)}
+                    className="w-full flex items-center gap-3 py-4 text-left group"
+                  >
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[16px] text-neutral-900 leading-snug">
+                        {s.title}
+                      </span>
+                      <span className="block text-[12px] text-neutral-500 mt-1">
+                        {s.context}
+                      </span>
+                    </span>
+                    <ArrowRight
+                      className="w-4 h-4 text-neutral-400 group-hover:text-[#FF6A00] group-hover:translate-x-0.5 transition-all shrink-0"
+                      strokeWidth={2}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
         {/* Secondary workspace links */}
         <section className="mt-12">
           <p className="text-[12px] font-medium uppercase tracking-wider text-neutral-400 mb-2">
             Workspaces
           </p>
           <ul className="divide-y divide-neutral-100">
-            <SecondaryRow
-              icon={Compass}
-              label="Workflows"
-              hint="AI-powered learning paths"
-              onClick={onPathsListClick}
-            />
-            <SecondaryRow
-              icon={Beaker}
-              label="Writing Lab"
-              hint="Open the AI writing workspace"
-              onClick={onLabsClick}
-            />
-            <SecondaryRow
-              icon={Layers}
-              label="Command Center"
-              hint="Projects, tasks, calendar"
-              onClick={onCommandCenterClick}
-            />
+            <SecondaryRow icon={Compass} label="Workflows"      hint="AI-powered learning paths"       onClick={onPathsListClick} />
+            <SecondaryRow icon={Beaker}  label="Writing Lab"    hint="Open the AI writing workspace"   onClick={onLabsClick} />
+            <SecondaryRow icon={Layers}  label="Command Center" hint="Projects, tasks, calendar"       onClick={onCommandCenterClick} />
           </ul>
         </section>
 

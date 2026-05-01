@@ -8,6 +8,8 @@ import UpgradeModal from './UpgradeModal';
 interface WritingSystemsPathProps {
   onBack?: () => void;
   onLabOpen?: (labId: string) => void;
+  initialInput?: string;
+  autoSend?: boolean;
 }
 
 type ImproveMode =
@@ -33,11 +35,11 @@ const IMPROVE_PROMPTS: Record<ImproveMode, string> = {
 const MISSION_TITLE = 'Mission 1 — Turn Raw Ideas into Clear Writing';
 const MISSION_TIP   = 'Dump messy thoughts first — refine after.';
 
-export default function WritingSystemsPath({ onBack }: WritingSystemsPathProps) {
+export default function WritingSystemsPath({ onBack, initialInput, autoSend }: WritingSystemsPathProps) {
   const { user } = useAuth();
   const { refreshUsageStatus } = useBilling();
 
-  const [input,         setInput]         = useState('');
+  const [input,         setInput]         = useState(initialInput ?? '');
   const [output,        setOutput]        = useState('');
   const [streaming,     setStreaming]     = useState(false);
   const [improvesUsed,  setImprovesUsed]  = useState(0);
@@ -137,6 +139,21 @@ export default function WritingSystemsPath({ onBack }: WritingSystemsPathProps) 
       output:  result,
     });
   }, [user]);
+
+  const autoSentRef = useRef(false);
+  useEffect(() => {
+    if (autoSentRef.current) return;
+    if (!autoSend) return;
+    if (!initialInput || !initialInput.trim()) return;
+    autoSentRef.current = true;
+    const text = initialInput.trim();
+    const prompt =
+      'Take the following rough thoughts and turn them into a clear, structured message. Return only the rewritten message:\n\n' +
+      text;
+    setInput('');
+    runAI(prompt, 'freeform', 'dump');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSend, initialInput]);
 
   const runAI = async (prompt: string, mode: string, kind: 'dump' | 'improve') => {
     if (streaming) return;

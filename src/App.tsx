@@ -50,6 +50,7 @@ function AppContent() {
   const [selectedModule, setSelectedModule] = useState<string>('');
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+  const [writingSeed, setWritingSeed] = useState<{ text: string; autoSend: boolean; nonce: number } | null>(null);
 
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
@@ -124,11 +125,14 @@ function AppContent() {
       if (selectedPath === 'ai-writing-systems') {
         return (
           <WritingSystemsPath
-            onBack={() => setView('paths-list')}
+            key={writingSeed?.nonce ?? 'default'}
+            onBack={() => { setWritingSeed(null); setView('dashboard'); }}
             onLabOpen={(labId) => {
               setSelectedLab(labId);
               setView('lab-sandbox');
             }}
+            initialInput={writingSeed?.text}
+            autoSend={writingSeed?.autoSend}
           />
         );
       }
@@ -295,6 +299,11 @@ function AppContent() {
         onLabSelect={(labId) => {
           setSelectedLab(labId);
           setView('lab-sandbox');
+        }}
+        onStartWriting={(text, autoSend) => {
+          setWritingSeed({ text, autoSend: !!autoSend, nonce: Date.now() });
+          setSelectedPath('ai-writing-systems');
+          setView('path');
         }}
       />
     );
