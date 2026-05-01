@@ -265,7 +265,15 @@ export default function WorkflowRunner({
             {workflow.tagline}.
           </p>
 
-          <div className="mt-6">
+          {!output && !streaming && workflow.inputTip && (
+            <p className="mt-6 text-[13px] text-neutral-500 leading-relaxed">
+              <span className="text-[#FF6A00] font-medium">Tip</span>
+              <span className="mx-2 text-neutral-300">·</span>
+              {workflow.inputTip}
+            </p>
+          )}
+
+          <div className="mt-4">
             <div className="relative flex items-end gap-2 border-b border-neutral-300 focus-within:border-neutral-900 transition-colors">
               <textarea
                 ref={inputRef}

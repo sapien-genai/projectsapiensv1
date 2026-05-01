@@ -25,6 +25,7 @@ export interface Workflow {
   icon: LucideIcon;
   intent: string;
   inputPlaceholder: string;
+  inputTip: string;
   promptTemplate: (input: string) => string;
   improveActions: ImproveAction[];
   category: WorkflowCategory;
@@ -59,6 +60,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: PenLine,
     intent: 'I want to write something clearly.',
     inputPlaceholder: 'Dump your raw thoughts here…',
+    inputTip: 'Start with the outcome you want — clarity beats length.',
     promptTemplate: input =>
       `Take the following rough thoughts and turn them into a clear, structured message. Return only the rewritten message:\n\n${input}`,
     improveActions: [REWRITE_CLEARER, REWRITE_SHORTER, REWRITE_PROFESSIONAL, REWRITE_PERSUASIVE],
@@ -72,6 +74,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: ListTodo,
     intent: 'I want to turn a goal into steps.',
     inputPlaceholder: 'Describe the goal or project you want to plan…',
+    inputTip: 'Include constraints — time, budget, energy — to get a usable plan.',
     promptTemplate: input =>
       `You are a practical planning assistant. Turn the following goal into a concrete, numbered action plan. Keep it tight: 5 to 8 steps, each step one sentence, sequenced so the user can start today. Return only the plan.\n\nGoal:\n${input}`,
     improveActions: [
@@ -106,6 +109,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: Scale,
     intent: 'I want to make a decision.',
     inputPlaceholder: 'Describe the decision and the options you\'re weighing…',
+    inputTip: 'Name the real tradeoff — what you gain and what you give up.',
     promptTemplate: input =>
       `You are a decision-making coach. For the following decision, (1) restate the real question in one sentence, (2) list the options, (3) compare them with the 2-3 factors that matter most, (4) recommend one option with a clear reason. Be direct. Return only the analysis.\n\nDecision:\n${input}`,
     improveActions: [
@@ -140,6 +144,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: Eye,
     intent: 'I want feedback on something.',
     inputPlaceholder: 'Paste the draft, idea, or plan you want reviewed…',
+    inputTip: 'Tell it who this is for — feedback lands better with an audience.',
     promptTemplate: input =>
       `You are a thoughtful reviewer. Read the following and produce three short sections: Summary, Key insights, Suggested next steps. Be concrete and specific. Return only the review.\n\nContent:\n${input}`,
     improveActions: [
@@ -174,6 +179,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: Sun,
     intent: 'I want to plan my day.',
     inputPlaceholder: 'What\'s on your plate today? Dump meetings, tasks, energy level…',
+    inputTip: 'Mention your energy and fixed blocks — the plan adapts to reality.',
     promptTemplate: input =>
       `You are a calm daily planning coach. Based on the following context, produce a focused plan for today: (1) the one thing that must get done, (2) a 3–5 item ordered to-do list with rough time blocks, (3) what to consciously drop. Be concrete and realistic. Return only the plan.\n\nContext:\n${input}`,
     improveActions: [
@@ -208,6 +214,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: CheckSquare,
     intent: 'I want to sort out my tasks.',
     inputPlaceholder: 'Paste your task list, inbox, or backlog…',
+    inputTip: 'Dump everything — messy beats missing when you triage.',
     promptTemplate: input =>
       `You are a task triage assistant. For the following list, group items into: Do now, Do this week, Do later, Drop. For each item keep it to one short line and, when useful, suggest the true next action. Return only the grouped list.\n\nTasks:\n${input}`,
     improveActions: [
@@ -242,6 +249,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: Moon,
     intent: 'I want to review my day.',
     inputPlaceholder: 'What happened today? Wins, drags, surprises, feelings…',
+    inputTip: 'Be honest about what drained you — that\'s where the lesson hides.',
     promptTemplate: input =>
       `You are a thoughtful coach helping with an end-of-day review. From the following notes, produce: (1) What went well, (2) What drained me, (3) One pattern worth noticing, (4) One thing to try tomorrow. Keep it short and human. Return only the review.\n\nNotes:\n${input}`,
     improveActions: [
@@ -276,6 +284,7 @@ export const workflows: Record<WorkflowId, Workflow> = {
     icon: FolderTree,
     intent: 'I want to get organized.',
     inputPlaceholder: 'Dump everything on your mind — projects, worries, ideas, open loops…',
+    inputTip: 'Capture everything first — sorting happens after the dump.',
     promptTemplate: input =>
       `You are an organizing coach. Take the following brain dump and structure it into clear life areas (e.g. Work, Health, Relationships, Money, Home, Learning). For each area list open items, and flag up to 3 things that need attention this week. Return only the structured map.\n\nDump:\n${input}`,
     improveActions: [
