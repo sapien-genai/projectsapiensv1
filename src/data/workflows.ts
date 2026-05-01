@@ -314,6 +314,3 @@ export const workflowList: Workflow[] = [
   workflows.review_day,
   workflows.organize_life,
 ];
-
-
-export { workflowList }
