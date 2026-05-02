@@ -8473,7 +8473,7 @@ ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
 
 AI TOOL COSTS:
 - ChatGPT Plus: $20/month = $240/year
-- Canva Pro: $13/month = $156/year
+- Canva Pro:  (paid plan required)
 - Basic chatbot: Free
 TOTAL COST: $396/year
 
@@ -8592,14 +8592,14 @@ COST: $0/month
 
 BASIC TIER (Most small businesses):
 - ChatGPT Plus: $20/month
-- Canva Pro: $13/month
+- Canva Pro:  (paid plan required)
 - Basic automation: $20/month
 - Customer support AI: $20/month
 COST: $73/month = $876/year
 
 GROWTH TIER (Scaling businesses):
-- Advanced AI tools: $50/month
-- More automation: $50/month
+- Advanced AI tools: paid plan required
+- More automation: paid plan required
 - Team collaboration: $30/month
 COST: $130/month = $1,560/year
 
@@ -8817,7 +8817,7 @@ COST includes:
       },
       {
         type: 'tip',
-        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a $50 cost = 900% ROI.`
+        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs paid plan required but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a $50 cost = 900% ROI.`
       },
       {
         type: 'text',
@@ -8879,7 +8879,7 @@ Use this to evaluate any AI investment:
 
 HIGH ROI (Do It Now):
 - Saves 5+ hours/week
-- Costs under $50/month
+- Costs under paid plan required
 - Easy to implement
 - Solves a daily problem
 
@@ -9379,19 +9379,19 @@ Each answer is complete, actionable, and guides to next step.`
 FOR WEBSITES:
 
 Tidio (Recommended for beginners)
-- Price: Free up to 50 conversations/month, $19-$394/month
+- Price: Free tier available; paid plans available
 - Best for: E-commerce, service businesses
 - Setup time: 30 minutes
 - AI capability: Visual flow builder + smart responses
 
 Intercom
-- Price: Starting at $74/month
+- Price: Free tier available; paid plans available
 - Best for: SaaS, tech products
 - Setup time: 2-3 hours
 - AI capability: Advanced AI with customization
 
 Drift
-- Price: Starting at $2,500/month
+- Price: Free tier available; paid plans available
 - Best for: B2B sales teams
 - Setup time: 1 week
 - AI capability: Conversational marketing focus
@@ -9399,14 +9399,14 @@ Drift
 FOR SOCIAL MEDIA:
 
 ManyChat (Facebook/Instagram)
-- Price: Free up to 1,000 contacts, $15/month+
+- Price: Free tier available; paid plans available
 - Best for: E-commerce, coaches, local businesses
 - Setup time: 1-2 hours
 
 FOR MULTI-CHANNEL:
 
 Zapier Chatbots (connects everything)
-- Price: Included with Zapier plan ($20-50/month)
+- Price: Included with Zapier plan (free tier available; paid plan required for advanced usage)
 - Best for: Businesses using multiple platforms
 - Setup time: 2-4 hours`
       },
@@ -9735,17 +9735,17 @@ ROI: 275% increase in email revenue`
 EMAIL PERSONALIZATION:
 
 Mailchimp (with AI)
-- Price: Free-$350/month
+- Price: Free tier available; paid plans available
 - AI features: Send time optimization, subject line helper, content suggestions
 - Best for: Beginners, small lists
 
 ActiveCampaign
-- Price: $29-$149/month
+- Price: Free tier available; paid plans available
 - AI features: Predictive sending, content, win probability scoring
 - Best for: Growing businesses with automation needs
 
 HubSpot (with AI)
-- Price: $45-$3,600/month
+- Price: Free tier available; paid plans available
 - AI features: Full predictive lead scoring, content generation, chatbot
 - Best for: B2B or businesses wanting all-in-one CRM
 
@@ -9757,14 +9757,14 @@ Shopify AI (built-in)
 - Best for: E-commerce on Shopify
 
 Nosto
-- Price: Custom pricing ($500+/month typically)
+- Price: Free tier available; paid plans available
 - AI features: Advanced personalization engine
 - Best for: Larger e-commerce sites
 
 WEBSITE PERSONALIZATION:
 
 OptiMonk
-- Price: Free-$249/month
+- Price: Free tier available; paid plans available
 - AI features: Smart popups, personalized offers based on behavior
 - Best for: Conversion optimization
 
@@ -10975,22 +10975,22 @@ ROI: Infinite. But more importantly: 223 owned relationships.`
 EMAIL PLATFORMS WITH AI:
 
 Mailchimp
-- Price: Free-$350/month
+- Price: Free tier available; paid plans available
 - AI features: Subject line helper, send time optimization, content suggestions
 - Best for: Beginners, small lists (under 10k)
 
 ConvertKit
-- Price: Free-$66/month
+- Price: Free tier available; paid plans available
 - AI features: Sequence optimization, tag-based automation
 - Best for: Creators, coaches, course sellers
 
 ActiveCampaign
-- Price: $29-$149/month
+- Price: Free tier available; paid plans available
 - AI features: Predictive sending, content generation, win probability
 - Best for: E-commerce, growing businesses
 
 Klaviyo
-- Price: Free-$700/month (scales with list)
+- Price: Free tier available; paid plans available
 - AI features: Product recommendations, predictive analytics
 - Best for: E-commerce exclusively
 
@@ -13845,7 +13845,7 @@ What you get:
 - Improvement opportunities
 
 Example insight:
-"Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition focus to partnerships."
+"Customers acquired in {{CURRENT_QUARTER}} spend more than customers from earlier quarters. Reason: channel mix differences. Shift acquisition focus to the strongest-performing channels."
 
 TECHNIQUE 2: SEGMENTATION ANALYSIS
 
@@ -14260,7 +14260,7 @@ Create a simple list:
 Month | Total Revenue | Source 1 | Source 2 | Source 3
 
 Example:
-- Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- this month | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
 - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
 - (continue for all months)
 
@@ -14286,7 +14286,7 @@ Common categories:
 - Admin/misc
 
 Example:
-- Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- this month | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
 
 STEP 4: COLLECT CUSTOMER DATA (if applicable)
 
@@ -14899,22 +14899,22 @@ Your primary AI interface—where you interact most.
 
 Options:
 
-ChatGPT (GPT-4)
+ChatGPT (paid plan available)
 - Best for: General business tasks, content, analysis
 - Pros: Most capable, broad knowledge, good UI
-- Cons: $20/month, no built-in integrations
+- Cons: Paid plan required, no built-in integrations
 - Use when: You need smartest responses, complex reasoning
 
 Claude (Anthropic)
 - Best for: Long documents, detailed analysis, creative work
-- Pros: 200K context window, excellent at following instructions
+- Pros: Strong long-form handling for many workflows
 - Cons: Sometimes slower, stricter safety filters
 - Use when: Analyzing large documents, nuanced writing
 
 Gemini (Google)
 - Best for: Real-time information, Google Workspace integration
 - Pros: Free tier, connects to Google apps, up-to-date info
-- Cons: Sometimes less capable than GPT-4
+- Cons: Different assistants have different strengths; check current benchmarks before committing to one
 - Use when: Need current info, already in Google ecosystem
 
 Perplexity
@@ -14927,7 +14927,7 @@ Your choice:
 
 Pick ONE as your primary assistant.
 
-Most people: ChatGPT Plus ($20/month)
+Most people: ChatGPT Plus (paid plan required)
 Google users: Gemini (free, then upgrade if needed)
 Researchers: Perplexity Pro ($20/month)
 
@@ -15052,13 +15052,13 @@ The goal: AI produces output where it's needed, not in isolation.`
         content: `Example Stack: Solo Consultant
 
 LAYER 1 - Brain:
-- ChatGPT Plus ($20/month) - main AI assistant
+- ChatGPT Plus (paid plan required) - main AI assistant
 
 LAYER 2 - Muscles:
-- Zapier ($20/month) - automation
+- Zapier (free tier available; paid plan required for advanced usage) - automation
 
 LAYER 3 - Memory:
-- Notion ($0 free tier) - client notes, templates
+- Notion (free tier available) - client notes, templates
 - Google Drive ($0 free tier) - file storage
 
 LAYER 4 - Senses:
@@ -15254,8 +15254,8 @@ SOLO CREATOR/FREELANCER
 Challenges: Limited time, wearing all hats, inconsistent income
 
 Core Stack:
-- AI: ChatGPT Plus ($20)
-- Automation: Zapier free tier → $20
+- AI: ChatGPT Plus (paid plan required)
+- Automation: Zapier (free tier available → paid plan required for higher usage)
 - Memory: Notion free tier
 - + Gmail, Google Calendar, Stripe
 
@@ -15272,9 +15272,9 @@ SMALL BUSINESS (2-10 PEOPLE)
 Challenges: Team coordination, scaling operations, customer management
 
 Core Stack:
-- AI: ChatGPT Team ($30/user) or Google Workspace + Gemini
-- Automation: Zapier ($50) or Make ($30)
-- Memory: Notion ($10/user) or Airtable ($20)
+- AI: ChatGPT Team (paid plan required) or Google Workspace + Gemini
+- Automation: Zapier (free tier available; paid plan required for advanced usage) or Make ($30)
+- Memory: Notion (free tier available) or Airtable ($20)
 - CRM: HubSpot free or Pipedrive ($15/user)
 - + Slack ($8/user), cloud storage
 
@@ -15293,7 +15293,7 @@ Challenges: Inventory, customer service, marketing, fulfillment
 
 Core Stack:
 - AI: ChatGPT Plus + Perplexity (research)
-- Automation: Zapier ($50)
+- Automation: Zapier (free tier available; paid plan required for advanced usage)
 - Memory: Google Sheets + Airtable
 - Platform: Shopify/WooCommerce
 - + Email marketing, customer service tools
@@ -15313,9 +15313,9 @@ SERVICE BUSINESS (AGENCY/CONSULTANCY)
 Challenges: Client management, deliverables, team utilization, reporting
 
 Core Stack:
-- AI: ChatGPT Team ($30/user)
+- AI: ChatGPT Team (paid plan required)
 - Automation: Make ($30-50)
-- Memory: Notion ($10/user)
+- Memory: Notion (free tier available)
 - Project mgmt: Monday.com or Asana
 - CRM: HubSpot or Salesforce
 - + Communication tools
@@ -15680,7 +15680,7 @@ You need access to an AI assistant. Choose one:
 
 Option A: ChatGPT (Recommended)
 - Go to chat.openai.com
-- Free tier works, but GPT-4 (ChatGPT Plus $20/month) is better
+- Free tier works, but paid ChatGPT plans can be better for advanced tasks (paid plan required)
 - Sign up or log in
 
 Option B: Claude
@@ -16240,7 +16240,7 @@ Solutions:
 2. Give AI more context
 3. Show AI examples of good output
 4. Iterate on prompts 5-10 times
-5. Use GPT-4 instead of GPT-3.5
+5. Use a higher-capability paid model when needed
 
 PROBLEM: "Automation broke and I don't know why"
 
@@ -16457,7 +16457,7 @@ Steps: 1) Gmail detects email, 2) Creates draft with template, 3) Sends to draft
 Output: Draft email ready for AI personalization
 Frequency: 5-10 times per week
 Time saved: 2.5 hours/week
-Last updated: Jan 15, 2024
+Last updated: this month
 Owner: You
 
 BACKUP PLAN
@@ -18189,7 +18189,7 @@ This becomes your reference library for training and scaling.`
 
 TOOLS:
 - ChatGPT Team: $500/month (25 users) - Content, emails, strategy
-- Claude Pro: $400/month (20 users) - Long-form content, analysis
+- Claude Pro (paid plan required) - Long-form content, analysis
 - Midjourney: $200/month (5 users) - Image generation
 - Make.com: $300/month - Automations and integrations
 
@@ -18939,7 +18939,7 @@ Prompt pattern:
 
 Example:
 
-"Research the top 5 project management tools for remote teams in 2024. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
+"Research the top 5 project management tools for remote teams this year. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
 
 Time saved: Research that takes 3 hours manually → 30 minutes with AI
 
@@ -19510,7 +19510,7 @@ This becomes your reference document - you'll compare against it monthly to meas
         type: 'example',
         content: `Real Baseline Example: Alex (Marketing Manager)
 
-PRODUCTIVITY BASELINE - Alex Chen - Jan 15, 2024
+PRODUCTIVITY BASELINE - Alex Chen - this month
 
 TIME INVESTMENT (40 hr work week tracked)
 - Total work hours tracked: 40 hours
@@ -31094,7 +31094,7 @@ BUILD THESE FIVE FIRST. They cover 80% of your integration needs.`
 TOOL 1: ZAPIER
 
 Best for: Non-technical users, common integrations
-Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - 6,000+ app integrations
@@ -31116,7 +31116,7 @@ Best use cases:
 TOOL 2: MAKE (INTEGROMAT)
 
 Best for: Complex workflows, visual thinkers
-Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - More powerful than Zapier
@@ -31138,7 +31138,7 @@ Best use cases:
 TOOL 3: N8N
 
 Best for: Technical users, self-hosters
-Pricing: Free (self-hosted), Cloud ($20/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - Open source
@@ -31160,7 +31160,7 @@ Best use cases:
 TOOL 4: PIPEDREAM
 
 Best for: Developers, API-first workflows
-Pricing: Free (generous), Basic ($19/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - Write code inline
@@ -35719,8 +35719,8 @@ Treat AI like learning a musical instrument: pick one foundational model and go 
 Pick one of these three:
 
 ChatGPT - Most mature, largest ecosystem, best for general use
-Gemini - Best if you're deep in the Google ecosystem
-Claude - Excellent for business, projects, and long-form reasoning
+Gemini - Useful if you're deep in the Google ecosystem
+Claude - Often used for business, projects, and long-form reasoning
 
 Choose based on your needs, not hype.`
       },
