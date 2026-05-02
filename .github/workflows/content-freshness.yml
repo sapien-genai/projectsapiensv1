@@ -1,0 +1,100 @@
+name: Content Freshness
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-content-freshness:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run content freshness check
+        id: freshness
+        run: |
+          set +e
+          npm run check:content > content-freshness-report.md 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          {
+            echo 'report<<EOF'
+            cat content-freshness-report.md
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Create or update issue on failure
+        if: steps.freshness.outputs.exit_code != '0'
+        uses: actions/github-script@v7
+        env:
+          REPORT: ${{ steps.freshness.outputs.report }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const labelName = 'content-debt';
+            const issueTitle = 'Content freshness check failing';
+            const body = process.env.REPORT || 'No report output captured.';
+
+            const labels = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner,
+              repo,
+              per_page: 100,
+            });
+
+            if (!labels.find((l) => l.name === labelName)) {
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: labelName,
+                color: 'B60205',
+                description: 'Content freshness checks are failing',
+              });
+            }
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+
+            const existing = issues.find((i) => i.title === issueTitle && !i.pull_request);
+
+            if (existing) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body,
+                labels: Array.from(new Set([...(existing.labels || []).map((l) => typeof l === 'string' ? l : l.name), labelName])).filter(Boolean),
+              });
+            } else {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title: issueTitle,
+                body,
+                labels: [labelName],
+              });
+            }
+
+      - name: Fail workflow when check fails
+        if: steps.freshness.outputs.exit_code != '0'
+        run: exit 1
