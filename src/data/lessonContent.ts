@@ -1711,7 +1711,7 @@ CREATOR USE CASES:
 - International creators: Multi-language voice options
 
 GAME-CHANGER:
-Audio quality that used to require $10,000+ equipment now possible with $20/month software. The barrier to professional-sounding content is gone.`
+Audio quality that used to require $10,000+ equipment now possible with affordable software. The barrier to professional-sounding content is gone.`
       },
       {
         type: 'text',
@@ -2629,7 +2629,7 @@ Look at your calendar for this week. Find THREE blocks you can delete. Then prot
 10. THE CURATED LIST
 "X Best [Resources/Tools] for [Audience/Goal]"
 - Practical, bookmark-worthy, evergreen
-- Example: "15 Best AI Tools for Content Creators (2024 Edition)"`
+- Example: "15 Best AI Tools for Content Creators (current edition)"`
       },
       {
         type: 'text',
@@ -8472,12 +8472,12 @@ TOTAL TIME SAVED: 13.3 hours per week
 ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
 
 AI TOOL COSTS:
-- ChatGPT Plus: $20/month = $240/year
-- Canva Pro: $13/month = $156/year
+- ChatGPT Plus (paid plan)
+- Canva Pro (paid plan)
 - Basic chatbot: Free
-TOTAL COST: $396/year
+TOTAL COST: [total]
 
-NET ROI: $32,854 in the first year
+NET ROI: [total] in the first year
 
 WHAT SARAH DID WITH 13 EXTRA HOURS:
 - 5 hours: Developing new products (launched 2 new lines)
@@ -8579,7 +8579,7 @@ TYPICAL SAVINGS: 2-4 hours/week`
 
 You've calculated potential savings. Now let's talk investment.
 
-THE GOOD NEWS: Most small businesses can implement AI for under $100/month.
+THE GOOD NEWS: Most small businesses can implement AI with affordable tools.
 
 COST BREAKDOWN:
 
@@ -8588,32 +8588,32 @@ FREE TIER (Start here):
 - Canva free version
 - Google AI tools (Gmail, Docs)
 - Many chatbot platforms
-COST: $0/month
+COST: Free
 
 BASIC TIER (Most small businesses):
-- ChatGPT Plus: $20/month
-- Canva Pro: $13/month
-- Basic automation: $20/month
-- Customer support AI: $20/month
-COST: $73/month = $876/year
+- ChatGPT Plus (paid plan)
+- Canva Pro (paid plan)
+- Basic automation (paid plan)
+- Customer support AI (paid plan)
+COST: Paid tier
 
 GROWTH TIER (Scaling businesses):
-- Advanced AI tools: $50/month
-- More automation: $50/month
-- Team collaboration: $30/month
-COST: $130/month = $1,560/year
+- Advanced AI tools (paid)
+- More automation (paid)
+- Team collaboration (paid)
+COST: Growth tier
 
 ROI CALCULATION:
 
 If you save just 5 hours per week at $40/hour:
 - Annual savings: $10,000
-- Annual cost: $876 (Basic Tier)
+- Annual cost: [basic tier cost]
 - NET ROI: $9,124
 - Return: 1,041%
 
 If you save 10 hours per week at $60/hour:
 - Annual savings: $30,000
-- Annual cost: $876
+- Annual cost: [basic tier cost]
 - NET ROI: $29,124
 - Return: 3,323%
 
@@ -8726,30 +8726,30 @@ The goal: Cover 80% of your business needs with 5 affordable tools.`
 
 1. CONVERSATIONAL AI (ChatGPT, Claude)
 - Use for: Writing, brainstorming, customer responses, strategy
-- Cost: $20/month or free
+- Cost: Free tier or paid plan
 - ROI: Immediate
 
 2. CONTENT CREATION (Canva AI, Copy.ai)
 - Use for: Social media, graphics, marketing copy
-- Cost: $10-30/month
+- Cost: Free tier or paid plan
 - ROI: Week 1
 
 3. AUTOMATION (Zapier, Make)
 - Use for: Connecting tools, workflow automation
-- Cost: $20-50/month
+- Cost: Paid plan
 - ROI: Month 1
 
 4. CUSTOMER SUPPORT (Tidio, Intercom)
 - Use for: Chatbots, FAQ automation, live chat
-- Cost: $0-50/month
+- Cost: Free tier or paid plan
 - ROI: Immediate
 
 5. ANALYTICS AI (Notion AI, Google Sheets + AI)
 - Use for: Data analysis, reporting, insights
-- Cost: $10-20/month
+- Cost: Paid plan
 - ROI: Monthly
 
-Total investment: $60-$170/month
+Total investment: Varies by selected paid plans
 Typical ROI: 10-50x in time savings`
       },
       {
@@ -8817,7 +8817,7 @@ COST includes:
       },
       {
         type: 'tip',
-        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a $50 cost = 900% ROI.`
+        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs [amount]/month but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a [amount] cost = 900% ROI.`
       },
       {
         type: 'text',
@@ -8836,13 +8836,13 @@ Track setup time: 8 hours at $30/hr = $240
 WEEK 3: Measurement
 Use AI tool while tracking time saved.
 Example: Support now takes 8 hrs/week = $240/week
-Tool cost: $40/month = $10/week
+Tool cost: [tool cost]
 
 WEEK 4: Calculate ROI
 Time saved: 7 hrs × $30 = $210/week
-Tool cost: $10/week
+Tool cost: [weekly cost]
 Net value: $200/week
-ROI: ($200 - $10) / $10 = 1,900%`
+ROI: (net value - cost) / cost`
       },
       {
         type: 'example',
@@ -8861,7 +8861,7 @@ With AI (ChatGPT Pro):
 - 1.5 hours per proposal
 - 9 hours total
 - At $100/hr = $900 in time
-- Tool cost: $20/month
+- Tool cost: [monthly cost]
 
 Results:
 - Time saved: 15 hours/month
@@ -8879,19 +8879,19 @@ Use this to evaluate any AI investment:
 
 HIGH ROI (Do It Now):
 - Saves 5+ hours/week
-- Costs under $50/month
+- Costs within a reasonable paid tier
 - Easy to implement
 - Solves a daily problem
 
 MEDIUM ROI (Test First):
 - Saves 2-5 hours/week
-- Costs $50-200/month
+- Costs at a moderate paid tier
 - Moderate learning curve
 - Solves a weekly problem
 
 LOW ROI (Skip It):
 - Saves under 2 hours/week
-- Costs over $200/month
+- Costs at a high paid tier
 - Complex setup
 - Solves an occasional problem
 
@@ -8914,7 +8914,7 @@ Go to the Strategy Lab and fill out this calculation:
 
 Example template:
 "Email responses take 10 hrs/week at $40/hr = $400
-AI tool costs $20/month = $5/week
+AI tool costs [monthly cost] = [weekly cost]
 With AI: 4 hrs/week at $40/hr = $160
 Savings: $240/week - $5 = $235/week
 ROI: 4,600%"
@@ -9379,19 +9379,19 @@ Each answer is complete, actionable, and guides to next step.`
 FOR WEBSITES:
 
 Tidio (Recommended for beginners)
-- Price: Free up to 50 conversations/month, $19-$394/month
+- Pricing: Free tier + paid plans
 - Best for: E-commerce, service businesses
 - Setup time: 30 minutes
 - AI capability: Visual flow builder + smart responses
 
 Intercom
-- Price: Starting at $74/month
+- Pricing: Paid plans
 - Best for: SaaS, tech products
 - Setup time: 2-3 hours
 - AI capability: Advanced AI with customization
 
 Drift
-- Price: Starting at $2,500/month
+- Pricing: Enterprise paid plans
 - Best for: B2B sales teams
 - Setup time: 1 week
 - AI capability: Conversational marketing focus
@@ -9399,14 +9399,14 @@ Drift
 FOR SOCIAL MEDIA:
 
 ManyChat (Facebook/Instagram)
-- Price: Free up to 1,000 contacts, $15/month+
+- Pricing: Free tier + paid plans
 - Best for: E-commerce, coaches, local businesses
 - Setup time: 1-2 hours
 
 FOR MULTI-CHANNEL:
 
 Zapier Chatbots (connects everything)
-- Price: Included with Zapier plan ($20-50/month)
+- Pricing: Included with paid Zapier plans
 - Best for: Businesses using multiple platforms
 - Setup time: 2-4 hours`
       },
@@ -9735,17 +9735,17 @@ ROI: 275% increase in email revenue`
 EMAIL PERSONALIZATION:
 
 Mailchimp (with AI)
-- Price: Free-$350/month
+- Pricing: Free tier + paid plans
 - AI features: Send time optimization, subject line helper, content suggestions
 - Best for: Beginners, small lists
 
 ActiveCampaign
-- Price: $29-$149/month
+- Pricing: Paid plans
 - AI features: Predictive sending, content, win probability scoring
 - Best for: Growing businesses with automation needs
 
 HubSpot (with AI)
-- Price: $45-$3,600/month
+- Pricing: Paid plans
 - AI features: Full predictive lead scoring, content generation, chatbot
 - Best for: B2B or businesses wanting all-in-one CRM
 
@@ -9757,19 +9757,19 @@ Shopify AI (built-in)
 - Best for: E-commerce on Shopify
 
 Nosto
-- Price: Custom pricing ($500+/month typically)
+- Pricing: Custom paid plans
 - AI features: Advanced personalization engine
 - Best for: Larger e-commerce sites
 
 WEBSITE PERSONALIZATION:
 
 OptiMonk
-- Price: Free-$249/month
+- Pricing: Free tier + paid plans
 - AI features: Smart popups, personalized offers based on behavior
 - Best for: Conversion optimization
 
 Dynamic Yield
-- Price: Enterprise (contact for pricing)
+- Pricing: Enterprise (contact for pricing)
 - AI features: Full website personalization
 - Best for: Larger businesses with dev resources`
       },
@@ -10975,22 +10975,22 @@ ROI: Infinite. But more importantly: 223 owned relationships.`
 EMAIL PLATFORMS WITH AI:
 
 Mailchimp
-- Price: Free-$350/month
+- Pricing: Free tier + paid plans
 - AI features: Subject line helper, send time optimization, content suggestions
 - Best for: Beginners, small lists (under 10k)
 
 ConvertKit
-- Price: Free-$66/month
+- Pricing: Free tier + paid plans
 - AI features: Sequence optimization, tag-based automation
 - Best for: Creators, coaches, course sellers
 
 ActiveCampaign
-- Price: $29-$149/month
+- Pricing: Paid plans
 - AI features: Predictive sending, content generation, win probability
 - Best for: E-commerce, growing businesses
 
 Klaviyo
-- Price: Free-$700/month (scales with list)
+- Pricing: Free tier + paid plans (scales with list)
 - AI features: Product recommendations, predictive analytics
 - Best for: E-commerce exclusively
 
@@ -10998,21 +10998,21 @@ AI WRITING ASSISTANTS:
 
 ChatGPT/Claude
 - Generate sequences, subject lines, body copy
-- Free or $20/month
+- Free or paid plan
 
 Jasper
 - Email-specific templates
-- $49-$125/month
+- Paid plans
 
 Copy.ai
 - Quick email generation
-- $49/month
+- Paid plan
 
 DESIGN TOOLS:
 
 Canva
 - Email templates, lead magnets
-- Free-$13/month
+- Free tier + paid plan
 
 Figma
 - More advanced design
@@ -13845,7 +13845,7 @@ What you get:
 - Improvement opportunities
 
 Example insight:
-"Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition focus to partnerships."
+"Customers acquired in Q4 spend 40% more than Q2 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition focus to partnerships."
 
 TECHNIQUE 2: SEGMENTATION ANALYSIS
 
@@ -14260,8 +14260,8 @@ Create a simple list:
 Month | Total Revenue | Source 1 | Source 2 | Source 3
 
 Example:
-- Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
-- Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Jan | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Feb | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
 - (continue for all months)
 
 Where to find it:
@@ -14286,7 +14286,7 @@ Common categories:
 - Admin/misc
 
 Example:
-- Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Jan | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
 
 STEP 4: COLLECT CUSTOMER DATA (if applicable)
 
@@ -14899,22 +14899,22 @@ Your primary AI interface—where you interact most.
 
 Options:
 
-ChatGPT (GPT-4)
+ChatGPT
 - Best for: General business tasks, content, analysis
 - Pros: Most capable, broad knowledge, good UI
 - Cons: $20/month, no built-in integrations
-- Use when: You need smartest responses, complex reasoning
+- Use when: You need high-quality responses, complex reasoning
 
 Claude (Anthropic)
 - Best for: Long documents, detailed analysis, creative work
-- Pros: 200K context window, excellent at following instructions
+- Pros: large context window, strong instruction following
 - Cons: Sometimes slower, stricter safety filters
 - Use when: Analyzing large documents, nuanced writing
 
 Gemini (Google)
 - Best for: Real-time information, Google Workspace integration
 - Pros: Free tier, connects to Google apps, up-to-date info
-- Cons: Sometimes less capable than GPT-4
+- Cons: 
 - Use when: Need current info, already in Google ecosystem
 
 Perplexity
@@ -14927,9 +14927,9 @@ Your choice:
 
 Pick ONE as your primary assistant.
 
-Most people: ChatGPT Plus ($20/month)
+Most people: ChatGPT Plus (paid plan)
 Google users: Gemini (free, then upgrade if needed)
-Researchers: Perplexity Pro ($20/month)
+Researchers: Perplexity Pro (paid plan)
 
 You can use multiple, but one should be your daily driver.
 
@@ -15052,7 +15052,7 @@ The goal: AI produces output where it's needed, not in isolation.`
         content: `Example Stack: Solo Consultant
 
 LAYER 1 - Brain:
-- ChatGPT Plus ($20/month) - main AI assistant
+- ChatGPT Plus (paid plan) - main AI assistant
 
 LAYER 2 - Muscles:
 - Zapier ($20/month) - automation
@@ -15680,7 +15680,7 @@ You need access to an AI assistant. Choose one:
 
 Option A: ChatGPT (Recommended)
 - Go to chat.openai.com
-- Free tier works, but GPT-4 (ChatGPT Plus $20/month) is better
+- Free tier works, but an advanced paid ChatGPT plan is better
 - Sign up or log in
 
 Option B: Claude
@@ -16227,7 +16227,7 @@ PROBLEM: "Zapier says I'm out of tasks"
 Free plan = 100 tasks/month.
 
 Solutions:
-1. Upgrade to $20/month (750 tasks)
+1. Upgrade to a paid tier (higher task limits)
 2. Prioritize: Turn off less important Zaps
 3. Consolidate: Combine multiple Zaps into one
 
@@ -16240,7 +16240,7 @@ Solutions:
 2. Give AI more context
 3. Show AI examples of good output
 4. Iterate on prompts 5-10 times
-5. Use GPT-4 instead of GPT-3.5
+5. Use the most capable model available
 
 PROBLEM: "Automation broke and I don't know why"
 
@@ -16457,7 +16457,7 @@ Steps: 1) Gmail detects email, 2) Creates draft with template, 3) Sends to draft
 Output: Draft email ready for AI personalization
 Frequency: 5-10 times per week
 Time saved: 2.5 hours/week
-Last updated: Jan 15, 2024
+Last updated: [recent]
 Owner: You
 
 BACKUP PLAN
@@ -17847,7 +17847,7 @@ Keep it to 1 page. Use visuals. Lead with business impact.`
         type: 'example',
         content: `Real Executive Report Example:
 
-AI INITIATIVE: MARCH 2024 UPDATE
+AI INITIATIVE: RECENT UPDATE
 
 SNAPSHOT
 - Active Users: 23/25 (92%)
@@ -18939,7 +18939,7 @@ Prompt pattern:
 
 Example:
 
-"Research the top 5 project management tools for remote teams in 2024. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
+"Research the top 5 project management tools for remote teams. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
 
 Time saved: Research that takes 3 hours manually → 30 minutes with AI
 
@@ -19510,7 +19510,7 @@ This becomes your reference document - you'll compare against it monthly to meas
         type: 'example',
         content: `Real Baseline Example: Alex (Marketing Manager)
 
-PRODUCTIVITY BASELINE - Alex Chen - Jan 15, 2024
+PRODUCTIVITY BASELINE - Alex Chen - [date]
 
 TIME INVESTMENT (40 hr work week tracked)
 - Total work hours tracked: 40 hours
@@ -26682,7 +26682,7 @@ MEDIUM:
 □ Get customer quote for case study (want to add to Section 1)
 
 LOW:
-□ Find better market size data (current source is 2021)
+□ Find better market size data (current source is dated)
 □ Decide on charts/graphs to include
 
 NEXT SESSION PREP:
@@ -31094,7 +31094,7 @@ BUILD THESE FIVE FIRST. They cover 80% of your integration needs.`
 TOOL 1: ZAPIER
 
 Best for: Non-technical users, common integrations
-Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+Pricing: Free tier and paid plans
 
 Pros:
 - 6,000+ app integrations
@@ -31116,7 +31116,7 @@ Best use cases:
 TOOL 2: MAKE (INTEGROMAT)
 
 Best for: Complex workflows, visual thinkers
-Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+Pricing: Free tier and paid plans
 
 Pros:
 - More powerful than Zapier
@@ -31138,7 +31138,7 @@ Best use cases:
 TOOL 3: N8N
 
 Best for: Technical users, self-hosters
-Pricing: Free (self-hosted), Cloud ($20/month)
+Pricing: Free self-hosted option and paid cloud plans
 
 Pros:
 - Open source
@@ -31160,7 +31160,7 @@ Best use cases:
 TOOL 4: PIPEDREAM
 
 Best for: Developers, API-first workflows
-Pricing: Free (generous), Basic ($19/month)
+Pricing: Free tier and paid plans
 
 Pros:
 - Write code inline
@@ -35789,7 +35789,7 @@ Track what works best with your chosen AI tool.`
         type: 'text',
         content: `# Context Is Everything
 
-The smartest AI in the world is useless without context.
+The most capable AI is useless without context.
 
 Think of context as the map that grounds the model in reality, helping it navigate its mathematical space to find the most relevant answers.
 
