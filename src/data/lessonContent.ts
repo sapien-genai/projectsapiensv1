@@ -8514,7 +8514,7 @@ TOTAL TIME SAVED: 13.3 hours per week
 ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
 
 AI TOOL COSTS:
-- ChatGPT Plus: $20/month = $240/year
+- ChatGPT Plus (paid tier)
 - Canva Pro:  (paid plan required)
 - Basic chatbot: Free
 TOTAL COST: $396/year
@@ -8630,10 +8630,10 @@ FREE TIER (Start here):
 - Canva free version
 - Google AI tools (Gmail, Docs)
 - Many chatbot platforms
-COST: $0/month
+COST: Free
 
 BASIC TIER (Most small businesses):
-- ChatGPT Plus: $20/month
+- ChatGPT Plus (paid tier)
 - Canva Pro:  (paid plan required)
 - Basic automation: $20/month
 - Customer support AI: $20/month
@@ -14971,7 +14971,7 @@ Pick ONE as your primary assistant.
 
 Most people: ChatGPT Plus (paid plan required)
 Google users: Gemini (free, then upgrade if needed)
-Researchers: Perplexity Pro ($20/month)
+Researchers: Perplexity Pro (paid tier)
 
 You can use multiple, but one should be your daily driver.
 
@@ -18230,12 +18230,12 @@ This becomes your reference library for training and scaling.`
         content: `Real AI Stack Example: 25-Person Marketing Agency
 
 TOOLS:
-- ChatGPT Team: $500/month (25 users) - Content, emails, strategy
+- ChatGPT Team (paid tier, ~25 users) - Content, emails, strategy
 - Claude Pro (paid plan required) - Long-form content, analysis
-- Midjourney: $200/month (5 users) - Image generation
+- Midjourney (paid tier, ~5 users) - Image generation
 - Make.com: $300/month - Automations and integrations
 
-Total: $1,400/month
+Total: paid tier stack (varies by usage)
 
 TOP WORKFLOWS:
 1. Blog posts: 3 hrs → 1.5 hrs (50% faster)
@@ -18527,7 +18527,7 @@ EXECUTIVE SUMMARY:
 
 TOOLS:
 - ChatGPT, Claude, Midjourney, Make.com
-- Total: $1,400/month
+- Total: paid tier stack (varies by usage)
 
 WORKFLOWS:
 - 10 documented workflows across marketing, sales, and ops
