@@ -1,6 +1,9 @@
 interface LessonContent {
   title: string;
   duration: string;
+  lastReviewed?: string;
+  volatility?: 'low' | 'medium' | 'high';
+  reviewIntervalDays?: number;
   content: {
     type: 'text' | 'tip' | 'example' | 'exercise';
     content: string;
@@ -9,6 +12,9 @@ interface LessonContent {
 
 export const lessonContent: Record<string, LessonContent> = {
   'lesson-1-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'What AI Actually Is (No Jargon)',
     duration: '10 min',
     content: [
@@ -51,6 +57,9 @@ You're already using AI every day without realizing it:
     ]
   },
   'lesson-1-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Your First Prompt: Talk to AI Like a Human',
     duration: '15 min',
     content: [
@@ -95,6 +104,9 @@ Write: "I'm a beginner who wants to build strength at home with no equipment. Cr
     ]
   },
   'lesson-1-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'The 3 Types of AI You Use Every Day',
     duration: '12 min',
     content: [
@@ -184,6 +196,9 @@ This awareness helps you choose the right AI tool for each task.`
     ]
   },
   'lesson-1-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Write 5 Different Prompts',
     duration: '20 min',
     content: [
@@ -333,6 +348,9 @@ Take what you've learned and experiment. The more you use AI, the more natural i
     ]
   },
   'lesson-2-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Meal Planning with AI',
     duration: '15 min',
     content: [
@@ -422,6 +440,9 @@ Add requirements like "high protein, under 500 calories" or "balanced macros for
     ]
   },
   'lesson-2-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Travel Itinerary Generator',
     duration: '18 min',
     content: [
@@ -515,6 +536,9 @@ Notice how quickly you go from "blank slate" to "detailed plan."`
     ]
   },
   'lesson-2-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Daily Schedule Optimizer',
     duration: '20 min',
     content: [
@@ -628,6 +652,9 @@ AFTER (AI-Optimized):
     ]
   },
   'lesson-2-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Decision-Making Framework',
     duration: '25 min',
     content: [
@@ -759,6 +786,9 @@ Use decision frameworks for important choices. Automate or randomize trivial one
     ]
   },
   'lesson-2-5': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Plan Your Week',
     duration: '30 min',
     content: [
@@ -911,6 +941,9 @@ Keep your weekly planning template. This becomes the foundation for everything e
     ]
   },
   'lesson-3-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Create Your Personal Learning Path',
     duration: '20 min',
     content: [
@@ -1023,6 +1056,9 @@ Tip: Don't choose something too ambitious. Start with a 30-day path you can actu
     ]
   },
   'lesson-3-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI as Your Study Partner',
     duration: '18 min',
     content: [
@@ -1148,6 +1184,9 @@ Result: I understood JOINs in 20 minutes instead of hours of reading.`
     ]
   },
   'lesson-3-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Skill Gap Analysis',
     duration: '22 min',
     content: [
@@ -1322,6 +1361,9 @@ ACTION: Start with user research this week`
     ]
   },
   'lesson-3-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build a Study Plan',
     duration: '30 min',
     content: [
@@ -25716,6 +25758,9 @@ Most people save 10-15 hours per week.`
     ]
   },
   'lesson-4-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Writing Better Emails & Messages',
     duration: '15 min',
     content: [
@@ -25828,6 +25873,9 @@ Save the best templates for reuse.`
     ]
   },
   'lesson-4-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Storytelling with AI',
     duration: '20 min',
     content: [
@@ -25936,6 +25984,9 @@ Notice how stories are more engaging than plain facts.`
     ]
   },
   'lesson-4-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Personal Journaling Assistant',
     duration: '18 min',
     content: [
@@ -26057,6 +26108,9 @@ DECISION CLARITY
     ]
   },
   'lesson-4-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Write Your Story',
     duration: '30 min',
     content: [
@@ -29847,6 +29901,9 @@ Next lesson: We'll build it.`
     ]
   },
   'lesson-5-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Building Your AI Command Center',
     duration: '30 min',
     content: [
@@ -29964,6 +30021,9 @@ Your Command Center is now live! You'll build out each section through the remai
     ]
   },
   'lesson-5-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Integrating Your AI Workflows',
     duration: '25 min',
     content: [
@@ -30107,6 +30167,9 @@ Make it practical and time-efficient."`
     ]
   },
   'lesson-5-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Automation & Smart Routines',
     duration: '20 min',
     content: [
@@ -30306,6 +30369,9 @@ Start with Tier 1. Master it. Then expand.`
     ]
   },
   'lesson-5-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Testing & Optimization',
     duration: '25 min',
     content: [
@@ -30499,6 +30565,9 @@ Give me specific implementation steps for each recommendation."`
     ]
   },
   'lesson-5-5': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Launch Your Command Center',
     duration: '30 min',
     content: [
