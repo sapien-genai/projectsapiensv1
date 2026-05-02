@@ -1,0 +1,830 @@
+# CONTENT AUDIT ROUND 2
+
+> **Placeholder Resolver Check: PASS (no `{{CURRENT_QUARTER}}`-style placeholders found in `src/data/lessonContent.ts`).**
+
+
+## Bucket Counts
+
+- **A** (Tool names in prose): **116**
+- **B** (Specific model versions): **5**
+- **C** (Specific capability claims): **11**
+- **D** (Pricing references): **622**
+- **E** (Date references): **134**
+- **F** (Placeholder tokens): **0**
+- **G** (Other / uncategorized): **103**
+
+
+## Top 10 Most-Affected Lessons
+
+- `lesson-3-4`: 856
+- `lesson-5-5`: 81
+- `lesson-4-4`: 27
+- `lesson-1-3`: 6
+- `lesson-2-2`: 5
+- `lesson-4-1`: 5
+- `lesson-1-4`: 2
+- `lesson-3-3`: 2
+- `lesson-2-1`: 1
+- `lesson-2-4`: 1
+
+
+## Bucket A Sample (5 of 116)
+
+- Line 132 | lesson-1-3 | `ChatGPT`
+- Line 132 | lesson-1-3 | `Claude`
+- Line 148 | lesson-1-3 | `DALL-E`
+- Line 148 | lesson-1-3 | `Midjourney`
+- Line 159 | lesson-1-3 | `ChatGPT`
+
+
+## Bucket B: Specific model versions
+
+- Line 14902 | `lesson-3-4` | `GPT-4` | ChatGPT (GPT-4)
+- Line 14917 | `lesson-3-4` | `GPT-4` | - Cons: Sometimes less capable than GPT-4
+- Line 15683 | `lesson-3-4` | `GPT-4` | - Free tier works, but GPT-4 (ChatGPT Plus $20/month) is better
+- Line 16243 | `lesson-3-4` | `GPT-4` | 5. Use GPT-4 instead of GPT-3.5
+- Line 16243 | `lesson-3-4` | `GPT-3.5` | 5. Use GPT-4 instead of GPT-3.5
+
+
+## Bucket C: Specific capability claims
+
+- Line 1554 | `lesson-3-4` | `10x faster` | - The result is uniquely yours, made 10x faster`
+- Line 2376 | `lesson-3-4` | `3x faster` | SOLUTION: The first time ALWAYS takes longer — you're learning. By piece 5-10, you'll be 3x faster. Time the process to see your improvement.
+- Line 2617 | `lesson-3-4` | `10x Faster` | - Example: "The RAPID Framework for 10x Faster Content Creation"
+- Line 4216 | `lesson-3-4` | `10x faster` | content: `Save your successful prompts. Build a prompt library organized by category (portraits, landscapes, logos, etc.). Future projects become 10x faster whe
+- Line 5876 | `lesson-3-4` | `10x faster` | Next time you need a brand asset, you have proven prompts ready to go. 10x faster creation.
+- Line 8493 | `lesson-3-4` | `fastest` | Based on hundreds of small businesses, these deliver the fastest returns:
+- Line 11601 | `lesson-3-4` | `10x faster` | content: `Never stop testing. The businesses winning online aren't smarter. They test more. Every element of your landing page is a hypothesis. Prove it or impr
+- Line 14906 | `lesson-3-4` | `smartest` | - Use when: You need smartest responses, complex reasoning
+- Line 14910 | `lesson-3-4` | `200K context window` | - Pros: 200K context window, excellent at following instructions
+- Line 22456 | `lesson-3-4` | `10x Faster` | content: `# Learn Anything 10x Faster
+- Line 35792 | `lesson-5-5` | `smartest` | The smartest AI in the world is useless without context.
+
+
+## Bucket D: Pricing references
+
+- Line 251 | `lesson-1-4` | `$80` | exampleGood: 'I need to decide between two job offers. Job A: $80k, 10-min commute, small startup. Job B: $90k, 45-min commute, established company. I value wor
+- Line 251 | `lesson-1-4` | `$90` | exampleGood: 'I need to decide between two job offers. Job A: $80k, 10-min commute, small startup. Job B: $90k, 45-min commute, established company. I value wor
+- Line 377 | `lesson-2-1` | `$40 per ` | "I'm cooking dinner for 2 people, Monday through Friday. I need meals that take 30 minutes or less. We eat chicken, fish, and vegetables but avoid dairy. We lik
+- Line 456 | `lesson-2-2` | `costs` | - Estimated costs
+- Line 464 | `lesson-2-2` | `$800 ` | "I'm visiting Barcelona for 4 days in May. Budget is $800 for activities and food (accommodations already booked in Gothic Quarter). I love food tours, architec
+- Line 464 | `lesson-2-2` | `costs` | "I'm visiting Barcelona for 4 days in May. Budget is $800 for activities and food (accommodations already booked in Gothic Quarter). I love food tours, architec
+- Line 704 | `lesson-2-4` | `COST` | THE OPPORTUNITY COST ANALYSIS
+- Line 1178 | `lesson-3-3` | `$5` | - "Freelance writer earning $5k/month"
+- Line 1215 | `lesson-3-3` | `$3` | - Earning $3-5k/month within 6 months
+- Line 1714 | `lesson-3-4` | `$10,000` | Audio quality that used to require $10,000+ equipment now possible with $20/month software. The barrier to professional-sounding content is gone.`
+- Line 1714 | `lesson-3-4` | `$20/month` | Audio quality that used to require $10,000+ equipment now possible with $20/month software. The barrier to professional-sounding content is gone.`
+- Line 2778 | `lesson-3-4` | `cost` | PROMISE: I'm going to show you the X most common mistakes people make with [topic] — mistakes that cost me [time/money/results] — and exactly how to avoid them.
+- Line 3217 | `lesson-3-4` | `$10,000 ` | "I spent $10,000 learning this lesson. Here it is for free:"
+- Line 3658 | `lesson-3-4` | `$5` | 1. 'I spent $5K on courses before I realized this...' - Story/Lesson - The one free resource that changed everything - Education
+- Line 7944 | `lesson-3-4` | `cost` | "If you struggle with content creation, this shows you exactly how AI can 10x your output while maintaining quality. Everything I used is free or low-cost."
+- Line 8444 | `lesson-3-4` | `$50/` | HOURLY VALUE: $50/hour (based on $100K annual goal)
+- Line 8444 | `lesson-3-4` | `$100` | HOURLY VALUE: $50/hour (based on $100K annual goal)
+- Line 8472 | `lesson-3-4` | `$50 ` | ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
+- Line 8472 | `lesson-3-4` | `$33,250` | ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
+- Line 8474 | `lesson-3-4` | `COSTS` | AI TOOL COSTS:
+- Line 8475 | `lesson-3-4` | `$20/month` | - ChatGPT Plus: $20/month = $240/year
+- Line 8475 | `lesson-3-4` | `$240/year` | - ChatGPT Plus: $20/month = $240/year
+- Line 8476 | `lesson-3-4` | `$13/month` | - Canva Pro: $13/month = $156/year
+- Line 8476 | `lesson-3-4` | `$156/year` | - Canva Pro: $13/month = $156/year
+- Line 8478 | `lesson-3-4` | `COST` | TOTAL COST: $396/year
+- Line 8478 | `lesson-3-4` | `$396/year` | TOTAL COST: $396/year
+- Line 8480 | `lesson-3-4` | `$32,854 ` | NET ROI: $32,854 in the first year
+- Line 8578 | `lesson-3-4` | `Cost` | content: `## What About the Cost?
+- Line 8582 | `lesson-3-4` | `$100/month` | THE GOOD NEWS: Most small businesses can implement AI for under $100/month.
+- Line 8584 | `lesson-3-4` | `COST` | COST BREAKDOWN:
+- Line 8591 | `lesson-3-4` | `COST` | COST: $0/month
+- Line 8591 | `lesson-3-4` | `$0/month` | COST: $0/month
+- Line 8594 | `lesson-3-4` | `$20/month` | - ChatGPT Plus: $20/month
+- Line 8595 | `lesson-3-4` | `$13/month` | - Canva Pro: $13/month
+- Line 8596 | `lesson-3-4` | `$20/month` | - Basic automation: $20/month
+- Line 8597 | `lesson-3-4` | `$20/month` | - Customer support AI: $20/month
+- Line 8598 | `lesson-3-4` | `COST` | COST: $73/month = $876/year
+- Line 8598 | `lesson-3-4` | `$73/month` | COST: $73/month = $876/year
+- Line 8598 | `lesson-3-4` | `$876/year` | COST: $73/month = $876/year
+- Line 8601 | `lesson-3-4` | `$50/month` | - Advanced AI tools: $50/month
+- Line 8602 | `lesson-3-4` | `$50/month` | - More automation: $50/month
+- Line 8603 | `lesson-3-4` | `$30/month` | - Team collaboration: $30/month
+- Line 8604 | `lesson-3-4` | `COST` | COST: $130/month = $1,560/year
+- Line 8604 | `lesson-3-4` | `$130/month` | COST: $130/month = $1,560/year
+- Line 8604 | `lesson-3-4` | `$1,560/year` | COST: $130/month = $1,560/year
+- Line 8608 | `lesson-3-4` | `$40/` | If you save just 5 hours per week at $40/hour:
+- Line 8609 | `lesson-3-4` | `$10,000` | - Annual savings: $10,000
+- Line 8610 | `lesson-3-4` | `cost` | - Annual cost: $876 (Basic Tier)
+- Line 8610 | `lesson-3-4` | `$876 ` | - Annual cost: $876 (Basic Tier)
+- Line 8611 | `lesson-3-4` | `$9,124` | - NET ROI: $9,124
+- Line 8614 | `lesson-3-4` | `$60/` | If you save 10 hours per week at $60/hour:
+- Line 8615 | `lesson-3-4` | `$30,000` | - Annual savings: $30,000
+- Line 8616 | `lesson-3-4` | `cost` | - Annual cost: $876
+- Line 8616 | `lesson-3-4` | `$876` | - Annual cost: $876
+- Line 8617 | `lesson-3-4` | `$29,124` | - NET ROI: $29,124
+- Line 8729 | `lesson-3-4` | `Cost` | - Cost: $20/month or free
+- Line 8729 | `lesson-3-4` | `$20/month` | - Cost: $20/month or free
+- Line 8734 | `lesson-3-4` | `Cost` | - Cost: $10-30/month
+- Line 8734 | `lesson-3-4` | `$10` | - Cost: $10-30/month
+- Line 8739 | `lesson-3-4` | `Cost` | - Cost: $20-50/month
+- Line 8739 | `lesson-3-4` | `$20` | - Cost: $20-50/month
+- Line 8744 | `lesson-3-4` | `Cost` | - Cost: $0-50/month
+- Line 8744 | `lesson-3-4` | `$0` | - Cost: $0-50/month
+- Line 8749 | `lesson-3-4` | `Cost` | - Cost: $10-20/month
+- Line 8749 | `lesson-3-4` | `$10` | - Cost: $10-20/month
+- Line 8752 | `lesson-3-4` | `$60` | Total investment: $60-$170/month
+- Line 8752 | `lesson-3-4` | `$170/month` | Total investment: $60-$170/month
+- Line 8768 | `lesson-3-4` | `cost` | Total cost: $40/month
+- Line 8768 | `lesson-3-4` | `$40/month` | Total cost: $40/month
+- Line 8769 | `lesson-3-4` | `$16,000/year` | Time saved: 8 hrs/week = $16,000/year value`
+- Line 8796 | `lesson-3-4` | `$20/month` | Whether it's $20/month or 5 hours of setup time, you'll know if it's worth it.`
+- Line 8802 | `lesson-3-4` | `Cost` | ROI = (Value Generated - Cost) / Cost × 100
+- Line 8802 | `lesson-3-4` | `Cost` | ROI = (Value Generated - Cost) / Cost × 100
+- Line 8809 | `lesson-3-4` | `Costs` | - Costs avoided (hiring delays, fewer errors)
+- Line 8812 | `lesson-3-4` | `COST` | COST includes:
+- Line 8820 | `lesson-3-4` | `costs` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `costs` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `$50/month` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `$50/` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `$500 month` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `$50 ` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8820 | `lesson-3-4` | `cost` | content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and yo
+- Line 8829 | `lesson-3-4` | `costs` | Track current process time and costs without AI.
+- Line 8830 | `lesson-3-4` | `$30/` | Example: Customer support takes 15 hrs/week at $30/hr = $450/week
+- Line 8830 | `lesson-3-4` | `$450/` | Example: Customer support takes 15 hrs/week at $30/hr = $450/week
+- Line 8834 | `lesson-3-4` | `$30/` | Track setup time: 8 hours at $30/hr = $240
+- Line 8834 | `lesson-3-4` | `$240` | Track setup time: 8 hours at $30/hr = $240
+- Line 8838 | `lesson-3-4` | `$240/` | Example: Support now takes 8 hrs/week = $240/week
+- Line 8839 | `lesson-3-4` | `cost` | Tool cost: $40/month = $10/week
+- Line 8839 | `lesson-3-4` | `$40/month` | Tool cost: $40/month = $10/week
+- Line 8839 | `lesson-3-4` | `$10/` | Tool cost: $40/month = $10/week
+- Line 8842 | `lesson-3-4` | `$30 ` | Time saved: 7 hrs × $30 = $210/week
+- Line 8842 | `lesson-3-4` | `$210/` | Time saved: 7 hrs × $30 = $210/week
+- Line 8843 | `lesson-3-4` | `cost` | Tool cost: $10/week
+- Line 8843 | `lesson-3-4` | `$10/` | Tool cost: $10/week
+- Line 8844 | `lesson-3-4` | `$200/` | Net value: $200/week
+- Line 8845 | `lesson-3-4` | `$200 ` | ROI: ($200 - $10) / $10 = 1,900%`
+- Line 8845 | `lesson-3-4` | `$10` | ROI: ($200 - $10) / $10 = 1,900%`
+- Line 8845 | `lesson-3-4` | `$10 ` | ROI: ($200 - $10) / $10 = 1,900%`
+- Line 8857 | `lesson-3-4` | `$100/` | - At $100/hr = $2,400 in time
+- Line 8857 | `lesson-3-4` | `$2,400 ` | - At $100/hr = $2,400 in time
+- Line 8863 | `lesson-3-4` | `$100/` | - At $100/hr = $900 in time
+- Line 8863 | `lesson-3-4` | `$900 ` | - At $100/hr = $900 in time
+- Line 8864 | `lesson-3-4` | `cost` | - Tool cost: $20/month
+- Line 8864 | `lesson-3-4` | `$20/month` | - Tool cost: $20/month
+- Line 8868 | `lesson-3-4` | `$1,500/month` | - Value saved: $1,500/month
+- Line 8869 | `lesson-3-4` | `$1,480/month` | - Net benefit: $1,480/month
+- Line 8882 | `lesson-3-4` | `Costs` | - Costs under $50/month
+- Line 8882 | `lesson-3-4` | `$50/month` | - Costs under $50/month
+- Line 8888 | `lesson-3-4` | `Costs` | - Costs $50-200/month
+- Line 8888 | `lesson-3-4` | `$50` | - Costs $50-200/month
+- Line 8894 | `lesson-3-4` | `Costs` | - Costs over $200/month
+- Line 8894 | `lesson-3-4` | `$200/month` | - Costs over $200/month
+- Line 8911 | `lesson-3-4` | `cost` | 2. Calculate current time/cost per week
+- Line 8912 | `lesson-3-4` | `cost` | 3. Estimate AI time/cost per week
+- Line 8916 | `lesson-3-4` | `$40/` | "Email responses take 10 hrs/week at $40/hr = $400
+- Line 8916 | `lesson-3-4` | `$400` | "Email responses take 10 hrs/week at $40/hr = $400
+- Line 8917 | `lesson-3-4` | `costs` | AI tool costs $20/month = $5/week
+- Line 8917 | `lesson-3-4` | `$20/month` | AI tool costs $20/month = $5/week
+- Line 8917 | `lesson-3-4` | `$5/` | AI tool costs $20/month = $5/week
+- Line 8918 | `lesson-3-4` | `$40/` | With AI: 4 hrs/week at $40/hr = $160
+- Line 8918 | `lesson-3-4` | `$160` | With AI: 4 hrs/week at $40/hr = $160
+- Line 8919 | `lesson-3-4` | `$240/` | Savings: $240/week - $5 = $235/week
+- Line 8919 | `lesson-3-4` | `$5 ` | Savings: $240/week - $5 = $235/week
+- Line 8919 | `lesson-3-4` | `$235/` | Savings: $240/week - $5 = $235/week
+- Line 8938 | `lesson-3-4` | `cost` | - Time and cost data for each process
+- Line 9052 | `lesson-3-4` | `Costs` | STEP 3: Calculate Costs
+- Line 9127 | `lesson-3-4` | `costs` | 3. Calculate costs - time × your hourly rate
+- Line 9138 | `lesson-3-4` | `cost` | - Time/cost data
+- Line 9172 | `lesson-3-4` | `pricing` | - Hours, location, pricing
+- Line 9338 | `lesson-3-4` | `pricing` | - Product/Service Info: Features, pricing, availability
+- Line 9371 | `lesson-3-4` | `$5 ` | A: "Absolutely! Order through our app and skip the line. First-time user? Use code CHATBOT for $5 off. [App download link]"
+- Line 9382 | `lesson-3-4` | `$19` | - Price: Free up to 50 conversations/month, $19-$394/month
+- Line 9382 | `lesson-3-4` | `$394/month` | - Price: Free up to 50 conversations/month, $19-$394/month
+- Line 9388 | `lesson-3-4` | `$74/month` | - Price: Starting at $74/month
+- Line 9394 | `lesson-3-4` | `$2,500/month` | - Price: Starting at $2,500/month
+- Line 9402 | `lesson-3-4` | `$15/month` | - Price: Free up to 1,000 contacts, $15/month+
+- Line 9409 | `lesson-3-4` | `$20` | - Price: Included with Zapier plan ($20-50/month)
+- Line 9487 | `lesson-3-4` | `$3,200` | - Sales from bot conversations: $3,200
+- Line 9490 | `lesson-3-4` | `$19/month` | ROI: $19/month tool cost, $3,200 in sales, 12 hours saved
+- Line 9490 | `lesson-3-4` | `cost` | ROI: $19/month tool cost, $3,200 in sales, 12 hours saved
+- Line 9490 | `lesson-3-4` | `$3,200 ` | ROI: $19/month tool cost, $3,200 in sales, 12 hours saved
+- Line 9725 | `lesson-3-4` | `$67 ` | - Average order value: $67 → $89
+- Line 9725 | `lesson-3-4` | `$89` | - Average order value: $67 → $89
+- Line 9738 | `lesson-3-4` | `$350/month` | - Price: Free-$350/month
+- Line 9743 | `lesson-3-4` | `Price: $` | - Price: $29-$149/month
+- Line 9743 | `lesson-3-4` | `$149/month` | - Price: $29-$149/month
+- Line 9748 | `lesson-3-4` | `Price: $` | - Price: $45-$3,600/month
+- Line 9748 | `lesson-3-4` | `$3,600/month` | - Price: $45-$3,600/month
+- Line 9760 | `lesson-3-4` | `pricing` | - Price: Custom pricing ($500+/month typically)
+- Line 9760 | `lesson-3-4` | `$500` | - Price: Custom pricing ($500+/month typically)
+- Line 9767 | `lesson-3-4` | `$249/month` | - Price: Free-$249/month
+- Line 9772 | `lesson-3-4` | `pricing` | - Price: Enterprise (contact for pricing)
+- Line 10039 | `lesson-3-4` | `Pricing` | 3. Pricing
+- Line 10130 | `lesson-3-4` | `pricing` | Bot: "Perfect! Sarah from our team will email you today with our custom cake options and pricing. Usually responds within 2 hours! Anything else I can help with
+- Line 10167 | `lesson-3-4` | `pricing` | - Or only on specific pages (pricing, FAQ page)
+- Line 10302 | `lesson-3-4` | `$4,500` | Total ROI: Free tool, 45 min setup + 1 hour refinement = 3 new clients worth $4,500`
+- Line 10556 | `lesson-3-4` | `$12,000 ` | "I made $12,000 last month from an email list of 487 people. Here's the exact email I sent..."
+- Line 10690 | `lesson-3-4` | `$1 ` | For every $1 spent on email marketing, the average return is $36.
+- Line 10690 | `lesson-3-4` | `$36` | For every $1 spent on email marketing, the average return is $36.
+- Line 10966 | `lesson-3-4` | `$2,040 ` | - $2,040 revenue
+- Line 10967 | `lesson-3-4` | `Cost` | - Cost: $0 (free tools + AI)
+- Line 10967 | `lesson-3-4` | `$0 ` | - Cost: $0 (free tools + AI)
+- Line 10978 | `lesson-3-4` | `$350/month` | - Price: Free-$350/month
+- Line 10983 | `lesson-3-4` | `$66/month` | - Price: Free-$66/month
+- Line 10988 | `lesson-3-4` | `Price: $` | - Price: $29-$149/month
+- Line 10988 | `lesson-3-4` | `$149/month` | - Price: $29-$149/month
+- Line 10993 | `lesson-3-4` | `$700/month` | - Price: Free-$700/month (scales with list)
+- Line 11001 | `lesson-3-4` | `$20/month` | - Free or $20/month
+- Line 11005 | `lesson-3-4` | `$49` | - $49-$125/month
+- Line 11005 | `lesson-3-4` | `$125/month` | - $49-$125/month
+- Line 11009 | `lesson-3-4` | `$49/month` | - $49/month
+- Line 11015 | `lesson-3-4` | `$13/month` | - Free-$13/month
+- Line 11126 | `lesson-3-4` | `$50 per ` | - $50 per sale
+- Line 11127 | `lesson-3-4` | `$1,000` | - Revenue: $1,000
+- Line 11133 | `lesson-3-4` | `$50 per ` | - $50 per sale
+- Line 11134 | `lesson-3-4` | `$3,000` | - Revenue: $3,000
+- Line 11142 | `lesson-3-4` | `costs` | content: `A 1% improvement in conversion rate is worth more than a 10% increase in traffic. Traffic costs money. Conversion optimization is (mostly) free. Alway
+- Line 11361 | `lesson-3-4` | `$400/month` | "Too expensive? Users report saving $400/month in time alone."
+- Line 11438 | `lesson-3-4` | `pricing` | - People abandon at the pricing section → address objections better
+- Line 11567 | `lesson-3-4` | `cost` | "Generate 10 landing page headlines for [your product/service]. Audience: [description]. Test these angles: time-saving, cost-saving, ease of use, social proof,
+- Line 11727 | `lesson-3-4` | `$19/year` | - Carrd (simplest, $19/year)
+- Line 11756 | `lesson-3-4` | `pricing` | 4. Freelance business tips (pricing, client management)
+- Line 11864 | `lesson-3-4` | `$100` | Budget recommendation: $100-200 for testing
+- Line 11869 | `lesson-3-4` | `cost` | 3. LinkedIn Ads (if B2B, higher cost)
+- Line 11877 | `lesson-3-4` | `$5` | - Set daily budget ($5-10/day)
+- Line 11881 | `lesson-3-4` | `cost` | - Analyze results (cost per lead)
+- Line 11884 | `lesson-3-4` | `cost` | - Scale if profitable (cost per lead < customer lifetime value)
+- Line 11920 | `lesson-3-4` | `$100` | □ Paid traffic test launched ($100-200 spent)
+- Line 11921 | `lesson-3-4` | `Cost` | □ Cost per lead calculated
+- Line 11936 | `lesson-3-4` | `$1,200 ` | - Revenue: $1,200 (1 branding project)
+- Line 11941 | `lesson-3-4` | `$150 ` | - Paid ads: $150 spent on Instagram → 18 new subscribers ($8.33 per lead)
+- Line 11941 | `lesson-3-4` | `$8.33 per ` | - Paid ads: $150 spent on Instagram → 18 new subscribers ($8.33 per lead)
+- Line 11949 | `lesson-3-4` | `$2,800 ` | - Revenue: $2,800 (2 branding projects)
+- Line 12088 | `lesson-3-4` | `Cost` | - Cost per acquisition
+- Line 12118 | `lesson-3-4` | `$2,400/month` | - Revenue: $2,400/month (project-based, inconsistent)
+- Line 12124 | `lesson-3-4` | `$6,800/month` | - Revenue: $6,800/month average (consistent pipeline)
+- Line 12128 | `lesson-3-4` | `$350 ` | Total marketing spend: $350 (tools + ads)
+- Line 12130 | `lesson-3-4` | `$4,400 ` | ROI: $4,400 increase in monthly revenue = 1,257% ROI
+- Line 12303 | `lesson-3-4` | `COST` | THE REAL COST OF IGNORING NUMBERS:
+- Line 12308 | `lesson-3-4` | `pricing` | - Make pricing decisions based on feelings, not facts
+- Line 12350 | `lesson-3-4` | `costs` | - Fixed costs (rent, software, salaries)
+- Line 12351 | `lesson-3-4` | `costs` | - Variable costs (materials, commissions, ads)
+- Line 12352 | `lesson-3-4` | `costs` | - One-time costs (equipment, website)
+- Line 12353 | `lesson-3-4` | `costs` | - Hidden costs (time, opportunity)
+- Line 12360 | `lesson-3-4` | `cost` | - Identify cost-cutting opportunities
+- Line 12379 | `lesson-3-4` | `pricing` | - Suggest pricing adjustments
+- Line 12380 | `lesson-3-4` | `cost` | - Model impact of cost changes
+- Line 12393 | `lesson-3-4` | `costs` | - Large one-time costs hit
+- Line 12409 | `lesson-3-4` | `$100 ` | $100 purchase × 4 times/year × 3 years = $1,200 CLV
+- Line 12409 | `lesson-3-4` | `$1,200 ` | $100 purchase × 4 times/year × 3 years = $1,200 CLV
+- Line 12418 | `lesson-3-4` | `cost` | - Determine max acquisition cost`
+- Line 12425 | `lesson-3-4` | `$8,000` | - Monthly revenue: $8,000
+- Line 12426 | `lesson-3-4` | `$2,400 ` | - Monthly expenses: $2,400 (software, contractors, ads, insurance)
+- Line 12427 | `lesson-3-4` | `$5,600 ` | - Profit margin: 70% ($5,600 profit)
+- Line 12431 | `lesson-3-4` | `$8,000 ` | - Invoiced $8,000 on March 1
+- Line 12433 | `lesson-3-4` | `$2,400 ` | - Paid $2,400 in expenses March 15
+- Line 12434 | `lesson-3-4` | `$2,400` | - Bank account in March: -$2,400
+- Line 12469 | `lesson-3-4` | `costs` | Predict costs before they surprise you.
+- Line 12477 | `lesson-3-4` | `cost` | "Here are my monthly business expenses by category for the past 12 months: [paste data]. I plan to [describe changes]. Based on this: 1) Forecast next 6 months 
+- Line 12481 | `lesson-3-4` | `Cost` | - Cost optimization opportunities
+- Line 12493 | `lesson-3-4` | `costs` | - Any large one-time costs coming
+- Line 12514 | `lesson-3-4` | `costs` | "Current situation: $[revenue]/month, $[expenses]/month. I'm considering [decision]. If I do this: costs increase by $[amount] and revenue might increase by [es
+- Line 12522 | `lesson-3-4` | `PRICING` | MODEL 5: PRICING OPTIMIZATION
+- Line 12527 | `lesson-3-4` | `pricing` | - Current pricing and volume
+- Line 12528 | `lesson-3-4` | `Cost` | - Cost to deliver
+- Line 12532 | `lesson-3-4` | `cost` | "I currently charge $[price] for [product/service]. I sell [quantity] per month. My cost to deliver is $[amount]. Based on similar industries, model what happen
+- Line 12544 | `lesson-3-4` | `$2,000/month` | Decision: Hire a part-time assistant for $2,000/month
+- Line 12547 | `lesson-3-4` | `$8,000/month` | - Revenue: $8,000/month
+- Line 12548 | `lesson-3-4` | `$2,400/month` | - Expenses: $2,400/month
+- Line 12549 | `lesson-3-4` | `$5,600/month` | - Profit: $5,600/month
+- Line 12557 | `lesson-3-4` | `$11,000/month` | - New revenue: $11,000/month
+- Line 12558 | `lesson-3-4` | `$4,400/month` | - New expenses: $4,400/month
+- Line 12559 | `lesson-3-4` | `$6,600/month` | - New profit: $6,600/month (↑18%)
+- Line 12564 | `lesson-3-4` | `$8,000/month` | - Revenue stays same: $8,000/month
+- Line 12565 | `lesson-3-4` | `$4,400/month` | - New expenses: $4,400/month
+- Line 12566 | `lesson-3-4` | `$3,600/month` | - New profit: $3,600/month (↓36%)
+- Line 12572 | `lesson-3-4` | `$9,500/month` | - New revenue: $9,500/month
+- Line 12573 | `lesson-3-4` | `$4,400/month` | - New expenses: $4,400/month
+- Line 12574 | `lesson-3-4` | `$5,100/month` | - New profit: $5,100/month (↓9% short term, neutral long term)
+- Line 12631 | `lesson-3-4` | `$15` | - $15-70/month
+- Line 12638 | `lesson-3-4` | `$30` | - $30-100/month
+- Line 12730 | `lesson-3-4` | `$7,200 ` | - Revenue: $7,200 (forecast was $8,000)
+- Line 12730 | `lesson-3-4` | `$8,000` | - Revenue: $7,200 (forecast was $8,000)
+- Line 12731 | `lesson-3-4` | `$2,900 ` | - Expenses: $2,900 (budget was $2,400)
+- Line 12731 | `lesson-3-4` | `$2,400` | - Expenses: $2,900 (budget was $2,400)
+- Line 12733 | `lesson-3-4` | `$12,400` | - Cash: $12,400
+- Line 12738 | `lesson-3-4` | `$300 ` | Expenses exceeded budget due to: 1) $300 additional ad spend (experimental Instagram ads), 2) $200 new design software (Figma team plan).
+- Line 12738 | `lesson-3-4` | `$200 ` | Expenses exceeded budget due to: 1) $300 additional ad spend (experimental Instagram ads), 2) $200 new design software (Figma team plan).
+- Line 12743 | `lesson-3-4` | `$2,000 ` | 1. Follow up on delayed project immediately (potential $2,000 recovery)
+- Line 12744 | `lesson-3-4` | `$300 ` | 2. Analyze Instagram ad ROI - $300 spent, how many leads generated?
+- Line 12745 | `lesson-3-4` | `$200/month` | 3. Budget for new software going forward ($200/month expected)
+- Line 12746 | `lesson-3-4` | `$8,500 ` | 4. April forecast: $8,500 (delayed project + normal pipeline)"
+- Line 12752 | `lesson-3-4` | `$8,500` | □ Adjust April forecast to $8,500`
+- Line 12774 | `lesson-3-4` | `COSTS` | MISTAKE 3: FORGETTING ONE-TIME COSTS
+- Line 12780 | `lesson-3-4` | `costs` | Better prompt: "Here are my regular monthly expenses. What one-time or annual costs might I be forgetting? Consider: software renewals, taxes, insurance, equipm
+- Line 12792 | `lesson-3-4` | `$10` | Human misunderstanding: "I invoiced $10K, I have $10K"
+- Line 12792 | `lesson-3-4` | `$10` | Human misunderstanding: "I invoiced $10K, I have $10K"
+- Line 12898 | `lesson-3-4` | `Cost` | content: `## The Hidden Cost of Inventory Problems
+- Line 12903 | `lesson-3-4` | `costs` | - Storage costs eating profit
+- Line 12908 | `lesson-3-4` | `cost` | Real cost example:
+- Line 12909 | `lesson-3-4` | `$50,000 ` | - $50,000 in excess inventory
+- Line 12910 | `lesson-3-4` | `cost` | - 20% annual carrying cost (storage, insurance, opportunity cost)
+- Line 12910 | `lesson-3-4` | `cost` | - 20% annual carrying cost (storage, insurance, opportunity cost)
+- Line 12911 | `lesson-3-4` | `cost` | - Real cost: $10,000/year wasted
+- Line 12911 | `lesson-3-4` | `$10,000/year` | - Real cost: $10,000/year wasted
+- Line 12923 | `lesson-3-4` | `cost` | Real cost example:
+- Line 12925 | `lesson-3-4` | `$200,000 ` | - $200,000 annual revenue
+- Line 12926 | `lesson-3-4` | `$20,000/year` | - Lost revenue: $20,000/year
+- Line 12933 | `lesson-3-4` | `costs` | - Ordering too frequently (high shipping costs)
+- Line 12937 | `lesson-3-4` | `cost` | Real cost example:
+- Line 12939 | `lesson-3-4` | `$2,600/year` | - Extra shipping: $2,600/year
+- Line 12941 | `lesson-3-4` | `cost` | - Opportunity cost of wrong mix: $15,000/year
+- Line 12941 | `lesson-3-4` | `$15,000/year` | - Opportunity cost of wrong mix: $15,000/year
+- Line 12952 | `lesson-3-4` | `cost` | Result: Right product, right quantity, right time, optimal cost.`
+- Line 13038 | `lesson-3-4` | `cost` | Order 140 units for Q1 (vs 200 if you based on Dec = 30% less inventory cost)"`
+- Line 13046 | `lesson-3-4` | `costs` | Finds the sweet spot between ordering costs and carrying costs.
+- Line 13046 | `lesson-3-4` | `costs` | Finds the sweet spot between ordering costs and carrying costs.
+- Line 13049 | `lesson-3-4` | `Cost` | EOQ = √(2 × Annual Demand × Order Cost / Carrying Cost)
+- Line 13049 | `lesson-3-4` | `Cost` | EOQ = √(2 × Annual Demand × Order Cost / Carrying Cost)
+- Line 13053 | `lesson-3-4` | `Cost` | - Cost per order (shipping, admin, etc.)
+- Line 13054 | `lesson-3-4` | `cost` | - Carrying cost (% of item value per year)
+- Line 13055 | `lesson-3-4` | `cost` | - Item cost
+- Line 13058 | `lesson-3-4` | `Cost` | "I sell [product]. Annual demand: [X] units. Cost per unit: $[amount]. Cost to place order: $[amount] (shipping + time). Annual carrying cost: [%] of item value
+- Line 13058 | `lesson-3-4` | `Cost` | "I sell [product]. Annual demand: [X] units. Cost per unit: $[amount]. Cost to place order: $[amount] (shipping + time). Annual carrying cost: [%] of item value
+- Line 13058 | `lesson-3-4` | `cost` | "I sell [product]. Annual demand: [X] units. Cost per unit: $[amount]. Cost to place order: $[amount] (shipping + time). Annual carrying cost: [%] of item value
+- Line 13058 | `lesson-3-4` | `cost` | "I sell [product]. Annual demand: [X] units. Cost per unit: $[amount]. Cost to place order: $[amount] (shipping + time). Annual carrying cost: [%] of item value
+- Line 13058 | `lesson-3-4` | `Cost` | "I sell [product]. Annual demand: [X] units. Cost per unit: $[amount]. Cost to place order: $[amount] (shipping + time). Annual carrying cost: [%] of item value
+- Line 13063 | `lesson-3-4` | `Cost` | - Cost comparison
+- Line 13119 | `lesson-3-4` | `costs` | - High carrying costs
+- Line 13125 | `lesson-3-4` | `costs` | - Low carrying costs
+- Line 13129 | `lesson-3-4` | `cost` | "I sell [product]. Current inventory: [X] units, value: $[amount]. Supplier lead time: [X] days, reliability: [describe]. Carrying cost: [%]. Customer expectati
+- Line 13129 | `lesson-3-4` | `Cost` | "I sell [product]. Current inventory: [X] units, value: $[amount]. Supplier lead time: [X] days, reliability: [describe]. Carrying cost: [%]. Customer expectati
+- Line 13133 | `lesson-3-4` | `Cost` | - Cost-benefit analysis
+- Line 13143 | `lesson-3-4` | `$89,400/year` | - Wireless headphones: $89,400/year
+- Line 13144 | `lesson-3-4` | `$62,100/year` | - Laptop stand: $62,100/year
+- Line 13145 | `lesson-3-4` | `$48,200/year` | - USB-C cables: $48,200/year
+- Line 13156 | `lesson-3-4` | `$12,400/year` | - Phone cases: $12,400/year
+- Line 13157 | `lesson-3-4` | `$8,900/year` | - Screen protectors: $8,900/year
+- Line 13167 | `lesson-3-4` | `$1,200/year` | - Niche adapters: $1,200/year
+- Line 13168 | `lesson-3-4` | `$800/year` | - Specialty cables: $800/year
+- Line 13212 | `lesson-3-4` | `cost` | "I have 3 suppliers for [product]: Supplier A: $[price], [X] day lead time, [%] on-time rate. Supplier B: $[price], [X] day lead time, [%] on-time rate. Supplie
+- Line 13215 | `lesson-3-4` | `cost` | - True cost comparison (not just unit price)
+- Line 13222 | `lesson-3-4` | `cost` | - Large orders: Lower unit cost, lower shipping/unit, but higher inventory
+- Line 13228 | `lesson-3-4` | `cost` | "Supplier offers: Order [X+] units, pay $[price]. Order [Y+] units, pay $[lower price]. Shipping cost: $[amount] per order. My monthly demand: [X] units. Storag
+- Line 13228 | `lesson-3-4` | `cost` | "Supplier offers: Order [X+] units, pay $[price]. Order [Y+] units, pay $[lower price]. Shipping cost: $[amount] per order. My monthly demand: [X] units. Storag
+- Line 13228 | `lesson-3-4` | `cost` | "Supplier offers: Order [X+] units, pay $[price]. Order [Y+] units, pay $[lower price]. Shipping cost: $[amount] per order. My monthly demand: [X] units. Storag
+- Line 13233 | `lesson-3-4` | `cost` | - Total cost comparison
+- Line 13245 | `lesson-3-4` | `costs` | "I ship [describe products]. Average order value: $[amount]. Customer expectation: [delivery timeframe]. Shipping options: [list with costs]. Analyze: 1) Cost p
+- Line 13245 | `lesson-3-4` | `Cost` | "I ship [describe products]. Average order value: $[amount]. Customer expectation: [delivery timeframe]. Shipping options: [list with costs]. Analyze: 1) Cost p
+- Line 13275 | `lesson-3-4` | `$200 ` | - 3 weekly orders from supplier ($200 shipping each = $600/week)
+- Line 13275 | `lesson-3-4` | `$600/` | - 3 weekly orders from supplier ($200 shipping each = $600/week)
+- Line 13276 | `lesson-3-4` | `$8 per ` | - 2-day express shipping to customers ($8 per order)
+- Line 13277 | `lesson-3-4` | `$1,000/month` | - Products stored in 500 sq ft warehouse ($1,000/month)
+- Line 13283 | `lesson-3-4` | `$200 ` | Current: 3 orders/week × $200 = $31,200/year shipping
+- Line 13283 | `lesson-3-4` | `$31,200/year` | Current: 3 orders/week × $200 = $31,200/year shipping
+- Line 13284 | `lesson-3-4` | `$150 ` | Optimal: 1 order/week (larger batch) × $150 = $7,800/year shipping
+- Line 13284 | `lesson-3-4` | `$7,800/year` | Optimal: 1 order/week (larger batch) × $150 = $7,800/year shipping
+- Line 13285 | `lesson-3-4` | `$23,400/year` | Savings: $23,400/year
+- Line 13286 | `lesson-3-4` | `cost` | Trade-off: 8 more days average inventory (minimal cost increase: $2,100)
+- Line 13286 | `lesson-3-4` | `$2,100` | Trade-off: 8 more days average inventory (minimal cost increase: $2,100)
+- Line 13287 | `lesson-3-4` | `$21,300/year` | Net savings: $21,300/year
+- Line 13290 | `lesson-3-4` | `$8` | Current: Express shipping ($8) for all orders
+- Line 13292 | `lesson-3-4` | `$4` | Recommendation: Default to standard ($4), offer express upgrade
+- Line 13293 | `lesson-3-4` | `$12,400/year` | Savings: $12,400/year
+- Line 13300 | `lesson-3-4` | `$8,600/year` | Labor savings: $8,600/year
+- Line 13302 | `lesson-3-4` | `$42,300/year` | Total optimization: $42,300/year savings (21% of revenue to bottom line)"
+- Line 13321 | `lesson-3-4` | `cost` | - Carrying cost (% of inventory value)
+- Line 13329 | `lesson-3-4` | `cost` | - Markdown losses (sold below cost)
+- Line 13330 | `lesson-3-4` | `costs` | - Carrying costs (storage, insurance, etc.)
+- Line 13348 | `lesson-3-4` | `$100` | - $100-300/month
+- Line 13355 | `lesson-3-4` | `$200` | - $200-500/month
+- Line 13377 | `lesson-3-4` | `cost` | - Carrying cost month-over-month
+- Line 13405 | `lesson-3-4` | `COSTS` | MISTAKE 3: IGNORING CARRYING COSTS
+- Line 13409 | `lesson-3-4` | `cost` | AI fix: Calculates true cost of excess inventory. Cash sitting idle has opportunity cost.
+- Line 13409 | `lesson-3-4` | `cost` | AI fix: Calculates true cost of excess inventory. Cash sitting idle has opportunity cost.
+- Line 13415 | `lesson-3-4` | `cost` | AI fix: Continuous supplier comparison on total cost, not just unit price.
+- Line 13447 | `lesson-3-4` | `Cost` | □ Cost per unit
+- Line 13482 | `lesson-3-4` | `cost` | - Expected cost savings estimate
+- Line 13568 | `lesson-3-4` | `cost` | - Customer acquisition cost by source
+- Line 13581 | `lesson-3-4` | `$500/month` | "Your Instagram ads generate 3x ROI while Google Ads are -20% ROI. Reallocate $500/month from Google to Instagram. Expected impact: +$1,500/month profit."
+- Line 13581 | `lesson-3-4` | `$1,500/month` | "Your Instagram ads generate 3x ROI while Google Ads are -20% ROI. Reallocate $500/month from Google to Instagram. Expected impact: +$1,500/month profit."
+- Line 13597 | `lesson-3-4` | `cost` | - True cost per customer by channel
+- Line 13608 | `lesson-3-4` | `cost` | - Profit per customer (after cost to serve)
+- Line 13650 | `lesson-3-4` | `cost` | - Effort required (resource cost)
+- Line 13672 | `lesson-3-4` | `$12,400/month` | - Revenue: $12,400/month
+- Line 13673 | `lesson-3-4` | `$4,200/month` | - Expenses: $4,200/month
+- Line 13675 | `lesson-3-4` | `$8,200 ` | - 1-on-1 coaching: $8,200 (16 clients × $512.50)
+- Line 13675 | `lesson-3-4` | `$512.50` | - 1-on-1 coaching: $8,200 (16 clients × $512.50)
+- Line 13676 | `lesson-3-4` | `$3,400 ` | - Group program: $3,400 (34 clients × $100)
+- Line 13676 | `lesson-3-4` | `$100` | - Group program: $3,400 (34 clients × $100)
+- Line 13677 | `lesson-3-4` | `$800 ` | - Digital course: $800 (40 sales × $20)
+- Line 13677 | `lesson-3-4` | `$20` | - Digital course: $800 (40 sales × $20)
+- Line 13684 | `lesson-3-4` | `$8,200 ` | - Revenue: $8,200 (66% of total)
+- Line 13685 | `lesson-3-4` | `$50/` | - Time investment: 24 hrs/week @ $50/hr opportunity cost = $4,800/month
+- Line 13685 | `lesson-3-4` | `cost` | - Time investment: 24 hrs/week @ $50/hr opportunity cost = $4,800/month
+- Line 13685 | `lesson-3-4` | `$4,800/month` | - Time investment: 24 hrs/week @ $50/hr opportunity cost = $4,800/month
+- Line 13686 | `lesson-3-4` | `$3,400` | - Net: $3,400
+- Line 13687 | `lesson-3-4` | `$85/` | - Hourly rate: $85/hr
+- Line 13690 | `lesson-3-4` | `$3,400 ` | - Revenue: $3,400 (27% of total)
+- Line 13691 | `lesson-3-4` | `$50/` | - Time investment: 6 hrs/week @ $50/hr = $1,200/month
+- Line 13691 | `lesson-3-4` | `$1,200/month` | - Time investment: 6 hrs/week @ $50/hr = $1,200/month
+- Line 13692 | `lesson-3-4` | `$2,200` | - Net: $2,200
+- Line 13693 | `lesson-3-4` | `$92/` | - Hourly rate: $92/hr
+- Line 13696 | `lesson-3-4` | `$800 ` | - Revenue: $800 (7% of total)
+- Line 13697 | `lesson-3-4` | `$400/month` | - Time investment: 2 hrs/week (marketing) = $400/month
+- Line 13698 | `lesson-3-4` | `$400` | - Net: $400
+- Line 13699 | `lesson-3-4` | `$50/` | - Hourly rate: $50/hr
+- Line 13702 | `lesson-3-4` | `$92/` | 1. Group program is most profitable per hour ($92/hr)
+- Line 13712 | `lesson-3-4` | `$3,800/month` | - Revenue: +$3,800/month
+- Line 13714 | `lesson-3-4` | `$16,200/month` | - New total: $16,200/month in same 40 hrs/week"
+- Line 13716 | `lesson-3-4` | `$2,900 ` | Decision: Owner implements immediately. Month 1 results: +$2,900 revenue, 12 hrs/week freed.`
+- Line 13754 | `lesson-3-4` | `Cost` | - AI helps: Cost optimization recommendations
+- Line 13757 | `lesson-3-4` | `costs` | - What: Revenue needed to cover all costs
+- Line 13764 | `lesson-3-4` | `Cost` | 7. Customer Acquisition Cost (CAC)
+- Line 13765 | `lesson-3-4` | `cost` | - Formula: Total marketing + sales cost / New customers
+- Line 13766 | `lesson-3-4` | `costs` | - Why: Know what it costs to grow
+- Line 13792 | `lesson-3-4` | `Cost` | - Formula: Cost of goods sold / Average inventory
+- Line 13800 | `lesson-3-4` | `$100` | - Target: $100K+ for knowledge work
+- Line 13898 | `lesson-3-4` | `Cost` | - Cost trends
+- Line 13916 | `lesson-3-4` | `cost` | - Customer acquisition cost
+- Line 13973 | `lesson-3-4` | `$124,000` | - Annual revenue saved: $124,000"
+- Line 14220 | `lesson-3-4` | `cost` | - Customer acquisition cost
+- Line 14263 | `lesson-3-4` | `$12,400 ` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14263 | `lesson-3-4` | `$8,200 ` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14263 | `lesson-3-4` | `$3,400 ` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14263 | `lesson-3-4` | `$800` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14264 | `lesson-3-4` | `$14,200 ` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14264 | `lesson-3-4` | `$9,100 ` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14264 | `lesson-3-4` | `$4,300 ` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14264 | `lesson-3-4` | `$800` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14281 | `lesson-3-4` | `Cost` | - Cost of goods sold (COGS)
+- Line 14289 | `lesson-3-4` | `$4,200 ` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14289 | `lesson-3-4` | `$1,800 ` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14289 | `lesson-3-4` | `$1,200 ` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14289 | `lesson-3-4` | `$800 ` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14289 | `lesson-3-4` | `$400` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14320 | `lesson-3-4` | `$4,200 ` | - Jan: $4,200 (Course A: $2,400, Course B: $1,200, Coaching: $600)
+- Line 14320 | `lesson-3-4` | `$2,400` | - Jan: $4,200 (Course A: $2,400, Course B: $1,200, Coaching: $600)
+- Line 14320 | `lesson-3-4` | `$1,200` | - Jan: $4,200 (Course A: $2,400, Course B: $1,200, Coaching: $600)
+- Line 14320 | `lesson-3-4` | `$600` | - Jan: $4,200 (Course A: $2,400, Course B: $1,200, Coaching: $600)
+- Line 14321 | `lesson-3-4` | `$5,100 ` | - Feb: $5,100 (Course A: $2,800, Course B: $1,500, Coaching: $800)
+- Line 14321 | `lesson-3-4` | `$2,800` | - Feb: $5,100 (Course A: $2,800, Course B: $1,500, Coaching: $800)
+- Line 14321 | `lesson-3-4` | `$1,500` | - Feb: $5,100 (Course A: $2,800, Course B: $1,500, Coaching: $800)
+- Line 14321 | `lesson-3-4` | `$800` | - Feb: $5,100 (Course A: $2,800, Course B: $1,500, Coaching: $800)
+- Line 14322 | `lesson-3-4` | `$4,800 ` | - Mar: $4,800 (Course A: $2,600, Course B: $1,400, Coaching: $800)
+- Line 14322 | `lesson-3-4` | `$2,600` | - Mar: $4,800 (Course A: $2,600, Course B: $1,400, Coaching: $800)
+- Line 14322 | `lesson-3-4` | `$1,400` | - Mar: $4,800 (Course A: $2,600, Course B: $1,400, Coaching: $800)
+- Line 14322 | `lesson-3-4` | `$800` | - Mar: $4,800 (Course A: $2,600, Course B: $1,400, Coaching: $800)
+- Line 14323 | `lesson-3-4` | `$6,200 ` | - Apr: $6,200 (Course A: $3,400, Course B: $2,000, Coaching: $800)
+- Line 14323 | `lesson-3-4` | `$3,400` | - Apr: $6,200 (Course A: $3,400, Course B: $2,000, Coaching: $800)
+- Line 14323 | `lesson-3-4` | `$2,000` | - Apr: $6,200 (Course A: $3,400, Course B: $2,000, Coaching: $800)
+- Line 14323 | `lesson-3-4` | `$800` | - Apr: $6,200 (Course A: $3,400, Course B: $2,000, Coaching: $800)
+- Line 14324 | `lesson-3-4` | `$5,900 ` | - May: $5,900 (Course A: $3,200, Course B: $1,900, Coaching: $800)
+- Line 14324 | `lesson-3-4` | `$3,200` | - May: $5,900 (Course A: $3,200, Course B: $1,900, Coaching: $800)
+- Line 14324 | `lesson-3-4` | `$1,900` | - May: $5,900 (Course A: $3,200, Course B: $1,900, Coaching: $800)
+- Line 14324 | `lesson-3-4` | `$800` | - May: $5,900 (Course A: $3,200, Course B: $1,900, Coaching: $800)
+- Line 14325 | `lesson-3-4` | `$7,400 ` | - Jun: $7,400 (Course A: $4,200, Course B: $2,400, Coaching: $800)
+- Line 14325 | `lesson-3-4` | `$4,200` | - Jun: $7,400 (Course A: $4,200, Course B: $2,400, Coaching: $800)
+- Line 14325 | `lesson-3-4` | `$2,400` | - Jun: $7,400 (Course A: $4,200, Course B: $2,400, Coaching: $800)
+- Line 14325 | `lesson-3-4` | `$800` | - Jun: $7,400 (Course A: $4,200, Course B: $2,400, Coaching: $800)
+- Line 14328 | `lesson-3-4` | `$2,100/month` | - Average: $2,100/month (Ads: $1,200, Software: $400, Contractors: $500)
+- Line 14328 | `lesson-3-4` | `$1,200` | - Average: $2,100/month (Ads: $1,200, Software: $400, Contractors: $500)
+- Line 14328 | `lesson-3-4` | `$400` | - Average: $2,100/month (Ads: $1,200, Software: $400, Contractors: $500)
+- Line 14328 | `lesson-3-4` | `$500` | - Average: $2,100/month (Ads: $1,200, Software: $400, Contractors: $500)
+- Line 14332 | `lesson-3-4` | `$380` | - Average purchase: $380
+- Line 14486 | `lesson-3-4` | `Cost` | - Cost to deliver per offering: [describe]
+- Line 14489 | `lesson-3-4` | `costs` | 1. Which offerings are most profitable (considering time + costs)?
+- Line 14554 | `lesson-3-4` | `$4,200` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `$5,100` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `$4,800` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `$6,200` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `$5,900` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `$7,400` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14557 | `lesson-3-4` | `$2,400 ` | - Course A (flagship): Growing from $2,400 to $4,200
+- Line 14557 | `lesson-3-4` | `$4,200` | - Course A (flagship): Growing from $2,400 to $4,200
+- Line 14558 | `lesson-3-4` | `$1,200 ` | - Course B (newer): Growing from $1,200 to $2,400
+- Line 14558 | `lesson-3-4` | `$2,400` | - Course B (newer): Growing from $1,200 to $2,400
+- Line 14559 | `lesson-3-4` | `$600` | - Coaching (1-on-1): Flat at $600-800
+- Line 14561 | `lesson-3-4` | `$2,100/month` | Expenses average $2,100/month
+- Line 14568 | `lesson-3-4` | `$4,200 ` | Trend: 33% growth from Jan to Jun ($4,200 → $7,400)
+- Line 14568 | `lesson-3-4` | `$7,400` | Trend: 33% growth from Jan to Jun ($4,200 → $7,400)
+- Line 14584 | `lesson-3-4` | `$10,400/month` | Expected impact: +40% revenue (to $10,400/month) in 90 days
+- Line 14588 | `lesson-3-4` | `$11,200 ` | Business owner's decision: Implemented group coaching, launched upsell. Month 3: $11,200 revenue.`
+- Line 14688 | `lesson-3-4` | `cost` | Right: Revenue, profit, customer acquisition cost, retention
+- Line 14759 | `lesson-3-4` | `$500 ` | - What: Reallocate $500 ad spend from Facebook to Instagram
+- Line 14885 | `lesson-3-4` | `costs` | 3. Save more time than it costs to maintain
+- Line 14905 | `lesson-3-4` | `$20/month` | - Cons: $20/month, no built-in integrations
+- Line 14930 | `lesson-3-4` | `$20/month` | Most people: ChatGPT Plus ($20/month)
+- Line 14932 | `lesson-3-4` | `$20/month` | Researchers: Perplexity Pro ($20/month)
+- Line 14944 | `lesson-3-4` | `Pricing` | - Pricing: Free tier, then $20-50/month
+- Line 14944 | `lesson-3-4` | `$20` | - Pricing: Free tier, then $20-50/month
+- Line 14951 | `lesson-3-4` | `Pricing` | - Pricing: Free tier, then $10-30/month
+- Line 14951 | `lesson-3-4` | `$10` | - Pricing: Free tier, then $10-30/month
+- Line 14958 | `lesson-3-4` | `Pricing` | - Pricing: Free (self-host) or cloud plans
+- Line 14971 | `lesson-3-4` | `Pricing` | - Pricing: Free tier, then $10/user/month
+- Line 14971 | `lesson-3-4` | `$10/user` | - Pricing: Free tier, then $10/user/month
+- Line 14978 | `lesson-3-4` | `Pricing` | - Pricing: Free 15GB, then $2-10/month
+- Line 14978 | `lesson-3-4` | `$2` | - Pricing: Free 15GB, then $2-10/month
+- Line 14985 | `lesson-3-4` | `Pricing` | - Pricing: Free, sync $10/month
+- Line 14985 | `lesson-3-4` | `$10/month` | - Pricing: Free, sync $10/month
+- Line 14992 | `lesson-3-4` | `Pricing` | - Pricing: Free tier, then $20/month
+- Line 14992 | `lesson-3-4` | `$20/month` | - Pricing: Free tier, then $20/month
+- Line 15055 | `lesson-3-4` | `$20/month` | - ChatGPT Plus ($20/month) - main AI assistant
+- Line 15058 | `lesson-3-4` | `$20/month` | - Zapier ($20/month) - automation
+- Line 15061 | `lesson-3-4` | `$0 ` | - Notion ($0 free tier) - client notes, templates
+- Line 15062 | `lesson-3-4` | `$0 ` | - Google Drive ($0 free tier) - file storage
+- Line 15072 | `lesson-3-4` | `$25/month` | - ConvertKit ($25/month) - email marketing
+- Line 15075 | `lesson-3-4` | `cost` | Total cost: $65/month
+- Line 15075 | `lesson-3-4` | `$65/month` | Total cost: $65/month
+- Line 15257 | `lesson-3-4` | `$20` | - AI: ChatGPT Plus ($20)
+- Line 15258 | `lesson-3-4` | `$20` | - Automation: Zapier free tier → $20
+- Line 15275 | `lesson-3-4` | `$30/user` | - AI: ChatGPT Team ($30/user) or Google Workspace + Gemini
+- Line 15276 | `lesson-3-4` | `$50` | - Automation: Zapier ($50) or Make ($30)
+- Line 15276 | `lesson-3-4` | `$30` | - Automation: Zapier ($50) or Make ($30)
+- Line 15277 | `lesson-3-4` | `$10/user` | - Memory: Notion ($10/user) or Airtable ($20)
+- Line 15277 | `lesson-3-4` | `$20` | - Memory: Notion ($10/user) or Airtable ($20)
+- Line 15278 | `lesson-3-4` | `$15/user` | - CRM: HubSpot free or Pipedrive ($15/user)
+- Line 15279 | `lesson-3-4` | `$8/user` | - + Slack ($8/user), cloud storage
+- Line 15296 | `lesson-3-4` | `$50` | - Automation: Zapier ($50)
+- Line 15316 | `lesson-3-4` | `$30/user` | - AI: ChatGPT Team ($30/user)
+- Line 15317 | `lesson-3-4` | `$30` | - Automation: Make ($30-50)
+- Line 15318 | `lesson-3-4` | `$10/user` | - Memory: Notion ($10/user)
+- Line 15357 | `lesson-3-4` | `$10` | content: `Your stack should evolve with your business. What works at $10K/month revenue won't work at $100K/month. Review quarterly: What's breaking? What's mis
+- Line 15357 | `lesson-3-4` | `$100` | content: `Your stack should evolve with your business. What works at $10K/month revenue won't work at $100K/month. Review quarterly: What's breaking? What's mis
+- Line 15419 | `lesson-3-4` | `Cost` | - Cost per automation (tool costs / value created)
+- Line 15419 | `lesson-3-4` | `costs` | - Cost per automation (tool costs / value created)
+- Line 15489 | `lesson-3-4` | `Costs` | - Costs: $45/month in tools
+- Line 15489 | `lesson-3-4` | `$45/month` | - Costs: $45/month in tools
+- Line 15536 | `lesson-3-4` | `costs` | Fix: Track time saved. If tool costs $30/month and saves 5 hours, that's $6/hr. Worth it?`
+- Line 15536 | `lesson-3-4` | `$30/month` | Fix: Track time saved. If tool costs $30/month and saves 5 hours, that's $6/hr. Worth it?`
+- Line 15536 | `lesson-3-4` | `$6/` | Fix: Track time saved. If tool costs $30/month and saves 5 hours, that's $6/hr. Worth it?`
+- Line 15569 | `lesson-3-4` | `cost` | "I'm a [business type]. My goals: [describe]. My budget: [amount/month]. My tech comfort level: [beginner/intermediate/advanced]. Recommend: 1) AI Ops Stack (5 
+- Line 15597 | `lesson-3-4` | `costs` | - Expected tool costs: $[X]/month
+- Line 15624 | `lesson-3-4` | `costs` | 3. ROI should be 10x+ on tool costs
+- Line 15683 | `lesson-3-4` | `$20/month` | - Free tier works, but GPT-4 (ChatGPT Plus $20/month) is better
+- Line 15772 | `lesson-3-4` | `pricing` | Thanks for your interest! I'd be happy to discuss pricing.
+- Line 15776 | `lesson-3-4` | `pricing` | I've found the best approach is a quick 15-minute call to understand your specific needs and provide accurate pricing.
+- Line 15791 | `lesson-3-4` | `pricing` | 6. In "Search String" field, enter: is:unread from:(*) subject:(rate OR pricing OR quote)
+- Line 15793 | `lesson-3-4` | `pricing` | This triggers when unread emails mention rates/pricing/quote.
+- Line 15833 | `lesson-3-4` | `pricing` | 1. Send yourself an email with "pricing" in subject
+- Line 15878 | `lesson-3-4` | `$4,000` | - Estimated value: $4,000+`
+- Line 16152 | `lesson-3-4` | `$50` | - "Budget: $50K"
+- Line 16207 | `lesson-3-4` | `$2,000` | - $2,000-5,000 value (at $40-100/hr)
+- Line 16207 | `lesson-3-4` | `$40` | - $2,000-5,000 value (at $40-100/hr)
+- Line 16208 | `lesson-3-4` | `costs` | - Tool costs: $0-20
+- Line 16208 | `lesson-3-4` | `$0` | - Tool costs: $0-20
+- Line 16230 | `lesson-3-4` | `$20/month` | 1. Upgrade to $20/month (750 tasks)
+- Line 16284 | `lesson-3-4` | `$50` | 4. Get help: Hire freelancer for $50-100 to set up
+- Line 16402 | `lesson-3-4` | `$80` | - $80-160/month in tool costs
+- Line 16402 | `lesson-3-4` | `costs` | - $80-160/month in tool costs
+- Line 16455 | `lesson-3-4` | `pricing` | Trigger: New unread Gmail with "rate" or "pricing" in subject
+- Line 16500 | `lesson-3-4` | `Cost` | - Cost savings ($ saved)
+- Line 16514 | `lesson-3-4` | `$2,400 ` | - Revenue impact: $2,400 (faster response = 3 extra clients)
+- Line 16517 | `lesson-3-4` | `$2,400 ` | - Value created: $2,400 revenue + 30 hrs × $50/hr = $3,900
+- Line 16517 | `lesson-3-4` | `$50/` | - Value created: $2,400 revenue + 30 hrs × $50/hr = $3,900
+- Line 16517 | `lesson-3-4` | `$3,900` | - Value created: $2,400 revenue + 30 hrs × $50/hr = $3,900
+- Line 16518 | `lesson-3-4` | `Cost` | - Cost: $0 (free tools) + 20 min setup × $50/hr = $17
+- Line 16518 | `lesson-3-4` | `$0 ` | - Cost: $0 (free tools) + 20 min setup × $50/hr = $17
+- Line 16518 | `lesson-3-4` | `$50/` | - Cost: $0 (free tools) + 20 min setup × $50/hr = $17
+- Line 16518 | `lesson-3-4` | `$17` | - Cost: $0 (free tools) + 20 min setup × $50/hr = $17
+- Line 17253 | `lesson-3-4` | `Cost` | - Cost savings (time × wage rate)
+- Line 17293 | `lesson-3-4` | `$45/` | - 155 hrs/week × $45/hr = $6,975/week value = $27,900/month
+- Line 17293 | `lesson-3-4` | `$6,975/` | - 155 hrs/week × $45/hr = $6,975/week value = $27,900/month
+- Line 17293 | `lesson-3-4` | `$27,900/month` | - 155 hrs/week × $45/hr = $6,975/week value = $27,900/month
+- Line 17294 | `lesson-3-4` | `cost` | - Tool cost: $500/month
+- Line 17294 | `lesson-3-4` | `$500/month` | - Tool cost: $500/month
+- Line 17295 | `lesson-3-4` | `$27,400/month` | - Net savings: $27,400/month
+- Line 17297 | `lesson-3-4` | `$45` | - Reinvested time: 3 new client projects (additional $45k revenue)
+- Line 17759 | `lesson-3-4` | `cost` | - If goal is cost reduction → track labor hours saved
+- Line 17814 | `lesson-3-4` | `Cost` | - Cost Savings: $X/month
+- Line 17825 | `lesson-3-4` | `Cost` | - Cost impact: $X saved in labor hours
+- Line 17855 | `lesson-3-4` | `Cost` | - Cost Savings: $27,900/month
+- Line 17855 | `lesson-3-4` | `$27,900/month` | - Cost Savings: $27,900/month
+- Line 17865 | `lesson-3-4` | `$45` | - Revenue impact: $45k from 3 new projects (freed capacity)
+- Line 17866 | `lesson-3-4` | `Cost` | - Cost impact: $27.9k saved vs manual work
+- Line 17866 | `lesson-3-4` | `$27.9` | - Cost impact: $27.9k saved vs manual work
+- Line 17881 | `lesson-3-4` | `$500/month` | - Current spend: $500/month
+- Line 17882 | `lesson-3-4` | `$1,200/month` | - Requested: $1,200/month for enterprise tier (needed for scaling to 35 users)
+- Line 17883 | `lesson-3-4` | `$50` | - Expected return: $50k+/month savings at full scale
+- Line 17889 | `lesson-3-4` | `$27,900 ` | content: `When reporting to leadership, always translate time savings into dollar value. "155 hours saved" is abstract. "$27,900 saved" gets budget approved.`
+- Line 18057 | `lesson-3-4` | `costs` | - Return (time saved, revenue enabled, costs reduced)
+- Line 18132 | `lesson-3-4` | `cost` | - Monthly cost: [e.g., $500]
+- Line 18132 | `lesson-3-4` | `$500` | - Monthly cost: [e.g., $500]
+- Line 18138 | `lesson-3-4` | `cost` | - Monthly cost: [e.g., $200]
+- Line 18138 | `lesson-3-4` | `$200` | - Monthly cost: [e.g., $200]
+- Line 18144 | `lesson-3-4` | `cost` | - Monthly cost: [e.g., $300]
+- Line 18144 | `lesson-3-4` | `$300` | - Monthly cost: [e.g., $300]
+- Line 18146 | `lesson-3-4` | `cost` | Total stack cost: [e.g., $1,000/month]
+- Line 18146 | `lesson-3-4` | `$1,000/month` | Total stack cost: [e.g., $1,000/month]
+- Line 18191 | `lesson-3-4` | `$500/month` | - ChatGPT Team: $500/month (25 users) - Content, emails, strategy
+- Line 18192 | `lesson-3-4` | `$400/month` | - Claude Pro: $400/month (20 users) - Long-form content, analysis
+- Line 18193 | `lesson-3-4` | `$200/month` | - Midjourney: $200/month (5 users) - Image generation
+- Line 18194 | `lesson-3-4` | `$300/month` | - Make.com: $300/month - Automations and integrations
+- Line 18196 | `lesson-3-4` | `$1,400/month` | Total: $1,400/month
+- Line 18207 | `lesson-3-4` | `$27,900/month` | - $27,900/month value
+- Line 18243 | `lesson-3-4` | `Cost` | - Cost savings: [$X per month]
+- Line 18488 | `lesson-3-4` | `$1,400/month` | - Total: $1,400/month
+- Line 18495 | `lesson-3-4` | `$27,900/month` | - 155 hrs/week saved = $27,900/month value
+- Line 18505 | `lesson-3-4` | `$1,200/month` | - $1,200/month budget for enterprise tier
+- Line 18507 | `lesson-3-4` | `$50` | - Expected return: $50k+/month at full scale
+- Line 18942 | `lesson-3-4` | `pricing` | "Research the top 5 project management tools for remote teams in 2024. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a 
+- Line 19106 | `lesson-3-4` | `cost` | - Decision frameworks (pros/cons, cost-benefit)
+- Line 19651 | `lesson-3-4` | `$50/` | - Savings: 6 hrs/week × $50/hr = $300/week = $15,600/year
+- Line 19651 | `lesson-3-4` | `$300/` | - Savings: 6 hrs/week × $50/hr = $300/week = $15,600/year
+- Line 19651 | `lesson-3-4` | `$15,600/year` | - Savings: 6 hrs/week × $50/hr = $300/week = $15,600/year
+- Line 20022 | `lesson-3-4` | `cost` | - What's the cost if not done?
+- Line 20429 | `lesson-3-4` | `costs` | 3. The other 20 become your "avoid at all costs" list
+- Line 22160 | `lesson-3-4` | `COST` | THE COST:
+- Line 22508 | `lesson-3-4` | `COST` | THE COST:
+- Line 23285 | `lesson-3-4` | `COST` | THE COST:
+- Line 23634 | `lesson-3-4` | `$50` | "Project kickoff meeting. Discussed timeline for website redesign. Need to launch before Black Friday. Designer needs 6 weeks, dev needs 4 weeks, testing needs 
+- Line 24549 | `lesson-3-4` | `$10` | "Team standup. Discussed Q4 roadmap. Marketing wants new landing page by Nov 15. Design team needs 3 weeks. Dev says 2 weeks after design. Sarah owns design, Mi
+- Line 24785 | `lesson-3-4` | `Cost` | Cost of interruptions:
+- Line 24803 | `lesson-3-4` | `costs` | Each interruption costs 23 minutes of productive work.
+- Line 25274 | `lesson-3-4` | `costs` | Why: Every task switch costs 23 minutes. Protect your flow state.
+- Line 25616 | `lesson-3-4` | `COST` | THE COST:
+- Line 25772 | `lesson-4-1` | `$15` | - Budget: $15k (within approved range)
+- Line 26263 | `lesson-4-4` | `costs` | - Every distraction costs 23 minutes
+- Line 26678 | `lesson-4-4` | `pricing` | □ Confirm pricing tiers with Product team (referenced in Section 3)
+- Line 26698 | `lesson-4-4` | `Pricing` | - Pricing tiers doc from Product team
+- Line 26709 | `lesson-4-4` | `pricing` | - Product: Confirmed pricing tiers
+- Line 26714 | `lesson-4-4` | `pricing` | □ Review pricing tiers doc from Product (in my email)
+- Line 27455 | `lesson-4-4` | `costs` | Average adult makes 35,000 decisions per day. Each one costs cognitive resources. By evening, decision quality drops 70%.
+- Line 27540 | `lesson-4-4` | `cost` | - What to wear (decision cost: medium)
+- Line 27541 | `lesson-4-4` | `cost` | - What to eat for breakfast (decision cost: low)
+- Line 27542 | `lesson-4-4` | `cost` | - What time to leave (decision cost: low)
+- Line 27543 | `lesson-4-4` | `cost` | - Which route to take (decision cost: low)
+- Line 27544 | `lesson-4-4` | `cost` | - What task to start with (decision cost: HIGH)
+- Line 27547 | `lesson-4-4` | `cost` | - Which email to read first (decision cost: medium)
+- Line 27548 | `lesson-4-4` | `cost` | - How to respond to messages (decision cost: medium)
+- Line 27549 | `lesson-4-4` | `cost` | - What to work on now (decision cost: HIGH)
+- Line 27550 | `lesson-4-4` | `cost` | - Whether to attend meeting (decision cost: medium)
+- Line 27551 | `lesson-4-4` | `cost` | - When to take breaks (decision cost: low)
+- Line 27554 | `lesson-4-4` | `cost` | - What to eat for dinner (decision cost: medium)
+- Line 27555 | `lesson-4-4` | `cost` | - Whether to work more (decision cost: HIGH)
+- Line 27556 | `lesson-4-4` | `cost` | - What to watch/read (decision cost: low)
+- Line 27557 | `lesson-4-4` | `cost` | - When to sleep (decision cost: medium)
+- Line 27560 | `lesson-4-4` | `cost` | High-cost decisions wasted: 5-10
+- Line 27601 | `lesson-4-4` | `cost` | Micro-decisions cost: 280 decisions per day
+- Line 30218 | `lesson-5-3` | `pricing` | Brief: They want pricing options - 3 scenarios ready
+- Line 30321 | `lesson-5-4` | `cost` | - Save time, not cost time
+- Line 30833 | `lesson-5-5` | `Costs` | - Costs can add up
+- Line 31097 | `lesson-5-5` | `Pricing` | Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+- Line 31097 | `lesson-5-5` | `$20/month` | Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+- Line 31097 | `lesson-5-5` | `$49/month` | Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+- Line 31119 | `lesson-5-5` | `Pricing` | Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+- Line 31119 | `lesson-5-5` | `$9/month` | Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+- Line 31119 | `lesson-5-5` | `$16/month` | Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+- Line 31123 | `lesson-5-5` | `pricing` | - Better pricing for high volume
+- Line 31141 | `lesson-5-5` | `Pricing` | Pricing: Free (self-hosted), Cloud ($20/month)
+- Line 31141 | `lesson-5-5` | `$20/month` | Pricing: Free (self-hosted), Cloud ($20/month)
+- Line 31146 | `lesson-5-5` | `pricing` | - Fair pricing
+- Line 31163 | `lesson-5-5` | `Pricing` | Pricing: Free (generous), Basic ($19/month)
+- Line 31163 | `lesson-5-5` | `$19/month` | Pricing: Free (generous), Basic ($19/month)
+- Line 31185 | `lesson-5-5` | `Pricing` | Pricing: Varies by tool
+- Line 31728 | `lesson-5-5` | `pricing` | - Wrong pricing tier
+- Line 31760 | `lesson-5-5` | `costs` | - Saves less time than it costs
+- Line 33546 | `lesson-5-5` | `cost` | - Decision reversal cost (lower)
+- Line 33982 | `lesson-5-5` | `cost` | Sunk cost fallacy. Bad systems compound losses.
+- Line 34014 | `lesson-5-5` | `cost` | Complexity has maintenance cost. ROI goes negative.
+- Line 35682 | `lesson-5-5` | `$1` | Input: My company just hit $1M ARR with only 3 full-time employees. We use AI extensively.
+
+
+## Bucket E: Date references
+
+- Line 464 | `lesson-2-2` | `May` | "I'm visiting Barcelona for 4 days in May. Budget is $800 for activities and food (accommodations already booked in Gothic Quarter). I love food tours, architec
+- Line 480 | `lesson-2-2` | `May` | "Create a packing list for a 4-day Barcelona trip in May. Include clothing, tech, and essentials. I'll have access to laundry."
+- Line 2632 | `lesson-3-4` | `2024` | - Example: "15 Best AI Tools for Content Creators (2024 Edition)"`
+- Line 3021 | `lesson-3-4` | `January` | - January: Goal-setting & planning
+- Line 3022 | `lesson-3-4` | `February` | - February: Skill-building
+- Line 3023 | `lesson-3-4` | `March` | - March: Tool recommendations
+- Line 3024 | `lesson-3-4` | `April` | - April: Case studies & results
+- Line 3944 | `lesson-3-4` | `January` | - January: Goal-setting content
+- Line 3945 | `lesson-3-4` | `February` | - February: Skill-building content
+- Line 3946 | `lesson-3-4` | `March` | - March: Tool reviews
+- Line 12431 | `lesson-3-4` | `March` | - Invoiced $8,000 on March 1
+- Line 12432 | `lesson-3-4` | `April` | - Clients pay 30 days later (April 1)
+- Line 12433 | `lesson-3-4` | `March` | - Paid $2,400 in expenses March 15
+- Line 12434 | `lesson-3-4` | `March` | - Bank account in March: -$2,400
+- Line 12707 | `lesson-3-4` | `December` | Usually December or January.
+- Line 12707 | `lesson-3-4` | `January` | Usually December or January.
+- Line 12727 | `lesson-3-4` | `March` | Sarah's Design Business - March Review
+- Line 12736 | `lesson-3-4` | `March` | "March revenue underperformed forecast by 10%. Two factors: 1) One expected project delayed to April, 2) Slower pipeline in February impacted March closes.
+- Line 12736 | `lesson-3-4` | `April` | "March revenue underperformed forecast by 10%. Two factors: 1) One expected project delayed to April, 2) Slower pipeline in February impacted March closes.
+- Line 12736 | `lesson-3-4` | `February` | "March revenue underperformed forecast by 10%. Two factors: 1) One expected project delayed to April, 2) Slower pipeline in February impacted March closes.
+- Line 12736 | `lesson-3-4` | `March` | "March revenue underperformed forecast by 10%. Two factors: 1) One expected project delayed to April, 2) Slower pipeline in February impacted March closes.
+- Line 12746 | `lesson-3-4` | `April` | 4. April forecast: $8,500 (delayed project + normal pipeline)"
+- Line 12752 | `lesson-3-4` | `April` | □ Adjust April forecast to $8,500`
+- Line 12784 | `lesson-3-4` | `January` | Human habit: Set budget in January, never adjust
+- Line 12967 | `lesson-3-4` | `December` | - Ignores seasonality (December ≠ February)
+- Line 12967 | `lesson-3-4` | `February` | - Ignores seasonality (December ≠ February)
+- Line 13014 | `lesson-3-4` | `Jan` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13014 | `lesson-3-4` | `Feb` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13014 | `lesson-3-4` | `Mar` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13014 | `lesson-3-4` | `Apr` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13014 | `lesson-3-4` | `May` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13014 | `lesson-3-4` | `Jun` | Jan: 45, Feb: 38, Mar: 52, Apr: 61, May: 58, Jun: 48
+- Line 13015 | `lesson-3-4` | `Jul` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13015 | `lesson-3-4` | `Aug` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13015 | `lesson-3-4` | `Sep` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13015 | `lesson-3-4` | `Oct` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13015 | `lesson-3-4` | `Nov` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13015 | `lesson-3-4` | `Dec` | Jul: 42, Aug: 39, Sep: 68, Oct: 94, Nov: 156, Dec: 183
+- Line 13020 | `lesson-3-4` | `Q4` | - Q4 (Oct-Dec): 472% above baseline (holiday gifting)
+- Line 13020 | `lesson-3-4` | `Oct` | - Q4 (Oct-Dec): 472% above baseline (holiday gifting)
+- Line 13020 | `lesson-3-4` | `Dec` | - Q4 (Oct-Dec): 472% above baseline (holiday gifting)
+- Line 13021 | `lesson-3-4` | `Q1` | - Q1 (Jan-Mar): Near baseline
+- Line 13021 | `lesson-3-4` | `Jan` | - Q1 (Jan-Mar): Near baseline
+- Line 13021 | `lesson-3-4` | `Mar` | - Q1 (Jan-Mar): Near baseline
+- Line 13022 | `lesson-3-4` | `Q2` | - Q2-Q3 (Apr-Sep): Slightly above baseline
+- Line 13022 | `lesson-3-4` | `Q3` | - Q2-Q3 (Apr-Sep): Slightly above baseline
+- Line 13022 | `lesson-3-4` | `Apr` | - Q2-Q3 (Apr-Sep): Slightly above baseline
+- Line 13022 | `lesson-3-4` | `Sep` | - Q2-Q3 (Apr-Sep): Slightly above baseline
+- Line 13027 | `lesson-3-4` | `January` | - January: 50 units (range: 42-58)
+- Line 13028 | `lesson-3-4` | `February` | - February: 42 units (range: 35-50)
+- Line 13029 | `lesson-3-4` | `March` | - March: 58 units (range: 48-68)
+- Line 13032 | `lesson-3-4` | `Q1` | 1. Don't over-order for Q1—demand drops 70% from December
+- Line 13032 | `lesson-3-4` | `December` | 1. Don't over-order for Q1—demand drops 70% from December
+- Line 13033 | `lesson-3-4` | `August` | 2. Start building inventory in August for Q4 surge
+- Line 13033 | `lesson-3-4` | `Q4` | 2. Start building inventory in August for Q4 surge
+- Line 13035 | `lesson-3-4` | `Feb` | 4. Watch for Valentine's Day (Feb 14) micro-spike—typically 40% increase week of
+- Line 13038 | `lesson-3-4` | `Q1` | Order 140 units for Q1 (vs 200 if you based on Dec = 30% less inventory cost)"`
+- Line 13038 | `lesson-3-4` | `Dec` | Order 140 units for Q1 (vs 200 if you based on Dec = 30% less inventory cost)"`
+- Line 13848 | `lesson-3-4` | `Q4` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 13848 | `lesson-3-4` | `2024` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 13848 | `lesson-3-4` | `Q2` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 13848 | `lesson-3-4` | `2024` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 13848 | `lesson-3-4` | `Q4` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 13848 | `lesson-3-4` | `Q2` | "Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition
+- Line 14082 | `lesson-3-4` | `January` | - It's January after December holiday surge (seasonal)
+- Line 14082 | `lesson-3-4` | `December` | - It's January after December holiday surge (seasonal)
+- Line 14086 | `lesson-3-4` | `December` | AI fix: AI automatically considers context when provided: "Revenue down 20%. Last month was December. We raised prices 15% in January. We're in e-commerce gifts
+- Line 14086 | `lesson-3-4` | `January` | AI fix: AI automatically considers context when provided: "Revenue down 20%. Last month was December. We raised prices 15% in January. We're in e-commerce gifts
+- Line 14263 | `lesson-3-4` | `Jan` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14263 | `lesson-3-4` | `2024` | - Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Line 14264 | `lesson-3-4` | `Feb` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14264 | `lesson-3-4` | `2024` | - Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Line 14289 | `lesson-3-4` | `Jan` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14289 | `lesson-3-4` | `2024` | - Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- Line 14320 | `lesson-3-4` | `Jan` | - Jan: $4,200 (Course A: $2,400, Course B: $1,200, Coaching: $600)
+- Line 14321 | `lesson-3-4` | `Feb` | - Feb: $5,100 (Course A: $2,800, Course B: $1,500, Coaching: $800)
+- Line 14322 | `lesson-3-4` | `Mar` | - Mar: $4,800 (Course A: $2,600, Course B: $1,400, Coaching: $800)
+- Line 14323 | `lesson-3-4` | `Apr` | - Apr: $6,200 (Course A: $3,400, Course B: $2,000, Coaching: $800)
+- Line 14324 | `lesson-3-4` | `May` | - May: $5,900 (Course A: $3,200, Course B: $1,900, Coaching: $800)
+- Line 14325 | `lesson-3-4` | `Jun` | - Jun: $7,400 (Course A: $4,200, Course B: $2,400, Coaching: $800)
+- Line 14554 | `lesson-3-4` | `Jan` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `Feb` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `Mar` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `Apr` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `May` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14554 | `lesson-3-4` | `Jun` | Jan: $4,200, Feb: $5,100, Mar: $4,800, Apr: $6,200, May: $5,900, Jun: $7,400
+- Line 14568 | `lesson-3-4` | `Jan` | Trend: 33% growth from Jan to Jun ($4,200 → $7,400)
+- Line 14568 | `lesson-3-4` | `Jun` | Trend: 33% growth from Jan to Jun ($4,200 → $7,400)
+- Line 14701 | `lesson-3-4` | `January` | Wrong: Built dashboard in January, never updated
+- Line 16460 | `lesson-3-4` | `Jan` | Last updated: Jan 15, 2024
+- Line 16460 | `lesson-3-4` | `2024` | Last updated: Jan 15, 2024
+- Line 17480 | `lesson-3-4` | `May` | → May need new tactics to break through
+- Line 17850 | `lesson-3-4` | `2024` | AI INITIATIVE: MARCH 2024 UPDATE
+- Line 17873 | `lesson-3-4` | `April` | - Expected outcome: Back to 100% adoption by end of April
+- Line 18942 | `lesson-3-4` | `2024` | "Research the top 5 project management tools for remote teams in 2024. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a 
+- Line 19466 | `lesson-3-4` | `Jan` | Monday, Jan 15
+- Line 19513 | `lesson-3-4` | `Jan` | PRODUCTIVITY BASELINE - Alex Chen - Jan 15, 2024
+- Line 19513 | `lesson-3-4` | `2024` | PRODUCTIVITY BASELINE - Alex Chen - Jan 15, 2024
+- Line 19819 | `lesson-3-4` | `Q4` | "Follow up with Sarah about Q4 budget proposal, send Mike the updated timeline, and schedule a check-in for next month."
+- Line 19822 | `lesson-3-4` | `Q4` | 1. Task: "Email Sarah - Q4 budget proposal" (Project: Client X, Due: Tomorrow)
+- Line 19965 | `lesson-3-4` | `Q2` | - Time allocation: 15-25% (minimize through Q2 work)
+- Line 19997 | `lesson-3-4` | `Q1` | Your goal: Systematically shift time from Q1 and Q3 into Q2.`
+- Line 19997 | `lesson-3-4` | `Q3` | Your goal: Systematically shift time from Q1 and Q3 into Q2.`
+- Line 19997 | `lesson-3-4` | `Q2` | Your goal: Systematically shift time from Q1 and Q3 into Q2.`
+- Line 20005 | `lesson-3-4` | `Q2` | content: `Quadrant 2 is where your biggest wins come from. Strategic work, prevention, relationship building, skill development - these never feel urgent but cr
+- Line 20088 | `lesson-3-4` | `Q2` | - Impact: 9 (shapes entire team direction for Q2)
+- Line 20286 | `lesson-3-4` | `Q2` | "Help me prioritize these 5 tasks using Impact, Urgency, Effort, Alignment (1-10 each). My goals: 1) Launch new product by Q2, 2) Build team capability, 3) Impr
+- Line 20623 | `lesson-3-4` | `Q2` | 4. Plan Q2 sprint (Score: 38) - Blocked Thu morning
+- Line 20956 | `lesson-3-4` | `Q2` | 4. Review Q2 metrics and adjust roadmap (2 hrs, Thursday AM)
+- Line 20983 | `lesson-3-4` | `Q2` | 4. Q2 metrics review - Blocked Thursday 9-11am
+- Line 22223 | `lesson-3-4` | `Q3` | - Adds executive summary at top: "Decided to pivot from SMB to enterprise market. Launch timeline moved to Q3. I'm leading customer research workstream."
+- Line 23453 | `lesson-3-4` | `Q2` | "Discussed new feature launch. Mike said we should target end of Q2. Sarah worried about testing time. Decided to add 2 weeks buffer. Need to update roadmap. De
+- Line 23458 | `lesson-3-4` | `Q2` | Approved Q2 feature launch with extended timeline to allow adequate testing. Design finalization is now the critical path, with marketing requiring 3 weeks noti
+- Line 23461 | `lesson-3-4` | `Q2` | 1. Launch target: End of Q2 (June 30) with 2-week buffer for testing
+- Line 23461 | `lesson-3-4` | `June` | 1. Launch target: End of Q2 (June 30) with 2-week buffer for testing
+- Line 23462 | `lesson-3-4` | `May` | 2. Design must be finalized by May 1 (decision maker: Mike)
+- Line 23469 | `lesson-3-4` | `May` | Due: May 1
+- Line 23475 | `lesson-3-4` | `April` | Due: April 15
+- Line 23481 | `lesson-3-4` | `May` | Due: May 15 (completion)
+- Line 23487 | `lesson-3-4` | `April` | Due: April 20
+- Line 23493 | `lesson-3-4` | `June` | Due: June 9 (3 weeks before launch)
+- Line 23503 | `lesson-3-4` | `May` | May 5 - Design review and development checkpoint
+- Line 24549 | `lesson-3-4` | `Q4` | "Team standup. Discussed Q4 roadmap. Marketing wants new landing page by Nov 15. Design team needs 3 weeks. Dev says 2 weeks after design. Sarah owns design, Mi
+- Line 24549 | `lesson-3-4` | `Nov` | "Team standup. Discussed Q4 roadmap. Marketing wants new landing page by Nov 15. Design team needs 3 weeks. Dev says 2 weeks after design. Sarah owns design, Mi
+- Line 25743 | `lesson-4-1` | `Q4` | - Good: "Feedback needed on Q4 proposal by Friday"
+- Line 25765 | `lesson-4-1` | `Q4` | "Subject: Q4 Proposal - Decision Needed by Friday
+- Line 25769 | `lesson-4-1` | `Q4` | Can you review the attached Q4 proposal by Friday? I need your approval to move forward with the vendor.
+- Line 25773 | `lesson-4-1` | `Oct` | - Timeline: 8 weeks starting Oct 1
+- Line 26677 | `lesson-4-4` | `Q4` | □ Get Q4 revenue projections from Finance (needed for Section 3)
+- Line 26685 | `lesson-4-4` | `2021` | □ Find better market size data (current source is 2021)
+- Line 26708 | `lesson-4-4` | `Q4` | - Finance: Q4 revenue projections
+- Line 26713 | `lesson-4-4` | `Q4` | □ Slack Finance team for Q4 projections (today)
+- Line 29913 | `lesson-5-1` | `January` | GOOD MORNING! Here are your priorities for Tuesday, January 16:
+- Line 35676 | `lesson-5-5` | `Q4` | Input: I need to present Q4 results to the board. Sales are down 12%, but customer satisfaction is up 23%.
+
+
+## Bucket F: Placeholder tokens
+
+- None found
