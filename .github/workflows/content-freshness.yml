@@ -1,0 +1,79 @@
+name: Content Freshness
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-content-freshness:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Run freshness check
+        id: freshness
+        run: |
+          set +e
+          npm run check:content > content-freshness-report.md 2>&1
+          status=$?
+          cat content-freshness-report.md
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Ensure content-debt label exists
+        if: steps.freshness.outputs.status != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const name = 'content-debt';
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name });
+            } catch (error) {
+              if (error.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner,
+                  repo,
+                  name,
+                  color: 'B60205',
+                  description: 'Content freshness debt and stale references',
+                });
+              } else {
+                throw error;
+              }
+            }
+      - name: Open or update issue
+        if: steps.freshness.outputs.status != '0'
+        uses: actions/github-script@v7
+        env:
+          REPORT_PATH: content-freshness-report.md
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = 'Content freshness check failing';
+            const body = fs.readFileSync(process.env.REPORT_PATH, 'utf8');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const existing = issues.find((issue) => issue.title === title);
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, body, labels: ['content-debt'] });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body, labels: ['content-debt'] });
+            }
+      - name: Fail workflow when high-confidence or overdue detected
+        if: steps.freshness.outputs.status != '0'
+        run: exit 1
