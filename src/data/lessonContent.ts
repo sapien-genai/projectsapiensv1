@@ -2671,7 +2671,7 @@ Look at your calendar for this week. Find THREE blocks you can delete. Then prot
 10. THE CURATED LIST
 "X Best [Resources/Tools] for [Audience/Goal]"
 - Practical, bookmark-worthy, evergreen
-- Example: "15 Best AI Tools for Content Creators (2024 Edition)"`
+- Example: "15 Best AI Tools for Content Creators (current edition)"`
       },
       {
         type: 'text',
@@ -14303,7 +14303,7 @@ Month | Total Revenue | Source 1 | Source 2 | Source 3
 
 Example:
 - this month | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
-- Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- Feb | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
 - (continue for all months)
 
 Where to find it:
@@ -14945,7 +14945,7 @@ ChatGPT (paid plan available)
 - Best for: General business tasks, content, analysis
 - Pros: Most capable, broad knowledge, good UI
 - Cons: Paid plan required, no built-in integrations
-- Use when: You need smartest responses, complex reasoning
+- Use when: You need high-quality responses, complex reasoning
 
 Claude (Anthropic)
 - Best for: Long documents, detailed analysis, creative work
@@ -17889,7 +17889,7 @@ Keep it to 1 page. Use visuals. Lead with business impact.`
         type: 'example',
         content: `Real Executive Report Example:
 
-AI INITIATIVE: MARCH 2024 UPDATE
+AI INITIATIVE: RECENT UPDATE
 
 SNAPSHOT
 - Active Users: 23/25 (92%)
@@ -26736,7 +26736,7 @@ MEDIUM:
 □ Get customer quote for case study (want to add to Section 1)
 
 LOW:
-□ Find better market size data (current source is 2021)
+□ Find better market size data (current source is dated)
 □ Decide on charts/graphs to include
 
 NEXT SESSION PREP:
@@ -35858,7 +35858,7 @@ Track what works best with your chosen AI tool.`
         type: 'text',
         content: `# Context Is Everything
 
-The smartest AI in the world is useless without context.
+The most capable AI is useless without context.
 
 Think of context as the map that grounds the model in reality, helping it navigate its mathematical space to find the most relevant answers.
 
