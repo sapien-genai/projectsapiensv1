@@ -1561,6 +1561,9 @@ Your study plan is now your most valuable asset. Follow it, adjust as needed, an
     ]
   },
   'creator-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI Won\'t Replace You. Here\'s Why.',
     duration: '12 min',
     content: [
@@ -1611,6 +1614,9 @@ AI can accelerate 1 and 2, giving you more time for 3 — where your unique tast
     ]
   },
   'creator-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Finding Your Creative Voice with AI',
     duration: '15 min',
     content: [
@@ -1652,6 +1658,9 @@ The key: The clearer you are about your creative identity, the better AI can hel
     ]
   },
   'creator-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'The 5 Creative AI Tools Every Creator Needs',
     duration: '18 min',
     content: [
@@ -1950,6 +1959,9 @@ Your creative vision is what matters. These tools amplify your ideas — they do
     ]
   },
   'creator-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Create Your First AI-Assisted Piece',
     duration: '25 min',
     content: [
@@ -2452,6 +2464,9 @@ Let's go build something amazing. 🚀`
     ]
   },
   'creator-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The Content Brief: Teaching AI Your Style',
     duration: '20 min',
     content: [
@@ -2509,6 +2524,9 @@ Use the template above. Then ask AI to generate each piece. Compare results.`
     ]
   },
   'creator-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Blog Posts That Convert',
     duration: '25 min',
     content: [
@@ -2849,6 +2867,9 @@ CONCLUSION: Can you replicate this? Yes. Here's how: [Simplified version they ca
     ]
   },
   'creator-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Social Media Content Factory',
     duration: '22 min',
     content: [
@@ -3200,6 +3221,9 @@ Instead of random posts, create 5-7 post series:
     ]
   },
   'creator-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Video Scripts & Storyboards',
     duration: '28 min',
     content: [
@@ -3613,6 +3637,9 @@ For series or multi-part content:
     ]
   },
   'creator-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: 30 Days of Content in 30 Minutes',
     duration: '35 min',
     content: [
@@ -4033,6 +4060,9 @@ You now have that system. Use it.`
     ]
   },
   'creator-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Prompt Engineering for Visual Art',
     duration: '25 min',
     content: [
@@ -4369,6 +4399,9 @@ GENERAL TIPS:
     ]
   },
   'creator-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Creating Consistent Brand Assets',
     duration: '30 min',
     content: [
@@ -4732,6 +4765,9 @@ Generate 10 different assets. Display them for 10 seconds. Can someone immediate
     ]
   },
   'creator-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Concept Art & Mood Boards',
     duration: '28 min',
     content: [
@@ -5118,6 +5154,9 @@ Never start final production without concept exploration. Always diverge before 
     ]
   },
   'creator-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Combining AI Art with Traditional Tools',
     duration: '32 min',
     content: [
@@ -5572,6 +5611,9 @@ The difference between amateur and professional is in the finishing. AI gets you
     ]
   },
   'creator-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build a Visual Identity',
     duration: '40 min',
     content: [
@@ -6116,6 +6158,9 @@ THIS IS THE FUTURE OF CREATIVE WORK. AND YOU JUST BUILT IT.`
     ]
   },
   'creator-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The Creative Workflow Stack',
     duration: '30 min',
     content: [
@@ -6409,6 +6454,9 @@ One complete, tested, documented workflow for your chosen project type.`
     ]
   },
   'creator-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Idea Generation to Final Product',
     duration: '35 min',
     content: [
@@ -6450,6 +6498,9 @@ Let's build this workflow together.`
     ]
   },
   'creator-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Quality Control & Human Touch',
     duration: '25 min',
     content: [
@@ -6516,6 +6567,9 @@ IF IT FAILS ANY: Fix it before publishing.`
     ]
   },
   'creator-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Signature Workflow',
     duration: '45 min',
     content: [
@@ -6652,6 +6706,9 @@ Run this workflow 3 more times over the next 2 weeks. After execution #3, do fin
     ]
   },
   'creator-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Choosing Your Project',
     duration: '20 min',
     content: [
@@ -7072,6 +7129,9 @@ Next lesson: Production Week begins!`
     ]
   },
   'creator-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Production Week: Build It',
     duration: '90 min',
     content: [
@@ -7497,6 +7557,9 @@ Next lesson: Polish & Perfect`
     ]
   },
   'creator-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Polish & Perfect',
     duration: '45 min',
     content: [
@@ -7859,6 +7922,9 @@ Time to share it with the world.`
     ]
   },
   'creator-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Launch Strategy & Community Feedback',
     duration: '30 min',
     content: [
@@ -8384,6 +8450,9 @@ NOW GO CREATE SOMETHING AMAZING.`
     ]
   },
   'business-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Where AI Actually Saves You Money',
     duration: '15 min',
     content: [
@@ -8751,6 +8820,9 @@ You now know exactly where AI will save you money. Time to make it happen.`
     ]
   },
   'business-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'The Small Business AI Stack',
     duration: '18 min',
     content: [
@@ -8824,6 +8896,9 @@ We'll build this stack step-by-step in future modules.`
     ]
   },
   'business-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'ROI Calculator: Measure AI Impact',
     duration: '20 min',
     content: [
@@ -8966,6 +9041,9 @@ Choose your highest ROI opportunity first.`
     ]
   },
   'business-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Audit Your Business Processes',
     duration: '30 min',
     content: [
@@ -9192,6 +9270,9 @@ This becomes your AI transformation roadmap for the next 90 days.`
     ]
   },
   'business-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI-Powered Customer Support',
     duration: '25 min',
     content: [
@@ -9255,6 +9336,9 @@ Next lesson: We'll turn this into an automated chatbot.`
     ]
   },
   'business-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Sales Email Sequences That Convert',
     duration: '30 min',
     content: [
@@ -9327,6 +9411,9 @@ In the next module, we'll automate delivery.`
     ]
   },
   'business-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Chatbots & FAQ Automation',
     duration: '28 min',
     content: [
@@ -9603,6 +9690,9 @@ A document ready to copy into your chosen chatbot tool. This preparation work wi
     ]
   },
   'business-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Personalization at Scale',
     duration: '25 min',
     content: [
@@ -9926,6 +10016,9 @@ A personalization roadmap: Start with one segment, one channel, one week. Once w
     ]
   },
   'business-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your First Support Bot',
     duration: '45 min',
     content: [
@@ -10350,6 +10443,9 @@ Total ROI: Free tool, 45 min setup + 1 hour refinement = 3 new clients worth $4,
     ]
   },
   'business-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Content Calendar in 30 Minutes',
     duration: '25 min',
     content: [
@@ -10410,6 +10506,9 @@ Save the other 23 for next week's batch session.`
     ]
   },
   'business-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Social Media Post Factory',
     duration: '28 min',
     content: [
@@ -10720,6 +10819,9 @@ Do this same 90-minute session at the start of every month. By month 3, you'll b
     ]
   },
   'business-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Email Marketing with AI',
     duration: '30 min',
     content: [
@@ -11144,6 +11246,9 @@ Share your signup link in the Network tab and collect your first subscribers fro
     ]
   },
   'business-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Ad Copy & Landing Page Optimization',
     duration: '32 min',
     content: [
@@ -11645,6 +11750,9 @@ Share your before/after conversion rates in the Network tab!`
     ]
   },
   'business-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: 90-Day Marketing Plan',
     duration: '45 min',
     content: [
@@ -12237,6 +12345,9 @@ Share your completed plan in the Network tab and find accountability partners!`
     ]
   },
   'business-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Automating Repetitive Tasks',
     duration: '30 min',
     content: [
@@ -12311,6 +12422,9 @@ We'll build these automations in the next lessons.`
     ]
   },
   'business-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Financial Forecasting & Budgeting',
     duration: '35 min',
     content: [
@@ -12921,6 +13035,9 @@ Share your biggest financial insight in the Network tab!`
     ]
   },
   'business-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Inventory & Supply Chain Optimization',
     duration: '30 min',
     content: [
@@ -13532,6 +13649,9 @@ Share your biggest inventory optimization win in the Network tab!`
     ]
   },
   'business-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Data Analysis for Business Decisions',
     duration: '35 min',
     content: [
@@ -14219,6 +14339,9 @@ Share your biggest data insight in the Network tab!`
     ]
   },
   'business-lesson-4-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Dashboard',
     duration: '45 min',
     content: [
@@ -14872,6 +14995,9 @@ Next module: Productivity. Time to multiply your personal effectiveness.`
     ]
   },
   'business-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Mapping Your AI Ops Stack',
     duration: '30 min',
     content: [
@@ -15681,6 +15807,9 @@ Next up: Measuring ROI & Scaling - Learn to prove the value of your AI investmen
     ]
   },
   'business-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Connecting Tools & Workflows',
     duration: '60 min',
     content: [
@@ -16627,6 +16756,9 @@ Congratulations on building your first automated workflows!`
     ]
   },
   'business-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Training Your Team on AI Tools',
     duration: '40 min',
     content: [
@@ -17210,6 +17342,9 @@ Go train your team. They're waiting for someone to show them the way.`
     ]
   },
   'business-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Measuring Success & Iterating',
     duration: '35 min',
     content: [
@@ -17990,6 +18125,9 @@ The businesses that measure and iterate will dominate their industries. Be one o
     ]
   },
   'business-lesson-5-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Final Project: Present Your AI Stack',
     duration: '45 min',
     content: [
@@ -18729,6 +18867,9 @@ Welcome to the future of business.`
     ]
   },
   'productivity-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The AI Productivity Multiplier',
     duration: '12 min',
     content: [
@@ -18800,6 +18941,9 @@ These are your AI multiplication opportunities.`
     ]
   },
   'productivity-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Audit Your Time: Find Your Leaks',
     duration: '15 min',
     content: [
@@ -18864,6 +19008,9 @@ We'll tackle each leak in the coming modules.`
     ]
   },
   'productivity-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The 80/20 of AI Productivity',
     duration: '18 min',
     content: [
@@ -19397,6 +19544,9 @@ Start with the 20% that matters. Results will follow.`
     ]
   },
   'productivity-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Baseline',
     duration: '25 min',
     content: [
@@ -19816,6 +19966,9 @@ Everything from here builds on this foundation. Make it solid.`
     ]
   },
   'productivity-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The Smart Task Capture System',
     duration: '20 min',
     content: [
@@ -19886,6 +20039,9 @@ Next lesson: We'll build the planning layer.`
     ]
   },
   'productivity-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI-Powered Project Planning',
     duration: '25 min',
     content: [
@@ -19966,6 +20122,9 @@ Notice how AI helps you see the full scope upfront.`
     ]
   },
   'productivity-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Priority Matrix: What to Do First',
     duration: '22 min',
     content: [
@@ -20763,6 +20922,9 @@ Do the right things, in the right order, the right way. Everything else is distr
     ]
   },
   'productivity-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Weekly Review Automation',
     duration: '20 min',
     content: [
@@ -21345,6 +21507,9 @@ Review your week. Plan your week. Improve your week. Repeat.`
     ]
   },
   'productivity-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Set Up Your Task System',
     duration: '30 min',
     content: [
@@ -22068,6 +22233,9 @@ Capture everything. Organize intentionally. Execute ruthlessly. Review consisten
     ]
   },
   'productivity-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Building a Second Brain with AI',
     duration: '25 min',
     content: [
@@ -22142,6 +22310,9 @@ Then ask AI to summarize and connect themes.`
     ]
   },
   'productivity-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Smart Note-Taking Systems',
     duration: '22 min',
     content: [
@@ -22490,6 +22661,9 @@ Capture deliberately. Connect generously. Synthesize regularly. Retrieve instant
     ]
   },
   'productivity-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI-Powered Research & Learning',
     duration: '28 min',
     content: [
@@ -23266,6 +23440,9 @@ Learn faster. Understand deeper. Remember longer. Apply immediately.`
     ]
   },
   'productivity-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Meeting Notes to Action Items',
     duration: '20 min',
     content: [
@@ -24080,6 +24257,9 @@ Capture clearly. Process quickly. Distribute immediately. Follow through relentl
     ]
   },
   'productivity-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Create Your Knowledge Base',
     duration: '35 min',
     content: [
@@ -24782,6 +24962,9 @@ Start using it tomorrow. Process one note. Build the habit. Your future self wil
     ]
   },
   'productivity-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The Attention Management System',
     duration: '20 min',
     content: [
@@ -25678,6 +25861,9 @@ Your attention is your most valuable resource. Stop giving it away for free.`
     ]
   },
   'productivity-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI Email & Message Triage',
     duration: '25 min',
     content: [
@@ -26255,6 +26441,9 @@ Keep the pieces you wrote today. They're the beginning of your personal archive 
     ]
   },
   'productivity-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Deep Work Blocks with AI Support',
     duration: '22 min',
     content: [
@@ -27491,6 +27680,9 @@ Your most important work deserves your deepest attention. Give it.`
     ]
   },
   'productivity-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Decision Fatigue: Automate Small Choices',
     duration: '18 min',
     content: [
@@ -28713,6 +28905,9 @@ Your decision budget is your most valuable asset. Spend it wisely.`
     ]
   },
   'productivity-lesson-4-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Your Focus Protocol',
     duration: '30 min',
     content: [
@@ -29822,6 +30017,9 @@ Welcome to the way you'll work for the rest of your career.`
     ]
   },
   'productivity-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Designing Your Command Center',
     duration: '30 min',
     content: [
@@ -30796,6 +30994,9 @@ You're ready. Launch.`
     ]
   },
   'productivity-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Connecting Your Tools',
     duration: '45 min',
     content: [
@@ -32146,6 +32347,9 @@ Integration by integration, you eliminate manual work and build your automated c
     ]
   },
   'productivity-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Daily, Weekly, Monthly Routines',
     duration: '35 min',
     content: [
@@ -33373,6 +33577,9 @@ Begin.`
     ]
   },
   'productivity-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Optimization & Iteration',
     duration: '25 min',
     content: [
@@ -34553,6 +34760,9 @@ Begin.`
     ]
   },
   'productivity-lesson-5-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Final Project: Launch Your System',
     duration: '40 min',
     content: [
@@ -35680,6 +35890,9 @@ Now go build.`
     ]
   },
   'mastery-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Learn Machine English: The AIM Framework',
     duration: '18 min',
     content: [
@@ -35768,6 +35981,9 @@ Mission: Explain blockchain in 3 short paragraphs using real estate analogies. F
     ]
   },
   'mastery-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Pick Your Instrument and Go Deep',
     duration: '15 min',
     content: [
@@ -35851,6 +36067,9 @@ Track what works best with your chosen AI tool.`
     ]
   },
   'mastery-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Feed It Context: The MAP Framework',
     duration: '20 min',
     content: [
@@ -35948,6 +36167,9 @@ Notice how much richer your request becomes.`
     ]
   },
   'mastery-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Debug Your Thinking: Iterative Prompting',
     duration: '22 min',
     content: [
@@ -36032,6 +36254,9 @@ This meta-awareness is how you level up.`
     ]
   },
   'mastery-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Steer to Experts',
     duration: '20 min',
     content: [
@@ -36118,6 +36343,9 @@ You'll immediately see the difference.`
     ]
   },
   'mastery-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Verify Everything: Critique, Don\'t Consume',
     duration: '25 min',
     content: [
@@ -36217,6 +36445,9 @@ Notice how much more confident you feel in the verified output.`
     ]
   },
   'mastery-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Develop Taste: The OCEAN Framework',
     duration: '22 min',
     content: [
@@ -36306,6 +36537,9 @@ Narrative: Structure your answer as: Why this question matters, The hidden probl
     ]
   },
   'mastery-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Training Yourself Through AI',
     duration: '18 min',
     content: [
