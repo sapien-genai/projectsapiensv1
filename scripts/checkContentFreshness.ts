@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, 'src', 'data');
+const SNAPSHOT_DIR = path.join(ROOT, 'src', 'content', 'snapshots');
 
 const LESSON_PREFIXES = [
   'lesson',
@@ -56,6 +57,13 @@ interface Flag {
   line: number;
   reason: string;
   snippet: string;
+}
+
+interface OverdueSnapshot {
+  file: string;
+  lastReviewed: string;
+  reviewIntervalDays: number;
+  daysOverdue: number;
 }
 
 function lineForIndex(content: string, index: number): number {
@@ -112,14 +120,45 @@ function daysBetween(a: Date, b: Date): number {
   return Math.floor(ms / (1000 * 60 * 60 * 24));
 }
 
+function parseSnapshotFrontmatter(raw: string): { lastReviewed?: string; reviewIntervalDays?: number } {
+  const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return {};
+
+  const metaLines = match[1].split('\n');
+  const meta: { lastReviewed?: string; reviewIntervalDays?: number } = {};
+
+  metaLines.forEach((line) => {
+    const [k, ...rest] = line.split(':');
+    if (!k || rest.length === 0) return;
+
+    const key = k.trim();
+    const value = rest.join(':').trim().replace(/^"|"$/g, '');
+
+    if (key === 'lastReviewed') meta.lastReviewed = value;
+    if (key === 'reviewIntervalDays') {
+      const days = Number(value);
+      if (!Number.isNaN(days)) meta.reviewIntervalDays = days;
+    }
+  });
+
+  return meta;
+}
+
 const files = fs.readdirSync(DATA_DIR)
   .filter((f) => f.endsWith('.ts'))
   .map((f) => path.join(DATA_DIR, f))
   .filter((f) => !f.includes(`${path.sep}scripts${path.sep}`) && !f.endsWith(`${path.sep}checkContentFreshness.ts`));
 
+const snapshotFiles = fs.existsSync(SNAPSHOT_DIR)
+  ? fs.readdirSync(SNAPSHOT_DIR)
+    .filter((f) => f.endsWith('.md'))
+    .map((f) => path.join(SNAPSHOT_DIR, f))
+  : [];
+
 const highFlags: Flag[] = [];
 const mediumFlags: Flag[] = [];
 const overdueLessons: Array<{ lesson: string; file: string; daysSince: number; interval: number; lastReviewed: string }> = [];
+const overdueSnapshots: OverdueSnapshot[] = [];
 let suppressedByAllowlist = 0;
 
 for (const file of files) {
@@ -189,6 +228,27 @@ for (const file of files) {
   }
 }
 
+for (const snapshotFile of snapshotFiles) {
+  const content = fs.readFileSync(snapshotFile, 'utf8');
+  const relFile = path.relative(ROOT, snapshotFile);
+  const meta = parseSnapshotFrontmatter(content);
+  if (!meta.lastReviewed) continue;
+
+  const reviewedDate = new Date(meta.lastReviewed);
+  if (Number.isNaN(reviewedDate.getTime())) continue;
+
+  const reviewIntervalDays = meta.reviewIntervalDays ?? 90;
+  const daysSinceReview = daysBetween(reviewedDate, new Date());
+  if (daysSinceReview > reviewIntervalDays) {
+    overdueSnapshots.push({
+      file: relFile,
+      lastReviewed: meta.lastReviewed,
+      reviewIntervalDays,
+      daysOverdue: daysSinceReview - reviewIntervalDays,
+    });
+  }
+}
+
 const highByLesson = new Map<string, Flag[]>();
 for (const flag of highFlags) {
   const key = `${flag.lesson} (${flag.file})`;
@@ -202,6 +262,7 @@ report += '# Content Freshness Report\n\n';
 report += '## Summary\n';
 report += `- High-confidence flags: ${highFlags.length}\n`;
 report += `- Overdue lessons: ${overdueLessons.length}\n`;
+report += `- Overdue snapshots: ${overdueSnapshots.length}\n`;
 report += `- Medium-confidence flags: ${mediumFlags.length}\n`;
 report += `- Suppressed-by-allowlist: ${suppressedByAllowlist}\n\n`;
 
@@ -210,6 +271,15 @@ if (overdueLessons.length === 0) report += '- None ✅\n\n';
 else {
   for (const o of overdueLessons) {
     report += `- ${o.lesson} (${o.file}): ${o.daysSince} days since review (interval ${o.interval}, lastReviewed ${o.lastReviewed})\n`;
+  }
+  report += '\n';
+}
+
+report += '## Overdue snapshots\n';
+if (overdueSnapshots.length === 0) report += '- None ✅\n\n';
+else {
+  for (const snapshot of overdueSnapshots) {
+    report += `- ${snapshot.file}: lastReviewed ${snapshot.lastReviewed}, reviewIntervalDays ${snapshot.reviewIntervalDays}, daysOverdue ${snapshot.daysOverdue}\n`;
   }
   report += '\n';
 }
@@ -236,6 +306,6 @@ else {
 
 console.log(report);
 
-if (highFlags.length > 0 || overdueLessons.length > 0) {
+if (highFlags.length > 0 || overdueLessons.length > 0 || overdueSnapshots.length > 0) {
   process.exit(1);
 }
