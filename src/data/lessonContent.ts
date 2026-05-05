@@ -4,10 +4,15 @@ interface LessonContent {
   lastReviewed?: string;
   volatility?: 'low' | 'medium' | 'high';
   reviewIntervalDays?: number;
-  content: {
+  content: ({
     type: 'text' | 'tip' | 'example' | 'exercise';
     content: string;
-  }[];
+  } | {
+    type: 'snapshotRef';
+    snapshotId: string;
+    label: string;
+    style: 'callout' | 'inline';
+  })[];
 }
 
 export const lessonContent: Record<string, LessonContent> = {
@@ -104,94 +109,118 @@ Write: "I'm a beginner who wants to build strength at home with no equipment. Cr
     ]
   },
   'lesson-1-3': {
-    lastReviewed: '2026-05-02',
-    volatility: 'high',
-    reviewIntervalDays: 90,
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The 3 Types of AI You Use Every Day',
     duration: '12 min',
     content: [
       {
         type: 'text',
-        content: `# Understanding AI Types
+        content: `# The 3 Types of AI You Use Every Day
 
-Not all AI is the same. Let's break down the three main types you interact with daily.
+Most people use AI in many places but get uneven results because they treat every AI interaction the same way.
 
-Understanding these helps you know when and how to use each one effectively.`
+If you can identify which type of AI is operating, you can ask better, faster questions and get better outcomes with less trial and error.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'Current AI Tool Landscape',
+        style: 'callout'
       },
       {
         type: 'text',
-        content: `## Type 1: Predictive AI
+        content: `## 1) Why AI "types" matter for better outcomes
 
-What it does: Predicts what comes next based on patterns
+A simple mental model: different AI types solve different problems.
 
-Examples:
-- Netflix suggesting what to watch
-- Google finishing your searches
-- Your phone's autocorrect
-- Spotify creating playlists
+When you match your goal to the right type, you reduce frustration and increase quality.
 
-Best for: Recommendations, predictions, personalization
-
-How to use it: Give it feedback (thumbs up/down, clicks, preferences) so it learns what you like`
+Use this lens any time results feel off: are you asking a ranking system to create, or a creative system to rank?`
       },
       {
         type: 'text',
-        content: `## Type 2: Conversational AI
+        content: `## 2) Predictive AI: pattern recognition and ranking
 
-What it does: Understands and responds to natural language
+Predictive AI estimates what is most likely or most useful based on past behavior and large pattern sets.
 
-Examples:
-- ChatGPT, Claude, and other chatbots
-- Siri, Alexa, Google Assistant
-- Customer service chatbots
-- AI writing assistants
+Best use cases include recommendations, prioritization, ranking, filtering, and next-best-action suggestions.
 
-Best for: Questions, brainstorming, writing help, learning
-
-How to use it: Be conversational. Ask follow-up questions. Treat it like talking to a knowledgeable colleague.`
+To improve predictive systems, provide consistent feedback signals over time so rankings adjust to your real preferences.`
       },
       {
         type: 'text',
-        content: `## Type 3: Generative AI
+        content: `## 3) Conversational AI: intent understanding and iterative dialogue
 
-What it does: Creates new content from your descriptions
+Conversational AI is strongest when you need to explore, clarify, or refine ideas through back-and-forth interaction.
 
-Examples:
-- DALL-E, Midjourney (images)
-- AI video generators
-- AI music creators
-- Code generators
-
-Best for: Creating visuals, designs, prototypes, creative assets
-
-How to use it: Describe what you want in detail. Iterate and refine. Think of it as a creative partner, not a one-shot tool.`
+It works best when you provide context, specify constraints, and iterate with follow-up questions instead of expecting a perfect one-shot response.`
       },
       {
-        type: 'tip',
-        content: `Most modern AI tools combine all three types! ChatGPT can predict what you need, converse with you, AND generate content. Understanding the underlying types helps you use them more effectively.`
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
+      },
+      {
+        type: 'text',
+        content: `## 4) Generative AI: synthesis and creation from constraints
+
+Generative AI creates new outputs such as drafts, images, concepts, code, or structured plans from your instructions.
+
+Higher-quality outputs usually come from tighter constraints: audience, style, format, length, and examples.
+
+Treat generation as an iterative process: generate, critique, refine, and repeat.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
+      },
+      {
+        type: 'text',
+        content: `## 5) Hybrid systems: when one product spans all three types
+
+Many modern AI products blend predictive, conversational, and generative behavior in one experience.
+
+A single workflow might rank options first, then discuss tradeoffs with you, then generate a final asset.
+
+Knowing the underlying mode at each step helps you ask for the right thing at the right moment.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
       },
       {
         type: 'example',
-        content: `Real-World Combo Example:
+        content: `Hybrid workflow pattern:
 
-You ask ChatGPT (Conversational): "Help me plan a dinner party"
+1. Predictive layer narrows likely choices
+2. Conversational layer helps you compare and decide
+3. Generative layer produces the final draft or artifact
 
-It predicts (Predictive): What information you'll need next (guests, dietary needs, budget)
-
-Then generates (Generative): A shopping list, recipes, timeline, and even a menu design
-
-All three types working together to help you accomplish your goal.`
+This sequence is often faster and more reliable than jumping straight to generation.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
       },
       {
         type: 'exercise',
-        content: `Your Turn: Type Detective
+        content: `## 6) Mini exercise: classify your last 5 AI interactions
 
-Think about the AI tools you've used this week. For each one, identify:
-1. Is it Predictive, Conversational, Generative, or a combination?
-2. What task were you trying to accomplish?
-3. Did you use it effectively, or could you have gotten better results?
+List the last five times you used AI this week. For each one:
+1. Label it predictive, conversational, generative, or hybrid
+2. Note your goal
+3. Decide whether a different mode would have produced a better result
 
-This awareness helps you choose the right AI tool for each task.`
+This habit builds fast intuition for choosing the right AI approach.`
       }
     ]
   },
