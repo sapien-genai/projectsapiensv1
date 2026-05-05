@@ -37,6 +37,7 @@ import {
 import PromptPracticeChat from './PromptPracticeChat';
 import FullscreenLabOverlay from './FullscreenLabOverlay';
 import VerificationChecklist from './VerificationChecklist';
+import { useSnapshotMeta } from '../utils/snapshots';
 
 interface LessonViewerProps {
   pathId: string;
@@ -46,6 +47,7 @@ interface LessonViewerProps {
   onComplete?: () => void;
   onPromptsClick?: () => void;
   onCommandCenterClick?: () => void;
+  onSnapshotOpen?: (snapshotId: string) => void;
 }
 
 const fallbackLesson = {
@@ -61,7 +63,35 @@ We're working on creating amazing content for this lesson. Check back soon!`
   ]
 };
 
-export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onComplete, onPromptsClick, onCommandCenterClick }: LessonViewerProps) {
+function SnapshotCallout({ snapshotId, label, onOpen }: { snapshotId: string; label: string; onOpen?: (snapshotId: string) => void }) {
+  const { lastReviewed, reviewIntervalDays } = useSnapshotMeta(snapshotId);
+
+  return (
+    <div className="bg-[#F7FAFF] p-5 border border-black shadow-[2px_2px_0px_#000000]">
+      <div className="flex gap-3">
+        <Info className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+        <div>
+          <a
+            href={`/snapshots/${snapshotId}`}
+            onClick={(e) => {
+              if (!onOpen) return;
+              e.preventDefault();
+              onOpen(snapshotId);
+            }}
+            className="font-extrabold uppercase tracking-tight text-[#0A74FF] hover:underline"
+          >
+            {label} →
+          </a>
+          <p className="text-xs text-[#57524D] mt-1">
+            Last reviewed {lastReviewed || 'Unknown'} · review every {reviewIntervalDays ?? '?'} days
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onComplete, onPromptsClick, onCommandCenterClick, onSnapshotOpen }: LessonViewerProps) {
   const { user } = useAuth();
   const [completing, setCompleting] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -307,20 +337,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
               if (block.type === 'snapshotRef') {
                 if (block.style === 'callout') {
                   return (
-                    <div key={index} className="bg-[#F7FAFF] p-5 border border-black shadow-[2px_2px_0px_#000000]">
-                      <div className="flex gap-3">
-                        <Info className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
-                        <div>
-                          <a
-                            href={`/snapshots/${block.snapshotId}`}
-                            className="font-extrabold uppercase tracking-tight text-[#0A74FF] hover:underline"
-                          >
-                            {block.label} →
-                          </a>
-                          <p className="text-xs text-[#57524D] mt-1">Last reviewed 2026-05-03 · review every 90 days</p>
-                        </div>
-                      </div>
-                    </div>
+                    <SnapshotCallout key={index} snapshotId={block.snapshotId} label={block.label} onOpen={onSnapshotOpen} />
                   );
                 }
 
