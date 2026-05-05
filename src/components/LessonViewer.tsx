@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Lightbulb, Zap, Save, ExternalLink, Copy, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Lightbulb, Zap, Save, ExternalLink, Copy, Check, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -302,6 +302,39 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                       </div>
                     </div>
                   </div>
+                );
+              }
+              if (block.type === 'snapshotRef') {
+                if (block.style === 'callout') {
+                  return (
+                    <div key={index} className="bg-[#F7FAFF] p-5 border border-black shadow-[2px_2px_0px_#000000]">
+                      <div className="flex gap-3">
+                        <Info className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                        <div>
+                          <a
+                            href={`/snapshots/${block.snapshotId}`}
+                            className="font-extrabold uppercase tracking-tight text-[#0A74FF] hover:underline"
+                          >
+                            {block.label} →
+                          </a>
+                          <p className="text-xs text-[#57524D] mt-1">Last reviewed 2026-05-03 · review every 90 days</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <p key={index} className="text-sm italic text-[#6B7280] -mt-2">
+                    (
+                    <a
+                      href={`/snapshots/${block.snapshotId}`}
+                      className="hover:text-[#374151] hover:underline transition-colors"
+                    >
+                      {block.label} →
+                    </a>
+                    )
+                  </p>
                 );
               }
 

@@ -38,6 +38,7 @@ import PaymentSuccessPage from './components/PaymentSuccessPage';
 import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 import DevPreviewRouter from './dev/DevPreviewRouter';
+import SnapshotPage from './pages/SnapshotPage';
 
 type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel';
 
@@ -50,6 +51,10 @@ function AppContent() {
   const [selectedModule, setSelectedModule] = useState<string>('');
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+  const snapshotMatch = window.location.pathname.match(/^\/snapshots\/([^/]+)$/);
+  if (snapshotMatch) {
+    return <SnapshotPage snapshotId={snapshotMatch[1]} />;
+  }
 
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
