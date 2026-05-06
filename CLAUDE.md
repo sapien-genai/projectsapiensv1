@@ -38,7 +38,7 @@ Five Supabase Edge Functions (Deno/TypeScript, in `/supabase/functions/`):
 - `create-checkout-session` / `create-portal-session` / `stripe-webhook` — Stripe billing
 - `get-usage-status` — Returns remaining quota per plan tier
 
-Edge Functions authenticate callers by validating the Supabase JWT from the `Authorization: Bearer` header.
+Most Edge Functions authenticate callers by validating the Supabase JWT from the `Authorization: Bearer` header. The exception is `stripe-webhook`, which verifies the `Stripe-Signature` header cryptographically — do not add JWT auth to that function.
 
 ### Database
 
