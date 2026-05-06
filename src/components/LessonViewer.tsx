@@ -347,6 +347,11 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                     <a
                       href={`/snapshots/${block.snapshotId}`}
                       className="hover:text-[#374151] hover:underline transition-colors"
+                      onClick={(e) => {
+                        if (!onSnapshotOpen) return;
+                        e.preventDefault();
+                        onSnapshotOpen(block.snapshotId);
+                      }}
                     >
                       {block.label} →
                     </a>
