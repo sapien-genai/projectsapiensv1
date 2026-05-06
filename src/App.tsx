@@ -38,8 +38,9 @@ import PaymentSuccessPage from './components/PaymentSuccessPage';
 import BillingCancelPage from './components/BillingCancelPage';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 import DevPreviewRouter from './dev/DevPreviewRouter';
+import SnapshotPage from './pages/SnapshotPage';
 
-type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel';
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel' | 'snapshot';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -50,6 +51,19 @@ function AppContent() {
   const [selectedModule, setSelectedModule] = useState<string>('');
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<string>('');
+  const [previousView, setPreviousView] = useState<View>('home');
+  const [previousPathname, setPreviousPathname] = useState<string>('/');
+
+  useEffect(() => {
+    const snapshotMatch = window.location.pathname.match(/^\/snapshots\/([^/]+)$/);
+    if (snapshotMatch) {
+      setSelectedSnapshot(snapshotMatch[1]);
+      setPreviousView(user ? 'dashboard' : 'home');
+      setPreviousPathname(user ? '/' : '/');
+      setView('snapshot');
+    }
+  }, [user]);
 
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
@@ -102,6 +116,18 @@ function AppContent() {
     );
   }
 
+  if (view === 'snapshot') {
+    return (
+      <SnapshotPage
+        snapshotId={selectedSnapshot}
+        onBack={() => {
+          setView(previousView);
+          window.history.replaceState({}, '', previousPathname);
+        }}
+      />
+    );
+  }
+
   if (user) {
     if (view === 'lesson') {
       return (
@@ -116,6 +142,13 @@ function AppContent() {
           }}
           onPromptsClick={() => setView('prompts')}
           onCommandCenterClick={() => setView('command-center')}
+          onSnapshotOpen={(snapshotId) => {
+            setPreviousView('lesson');
+            setPreviousPathname(window.location.pathname);
+            setSelectedSnapshot(snapshotId);
+            setView('snapshot');
+            window.history.pushState({}, '', `/snapshots/${snapshotId}`);
+          }}
         />
       );
     }

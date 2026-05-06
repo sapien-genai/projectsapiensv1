@@ -1,14 +1,25 @@
 interface LessonContent {
   title: string;
   duration: string;
-  content: {
+  lastReviewed?: string;
+  volatility?: 'low' | 'medium' | 'high';
+  reviewIntervalDays?: number;
+  content: ({
     type: 'text' | 'tip' | 'example' | 'exercise';
     content: string;
-  }[];
+  } | {
+    type: 'snapshotRef';
+    snapshotId: string;
+    label: string;
+    style: 'callout' | 'inline';
+  })[];
 }
 
 export const lessonContent: Record<string, LessonContent> = {
   'lesson-1-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'What AI Actually Is (No Jargon)',
     duration: '10 min',
     content: [
@@ -51,6 +62,9 @@ You're already using AI every day without realizing it:
     ]
   },
   'lesson-1-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Your First Prompt: Talk to AI Like a Human',
     duration: '15 min',
     content: [
@@ -95,95 +109,125 @@ Write: "I'm a beginner who wants to build strength at home with no equipment. Cr
     ]
   },
   'lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The 3 Types of AI You Use Every Day',
     duration: '12 min',
     content: [
       {
         type: 'text',
-        content: `# Understanding AI Types
+        content: `# The 3 Types of AI You Use Every Day
 
-Not all AI is the same. Let's break down the three main types you interact with daily.
+Most people use AI in many places but get uneven results because they treat every AI interaction the same way.
 
-Understanding these helps you know when and how to use each one effectively.`
+If you can identify which type of AI is operating, you can ask better, faster questions and get better outcomes with less trial and error.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'Current AI Tool Landscape',
+        style: 'callout'
       },
       {
         type: 'text',
-        content: `## Type 1: Predictive AI
+        content: `## 1) Why AI "types" matter for better outcomes
 
-What it does: Predicts what comes next based on patterns
+A simple mental model: different AI types solve different problems.
 
-Examples:
-- Netflix suggesting what to watch
-- Google finishing your searches
-- Your phone's autocorrect
-- Spotify creating playlists
+When you match your goal to the right type, you reduce frustration and increase quality.
 
-Best for: Recommendations, predictions, personalization
-
-How to use it: Give it feedback (thumbs up/down, clicks, preferences) so it learns what you like`
+Use this lens any time results feel off: are you asking a ranking system to create, or a creative system to rank?`
       },
       {
         type: 'text',
-        content: `## Type 2: Conversational AI
+        content: `## 2) Predictive AI: pattern recognition and ranking
 
-What it does: Understands and responds to natural language
+Predictive AI estimates what is most likely or most useful based on past behavior and large pattern sets.
 
-Examples:
-- ChatGPT, Claude, and other chatbots
-- Siri, Alexa, Google Assistant
-- Customer service chatbots
-- AI writing assistants
+Best use cases include recommendations, prioritization, ranking, filtering, and next-best-action suggestions.
 
-Best for: Questions, brainstorming, writing help, learning
-
-How to use it: Be conversational. Ask follow-up questions. Treat it like talking to a knowledgeable colleague.`
+To improve predictive systems, provide consistent feedback signals over time so rankings adjust to your real preferences.`
       },
       {
         type: 'text',
-        content: `## Type 3: Generative AI
+        content: `## 3) Conversational AI: intent understanding and iterative dialogue
 
-What it does: Creates new content from your descriptions
+Conversational AI is strongest when you need to explore, clarify, or refine ideas through back-and-forth interaction.
 
-Examples:
-- DALL-E, Midjourney (images)
-- AI video generators
-- AI music creators
-- Code generators
-
-Best for: Creating visuals, designs, prototypes, creative assets
-
-How to use it: Describe what you want in detail. Iterate and refine. Think of it as a creative partner, not a one-shot tool.`
+It works best when you provide context, specify constraints, and iterate with follow-up questions instead of expecting a perfect one-shot response.`
       },
       {
-        type: 'tip',
-        content: `Most modern AI tools combine all three types! ChatGPT can predict what you need, converse with you, AND generate content. Understanding the underlying types helps you use them more effectively.`
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
+      },
+      {
+        type: 'text',
+        content: `## 4) Generative AI: synthesis and creation from constraints
+
+Generative AI creates new outputs such as drafts, images, concepts, code, or structured plans from your instructions.
+
+Higher-quality outputs usually come from tighter constraints: audience, style, format, length, and examples.
+
+Treat generation as an iterative process: generate, critique, refine, and repeat.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
+      },
+      {
+        type: 'text',
+        content: `## 5) Hybrid systems: when one product spans all three types
+
+Many modern AI products blend predictive, conversational, and generative behavior in one experience.
+
+A single workflow might rank options first, then discuss tradeoffs with you, then generate a final asset.
+
+Knowing the underlying mode at each step helps you ask for the right thing at the right moment.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
       },
       {
         type: 'example',
-        content: `Real-World Combo Example:
+        content: `Hybrid workflow pattern:
 
-You ask ChatGPT (Conversational): "Help me plan a dinner party"
+1. Predictive layer narrows likely choices
+2. Conversational layer helps you compare and decide
+3. Generative layer produces the final draft or artifact
 
-It predicts (Predictive): What information you'll need next (guests, dietary needs, budget)
-
-Then generates (Generative): A shopping list, recipes, timeline, and even a menu design
-
-All three types working together to help you accomplish your goal.`
+This sequence is often faster and more reliable than jumping straight to generation.`
+      },
+      {
+        type: 'snapshotRef',
+        snapshotId: 'everyday-ai-types-landscape',
+        label: 'see current tools',
+        style: 'inline'
       },
       {
         type: 'exercise',
-        content: `Your Turn: Type Detective
+        content: `## 6) Mini exercise: classify your last 5 AI interactions
 
-Think about the AI tools you've used this week. For each one, identify:
-1. Is it Predictive, Conversational, Generative, or a combination?
-2. What task were you trying to accomplish?
-3. Did you use it effectively, or could you have gotten better results?
+List the last five times you used AI this week. For each one:
+1. Label it predictive, conversational, generative, or hybrid
+2. Note your goal
+3. Decide whether a different mode would have produced a better result
 
-This awareness helps you choose the right AI tool for each task.`
+This habit builds fast intuition for choosing the right AI approach.`
       }
     ]
   },
   'lesson-1-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Write 5 Different Prompts',
     duration: '20 min',
     content: [
@@ -333,6 +377,9 @@ Take what you've learned and experiment. The more you use AI, the more natural i
     ]
   },
   'lesson-2-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Meal Planning with AI',
     duration: '15 min',
     content: [
@@ -422,6 +469,9 @@ Add requirements like "high protein, under 500 calories" or "balanced macros for
     ]
   },
   'lesson-2-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Travel Itinerary Generator',
     duration: '18 min',
     content: [
@@ -515,6 +565,9 @@ Notice how quickly you go from "blank slate" to "detailed plan."`
     ]
   },
   'lesson-2-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Daily Schedule Optimizer',
     duration: '20 min',
     content: [
@@ -628,6 +681,9 @@ AFTER (AI-Optimized):
     ]
   },
   'lesson-2-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Decision-Making Framework',
     duration: '25 min',
     content: [
@@ -759,6 +815,9 @@ Use decision frameworks for important choices. Automate or randomize trivial one
     ]
   },
   'lesson-2-5': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Plan Your Week',
     duration: '30 min',
     content: [
@@ -911,6 +970,9 @@ Keep your weekly planning template. This becomes the foundation for everything e
     ]
   },
   'lesson-3-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Create Your Personal Learning Path',
     duration: '20 min',
     content: [
@@ -1023,6 +1085,9 @@ Tip: Don't choose something too ambitious. Start with a 30-day path you can actu
     ]
   },
   'lesson-3-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI as Your Study Partner',
     duration: '18 min',
     content: [
@@ -1148,6 +1213,9 @@ Result: I understood JOINs in 20 minutes instead of hours of reading.`
     ]
   },
   'lesson-3-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Skill Gap Analysis',
     duration: '22 min',
     content: [
@@ -1322,6 +1390,9 @@ ACTION: Start with user research this week`
     ]
   },
   'lesson-3-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build a Study Plan',
     duration: '30 min',
     content: [
@@ -1519,6 +1590,9 @@ Your study plan is now your most valuable asset. Follow it, adjust as needed, an
     ]
   },
   'creator-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI Won\'t Replace You. Here\'s Why.',
     duration: '12 min',
     content: [
@@ -1569,6 +1643,9 @@ AI can accelerate 1 and 2, giving you more time for 3 — where your unique tast
     ]
   },
   'creator-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Finding Your Creative Voice with AI',
     duration: '15 min',
     content: [
@@ -1610,6 +1687,9 @@ The key: The clearer you are about your creative identity, the better AI can hel
     ]
   },
   'creator-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'The 5 Creative AI Tools Every Creator Needs',
     duration: '18 min',
     content: [
@@ -1908,6 +1988,9 @@ Your creative vision is what matters. These tools amplify your ideas — they do
     ]
   },
   'creator-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Create Your First AI-Assisted Piece',
     duration: '25 min',
     content: [
@@ -2410,6 +2493,9 @@ Let's go build something amazing. 🚀`
     ]
   },
   'creator-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The Content Brief: Teaching AI Your Style',
     duration: '20 min',
     content: [
@@ -2467,6 +2553,9 @@ Use the template above. Then ask AI to generate each piece. Compare results.`
     ]
   },
   'creator-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Blog Posts That Convert',
     duration: '25 min',
     content: [
@@ -2629,7 +2718,7 @@ Look at your calendar for this week. Find THREE blocks you can delete. Then prot
 10. THE CURATED LIST
 "X Best [Resources/Tools] for [Audience/Goal]"
 - Practical, bookmark-worthy, evergreen
-- Example: "15 Best AI Tools for Content Creators (2024 Edition)"`
+- Example: "15 Best AI Tools for Content Creators (current edition)"`
       },
       {
         type: 'text',
@@ -2807,6 +2896,9 @@ CONCLUSION: Can you replicate this? Yes. Here's how: [Simplified version they ca
     ]
   },
   'creator-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Social Media Content Factory',
     duration: '22 min',
     content: [
@@ -3158,6 +3250,9 @@ Instead of random posts, create 5-7 post series:
     ]
   },
   'creator-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Video Scripts & Storyboards',
     duration: '28 min',
     content: [
@@ -3571,6 +3666,9 @@ For series or multi-part content:
     ]
   },
   'creator-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: 30 Days of Content in 30 Minutes',
     duration: '35 min',
     content: [
@@ -3991,6 +4089,9 @@ You now have that system. Use it.`
     ]
   },
   'creator-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Prompt Engineering for Visual Art',
     duration: '25 min',
     content: [
@@ -4327,6 +4428,9 @@ GENERAL TIPS:
     ]
   },
   'creator-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Creating Consistent Brand Assets',
     duration: '30 min',
     content: [
@@ -4690,6 +4794,9 @@ Generate 10 different assets. Display them for 10 seconds. Can someone immediate
     ]
   },
   'creator-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Concept Art & Mood Boards',
     duration: '28 min',
     content: [
@@ -5076,6 +5183,9 @@ Never start final production without concept exploration. Always diverge before 
     ]
   },
   'creator-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Combining AI Art with Traditional Tools',
     duration: '32 min',
     content: [
@@ -5530,6 +5640,9 @@ The difference between amateur and professional is in the finishing. AI gets you
     ]
   },
   'creator-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build a Visual Identity',
     duration: '40 min',
     content: [
@@ -6074,6 +6187,9 @@ THIS IS THE FUTURE OF CREATIVE WORK. AND YOU JUST BUILT IT.`
     ]
   },
   'creator-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The Creative Workflow Stack',
     duration: '30 min',
     content: [
@@ -6367,6 +6483,9 @@ One complete, tested, documented workflow for your chosen project type.`
     ]
   },
   'creator-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Idea Generation to Final Product',
     duration: '35 min',
     content: [
@@ -6408,6 +6527,9 @@ Let's build this workflow together.`
     ]
   },
   'creator-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Quality Control & Human Touch',
     duration: '25 min',
     content: [
@@ -6474,6 +6596,9 @@ IF IT FAILS ANY: Fix it before publishing.`
     ]
   },
   'creator-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Signature Workflow',
     duration: '45 min',
     content: [
@@ -6610,6 +6735,9 @@ Run this workflow 3 more times over the next 2 weeks. After execution #3, do fin
     ]
   },
   'creator-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Choosing Your Project',
     duration: '20 min',
     content: [
@@ -7030,6 +7158,9 @@ Next lesson: Production Week begins!`
     ]
   },
   'creator-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Production Week: Build It',
     duration: '90 min',
     content: [
@@ -7455,6 +7586,9 @@ Next lesson: Polish & Perfect`
     ]
   },
   'creator-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Polish & Perfect',
     duration: '45 min',
     content: [
@@ -7817,6 +7951,9 @@ Time to share it with the world.`
     ]
   },
   'creator-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Launch Strategy & Community Feedback',
     duration: '30 min',
     content: [
@@ -8342,6 +8479,9 @@ NOW GO CREATE SOMETHING AMAZING.`
     ]
   },
   'business-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Where AI Actually Saves You Money',
     duration: '15 min',
     content: [
@@ -8472,8 +8612,8 @@ TOTAL TIME SAVED: 13.3 hours per week
 ANNUAL SAVINGS: 13.3 × $50 × 50 = $33,250
 
 AI TOOL COSTS:
-- ChatGPT Plus: $20/month = $240/year
-- Canva Pro: $13/month = $156/year
+- ChatGPT Plus (paid tier)
+- Canva Pro:  (paid plan required)
 - Basic chatbot: Free
 TOTAL COST: $396/year
 
@@ -8588,18 +8728,18 @@ FREE TIER (Start here):
 - Canva free version
 - Google AI tools (Gmail, Docs)
 - Many chatbot platforms
-COST: $0/month
+COST: Free
 
 BASIC TIER (Most small businesses):
-- ChatGPT Plus: $20/month
-- Canva Pro: $13/month
+- ChatGPT Plus (paid tier)
+- Canva Pro:  (paid plan required)
 - Basic automation: $20/month
 - Customer support AI: $20/month
 COST: $73/month = $876/year
 
 GROWTH TIER (Scaling businesses):
-- Advanced AI tools: $50/month
-- More automation: $50/month
+- Advanced AI tools: paid plan required
+- More automation: paid plan required
 - Team collaboration: $30/month
 COST: $130/month = $1,560/year
 
@@ -8709,6 +8849,9 @@ You now know exactly where AI will save you money. Time to make it happen.`
     ]
   },
   'business-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'The Small Business AI Stack',
     duration: '18 min',
     content: [
@@ -8782,6 +8925,9 @@ We'll build this stack step-by-step in future modules.`
     ]
   },
   'business-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'ROI Calculator: Measure AI Impact',
     duration: '20 min',
     content: [
@@ -8817,7 +8963,7 @@ COST includes:
       },
       {
         type: 'tip',
-        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs $50/month but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a $50 cost = 900% ROI.`
+        content: `The biggest ROI mistake: Only counting software costs. Your time is the most expensive input. If a tool costs paid plan required but saves you 10 hours, and your time is worth $50/hour, that's a $500 monthly value for a $50 cost = 900% ROI.`
       },
       {
         type: 'text',
@@ -8879,7 +9025,7 @@ Use this to evaluate any AI investment:
 
 HIGH ROI (Do It Now):
 - Saves 5+ hours/week
-- Costs under $50/month
+- Costs under paid plan required
 - Easy to implement
 - Solves a daily problem
 
@@ -8924,6 +9070,9 @@ Choose your highest ROI opportunity first.`
     ]
   },
   'business-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Audit Your Business Processes',
     duration: '30 min',
     content: [
@@ -9150,6 +9299,9 @@ This becomes your AI transformation roadmap for the next 90 days.`
     ]
   },
   'business-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI-Powered Customer Support',
     duration: '25 min',
     content: [
@@ -9213,6 +9365,9 @@ Next lesson: We'll turn this into an automated chatbot.`
     ]
   },
   'business-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Sales Email Sequences That Convert',
     duration: '30 min',
     content: [
@@ -9285,6 +9440,9 @@ In the next module, we'll automate delivery.`
     ]
   },
   'business-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Chatbots & FAQ Automation',
     duration: '28 min',
     content: [
@@ -9379,19 +9537,19 @@ Each answer is complete, actionable, and guides to next step.`
 FOR WEBSITES:
 
 Tidio (Recommended for beginners)
-- Price: Free up to 50 conversations/month, $19-$394/month
+- Price: Free tier available; paid plans available
 - Best for: E-commerce, service businesses
 - Setup time: 30 minutes
 - AI capability: Visual flow builder + smart responses
 
 Intercom
-- Price: Starting at $74/month
+- Price: Free tier available; paid plans available
 - Best for: SaaS, tech products
 - Setup time: 2-3 hours
 - AI capability: Advanced AI with customization
 
 Drift
-- Price: Starting at $2,500/month
+- Price: Free tier available; paid plans available
 - Best for: B2B sales teams
 - Setup time: 1 week
 - AI capability: Conversational marketing focus
@@ -9399,14 +9557,14 @@ Drift
 FOR SOCIAL MEDIA:
 
 ManyChat (Facebook/Instagram)
-- Price: Free up to 1,000 contacts, $15/month+
+- Price: Free tier available; paid plans available
 - Best for: E-commerce, coaches, local businesses
 - Setup time: 1-2 hours
 
 FOR MULTI-CHANNEL:
 
 Zapier Chatbots (connects everything)
-- Price: Included with Zapier plan ($20-50/month)
+- Price: Included with Zapier plan (free tier available; paid plan required for advanced usage)
 - Best for: Businesses using multiple platforms
 - Setup time: 2-4 hours`
       },
@@ -9561,6 +9719,9 @@ A document ready to copy into your chosen chatbot tool. This preparation work wi
     ]
   },
   'business-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Personalization at Scale',
     duration: '25 min',
     content: [
@@ -9735,17 +9896,17 @@ ROI: 275% increase in email revenue`
 EMAIL PERSONALIZATION:
 
 Mailchimp (with AI)
-- Price: Free-$350/month
+- Price: Free tier available; paid plans available
 - AI features: Send time optimization, subject line helper, content suggestions
 - Best for: Beginners, small lists
 
 ActiveCampaign
-- Price: $29-$149/month
+- Price: Free tier available; paid plans available
 - AI features: Predictive sending, content, win probability scoring
 - Best for: Growing businesses with automation needs
 
 HubSpot (with AI)
-- Price: $45-$3,600/month
+- Price: Free tier available; paid plans available
 - AI features: Full predictive lead scoring, content generation, chatbot
 - Best for: B2B or businesses wanting all-in-one CRM
 
@@ -9757,14 +9918,14 @@ Shopify AI (built-in)
 - Best for: E-commerce on Shopify
 
 Nosto
-- Price: Custom pricing ($500+/month typically)
+- Price: Free tier available; paid plans available
 - AI features: Advanced personalization engine
 - Best for: Larger e-commerce sites
 
 WEBSITE PERSONALIZATION:
 
 OptiMonk
-- Price: Free-$249/month
+- Price: Free tier available; paid plans available
 - AI features: Smart popups, personalized offers based on behavior
 - Best for: Conversion optimization
 
@@ -9884,6 +10045,9 @@ A personalization roadmap: Start with one segment, one channel, one week. Once w
     ]
   },
   'business-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your First Support Bot',
     duration: '45 min',
     content: [
@@ -10308,6 +10472,9 @@ Total ROI: Free tool, 45 min setup + 1 hour refinement = 3 new clients worth $4,
     ]
   },
   'business-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Content Calendar in 30 Minutes',
     duration: '25 min',
     content: [
@@ -10368,6 +10535,9 @@ Save the other 23 for next week's batch session.`
     ]
   },
   'business-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Social Media Post Factory',
     duration: '28 min',
     content: [
@@ -10678,6 +10848,9 @@ Do this same 90-minute session at the start of every month. By month 3, you'll b
     ]
   },
   'business-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Email Marketing with AI',
     duration: '30 min',
     content: [
@@ -10975,22 +11148,22 @@ ROI: Infinite. But more importantly: 223 owned relationships.`
 EMAIL PLATFORMS WITH AI:
 
 Mailchimp
-- Price: Free-$350/month
+- Price: Free tier available; paid plans available
 - AI features: Subject line helper, send time optimization, content suggestions
 - Best for: Beginners, small lists (under 10k)
 
 ConvertKit
-- Price: Free-$66/month
+- Price: Free tier available; paid plans available
 - AI features: Sequence optimization, tag-based automation
 - Best for: Creators, coaches, course sellers
 
 ActiveCampaign
-- Price: $29-$149/month
+- Price: Free tier available; paid plans available
 - AI features: Predictive sending, content generation, win probability
 - Best for: E-commerce, growing businesses
 
 Klaviyo
-- Price: Free-$700/month (scales with list)
+- Price: Free tier available; paid plans available
 - AI features: Product recommendations, predictive analytics
 - Best for: E-commerce exclusively
 
@@ -11102,6 +11275,9 @@ Share your signup link in the Network tab and collect your first subscribers fro
     ]
   },
   'business-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Ad Copy & Landing Page Optimization',
     duration: '32 min',
     content: [
@@ -11603,6 +11779,9 @@ Share your before/after conversion rates in the Network tab!`
     ]
   },
   'business-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: 90-Day Marketing Plan',
     duration: '45 min',
     content: [
@@ -12195,6 +12374,9 @@ Share your completed plan in the Network tab and find accountability partners!`
     ]
   },
   'business-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Automating Repetitive Tasks',
     duration: '30 min',
     content: [
@@ -12269,6 +12451,9 @@ We'll build these automations in the next lessons.`
     ]
   },
   'business-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Financial Forecasting & Budgeting',
     duration: '35 min',
     content: [
@@ -12879,6 +13064,9 @@ Share your biggest financial insight in the Network tab!`
     ]
   },
   'business-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Inventory & Supply Chain Optimization',
     duration: '30 min',
     content: [
@@ -13490,6 +13678,9 @@ Share your biggest inventory optimization win in the Network tab!`
     ]
   },
   'business-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Data Analysis for Business Decisions',
     duration: '35 min',
     content: [
@@ -13845,7 +14036,7 @@ What you get:
 - Improvement opportunities
 
 Example insight:
-"Customers acquired in Q4 2024 spend 40% more than Q2 2024 customers. Reason: Q4 customers entered through partnership channel vs Q2 paid ads. Shift acquisition focus to partnerships."
+"Customers acquired in {{CURRENT_QUARTER}} spend more than customers from earlier quarters. Reason: channel mix differences. Shift acquisition focus to the strongest-performing channels."
 
 TECHNIQUE 2: SEGMENTATION ANALYSIS
 
@@ -14177,6 +14368,9 @@ Share your biggest data insight in the Network tab!`
     ]
   },
   'business-lesson-4-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Dashboard',
     duration: '45 min',
     content: [
@@ -14260,8 +14454,8 @@ Create a simple list:
 Month | Total Revenue | Source 1 | Source 2 | Source 3
 
 Example:
-- Jan 2024 | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
-- Feb 2024 | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
+- this month | $12,400 | Product A: $8,200 | Product B: $3,400 | Services: $800
+- Feb | $14,200 | Product A: $9,100 | Product B: $4,300 | Services: $800
 - (continue for all months)
 
 Where to find it:
@@ -14286,7 +14480,7 @@ Common categories:
 - Admin/misc
 
 Example:
-- Jan 2024 | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
+- this month | $4,200 | COGS: $1,800 | Marketing: $1,200 | Software: $800 | Labor: $400
 
 STEP 4: COLLECT CUSTOMER DATA (if applicable)
 
@@ -14830,6 +15024,9 @@ Next module: Productivity. Time to multiply your personal effectiveness.`
     ]
   },
   'business-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Mapping Your AI Ops Stack',
     duration: '30 min',
     content: [
@@ -14899,22 +15096,22 @@ Your primary AI interface—where you interact most.
 
 Options:
 
-ChatGPT (GPT-4)
+ChatGPT (paid plan available)
 - Best for: General business tasks, content, analysis
 - Pros: Most capable, broad knowledge, good UI
-- Cons: $20/month, no built-in integrations
-- Use when: You need smartest responses, complex reasoning
+- Cons: Paid plan required, no built-in integrations
+- Use when: You need high-quality responses, complex reasoning
 
 Claude (Anthropic)
 - Best for: Long documents, detailed analysis, creative work
-- Pros: 200K context window, excellent at following instructions
+- Pros: Strong long-form handling for many workflows
 - Cons: Sometimes slower, stricter safety filters
 - Use when: Analyzing large documents, nuanced writing
 
 Gemini (Google)
 - Best for: Real-time information, Google Workspace integration
 - Pros: Free tier, connects to Google apps, up-to-date info
-- Cons: Sometimes less capable than GPT-4
+- Cons: Different assistants have different strengths; check current benchmarks before committing to one
 - Use when: Need current info, already in Google ecosystem
 
 Perplexity
@@ -14927,9 +15124,9 @@ Your choice:
 
 Pick ONE as your primary assistant.
 
-Most people: ChatGPT Plus ($20/month)
+Most people: ChatGPT Plus (paid plan required)
 Google users: Gemini (free, then upgrade if needed)
-Researchers: Perplexity Pro ($20/month)
+Researchers: Perplexity Pro (paid tier)
 
 You can use multiple, but one should be your daily driver.
 
@@ -15052,13 +15249,13 @@ The goal: AI produces output where it's needed, not in isolation.`
         content: `Example Stack: Solo Consultant
 
 LAYER 1 - Brain:
-- ChatGPT Plus ($20/month) - main AI assistant
+- ChatGPT Plus (paid plan required) - main AI assistant
 
 LAYER 2 - Muscles:
-- Zapier ($20/month) - automation
+- Zapier (free tier available; paid plan required for advanced usage) - automation
 
 LAYER 3 - Memory:
-- Notion ($0 free tier) - client notes, templates
+- Notion (free tier available) - client notes, templates
 - Google Drive ($0 free tier) - file storage
 
 LAYER 4 - Senses:
@@ -15254,8 +15451,8 @@ SOLO CREATOR/FREELANCER
 Challenges: Limited time, wearing all hats, inconsistent income
 
 Core Stack:
-- AI: ChatGPT Plus ($20)
-- Automation: Zapier free tier → $20
+- AI: ChatGPT Plus (paid plan required)
+- Automation: Zapier (free tier available → paid plan required for higher usage)
 - Memory: Notion free tier
 - + Gmail, Google Calendar, Stripe
 
@@ -15272,9 +15469,9 @@ SMALL BUSINESS (2-10 PEOPLE)
 Challenges: Team coordination, scaling operations, customer management
 
 Core Stack:
-- AI: ChatGPT Team ($30/user) or Google Workspace + Gemini
-- Automation: Zapier ($50) or Make ($30)
-- Memory: Notion ($10/user) or Airtable ($20)
+- AI: ChatGPT Team (paid plan required) or Google Workspace + Gemini
+- Automation: Zapier (free tier available; paid plan required for advanced usage) or Make ($30)
+- Memory: Notion (free tier available) or Airtable ($20)
 - CRM: HubSpot free or Pipedrive ($15/user)
 - + Slack ($8/user), cloud storage
 
@@ -15293,7 +15490,7 @@ Challenges: Inventory, customer service, marketing, fulfillment
 
 Core Stack:
 - AI: ChatGPT Plus + Perplexity (research)
-- Automation: Zapier ($50)
+- Automation: Zapier (free tier available; paid plan required for advanced usage)
 - Memory: Google Sheets + Airtable
 - Platform: Shopify/WooCommerce
 - + Email marketing, customer service tools
@@ -15313,9 +15510,9 @@ SERVICE BUSINESS (AGENCY/CONSULTANCY)
 Challenges: Client management, deliverables, team utilization, reporting
 
 Core Stack:
-- AI: ChatGPT Team ($30/user)
+- AI: ChatGPT Team (paid plan required)
 - Automation: Make ($30-50)
-- Memory: Notion ($10/user)
+- Memory: Notion (free tier available)
 - Project mgmt: Monday.com or Asana
 - CRM: HubSpot or Salesforce
 - + Communication tools
@@ -15639,6 +15836,9 @@ Next up: Measuring ROI & Scaling - Learn to prove the value of your AI investmen
     ]
   },
   'business-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Connecting Tools & Workflows',
     duration: '60 min',
     content: [
@@ -15680,7 +15880,7 @@ You need access to an AI assistant. Choose one:
 
 Option A: ChatGPT (Recommended)
 - Go to chat.openai.com
-- Free tier works, but GPT-4 (ChatGPT Plus $20/month) is better
+- Free tier works, but paid ChatGPT plans can be better for advanced tasks (paid plan required)
 - Sign up or log in
 
 Option B: Claude
@@ -16240,7 +16440,7 @@ Solutions:
 2. Give AI more context
 3. Show AI examples of good output
 4. Iterate on prompts 5-10 times
-5. Use GPT-4 instead of GPT-3.5
+5. Use a higher-capability paid model when needed
 
 PROBLEM: "Automation broke and I don't know why"
 
@@ -16457,7 +16657,7 @@ Steps: 1) Gmail detects email, 2) Creates draft with template, 3) Sends to draft
 Output: Draft email ready for AI personalization
 Frequency: 5-10 times per week
 Time saved: 2.5 hours/week
-Last updated: Jan 15, 2024
+Last updated: this month
 Owner: You
 
 BACKUP PLAN
@@ -16585,6 +16785,9 @@ Congratulations on building your first automated workflows!`
     ]
   },
   'business-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Training Your Team on AI Tools',
     duration: '40 min',
     content: [
@@ -17168,6 +17371,9 @@ Go train your team. They're waiting for someone to show them the way.`
     ]
   },
   'business-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Measuring Success & Iterating',
     duration: '35 min',
     content: [
@@ -17847,7 +18053,7 @@ Keep it to 1 page. Use visuals. Lead with business impact.`
         type: 'example',
         content: `Real Executive Report Example:
 
-AI INITIATIVE: MARCH 2024 UPDATE
+AI INITIATIVE: RECENT UPDATE
 
 SNAPSHOT
 - Active Users: 23/25 (92%)
@@ -17948,6 +18154,9 @@ The businesses that measure and iterate will dominate their industries. Be one o
     ]
   },
   'business-lesson-5-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Final Project: Present Your AI Stack',
     duration: '45 min',
     content: [
@@ -18188,12 +18397,12 @@ This becomes your reference library for training and scaling.`
         content: `Real AI Stack Example: 25-Person Marketing Agency
 
 TOOLS:
-- ChatGPT Team: $500/month (25 users) - Content, emails, strategy
-- Claude Pro: $400/month (20 users) - Long-form content, analysis
-- Midjourney: $200/month (5 users) - Image generation
+- ChatGPT Team (paid tier, ~25 users) - Content, emails, strategy
+- Claude Pro (paid plan required) - Long-form content, analysis
+- Midjourney (paid tier, ~5 users) - Image generation
 - Make.com: $300/month - Automations and integrations
 
-Total: $1,400/month
+Total: paid tier stack (varies by usage)
 
 TOP WORKFLOWS:
 1. Blog posts: 3 hrs → 1.5 hrs (50% faster)
@@ -18485,7 +18694,7 @@ EXECUTIVE SUMMARY:
 
 TOOLS:
 - ChatGPT, Claude, Midjourney, Make.com
-- Total: $1,400/month
+- Total: paid tier stack (varies by usage)
 
 WORKFLOWS:
 - 10 documented workflows across marketing, sales, and ops
@@ -18687,6 +18896,9 @@ Welcome to the future of business.`
     ]
   },
   'productivity-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The AI Productivity Multiplier',
     duration: '12 min',
     content: [
@@ -18758,6 +18970,9 @@ These are your AI multiplication opportunities.`
     ]
   },
   'productivity-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Audit Your Time: Find Your Leaks',
     duration: '15 min',
     content: [
@@ -18822,6 +19037,9 @@ We'll tackle each leak in the coming modules.`
     ]
   },
   'productivity-lesson-1-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The 80/20 of AI Productivity',
     duration: '18 min',
     content: [
@@ -18939,7 +19157,7 @@ Prompt pattern:
 
 Example:
 
-"Research the top 5 project management tools for remote teams in 2024. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
+"Research the top 5 project management tools for remote teams this year. Compare features, pricing, user reviews, and integration capabilities. Synthesize into a comparison table with pros/cons for each. Include 3-5 user review highlights per tool."
 
 Time saved: Research that takes 3 hours manually → 30 minutes with AI
 
@@ -19355,6 +19573,9 @@ Start with the 20% that matters. Results will follow.`
     ]
   },
   'productivity-lesson-1-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Build Your Baseline',
     duration: '25 min',
     content: [
@@ -19510,7 +19731,7 @@ This becomes your reference document - you'll compare against it monthly to meas
         type: 'example',
         content: `Real Baseline Example: Alex (Marketing Manager)
 
-PRODUCTIVITY BASELINE - Alex Chen - Jan 15, 2024
+PRODUCTIVITY BASELINE - Alex Chen - this month
 
 TIME INVESTMENT (40 hr work week tracked)
 - Total work hours tracked: 40 hours
@@ -19774,6 +19995,9 @@ Everything from here builds on this foundation. Make it solid.`
     ]
   },
   'productivity-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'The Smart Task Capture System',
     duration: '20 min',
     content: [
@@ -19844,6 +20068,9 @@ Next lesson: We'll build the planning layer.`
     ]
   },
   'productivity-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI-Powered Project Planning',
     duration: '25 min',
     content: [
@@ -19924,6 +20151,9 @@ Notice how AI helps you see the full scope upfront.`
     ]
   },
   'productivity-lesson-2-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Priority Matrix: What to Do First',
     duration: '22 min',
     content: [
@@ -20721,6 +20951,9 @@ Do the right things, in the right order, the right way. Everything else is distr
     ]
   },
   'productivity-lesson-2-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Weekly Review Automation',
     duration: '20 min',
     content: [
@@ -21303,6 +21536,9 @@ Review your week. Plan your week. Improve your week. Repeat.`
     ]
   },
   'productivity-lesson-2-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Set Up Your Task System',
     duration: '30 min',
     content: [
@@ -22026,6 +22262,9 @@ Capture everything. Organize intentionally. Execute ruthlessly. Review consisten
     ]
   },
   'productivity-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Building a Second Brain with AI',
     duration: '25 min',
     content: [
@@ -22100,6 +22339,9 @@ Then ask AI to summarize and connect themes.`
     ]
   },
   'productivity-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Smart Note-Taking Systems',
     duration: '22 min',
     content: [
@@ -22448,6 +22690,9 @@ Capture deliberately. Connect generously. Synthesize regularly. Retrieve instant
     ]
   },
   'productivity-lesson-3-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'AI-Powered Research & Learning',
     duration: '28 min',
     content: [
@@ -23224,6 +23469,9 @@ Learn faster. Understand deeper. Remember longer. Apply immediately.`
     ]
   },
   'productivity-lesson-3-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Meeting Notes to Action Items',
     duration: '20 min',
     content: [
@@ -24038,6 +24286,9 @@ Capture clearly. Process quickly. Distribute immediately. Follow through relentl
     ]
   },
   'productivity-lesson-3-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Create Your Knowledge Base',
     duration: '35 min',
     content: [
@@ -24740,6 +24991,9 @@ Start using it tomorrow. Process one note. Build the habit. Your future self wil
     ]
   },
   'productivity-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'The Attention Management System',
     duration: '20 min',
     content: [
@@ -25636,6 +25890,9 @@ Your attention is your most valuable resource. Stop giving it away for free.`
     ]
   },
   'productivity-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'AI Email & Message Triage',
     duration: '25 min',
     content: [
@@ -25716,6 +25973,9 @@ Most people save 10-15 hours per week.`
     ]
   },
   'lesson-4-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Writing Better Emails & Messages',
     duration: '15 min',
     content: [
@@ -25828,6 +26088,9 @@ Save the best templates for reuse.`
     ]
   },
   'lesson-4-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Storytelling with AI',
     duration: '20 min',
     content: [
@@ -25936,6 +26199,9 @@ Notice how stories are more engaging than plain facts.`
     ]
   },
   'lesson-4-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'low',
+    reviewIntervalDays: 365,
     title: 'Personal Journaling Assistant',
     duration: '18 min',
     content: [
@@ -26057,6 +26323,9 @@ DECISION CLARITY
     ]
   },
   'lesson-4-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Write Your Story',
     duration: '30 min',
     content: [
@@ -26201,6 +26470,9 @@ Keep the pieces you wrote today. They're the beginning of your personal archive 
     ]
   },
   'productivity-lesson-4-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Deep Work Blocks with AI Support',
     duration: '22 min',
     content: [
@@ -26682,7 +26954,7 @@ MEDIUM:
 □ Get customer quote for case study (want to add to Section 1)
 
 LOW:
-□ Find better market size data (current source is 2021)
+□ Find better market size data (current source is dated)
 □ Decide on charts/graphs to include
 
 NEXT SESSION PREP:
@@ -27437,6 +27709,9 @@ Your most important work deserves your deepest attention. Give it.`
     ]
   },
   'productivity-lesson-4-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Decision Fatigue: Automate Small Choices',
     duration: '18 min',
     content: [
@@ -28659,6 +28934,9 @@ Your decision budget is your most valuable asset. Spend it wisely.`
     ]
   },
   'productivity-lesson-4-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Practice Lab: Your Focus Protocol',
     duration: '30 min',
     content: [
@@ -29768,6 +30046,9 @@ Welcome to the way you'll work for the rest of your career.`
     ]
   },
   'productivity-lesson-5-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Designing Your Command Center',
     duration: '30 min',
     content: [
@@ -29847,6 +30128,9 @@ Next lesson: We'll build it.`
     ]
   },
   'lesson-5-1': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Building Your AI Command Center',
     duration: '30 min',
     content: [
@@ -29964,6 +30248,9 @@ Your Command Center is now live! You'll build out each section through the remai
     ]
   },
   'lesson-5-2': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Integrating Your AI Workflows',
     duration: '25 min',
     content: [
@@ -30107,6 +30394,9 @@ Make it practical and time-efficient."`
     ]
   },
   'lesson-5-3': {
+    lastReviewed: '2026-05-02',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Automation & Smart Routines',
     duration: '20 min',
     content: [
@@ -30306,6 +30596,9 @@ Start with Tier 1. Master it. Then expand.`
     ]
   },
   'lesson-5-4': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Testing & Optimization',
     duration: '25 min',
     content: [
@@ -30499,6 +30792,9 @@ Give me specific implementation steps for each recommendation."`
     ]
   },
   'lesson-5-5': {
+    lastReviewed: '2026-05-02',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Launch Your Command Center',
     duration: '30 min',
     content: [
@@ -30727,6 +31023,9 @@ You're ready. Launch.`
     ]
   },
   'productivity-lesson-5-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'high',
+    reviewIntervalDays: 90,
     title: 'Connecting Your Tools',
     duration: '45 min',
     content: [
@@ -31094,7 +31393,7 @@ BUILD THESE FIVE FIRST. They cover 80% of your integration needs.`
 TOOL 1: ZAPIER
 
 Best for: Non-technical users, common integrations
-Pricing: Free (100 tasks/month), Starter ($20/month), Professional ($49/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - 6,000+ app integrations
@@ -31116,7 +31415,7 @@ Best use cases:
 TOOL 2: MAKE (INTEGROMAT)
 
 Best for: Complex workflows, visual thinkers
-Pricing: Free (1,000 ops/month), Core ($9/month), Pro ($16/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - More powerful than Zapier
@@ -31138,7 +31437,7 @@ Best use cases:
 TOOL 3: N8N
 
 Best for: Technical users, self-hosters
-Pricing: Free (self-hosted), Cloud ($20/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - Open source
@@ -31160,7 +31459,7 @@ Best use cases:
 TOOL 4: PIPEDREAM
 
 Best for: Developers, API-first workflows
-Pricing: Free (generous), Basic ($19/month)
+Pricing: Free tier available; paid plans available for advanced usage
 
 Pros:
 - Write code inline
@@ -32077,6 +32376,9 @@ Integration by integration, you eliminate manual work and build your automated c
     ]
   },
   'productivity-lesson-5-3': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Daily, Weekly, Monthly Routines',
     duration: '35 min',
     content: [
@@ -33304,6 +33606,9 @@ Begin.`
     ]
   },
   'productivity-lesson-5-4': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Optimization & Iteration',
     duration: '25 min',
     content: [
@@ -34484,6 +34789,9 @@ Begin.`
     ]
   },
   'productivity-lesson-5-5': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Final Project: Launch Your System',
     duration: '40 min',
     content: [
@@ -35611,6 +35919,9 @@ Now go build.`
     ]
   },
   'mastery-lesson-1-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Learn Machine English: The AIM Framework',
     duration: '18 min',
     content: [
@@ -35699,6 +36010,9 @@ Mission: Explain blockchain in 3 short paragraphs using real estate analogies. F
     ]
   },
   'mastery-lesson-1-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Pick Your Instrument and Go Deep',
     duration: '15 min',
     content: [
@@ -35719,8 +36033,8 @@ Treat AI like learning a musical instrument: pick one foundational model and go 
 Pick one of these three:
 
 ChatGPT - Most mature, largest ecosystem, best for general use
-Gemini - Best if you're deep in the Google ecosystem
-Claude - Excellent for business, projects, and long-form reasoning
+Gemini - Useful if you're deep in the Google ecosystem
+Claude - Often used for business, projects, and long-form reasoning
 
 Choose based on your needs, not hype.`
       },
@@ -35782,6 +36096,9 @@ Track what works best with your chosen AI tool.`
     ]
   },
   'mastery-lesson-2-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Feed It Context: The MAP Framework',
     duration: '20 min',
     content: [
@@ -35789,7 +36106,7 @@ Track what works best with your chosen AI tool.`
         type: 'text',
         content: `# Context Is Everything
 
-The smartest AI in the world is useless without context.
+The most capable AI is useless without context.
 
 Think of context as the map that grounds the model in reality, helping it navigate its mathematical space to find the most relevant answers.
 
@@ -35879,6 +36196,9 @@ Notice how much richer your request becomes.`
     ]
   },
   'mastery-lesson-2-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Debug Your Thinking: Iterative Prompting',
     duration: '22 min',
     content: [
@@ -35963,6 +36283,9 @@ This meta-awareness is how you level up.`
     ]
   },
   'mastery-lesson-3-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Steer to Experts',
     duration: '20 min',
     content: [
@@ -36049,6 +36372,9 @@ You'll immediately see the difference.`
     ]
   },
   'mastery-lesson-3-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Verify Everything: Critique, Don\'t Consume',
     duration: '25 min',
     content: [
@@ -36148,6 +36474,9 @@ Notice how much more confident you feel in the verified output.`
     ]
   },
   'mastery-lesson-4-1': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Develop Taste: The OCEAN Framework',
     duration: '22 min',
     content: [
@@ -36237,6 +36566,9 @@ Narrative: Structure your answer as: Why this question matters, The hidden probl
     ]
   },
   'mastery-lesson-4-2': {
+    lastReviewed: '2026-05-03',
+    volatility: 'medium',
+    reviewIntervalDays: 180,
     title: 'Training Yourself Through AI',
     duration: '18 min',
     content: [
