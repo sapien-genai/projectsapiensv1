@@ -342,11 +342,11 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 }
 
                 return (
-                  <p key={index} className="text-sm italic text-[#6B7280] -mt-2">
+                  <p key={index} className="text-sm italic text-[#57524D] -mt-2">
                     (
                     <a
                       href={`/snapshots/${block.snapshotId}`}
-                      className="hover:text-[#374151] hover:underline transition-colors"
+                      className="text-[#FF6A00] underline hover:text-[#CC5500] transition-colors"
                       onClick={(e) => {
                         if (!onSnapshotOpen) return;
                         e.preventDefault();
