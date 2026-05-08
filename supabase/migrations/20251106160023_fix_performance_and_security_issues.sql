@@ -415,44 +415,66 @@ CREATE POLICY "Users can record their usage"
   WITH CHECK (user_id = (select auth.uid()));
 
 -- ONBOARDING_RESPONSES policies
-DROP POLICY IF EXISTS "Users can view their own responses" ON public.onboarding_responses;
-CREATE POLICY "Users can view their own responses"
-  ON public.onboarding_responses FOR SELECT
-  TO authenticated
-  USING (user_id = (select auth.uid()));
+-- This table exists in production but is not migration-managed (added directly
+-- via Supabase Studio). The conditional makes this migration safe in environments
+-- where the table does not exist. Production behaviour is unchanged.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'onboarding_responses'
+  ) THEN
+    DROP POLICY IF EXISTS "Users can view their own responses" ON public.onboarding_responses;
+    CREATE POLICY "Users can view their own responses"
+      ON public.onboarding_responses FOR SELECT
+      TO authenticated
+      USING (user_id = (select auth.uid()));
 
-DROP POLICY IF EXISTS "Users can create their own responses" ON public.onboarding_responses;
-CREATE POLICY "Users can create their own responses"
-  ON public.onboarding_responses FOR INSERT
-  TO authenticated
-  WITH CHECK (user_id = (select auth.uid()));
+    DROP POLICY IF EXISTS "Users can create their own responses" ON public.onboarding_responses;
+    CREATE POLICY "Users can create their own responses"
+      ON public.onboarding_responses FOR INSERT
+      TO authenticated
+      WITH CHECK (user_id = (select auth.uid()));
 
-DROP POLICY IF EXISTS "Users can update their own responses" ON public.onboarding_responses;
-CREATE POLICY "Users can update their own responses"
-  ON public.onboarding_responses FOR UPDATE
-  TO authenticated
-  USING (user_id = (select auth.uid()))
-  WITH CHECK (user_id = (select auth.uid()));
+    DROP POLICY IF EXISTS "Users can update their own responses" ON public.onboarding_responses;
+    CREATE POLICY "Users can update their own responses"
+      ON public.onboarding_responses FOR UPDATE
+      TO authenticated
+      USING (user_id = (select auth.uid()))
+      WITH CHECK (user_id = (select auth.uid()));
+  END IF;
+END $$;
 
 -- USER_ONBOARDING_STATUS policies
-DROP POLICY IF EXISTS "Users can view their own status" ON public.user_onboarding_status;
-CREATE POLICY "Users can view their own status"
-  ON public.user_onboarding_status FOR SELECT
-  TO authenticated
-  USING (user_id = (select auth.uid()));
+-- This table exists in production but is not migration-managed (added directly
+-- via Supabase Studio). The conditional makes this migration safe in environments
+-- where the table does not exist. Production behaviour is unchanged.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'user_onboarding_status'
+  ) THEN
+    DROP POLICY IF EXISTS "Users can view their own status" ON public.user_onboarding_status;
+    CREATE POLICY "Users can view their own status"
+      ON public.user_onboarding_status FOR SELECT
+      TO authenticated
+      USING (user_id = (select auth.uid()));
 
-DROP POLICY IF EXISTS "Users can insert their own status" ON public.user_onboarding_status;
-CREATE POLICY "Users can insert their own status"
-  ON public.user_onboarding_status FOR INSERT
-  TO authenticated
-  WITH CHECK (user_id = (select auth.uid()));
+    DROP POLICY IF EXISTS "Users can insert their own status" ON public.user_onboarding_status;
+    CREATE POLICY "Users can insert their own status"
+      ON public.user_onboarding_status FOR INSERT
+      TO authenticated
+      WITH CHECK (user_id = (select auth.uid()));
 
-DROP POLICY IF EXISTS "Users can update their own status" ON public.user_onboarding_status;
-CREATE POLICY "Users can update their own status"
-  ON public.user_onboarding_status FOR UPDATE
-  TO authenticated
-  USING (user_id = (select auth.uid()))
-  WITH CHECK (user_id = (select auth.uid()));
+    DROP POLICY IF EXISTS "Users can update their own status" ON public.user_onboarding_status;
+    CREATE POLICY "Users can update their own status"
+      ON public.user_onboarding_status FOR UPDATE
+      TO authenticated
+      USING (user_id = (select auth.uid()))
+      WITH CHECK (user_id = (select auth.uid()));
+  END IF;
+END $$;
 
 -- ============================================================================
 -- 3. FIX FUNCTION SEARCH PATHS
