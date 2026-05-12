@@ -21,3 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Local environment files
+.env.local
+.env.*.local
+supabase/.env*
