@@ -11,8 +11,8 @@ const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
-const DEFAULT_GEMINI_MODEL = "gemini-1.5-flash";
-const DEFAULT_GEMINI_FALLBACK_MODEL = "gemini-1.5-flash";
+const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
+const DEFAULT_GEMINI_FALLBACK_MODEL = "gemini-2.5-flash";
 
 type LabRunStatus = "pending" | "success" | "error";
 
@@ -171,6 +171,15 @@ async function fetchWithRetry(
   throw lastError || new Error("Request failed");
 }
 
+function tryParseGeminiChunk(data: string): { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } } | null {
+  if (!data || data === "[DONE]") return null;
+  try {
+    return JSON.parse(data) as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
+  } catch {
+    return null;
+  }
+}
+
 function extractTextFromSseData(data: string): string {
   if (!data || data === "[DONE]") {
     return "";
@@ -192,6 +201,7 @@ interface RequestBody {
   labId: string;
   mode?: string;
   conversationHistory?: Array<{ role: string; content: string }>;
+  exerciseId?: string;
 }
 
 const labSystemPrompts: Record<string, string> = {
@@ -261,6 +271,23 @@ CRITICAL FORMATTING RULES:
 - NEVER use hashtags (#) for headers
 - NEVER use markdown formatting in explanatory text
 - Write explanations in plain text only
+- For emphasis, use UPPERCASE letters or quotation marks
+- For section headers, use simple text followed by a colon
+- For lists, use simple dashes or numbers`,
+  "exercise-lab": `You are a helpful AI assistant. A student is practicing how to write effective prompts. Treat their message as a complete, real-world prompt and respond to it directly and helpfully — exactly as you would if you received it outside any learning context.
+
+Do not begin your response with filler phrases like "Sure!", "Great!", "Of course!", or "Here's a response to your prompt:". Start answering immediately.
+
+Do not comment on, evaluate, critique, or restate the student's prompt. Do not acknowledge that this is a practice exercise. Simply respond to the request.
+
+If the prompt is ambiguous, respond to the most reasonable interpretation rather than asking for clarification.
+
+CRITICAL FORMATTING RULES:
+- NEVER use asterisks (*) for bold or emphasis
+- NEVER use underscores (_) for italics
+- NEVER use hashtags (#) for headers
+- NEVER use markdown formatting of any kind
+- Write in plain text only
 - For emphasis, use UPPERCASE letters or quotation marks
 - For section headers, use simple text followed by a colon
 - For lists, use simple dashes or numbers`,
@@ -514,7 +541,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const body: unknown = await req.json();
-    const { prompt, labId, mode, conversationHistory = [] } = (body || {}) as RequestBody;
+    const { prompt, labId, mode, conversationHistory = [], exerciseId } = (body || {}) as RequestBody;
 
     if (!isNonEmptyString(prompt) || !isNonEmptyString(labId) || !isConversationHistory(conversationHistory)) {
       return new Response(
@@ -800,6 +827,7 @@ Deno.serve(async (req: Request) => {
       const decoder = new TextDecoder();
       let accumulatedText = "";
       let sseBuffer = "";
+      let capturedUsageMetadata: { promptTokenCount?: number; candidatesTokenCount?: number } | null = null;
 
       try {
         while (true) {
@@ -818,7 +846,12 @@ Deno.serve(async (req: Request) => {
               continue;
             }
 
-            accumulatedText += extractTextFromSseData(line.slice(6).trim());
+            const sseData = line.slice(6).trim();
+            accumulatedText += extractTextFromSseData(sseData);
+            const parsedChunk = tryParseGeminiChunk(sseData);
+            if (parsedChunk?.usageMetadata) {
+              capturedUsageMetadata = parsedChunk.usageMetadata;
+            }
           }
         }
 
@@ -826,7 +859,12 @@ Deno.serve(async (req: Request) => {
 
         const finalLine = sseBuffer.trim();
         if (finalLine.startsWith("data: ")) {
-          accumulatedText += extractTextFromSseData(finalLine.slice(6).trim());
+          const sseData = finalLine.slice(6).trim();
+          accumulatedText += extractTextFromSseData(sseData);
+          const parsedChunk = tryParseGeminiChunk(sseData);
+          if (parsedChunk?.usageMetadata) {
+            capturedUsageMetadata = parsedChunk.usageMetadata;
+          }
         }
 
         if (!isNonEmptyString(accumulatedText)) {
@@ -845,6 +883,22 @@ Deno.serve(async (req: Request) => {
           model: modelUsed,
           outputText: accumulatedText,
         });
+
+        if (isNonEmptyString(exerciseId) && capturedUsageMetadata) {
+          const { error: usageLogError } = await supabaseAdmin
+            .from("ai_usage_log")
+            .insert({
+              user_id: userId,
+              feature_id: "exercise_response",
+              exercise_id: exerciseId,
+              model: modelUsed,
+              input_tokens: capturedUsageMetadata.promptTokenCount ?? 0,
+              output_tokens: capturedUsageMetadata.candidatesTokenCount ?? 0,
+            });
+          if (usageLogError) {
+            console.warn("ai_usage_log insert skipped:", usageLogError.message);
+          }
+        }
 
         console.log(
           `lab-ai-chat request complete userId=${userId} labId=${labId.trim()} mode=${normalizedMode || "none"} plan=${effectivePlan} modelUsed=${modelUsed}`,
