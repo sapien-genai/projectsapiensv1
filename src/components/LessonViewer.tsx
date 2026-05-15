@@ -15,6 +15,7 @@ import FinishingChecklist from './FinishingChecklist';
 import LabSandbox from './LabSandbox';
 import LaunchCommitmentForm from './LaunchCommitmentForm';
 import PromptExerciseCard from './PromptExerciseCard';
+import PromptExerciseBlock from './PromptExerciseBlock';
 import {
   TimeAllocationForm,
   GoalsDefinitionForm,
@@ -358,6 +359,10 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                     )
                   </p>
                 );
+              }
+
+              if (block.type === 'promptExercise') {
+                return <PromptExerciseBlock key={index} block={block} lessonId={lessonId} />;
               }
 
               if (block.type === 'example') {
