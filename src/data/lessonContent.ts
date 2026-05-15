@@ -1,18 +1,38 @@
+interface EvaluationCriterion {
+  id: string;
+  label: string;
+  description: string;
+}
+
+interface PromptExerciseBlock {
+  type: 'promptExercise';
+  id: string;
+  label: string;
+  scenario: string;
+  template: string;
+  criteria: EvaluationCriterion[];
+  referenceSolution: string;
+}
+
 interface LessonContent {
   title: string;
   duration: string;
   lastReviewed?: string;
   volatility?: 'low' | 'medium' | 'high';
   reviewIntervalDays?: number;
-  content: ({
-    type: 'text' | 'tip' | 'example' | 'exercise';
-    content: string;
-  } | {
-    type: 'snapshotRef';
-    snapshotId: string;
-    label: string;
-    style: 'callout' | 'inline';
-  })[];
+  content: (
+    | {
+        type: 'text' | 'tip' | 'example' | 'exercise';
+        content: string;
+      }
+    | {
+        type: 'snapshotRef';
+        snapshotId: string;
+        label: string;
+        style: 'callout' | 'inline';
+      }
+    | PromptExerciseBlock
+  )[];
 }
 
 export const lessonContent: Record<string, LessonContent> = {
@@ -101,6 +121,39 @@ Example:
         content: `Try This:
 Instead of: "Help me exercise"
 Write: "I'm a beginner who wants to build strength at home with no equipment. Create a 20-minute workout routine I can do 3 times per week, with exercise descriptions."`
+      },
+      {
+        type: 'promptExercise',
+        id: 'ex-1-2-trip-planning',
+        label: 'Exercise: Trip Planning',
+        scenario: `Your friend is planning their first solo trip and has asked for your help. ` +
+          `They want specific recommendations, not vague suggestions. ` +
+          `Use what you've learned about the CONTEXT + TASK + FORMAT structure to write a prompt ` +
+          `that will give your friend an actually useful itinerary.`,
+        template: `I'm helping a friend plan a {{trip_duration}} trip to {{destination}}. ` +
+          `They're most interested in {{interest_1}} and {{interest_2}}. ` +
+          `Please create an itinerary in {{output_format}} format.`,
+        criteria: [
+          {
+            id: 'has_context',
+            label: 'Includes relevant context',
+            description: 'The prompt gives the AI enough background to personalise the response — duration, destination, interests.',
+          },
+          {
+            id: 'has_task',
+            label: 'States a clear task',
+            description: 'The prompt explicitly asks for an itinerary, not just general advice.',
+          },
+          {
+            id: 'specifies_format',
+            label: 'Specifies output format',
+            description: 'The prompt tells the AI how to structure the response.',
+          },
+        ],
+        referenceSolution: `My friend is taking a 7-day solo trip to Lisbon. ` +
+          `They love food, walking neighbourhoods, and free or low-cost cultural experiences — ` +
+          `not nightlife or beaches. Please create a day-by-day itinerary in a simple table ` +
+          `with columns for morning, afternoon, and evening.`,
       },
       {
         type: 'interactive',
