@@ -11,7 +11,7 @@ const rateLimiter = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
-const DEFAULT_GEMINI_MODEL = "gemini-1.5-flash";
+const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 15,
