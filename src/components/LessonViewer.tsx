@@ -295,9 +295,10 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
           <div className="prose prose-sm md:prose-base max-w-none space-y-6">
             {lesson.content.map((block, index) => {
               if (block.type === 'text') {
+                const content = block.content || '';
                 return (
                   <div key={index} className="whitespace-pre-line font-sans leading-relaxed">
-                    {block.content.split('\n').map((line, i) => {
+                    {content.split('\n').map((line, i) => {
                       if (line.startsWith('# ')) {
                         return <h2 key={i} className="font-extrabold text-2xl uppercase tracking-tight mt-8 mb-4 text-[#1C1A17]">{line.substring(2)}</h2>;
                       }
@@ -366,11 +367,12 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
               }
 
               if (block.type === 'example') {
-                const lines = block.content.split('\n');
+                const content = block.content || '';
+                const lines = content.split('\n');
                 const hasPrompt = lines.some(line => line.startsWith('"') && line.endsWith('"'));
                 const promptText = hasPrompt ? lines.find(line => line.startsWith('"') && line.endsWith('"'))?.slice(1, -1) : '';
-                const isScheduleOptimizer = lessonId === 'lesson-2-3' && block.content.includes('Schedule Optimization Prompt');
-                const isDecisionMaking = lessonId === 'lesson-2-4' && block.content.includes('Medium Decision Prompt');
+                const isScheduleOptimizer = lessonId === 'lesson-2-3' && content.includes('Schedule Optimization Prompt');
+                const isDecisionMaking = lessonId === 'lesson-2-4' && content.includes('Medium Decision Prompt');
 
                 return (
                   <div key={index} className="bg-[#E3F2FD] p-4 md:p-6 border border-black shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] relative">
@@ -436,10 +438,11 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
               }
 
               if (block.type === 'prompt-lab') {
-                const lines = block.content.split('\n');
+                const content = block.content || '';
+                const lines = content.split('\n');
                 const hasPrompt = lines.some(line => line.startsWith('"') && line.endsWith('"'));
                 const promptText = hasPrompt ? lines.find(line => line.startsWith('"') && line.endsWith('"'))?.slice(1, -1) : '';
-                const isLearningPath = lessonId === 'lesson-3-1' && block.content.includes('Sample Learning Path Prompt');
+                const isLearningPath = lessonId === 'lesson-3-1' && content.includes('Sample Learning Path Prompt');
 
                 return (
                   <div key={index} className="bg-[#E3F2FD] p-4 md:p-6 border border-black shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] relative">
@@ -512,6 +515,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
               }
 
               if (block.type === 'exercise') {
+                const content = block.content || '';
                 const parseLineWithLinks = (line: string) => {
                   const linkRegex = /\[LINK:([^\]]+)\](.*?)\[\/LINK\]/g;
                   const parts: (string | JSX.Element)[] = [];
@@ -576,7 +580,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 return (
                   <div key={index} className="bg-[#FF6A00] border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
                     <div className="text-sm leading-relaxed text-black whitespace-pre-line mb-4">
-                      {block.content.split('\n').map((line, i) => {
+                      {content.split('\n').map((line, i) => {
                         if (line.startsWith('**') && line.endsWith('**')) {
                           return <p key={i} className="font-extrabold uppercase tracking-tight mb-3">{line.slice(2, -2)}</p>;
                         }
@@ -604,7 +608,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                         rows={4}
                       />
                       <button
-                        onClick={() => saveJournalEntry(index, block.content, journalEntries[index] || '')}
+                        onClick={() => saveJournalEntry(index, content, journalEntries[index] || '')}
                         disabled={savingJournal[index] || savedJournal[index] || !journalEntries[index]?.trim()}
                         className={`flex items-center gap-2 border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight transition-all disabled:cursor-not-allowed ${
                           savedJournal[index]
