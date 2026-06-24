@@ -68,11 +68,19 @@ function AppContent() {
   // Load saved state on mount (only for authenticated users)
   useEffect(() => {
     if (!loading && user && !initialized) {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
       const params = new URLSearchParams(window.location.search);
       const paymentParam = params.get('payment');
-      if (paymentParam === 'success' || paymentParam === 'cancel') {
-        window.history.replaceState({}, '', window.location.pathname);
-        setView(paymentParam === 'success' ? 'payment-success' : 'billing-cancel');
+      const paymentPathView =
+        pathname === '/billing/success'
+          ? 'payment-success'
+          : pathname === '/billing/cancel'
+            ? 'billing-cancel'
+            : null;
+
+      if (paymentParam === 'success' || paymentParam === 'cancel' || paymentPathView) {
+        window.history.replaceState({}, '', '/');
+        setView(paymentPathView || (paymentParam === 'success' ? 'payment-success' : 'billing-cancel'));
         setInitialized(true);
         return;
       }
