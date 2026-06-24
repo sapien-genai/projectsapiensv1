@@ -94,7 +94,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
     if (!user) return;
 
     try {
-      const unlocked = await supabase.rpc('check_network_unlock', {
+      await supabase.rpc('check_network_unlock', {
         p_user_id: user.id,
       });
 
@@ -216,7 +216,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
     return (
       <ProjectDetailView
         projectId={selectedProject.id}
-        onBack={() => setSelectedProject(null)}
+        onClose={() => setSelectedProject(null)}
       />
     );
   }

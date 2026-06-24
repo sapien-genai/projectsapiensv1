@@ -1,10 +1,32 @@
+type LessonBlockType =
+  | 'text'
+  | 'tip'
+  | 'example'
+  | 'exercise'
+  | 'interactive'
+  | 'prompt-exercise'
+  | 'prompt-lab'
+  | 'lab'
+  | 'form';
+
+interface LessonBlock {
+  type: LessonBlockType;
+  content?: string;
+  tool?: string;
+  tools?: string[];
+  exerciseNumber?: number;
+  title?: string;
+  description?: string;
+  guidancePoints?: string[];
+  exampleBad?: string;
+  exampleGood?: string;
+  formType?: string;
+}
+
 interface LessonContent {
   title: string;
   duration: string;
-  content: {
-    type: 'text' | 'tip' | 'example' | 'exercise';
-    content: string;
-  }[];
+  content: LessonBlock[];
 }
 
 export const lessonContent: Record<string, LessonContent> = {

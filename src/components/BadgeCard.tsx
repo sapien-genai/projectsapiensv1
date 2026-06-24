@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import * as Icons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { Badge } from '../data/badgeDefinitions';
 import { getRarityLabel } from '../data/badgeDefinitions';
 
@@ -17,7 +18,7 @@ interface BadgeCardProps {
 
 function BadgeCardComponent({ badge, earned = false, earnedAt, progress, featured = false, onClick }: BadgeCardProps) {
   const Icon = useMemo(
-    () => (Icons as Record<string, React.ComponentType<{ className?: string }>>)[badge.icon] || Icons.Award,
+    () => (Icons as unknown as Record<string, LucideIcon>)[badge.icon] || Icons.Award,
     [badge.icon]
   );
 
@@ -94,7 +95,7 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
               />
             </div>
             <p className="text-xs font-semibold mt-2 uppercase tracking-wide">
-              {progress.current}/{progress.total} {badge.criteria.details || ''}
+              {progress?.current}/{progress?.total} {badge.criteria.details || ''}
             </p>
           </div>
         )}
