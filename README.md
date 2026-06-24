@@ -17,6 +17,12 @@ Project Sapiens is a comprehensive learning platform that teaches people how to 
 
 The platform emphasizes learning-by-doing with a warm minimalist design that supports long-form reading, mobile-first interaction, and calm, focused learning.
 
+## Current GTM Focus
+
+Project Sapiens is currently being shaped around a small-team AI fluency offer: practical, role-based training for teams that need to use AI safely and measurably in everyday work.
+
+See [Small Team AI Fluency GTM Plan](./SMALL_TEAM_AI_FLUENCY_GTM.md) for the 30-day pilot plan, customization model, packaging, and product backlog.
+
 ## Tech Stack
 
 ### Frontend
