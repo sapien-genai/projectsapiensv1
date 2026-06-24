@@ -302,14 +302,17 @@ export default function TasksManager() {
 }
 
 function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void; onCancel: () => void }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Pick<Task, 'title' | 'description' | 'priority' | 'category' | 'energy_required' | 'tags'> & {
+    due_date: string;
+    estimated_minutes: number;
+  }>({
     title: '',
     description: '',
-    priority: 'medium' as const,
-    category: 'work' as const,
+    priority: 'medium',
+    category: 'work',
     due_date: '',
     estimated_minutes: 30,
-    energy_required: 'medium' as const,
+    energy_required: 'medium',
     tags: [] as string[]
   });
 
@@ -356,7 +359,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
           <label className="block text-sm font-bold mb-2">Priority</label>
           <select
             value={formData.priority}
-            onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, priority: e.target.value as Task['priority'] })}
             className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
           >
             <option value="low">Low</option>
@@ -460,7 +463,7 @@ function TaskCard({
   getEnergyIcon: (energy: string) => React.ReactNode;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const [editing, setEditing] = useState(false);
+  const [, setEditing] = useState(false);
 
   const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
 

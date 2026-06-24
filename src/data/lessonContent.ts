@@ -14,25 +14,45 @@ interface PromptExerciseBlock {
   referenceSolution: string;
 }
 
+type LessonBlockType =
+  | 'text'
+  | 'tip'
+  | 'example'
+  | 'exercise'
+  | 'interactive'
+  | 'prompt-exercise'
+  | 'prompt-lab'
+  | 'lab'
+  | 'form';
+
+interface RichLessonBlock {
+  type: LessonBlockType;
+  content?: string;
+  tool?: string;
+  tools?: string[];
+  exerciseNumber?: number;
+  title?: string;
+  description?: string;
+  guidancePoints?: string[];
+  exampleBad?: string;
+  exampleGood?: string;
+  formType?: string;
+}
+
+interface SnapshotRefBlock {
+  type: 'snapshotRef';
+  snapshotId: string;
+  label: string;
+  style: 'callout' | 'inline';
+}
+
 interface LessonContent {
   title: string;
   duration: string;
   lastReviewed?: string;
   volatility?: 'low' | 'medium' | 'high';
   reviewIntervalDays?: number;
-  content: (
-    | {
-        type: 'text' | 'tip' | 'example' | 'exercise';
-        content: string;
-      }
-    | {
-        type: 'snapshotRef';
-        snapshotId: string;
-        label: string;
-        style: 'callout' | 'inline';
-      }
-    | PromptExerciseBlock
-  )[];
+  content: (RichLessonBlock | SnapshotRefBlock | PromptExerciseBlock)[];
 }
 
 export const lessonContent: Record<string, LessonContent> = {
