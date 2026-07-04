@@ -154,7 +154,7 @@ export default function TasksManager() {
 
   if (loading) {
     return (
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <p>Loading tasks...</p>
       </div>
     );
@@ -163,23 +163,23 @@ export default function TasksManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-extrabold uppercase tracking-tight mb-2">Task Management</h2>
-            <p className="text-[#57524D] text-sm">Organize and prioritize your work with AI assistance</p>
+            <p className="text-secondary text-sm">Organize and prioritize your work with AI assistance</p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={generateAITasks}
-              className="flex items-center gap-2 px-4 py-2 bg-[#F4A261] text-white border border-black font-bold text-sm hover:bg-[#e89350] transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-accent-soft text-white border border-ink font-bold text-sm hover:bg-accent-hover transition-colors"
             >
               <Sparkles className="w-4 h-4" strokeWidth={2} />
               AI Generate
             </button>
             <button
               onClick={() => setShowAddTask(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-bold text-sm hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-bold text-sm hover:bg-gray-800 transition-colors"
             >
               <Plus className="w-4 h-4" strokeWidth={2} />
               Add Task
@@ -192,36 +192,36 @@ export default function TasksManager() {
           <div className="flex gap-2">
             <button
               onClick={() => setFilterStatus('active')}
-              className={`px-3 py-1 text-sm font-bold border border-black transition-colors ${
-                filterStatus === 'active' ? 'bg-black text-white' : 'bg-white hover:bg-[#F8F5F2]'
+              className={`px-3 py-1 text-sm font-bold border border-ink transition-colors ${
+                filterStatus === 'active' ? 'bg-ink text-white' : 'bg-white hover:bg-paper'
               }`}
             >
               Active ({tasks.filter(t => t.status !== 'completed').length})
             </button>
             <button
               onClick={() => setFilterStatus('completed')}
-              className={`px-3 py-1 text-sm font-bold border border-black transition-colors ${
-                filterStatus === 'completed' ? 'bg-black text-white' : 'bg-white hover:bg-[#F8F5F2]'
+              className={`px-3 py-1 text-sm font-bold border border-ink transition-colors ${
+                filterStatus === 'completed' ? 'bg-ink text-white' : 'bg-white hover:bg-paper'
               }`}
             >
               Completed ({tasks.filter(t => t.status === 'completed').length})
             </button>
             <button
               onClick={() => setFilterStatus('all')}
-              className={`px-3 py-1 text-sm font-bold border border-black transition-colors ${
-                filterStatus === 'all' ? 'bg-black text-white' : 'bg-white hover:bg-[#F8F5F2]'
+              className={`px-3 py-1 text-sm font-bold border border-ink transition-colors ${
+                filterStatus === 'all' ? 'bg-ink text-white' : 'bg-white hover:bg-paper'
               }`}
             >
               All ({tasks.length})
             </button>
           </div>
 
-          <div className="h-6 w-px bg-black"></div>
+          <div className="h-6 w-px bg-ink"></div>
 
           <select
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
-            className="px-3 py-1 text-sm font-bold border border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="px-3 py-1 text-sm font-bold border border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="all">All Priorities</option>
             <option value="urgent">Urgent</option>
@@ -233,7 +233,7 @@ export default function TasksManager() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-1 text-sm font-bold border border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="px-3 py-1 text-sm font-bold border border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="priority">Sort by Priority</option>
             <option value="due_date">Sort by Due Date</option>
@@ -249,10 +249,10 @@ export default function TasksManager() {
 
       {/* Tasks List */}
       {sortedTasks.length === 0 ? (
-        <div className="bg-white border border-black p-12 text-center shadow-[2px_2px_0px_#000000]">
-          <Circle className="w-12 h-12 mx-auto mb-3 text-[#E9E5E0]" strokeWidth={2} />
-          <p className="text-[#57524D] mb-2">No tasks found</p>
-          <p className="text-sm text-[#57524D]">Create your first task or let AI generate suggestions</p>
+        <div className="bg-white border border-ink p-12 text-center shadow-brutal-sm">
+          <Circle className="w-12 h-12 mx-auto mb-3 text-paper-2" strokeWidth={2} />
+          <p className="text-secondary mb-2">No tasks found</p>
+          <p className="text-sm text-secondary">Create your first task or let AI generate suggestions</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -323,10 +323,10 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+    <form onSubmit={handleSubmit} className="bg-white border border-ink p-6 shadow-brutal-sm">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold uppercase tracking-tight">Add New Task</h3>
-        <button type="button" onClick={onCancel} className="p-1 hover:bg-[#F8F5F2] transition-colors rounded">
+        <button type="button" onClick={onCancel} className="p-1 hover:bg-paper transition-colors rounded">
           <X className="w-5 h-5" strokeWidth={2} />
         </button>
       </div>
@@ -338,7 +338,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
             type="text"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             placeholder="What needs to be done?"
             required
           />
@@ -349,7 +349,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261] resize-y"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft resize-y"
             rows={3}
             placeholder="Add details..."
           />
@@ -360,7 +360,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
           <select
             value={formData.priority}
             onChange={(e) => setFormData({ ...formData, priority: e.target.value as Task['priority'] })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -374,7 +374,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
           <select
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="work">Work</option>
             <option value="personal">Personal</option>
@@ -393,7 +393,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
             type="date"
             value={formData.due_date}
             onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
 
@@ -403,7 +403,7 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
             type="number"
             value={formData.estimated_minutes}
             onChange={(e) => setFormData({ ...formData, estimated_minutes: parseInt(e.target.value) })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             min="5"
             step="5"
           />
@@ -417,8 +417,8 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
                 key={level}
                 type="button"
                 onClick={() => setFormData({ ...formData, energy_required: level })}
-                className={`flex-1 px-4 py-2 border border-black font-bold text-sm capitalize transition-colors ${
-                  formData.energy_required === level ? 'bg-black text-white' : 'bg-white hover:bg-[#F8F5F2]'
+                className={`flex-1 px-4 py-2 border border-ink font-bold text-sm capitalize transition-colors ${
+                  formData.energy_required === level ? 'bg-ink text-white' : 'bg-white hover:bg-paper'
                 }`}
               >
                 {level}
@@ -431,14 +431,14 @@ function AddTaskForm({ onAdd, onCancel }: { onAdd: (task: Partial<Task>) => void
       <div className="flex gap-3 mt-6">
         <button
           type="submit"
-          className="flex-1 px-4 py-2 bg-[#F4A261] text-white border border-black font-bold text-sm hover:bg-[#e89350] transition-colors"
+          className="flex-1 px-4 py-2 bg-accent-soft text-white border border-ink font-bold text-sm hover:bg-accent-hover transition-colors"
         >
           Add Task
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-white border border-black font-bold text-sm hover:bg-[#F8F5F2] transition-colors"
+          className="px-4 py-2 bg-white border border-ink font-bold text-sm hover:bg-paper transition-colors"
         >
           Cancel
         </button>
@@ -468,7 +468,7 @@ function TaskCard({
   const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
 
   return (
-    <div className={`bg-white border border-black p-4 shadow-[2px_2px_0px_#000000] ${task.status === 'completed' ? 'opacity-60' : ''}`}>
+    <div className={`bg-white border border-ink p-4 shadow-brutal-sm ${task.status === 'completed' ? 'opacity-60' : ''}`}>
       <div className="flex items-start gap-3">
         <button
           onClick={onToggle}
@@ -477,7 +477,7 @@ function TaskCard({
           {task.status === 'completed' ? (
             <CheckCircle2 className="w-5 h-5 text-green-600" strokeWidth={2} />
           ) : (
-            <Circle className="w-5 h-5 text-gray-400 hover:text-black transition-colors" strokeWidth={2} />
+            <Circle className="w-5 h-5 text-gray-400 hover:text-ink transition-colors" strokeWidth={2} />
           )}
         </button>
 
@@ -486,7 +486,7 @@ function TaskCard({
             <div className="flex-1">
               <h4 className={`font-bold ${task.status === 'completed' ? 'line-through' : ''}`}>{task.title}</h4>
               {task.description && expanded && (
-                <p className="text-sm text-[#57524D] mt-1">{task.description}</p>
+                <p className="text-sm text-secondary mt-1">{task.description}</p>
               )}
             </div>
 
@@ -496,8 +496,8 @@ function TaskCard({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-[#57524D]">
-            <span className="px-2 py-1 bg-[#F8F5F2] border border-[#E9E5E0] font-bold">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-secondary">
+            <span className="px-2 py-1 bg-paper border border-paper-2 font-bold">
               {task.category}
             </span>
             {task.due_date && (
@@ -513,7 +513,7 @@ function TaskCard({
               </span>
             )}
             {task.ai_generated && (
-              <span className="flex items-center gap-1 text-[#F4A261] font-bold">
+              <span className="flex items-center gap-1 text-accent-soft font-bold">
                 <Sparkles className="w-3 h-3" strokeWidth={2} />
                 AI
               </span>
@@ -524,14 +524,14 @@ function TaskCard({
             <div className="mt-3 flex gap-2">
               <button
                 onClick={() => setEditing(true)}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#F8F5F2] border border-black hover:bg-[#E9E5E0] transition-colors"
+                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-paper border border-ink hover:bg-paper-2 transition-colors"
               >
                 <Edit2 className="w-3 h-3" strokeWidth={2} />
                 Edit
               </button>
               <button
                 onClick={onDelete}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-50 border border-black text-red-600 hover:bg-red-100 transition-colors"
+                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-50 border border-ink text-red-600 hover:bg-red-100 transition-colors"
               >
                 <Trash2 className="w-3 h-3" strokeWidth={2} />
                 Delete
@@ -539,7 +539,7 @@ function TaskCard({
               {task.status !== 'completed' && (
                 <button
                   onClick={() => onUpdate({ status: 'in_progress' })}
-                  className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-yellow-50 border border-black hover:bg-yellow-100 transition-colors"
+                  className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-yellow-50 border border-ink hover:bg-yellow-100 transition-colors"
                 >
                   <Clock className="w-3 h-3" strokeWidth={2} />
                   Start
@@ -566,7 +566,7 @@ function TaskCard({
 
 function StatCard({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) {
   return (
-    <div className={`${color} border border-black p-4`}>
+    <div className={`${color} border border-ink p-4`}>
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-bold uppercase tracking-tight">{label}</span>
         {icon}

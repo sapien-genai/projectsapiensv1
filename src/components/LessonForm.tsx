@@ -110,7 +110,7 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
   const renderField = (field: FormField) => {
     const value = formData[field.id] ?? '';
 
-    const baseClasses = "w-full px-4 py-3 bg-white border border-black text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black font-medium";
+    const baseClasses = "w-full px-4 py-3 bg-white border border-ink text-ink placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ink font-medium";
 
     switch (field.type) {
       case 'textarea':
@@ -153,12 +153,12 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
 
       case 'checkbox':
         return (
-          <div className="flex items-center space-x-3 p-3 bg-white border border-black">
+          <div className="flex items-center space-x-3 p-3 bg-white border border-ink">
             <input
               type="checkbox"
               checked={value === true}
               onChange={(e) => handleChange(field.id, e.target.checked)}
-              className="w-5 h-5 border border-black cursor-pointer"
+              className="w-5 h-5 border border-ink cursor-pointer"
               required={field.required}
             />
             <span className="text-sm font-semibold uppercase tracking-tight">{field.label}</span>
@@ -169,13 +169,13 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
         return (
           <div className="space-y-2">
             {field.options?.map(option => (
-              <label key={option} className="flex items-center space-x-3 p-3 bg-white border border-black cursor-pointer hover:bg-gray-50 transition-colors">
+              <label key={option} className="flex items-center space-x-3 p-3 bg-white border border-ink cursor-pointer hover:bg-gray-50 transition-colors">
                 <input
                   type="radio"
                   value={option}
                   checked={value === option}
                   onChange={(e) => handleChange(field.id, e.target.value)}
-                  className="w-5 h-5 border border-black cursor-pointer"
+                  className="w-5 h-5 border border-ink cursor-pointer"
                   required={field.required}
                 />
                 <span className="text-sm font-medium">{option}</span>
@@ -211,29 +211,29 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
 
   if (loading) {
     return (
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 border border-black w-3/4"></div>
-          <div className="h-10 bg-gray-200 border border-black"></div>
-          <div className="h-10 bg-gray-200 border border-black"></div>
+          <div className="h-4 bg-gray-200 border border-ink w-3/4"></div>
+          <div className="h-10 bg-gray-200 border border-ink"></div>
+          <div className="h-10 bg-gray-200 border border-ink"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#FFF9E6] border border-black p-6 shadow-[2px_2px_0px_#000000] space-y-6">
+    <div className="bg-cream border border-ink p-6 shadow-brutal-sm space-y-6">
       {title && (
-        <h3 className="text-xl font-extrabold text-black uppercase tracking-tight">{title}</h3>
+        <h3 className="text-xl font-extrabold text-ink uppercase tracking-tight">{title}</h3>
       )}
 
       <div className="space-y-5">
         {fields.map(field => (
           <div key={field.id} className="space-y-2">
             {field.type !== 'checkbox' && (
-              <label className="block text-sm font-extrabold text-black uppercase tracking-tight">
+              <label className="block text-sm font-extrabold text-ink uppercase tracking-tight">
                 {field.label}
-                {field.required && <span className="text-[#FF6A00] ml-1">*</span>}
+                {field.required && <span className="text-accent ml-1">*</span>}
               </label>
             )}
             {renderField(field)}
@@ -244,14 +244,14 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
         ))}
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t-2 border-black">
+      <div className="flex items-center justify-between pt-4 border-t-2 border-ink">
         <button
           onClick={handleSave}
           disabled={saving || !user}
-          className={`flex items-center gap-2 px-6 py-3 border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`flex items-center gap-2 px-6 py-3 border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             saved
-              ? 'bg-[#00D084] text-black'
-              : 'bg-black text-white'
+              ? 'bg-[#00D084] text-ink'
+              : 'bg-ink text-white'
           }`}
         >
           {saved ? (
@@ -268,7 +268,7 @@ export default function LessonForm({ pathId, lessonId, exerciseId, fields, title
         </button>
 
         {!user && (
-          <p className="text-xs font-semibold text-[#FF6A00] uppercase tracking-tight">Sign in to save</p>
+          <p className="text-xs font-semibold text-accent uppercase tracking-tight">Sign in to save</p>
         )}
       </div>
     </div>

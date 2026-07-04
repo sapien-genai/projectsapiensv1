@@ -58,17 +58,17 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-surface flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <a
           href="/"
-          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-accent transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           BACK TO HOME
         </a>
 
-        <div className="bg-white border border-black p-8 shadow-[8px_8px_0px_#000000]">
+        <div className="bg-white border border-ink p-8 shadow-brutal-xl">
           <h1 className="font-extrabold text-4xl uppercase tracking-tighter mb-2">
             {isLogin ? 'WELCOME BACK' : 'JOIN SAPIENS'}
           </h1>
@@ -79,8 +79,8 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
           </p>
 
           {error && (
-            <div className="bg-[#FF6A00] border border-black p-4 mb-6 shadow-[2px_2px_0px_#000000]">
-              <p className="text-sm font-semibold text-black">{error}</p>
+            <div className="bg-accent border border-ink p-4 mb-6 shadow-brutal-sm">
+              <p className="text-sm font-semibold text-ink">{error}</p>
             </div>
           )}
 
@@ -97,7 +97,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
                     id="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-white border border-black pl-12 pr-4 py-3 focus:outline-none focus:border-[#0A74FF] transition-colors"
+                    className="w-full bg-white border border-ink pl-12 pr-4 py-3 focus:outline-none focus:border-info transition-colors"
                     placeholder="sapiens_user"
                     required={!isLogin}
                   />
@@ -116,7 +116,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white border border-black pl-12 pr-4 py-3 focus:outline-none focus:border-[#0A74FF] transition-colors"
+                  className="w-full bg-white border border-ink pl-12 pr-4 py-3 focus:outline-none focus:border-info transition-colors"
                   placeholder="your@email.com"
                   required
                 />
@@ -134,7 +134,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white border border-black pl-12 pr-12 py-3 focus:outline-none focus:border-[#0A74FF] transition-colors"
+                  className="w-full bg-white border border-ink pl-12 pr-12 py-3 focus:outline-none focus:border-info transition-colors"
                   placeholder="••••••••"
                   required
                   minLength={6}
@@ -142,7 +142,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-[#FF6A00] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-accent transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -159,7 +159,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
               {onTermsClick && (
                 <button
                   onClick={onTermsClick}
-                  className="text-[#FF6A00] font-semibold hover:underline"
+                  className="text-accent font-semibold hover:underline"
                 >
                   Terms of Service
                 </button>
@@ -168,7 +168,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
               {onPrivacyClick && (
                 <button
                   onClick={onPrivacyClick}
-                  className="text-[#FF6A00] font-semibold hover:underline"
+                  className="text-accent font-semibold hover:underline"
                 >
                   Privacy Policy
                 </button>
@@ -178,44 +178,44 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#FF6A00] text-black border border-black px-8 py-4 font-extrabold text-base uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-accent text-ink border border-ink px-8 py-4 font-extrabold text-base uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'PROCESSING...' : isLogin ? 'LOG IN' : 'CREATE ACCOUNT'}
             </button>
           </form>
 
-          <div className="mt-8 pt-8 border-t-2 border-black">
+          <div className="mt-8 pt-8 border-t-2 border-ink">
             <button
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
               }}
-              className="text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+              className="text-sm font-semibold hover:text-accent transition-colors"
             >
               {isLogin ? "Don't have an account? SIGN UP" : 'Already have an account? LOG IN'}
             </button>
           </div>
         </div>
 
-        <div className="mt-8 bg-white border border-black p-6 shadow-[3px_3px_0px_#000000]">
+        <div className="mt-8 bg-white border border-ink p-6 shadow-brutal">
           <h3 className="font-extrabold text-sm uppercase tracking-tight mb-3">
             WHAT YOU'LL GET:
           </h3>
           <ul className="space-y-2 text-sm leading-relaxed">
             <li className="flex items-start gap-2">
-              <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+              <span className="text-accent font-extrabold">&gt;</span>
               <span>Access to all 5 learning paths</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+              <span className="text-accent font-extrabold">&gt;</span>
               <span>Interactive lab environments</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+              <span className="text-accent font-extrabold">&gt;</span>
               <span>AI Fluency progression tracking</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+              <span className="text-accent font-extrabold">&gt;</span>
               <span>Community challenges and badges</span>
             </li>
           </ul>

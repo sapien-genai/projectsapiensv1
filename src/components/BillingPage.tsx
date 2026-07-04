@@ -50,11 +50,11 @@ export default function BillingPage({ onBack }: BillingPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-6xl mx-auto px-6 py-8">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-accent transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           BACK TO DASHBOARD
@@ -70,8 +70,8 @@ export default function BillingPage({ onBack }: BillingPageProps) {
         </div>
 
         {(error || portalError) && (
-          <div className="bg-[#FF6A00] border-2 border-black p-4 mb-6 shadow-[4px_4px_0px_#000000]">
-            <div className="space-y-2 text-sm font-semibold text-black">
+          <div className="bg-accent border-2 border-ink p-4 mb-6 shadow-brutal-md">
+            <div className="space-y-2 text-sm font-semibold text-ink">
               {error && <p>{error}</p>}
               {portalError && (
                 <div className="flex items-center justify-between gap-4">
@@ -89,14 +89,14 @@ export default function BillingPage({ onBack }: BillingPageProps) {
         )}
 
         {loading && !usageStatus ? (
-          <div className="bg-white border-2 border-black p-12 text-center shadow-[4px_4px_0px_#000000]">
-            <div className="inline-block w-8 h-8 border-4 border-black border-t-[#FF6A00] animate-spin mb-4"></div>
+          <div className="bg-white border-2 border-ink p-12 text-center shadow-brutal-md">
+            <div className="inline-block w-8 h-8 border-4 border-ink border-t-accent animate-spin mb-4"></div>
             <p className="font-semibold">Loading billing information...</p>
           </div>
         ) : usageStatus ? (
           <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
+              <div className="bg-white border-2 border-ink p-6 shadow-brutal-md">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <CreditCard className="w-5 h-5" strokeWidth={2} />
@@ -105,7 +105,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                   <button
                     onClick={handleRefresh}
                     disabled={refreshing}
-                    className="hover:text-[#FF6A00] transition-colors disabled:opacity-50"
+                    className="hover:text-accent transition-colors disabled:opacity-50"
                     aria-label="Refresh usage"
                   >
                     <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} strokeWidth={2} />
@@ -117,13 +117,13 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                     <div className="flex items-center gap-2">
                       {usageStatus.plan === 'pro' ? (
                         <>
-                          <span className="bg-[#FF6A00] text-black border-2 border-black px-4 py-2 font-extrabold text-lg uppercase">
+                          <span className="bg-accent text-ink border-2 border-ink px-4 py-2 font-extrabold text-lg uppercase">
                             PRO
                           </span>
                           <TrendingUp className="w-5 h-5" strokeWidth={2} />
                         </>
                       ) : (
-                        <span className="bg-white border-2 border-black px-4 py-2 font-extrabold text-lg uppercase">
+                        <span className="bg-white border-2 border-ink px-4 py-2 font-extrabold text-lg uppercase">
                           FREE
                         </span>
                       )}
@@ -132,7 +132,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                   {usageStatus.plan === 'free' && (
                     <button
                       onClick={() => setShowUpgradeModal(true)}
-                      className="w-full bg-[#FF6A00] text-black border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                      className="w-full bg-accent text-ink border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                     >
                       UPGRADE TO PRO
                     </button>
@@ -140,7 +140,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                   <button
                     onClick={startPortal}
                     disabled={portalLoading}
-                    className="w-full bg-white text-black border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-white text-ink border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {portalLoading ? 'OPENING STRIPE...' : 'REVIEW BILLING IN STRIPE'}
                   </button>
@@ -150,7 +150,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
+              <div className="bg-white border-2 border-ink p-6 shadow-brutal-md">
                 <div className="flex items-center gap-3 mb-4">
                   <Zap className="w-5 h-5" strokeWidth={2} />
                   <h2 className="font-extrabold text-lg uppercase">TODAY'S USAGE</h2>
@@ -163,14 +163,14 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                     </p>
                   </div>
                   <div>
-                    <div className="bg-[#F4F4F4] border-2 border-black h-6 overflow-hidden">
+                    <div className="bg-surface border-2 border-ink h-6 overflow-hidden">
                       <div
                         className={`h-full ${
                           isAtLimit
-                            ? 'bg-[#FF6A00]'
+                            ? 'bg-accent'
                             : percentUsed > 80
-                            ? 'bg-[#FFD700]'
-                            : 'bg-black'
+                            ? 'bg-gold'
+                            : 'bg-ink'
                         } transition-all duration-300`}
                         style={{ width: `${Math.min(percentUsed, 100)}%` }}
                       ></div>
@@ -183,7 +183,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
+            <div className="bg-white border-2 border-ink p-6 shadow-brutal-md">
               <div className="flex items-center gap-3 mb-4">
                 <Clock className="w-5 h-5" strokeWidth={2} />
                 <h2 className="font-extrabold text-lg uppercase">RESET INFORMATION</h2>
@@ -197,7 +197,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
             </div>
 
             {isAtLimit && (
-              <div className="bg-[#FF6A00] border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
+              <div className="bg-accent border-2 border-ink p-6 shadow-brutal-md">
                 <h3 className="font-extrabold text-xl uppercase mb-3">DAILY LIMIT REACHED</h3>
                 <p className="text-sm leading-relaxed mb-4">
                   You've used all {usageStatus.limit} of today's AI practice sessions. Your limit will reset {formatResetTime(usageStatus.resets_at)}.
@@ -205,7 +205,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                 {usageStatus.plan === 'free' && (
                   <button
                     onClick={() => setShowUpgradeModal(true)}
-                    className="bg-black text-white border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                    className="bg-ink text-white border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                   >
                     UPGRADE FOR MORE SESSIONS
                   </button>
@@ -213,7 +213,7 @@ export default function BillingPage({ onBack }: BillingPageProps) {
               </div>
             )}
 
-            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000000]">
+            <div className="bg-white border-2 border-ink p-6 shadow-brutal-md">
               <h2 className="font-extrabold text-lg uppercase mb-4">WHAT COUNTS AS A SESSION?</h2>
               <div className="space-y-3 text-sm leading-relaxed">
                 <p>
@@ -224,19 +224,19 @@ export default function BillingPage({ onBack }: BillingPageProps) {
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
-                    <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                    <span className="text-accent font-extrabold">&gt;</span>
                     <span>Writing lab conversations</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                    <span className="text-accent font-extrabold">&gt;</span>
                     <span>Analysis lab queries</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                    <span className="text-accent font-extrabold">&gt;</span>
                     <span>Creative brainstorming sessions</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                    <span className="text-accent font-extrabold">&gt;</span>
                     <span>Strategy and code lab interactions</span>
                   </li>
                 </ul>

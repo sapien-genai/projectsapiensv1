@@ -39,7 +39,7 @@ export default function FeaturedPaths() {
         {paths.map((path) => (
           <div
             key={path.title}
-            className="bg-white border-2 border-black p-8 shadow-[4px_4px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer group"
+            className="bg-white border-2 border-ink p-8 shadow-brutal-md hover:shadow-brutal-xl hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer group"
           >
             <path.icon className="w-12 h-12 mb-6 group-hover:scale-110 transition-transform" strokeWidth={2} />
 

@@ -31,9 +31,9 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <div className="bg-white border-2 border-black p-6 md:p-8 shadow-[4px_4px_0px_#000000]">
+        <div className="bg-white border-2 border-ink p-6 md:p-8 shadow-brutal-md">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-[#F4F4F4] border-2 border-black p-3">
+            <div className="bg-surface border-2 border-ink p-3">
               <Zap className="w-6 h-6" strokeWidth={2} />
             </div>
             <div>
@@ -79,19 +79,19 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
 
           <button
             onClick={onGetStarted}
-            className="w-full bg-white border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="w-full bg-white border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             START FREE
           </button>
         </div>
 
-        <div className="bg-[#FF6A00] border-2 border-black p-6 md:p-8 shadow-[4px_4px_0px_#000000] relative">
-          <div className="absolute -top-3 -right-3 bg-black text-white border-2 border-black px-3 py-1 font-extrabold text-xs uppercase">
+        <div className="bg-accent border-2 border-ink p-6 md:p-8 shadow-brutal-md relative">
+          <div className="absolute -top-3 -right-3 bg-ink text-white border-2 border-ink px-3 py-1 font-extrabold text-xs uppercase">
             BEST VALUE
           </div>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-black border-2 border-black p-3">
+            <div className="bg-ink border-2 border-ink p-3">
               <TrendingUp className="w-6 h-6 text-white" strokeWidth={2} />
             </div>
             <div>
@@ -107,9 +107,9 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
           <div className="mb-6">
             <div className="flex items-baseline gap-2 mb-2">
               <span className="font-extrabold text-4xl">120</span>
-              <span className="text-sm text-black font-semibold">AI practice sessions / day</span>
+              <span className="text-sm text-ink font-semibold">AI practice sessions / day</span>
             </div>
-            <p className="text-xs text-black font-semibold">8x more than Free plan</p>
+            <p className="text-xs text-ink font-semibold">8x more than Free plan</p>
           </div>
 
           <ul className="space-y-3 mb-8">
@@ -142,10 +142,10 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
           <button
             onClick={handleUpgrade}
             disabled={isPro}
-            className={`w-full border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight transition-all ${
+            className={`w-full border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight transition-all ${
               isPro
-                ? 'bg-[#CCCCCC] text-black cursor-not-allowed'
-                : 'bg-black text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                ? 'bg-[#CCCCCC] text-ink cursor-not-allowed'
+                : 'bg-ink text-white shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
             }`}
           >
             {isPro ? 'CURRENT PLAN' : user ? 'GO PRO' : 'SIGN UP TO GO PRO'}
@@ -154,7 +154,7 @@ export default function PricingSection({ onGetStarted }: PricingSectionProps) {
       </div>
 
       <div className="mt-12 text-center">
-        <div className="inline-block bg-white border-2 border-black p-6 shadow-[2px_2px_0px_#000000] max-w-2xl">
+        <div className="inline-block bg-white border-2 border-ink p-6 shadow-brutal-sm max-w-2xl">
           <h3 className="font-extrabold text-lg uppercase mb-2">What are AI practice sessions?</h3>
           <p className="text-sm leading-relaxed">
             One session equals one successful interaction with our AI in any lab environment. This includes conversations in the Writing Lab, queries in the Analysis Lab, brainstorming in the Creative Lab, and more. Failed requests or system errors don't count toward your limit.

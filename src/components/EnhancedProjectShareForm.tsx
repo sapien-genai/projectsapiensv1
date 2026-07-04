@@ -128,14 +128,14 @@ export default function EnhancedProjectShareForm({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-[#F8F5F2] border-2 sm:border-4 border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] md:shadow-[12px_12px_0px_#000000] max-w-full sm:max-w-3xl w-full my-8">
-        <div className="bg-white border-b-2 sm:border-b-4 border-black p-4 sm:p-6 flex justify-between items-center gap-2">
+      <div className="bg-paper border-2 sm:border-4 border-ink shadow-brutal-md sm:shadow-brutal-xl md:shadow-brutal-2xl max-w-full sm:max-w-3xl w-full my-8">
+        <div className="bg-white border-b-2 sm:border-b-4 border-ink p-4 sm:p-6 flex justify-between items-center gap-2">
           <h2 className="font-extrabold text-lg sm:text-xl md:text-2xl uppercase tracking-tight">
             {existingProject ? 'Edit' : 'Share'} Project
           </h2>
           <button
             onClick={onClose}
-            className="p-2 min-h-[44px] min-w-[44px] hover:bg-[#E9E5E0] border-2 border-black transition-colors flex items-center justify-center"
+            className="p-2 min-h-[44px] min-w-[44px] hover:bg-paper-2 border-2 border-ink transition-colors flex items-center justify-center"
             aria-label="Close form"
           >
             <X className="w-5 h-5" strokeWidth={2.5} />
@@ -158,7 +158,7 @@ export default function EnhancedProjectShareForm({
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
               required
             />
           </div>
@@ -171,7 +171,7 @@ export default function EnhancedProjectShareForm({
               type="text"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
               placeholder="One-line summary of your project"
               required
             />
@@ -184,7 +184,7 @@ export default function EnhancedProjectShareForm({
             <textarea
               value={formData.problem_statement}
               onChange={(e) => setFormData({ ...formData, problem_statement: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] min-h-[100px]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft min-h-[100px]"
               placeholder="What problem were you trying to solve?"
               required
             />
@@ -197,7 +197,7 @@ export default function EnhancedProjectShareForm({
             <textarea
               value={formData.ai_approach}
               onChange={(e) => setFormData({ ...formData, ai_approach: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] min-h-[100px]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft min-h-[100px]"
               placeholder="How did you use AI to address this problem?"
               required
             />
@@ -211,7 +211,7 @@ export default function EnhancedProjectShareForm({
               type="text"
               value={formData.tools_models}
               onChange={(e) => setFormData({ ...formData, tools_models: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
               placeholder="e.g., ChatGPT, Claude, Midjourney, Python, etc."
               required
             />
@@ -224,7 +224,7 @@ export default function EnhancedProjectShareForm({
             <textarea
               value={formData.outcome}
               onChange={(e) => setFormData({ ...formData, outcome: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] min-h-[120px]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft min-h-[120px]"
               placeholder="What was the result? What did you learn?"
               required
             />
@@ -238,7 +238,7 @@ export default function EnhancedProjectShareForm({
               <select
                 value={formData.skill_level}
                 onChange={(e) => setFormData({ ...formData, skill_level: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] bg-white"
+                className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft bg-white"
                 required
               >
                 <option value="beginner">Beginner</option>
@@ -254,7 +254,7 @@ export default function EnhancedProjectShareForm({
               <select
                 value={formData.domain}
                 onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] bg-white"
+                className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft bg-white"
               >
                 <option value="">Select domain</option>
                 {AI_DOMAINS.map((domain) => (
@@ -274,7 +274,7 @@ export default function EnhancedProjectShareForm({
               type="text"
               value={formData.tags}
               onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+              className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
               placeholder="automation, productivity, research"
             />
           </div>
@@ -288,7 +288,7 @@ export default function EnhancedProjectShareForm({
                 type="url"
                 value={formData.github_url}
                 onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                 placeholder="https://github.com/..."
               />
             </div>
@@ -301,20 +301,20 @@ export default function EnhancedProjectShareForm({
                 type="url"
                 value={formData.demo_url}
                 onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                 placeholder="https://..."
               />
             </div>
           </div>
 
-          <div className="bg-[#E9E5E0] border-2 border-black p-4 space-y-3">
+          <div className="bg-paper-2 border-2 border-ink p-4 space-y-3">
             <p className="font-bold uppercase tracking-tight text-sm">Optional Settings</p>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.open_to_feedback}
                 onChange={(e) => setFormData({ ...formData, open_to_feedback: e.target.checked })}
-                className="w-5 h-5 border-2 border-black"
+                className="w-5 h-5 border-2 border-ink"
               />
               <span className="text-sm">Open to feedback</span>
             </label>
@@ -325,7 +325,7 @@ export default function EnhancedProjectShareForm({
                 onChange={(e) =>
                   setFormData({ ...formData, looking_for_collaborators: e.target.checked })
                 }
-                className="w-5 h-5 border-2 border-black"
+                className="w-5 h-5 border-2 border-ink"
               />
               <span className="text-sm">Looking for collaborators</span>
             </label>
@@ -335,14 +335,14 @@ export default function EnhancedProjectShareForm({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+              className="flex-1 px-6 py-3 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
               disabled={loading}
             >
               <Save className="w-5 h-5" strokeWidth={2.5} />

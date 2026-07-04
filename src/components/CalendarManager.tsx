@@ -174,7 +174,7 @@ export default function CalendarManager() {
 
   if (loading) {
     return (
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <p>Loading calendar...</p>
       </div>
     );
@@ -183,15 +183,15 @@ export default function CalendarManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-extrabold uppercase tracking-tight mb-2">Calendar</h2>
-            <p className="text-[#57524D] text-sm">Manage your schedule with AI-powered prep</p>
+            <p className="text-secondary text-sm">Manage your schedule with AI-powered prep</p>
           </div>
           <button
             onClick={() => setShowAddEvent(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-bold text-sm hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-bold text-sm hover:bg-gray-800 transition-colors"
           >
             <Plus className="w-4 h-4" strokeWidth={2} />
             Add Event
@@ -203,19 +203,19 @@ export default function CalendarManager() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigateDate('prev')}
-              className="p-2 border border-black hover:bg-[#F8F5F2] transition-colors"
+              className="p-2 border border-ink hover:bg-paper transition-colors"
             >
               <ChevronLeft className="w-5 h-5" strokeWidth={2} />
             </button>
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="px-4 py-2 border border-black font-bold text-sm hover:bg-[#F8F5F2] transition-colors"
+              className="px-4 py-2 border border-ink font-bold text-sm hover:bg-paper transition-colors"
             >
               Today
             </button>
             <button
               onClick={() => navigateDate('next')}
-              className="p-2 border border-black hover:bg-[#F8F5F2] transition-colors"
+              className="p-2 border border-ink hover:bg-paper transition-colors"
             >
               <ChevronRight className="w-5 h-5" strokeWidth={2} />
             </button>
@@ -227,8 +227,8 @@ export default function CalendarManager() {
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`px-4 py-2 border border-black font-bold text-sm capitalize transition-colors ${
-                  viewMode === mode ? 'bg-black text-white' : 'bg-white hover:bg-[#F8F5F2]'
+                className={`px-4 py-2 border border-ink font-bold text-sm capitalize transition-colors ${
+                  viewMode === mode ? 'bg-ink text-white' : 'bg-white hover:bg-paper'
                 }`}
               >
                 {mode}
@@ -306,10 +306,10 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+    <form onSubmit={handleSubmit} className="bg-white border border-ink p-6 shadow-brutal-sm">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold uppercase tracking-tight">Add Calendar Event</h3>
-        <button type="button" onClick={onCancel} className="p-1 hover:bg-[#F8F5F2] transition-colors rounded">
+        <button type="button" onClick={onCancel} className="p-1 hover:bg-paper transition-colors rounded">
           <X className="w-5 h-5" strokeWidth={2} />
         </button>
       </div>
@@ -321,7 +321,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
             type="text"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             placeholder="Meeting, deadline, etc."
             required
           />
@@ -332,7 +332,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
           <select
             value={formData.event_type}
             onChange={(e) => setFormData({ ...formData, event_type: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="meeting">Meeting</option>
             <option value="task">Task</option>
@@ -348,7 +348,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
             type="date"
             value={formData.event_date}
             onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
 
@@ -358,7 +358,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
             type="time"
             value={formData.event_time}
             onChange={(e) => setFormData({ ...formData, event_time: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
 
@@ -368,7 +368,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
             type="number"
             value={formData.duration_minutes}
             onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             min="15"
             step="15"
           />
@@ -380,7 +380,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
             type="text"
             value={formData.location}
             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             placeholder="Office, Zoom, etc."
           />
         </div>
@@ -390,7 +390,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
           <select
             value={formData.reminder_minutes}
             onChange={(e) => setFormData({ ...formData, reminder_minutes: parseInt(e.target.value) })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="0">No reminder</option>
             <option value="5">5 minutes</option>
@@ -406,7 +406,7 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261] resize-y"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft resize-y"
             rows={3}
             placeholder="Event details..."
           />
@@ -416,14 +416,14 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
       <div className="flex gap-3 mt-6">
         <button
           type="submit"
-          className="flex-1 px-4 py-2 bg-[#F4A261] text-white border border-black font-bold text-sm hover:bg-[#e89350] transition-colors"
+          className="flex-1 px-4 py-2 bg-accent-soft text-white border border-ink font-bold text-sm hover:bg-accent-hover transition-colors"
         >
           Add Event
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-white border border-black font-bold text-sm hover:bg-[#F8F5F2] transition-colors"
+          className="px-4 py-2 bg-white border border-ink font-bold text-sm hover:bg-paper transition-colors"
         >
           Cancel
         </button>
@@ -434,12 +434,12 @@ function AddEventForm({ onAdd, onCancel }: { onAdd: (event: Partial<CalendarEven
 
 function DayView({ date, events, onEventUpdate, onEventDelete, onGeneratePrep, getEventTypeColor }: any) {
   return (
-    <div className="bg-white border border-black shadow-[2px_2px_0px_#000000]">
+    <div className="bg-white border border-ink shadow-brutal-sm">
       <div className="p-6">
         <h3 className="font-bold mb-4">{date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</h3>
         {events.length === 0 ? (
-          <div className="text-center py-12 text-[#57524D]">
-            <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-[#E9E5E0]" strokeWidth={2} />
+          <div className="text-center py-12 text-secondary">
+            <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-paper-2" strokeWidth={2} />
             <p>No events scheduled for this day</p>
           </div>
         ) : (
@@ -469,19 +469,19 @@ function WeekView({ startDate, events, onEventUpdate, onEventDelete, onGenerateP
   });
 
   return (
-    <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] overflow-x-auto">
+    <div className="bg-white border border-ink shadow-brutal-sm overflow-x-auto">
       <div className="grid grid-cols-7 min-w-[800px]">
         {days.map((day, i) => (
-          <div key={i} className={`border-r-2 border-black last:border-r-0 ${day.toDateString() === new Date().toDateString() ? 'bg-[#FFF9E6]' : ''}`}>
-            <div className="p-3 border-b-2 border-black">
-              <div className="text-xs font-bold text-[#57524D]">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+          <div key={i} className={`border-r-2 border-ink last:border-r-0 ${day.toDateString() === new Date().toDateString() ? 'bg-cream' : ''}`}>
+            <div className="p-3 border-b-2 border-ink">
+              <div className="text-xs font-bold text-secondary">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
               <div className="text-lg font-bold">{day.getDate()}</div>
             </div>
             <div className="p-2 space-y-2 min-h-[200px]">
               {getEventsForDate(day).map((event: CalendarEvent) => (
                 <div key={event.id} className={`p-2 border-l-4 ${getEventTypeColor(event.event_type)} text-xs`}>
                   <div className="font-bold truncate">{event.title}</div>
-                  {event.event_time && <div className="text-[#57524D]">{event.event_time}</div>}
+                  {event.event_time && <div className="text-secondary">{event.event_time}</div>}
                 </div>
               ))}
             </div>
@@ -506,10 +506,10 @@ function MonthView({ currentDate, events, getEventsForDate }: any) {
   }
 
   return (
-    <div className="bg-white border border-black shadow-[2px_2px_0px_#000000]">
+    <div className="bg-white border border-ink shadow-brutal-sm">
       <div className="grid grid-cols-7">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="p-2 border-b-2 border-r-2 border-black last:border-r-0 text-center font-bold text-sm">
+          <div key={day} className="p-2 border-b-2 border-r-2 border-ink last:border-r-0 text-center font-bold text-sm">
             {day}
           </div>
         ))}
@@ -521,11 +521,11 @@ function MonthView({ currentDate, events, getEventsForDate }: any) {
           return (
             <div
               key={i}
-              className={`min-h-[100px] p-2 border-r-2 border-b-2 border-black last:border-r-0 ${
-                !isCurrentMonth ? 'bg-[#F8F5F2] text-[#57524D]' : ''
-              } ${isToday ? 'bg-[#FFF9E6]' : ''}`}
+              className={`min-h-[100px] p-2 border-r-2 border-b-2 border-ink last:border-r-0 ${
+                !isCurrentMonth ? 'bg-paper text-secondary' : ''
+              } ${isToday ? 'bg-cream' : ''}`}
             >
-              <div className={`text-sm font-bold mb-1 ${isToday ? 'bg-black text-white w-6 h-6 rounded-full flex items-center justify-center' : ''}`}>
+              <div className={`text-sm font-bold mb-1 ${isToday ? 'bg-ink text-white w-6 h-6 rounded-full flex items-center justify-center' : ''}`}>
                 {day.getDate()}
               </div>
               <div className="space-y-1">
@@ -535,7 +535,7 @@ function MonthView({ currentDate, events, getEventsForDate }: any) {
                   </div>
                 ))}
                 {dayEvents.length > 3 && (
-                  <div className="text-xs text-[#57524D]">+{dayEvents.length - 3} more</div>
+                  <div className="text-xs text-secondary">+{dayEvents.length - 3} more</div>
                 )}
               </div>
             </div>
@@ -552,7 +552,7 @@ function EventCard({ event, onUpdate, onDelete, onGeneratePrep, getEventTypeColo
       <div className="flex items-start justify-between mb-2">
         <div>
           <h4 className="font-bold">{event.title}</h4>
-          <div className="flex items-center gap-3 text-sm text-[#57524D] mt-1">
+          <div className="flex items-center gap-3 text-sm text-secondary mt-1">
             {event.event_time && (
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" strokeWidth={2} />
@@ -567,10 +567,10 @@ function EventCard({ event, onUpdate, onDelete, onGeneratePrep, getEventTypeColo
             )}
           </div>
         </div>
-        <span className="text-xs font-bold px-2 py-1 bg-white border border-black">{event.event_type}</span>
+        <span className="text-xs font-bold px-2 py-1 bg-white border border-ink">{event.event_type}</span>
       </div>
 
-      {event.description && <p className="text-sm text-[#57524D] mb-3">{event.description}</p>}
+      {event.description && <p className="text-sm text-secondary mb-3">{event.description}</p>}
 
       {event.ai_generated_prep && event.prep_notes && (
         <div className="mb-3 p-2 bg-yellow-50 border border-yellow-500 rounded">
@@ -583,7 +583,7 @@ function EventCard({ event, onUpdate, onDelete, onGeneratePrep, getEventTypeColo
         {!event.ai_generated_prep && (
           <button
             onClick={() => onGeneratePrep(event.id)}
-            className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#F4A261] text-white border border-black hover:bg-[#e89350] transition-colors"
+            className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-accent-soft text-white border border-ink hover:bg-accent-hover transition-colors"
           >
             <Sparkles className="w-3 h-3" strokeWidth={2} />
             Generate AI Prep
@@ -591,14 +591,14 @@ function EventCard({ event, onUpdate, onDelete, onGeneratePrep, getEventTypeColo
         )}
         <button
           onClick={() => onUpdate(event.id, { completed: !event.completed })}
-          className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-green-50 border border-black hover:bg-green-100 transition-colors"
+          className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-green-50 border border-ink hover:bg-green-100 transition-colors"
         >
           <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
           {event.completed ? 'Completed' : 'Mark Complete'}
         </button>
         <button
           onClick={() => onDelete(event.id)}
-          className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-50 border border-black text-red-600 hover:bg-red-100 transition-colors"
+          className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-50 border border-ink text-red-600 hover:bg-red-100 transition-colors"
         >
           <Trash2 className="w-3 h-3" strokeWidth={2} />
           Delete
@@ -610,7 +610,7 @@ function EventCard({ event, onUpdate, onDelete, onGeneratePrep, getEventTypeColo
 
 function StatCard({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) {
   return (
-    <div className={`${color} border border-black p-4`}>
+    <div className={`${color} border border-ink p-4`}>
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-bold uppercase tracking-tight">{label}</span>
         {icon}

@@ -214,9 +214,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+      <div className="min-h-screen bg-paper flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#F4A261] animate-spin"></div>
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent-soft animate-spin"></div>
           <p className="mt-4 font-semibold">LOADING...</p>
         </div>
       </div>
@@ -225,7 +225,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+      <div className="min-h-screen bg-paper flex items-center justify-center">
         <p>Profile not found</p>
       </div>
     );
@@ -234,14 +234,14 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
   const currentLevel = fluencyLevels.find((l) => l.level === profile.fluency_level) || fluencyLevels[0];
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
-      <nav className="bg-white border-b-4 border-black">
+    <div className="min-h-screen bg-paper">
+      <nav className="bg-white border-b-4 border-ink">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             {onBack && (
               <button
                 onClick={onBack}
-                className="p-2 hover:bg-[#E9E5E0] border-2 border-black transition-colors"
+                className="p-2 hover:bg-paper-2 border-2 border-ink transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
               </button>
@@ -251,7 +251,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           {!editing && (
             <button
               onClick={() => setEditing(true)}
-              className="px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+              className="px-6 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
             >
               Edit Profile
             </button>
@@ -266,9 +266,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           </div>
         )}
 
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-8">
           <div className="flex items-start gap-6 mb-6">
-            <div className="w-24 h-24 bg-[#E9E5E0] border-4 border-black flex items-center justify-center">
+            <div className="w-24 h-24 bg-paper-2 border-4 border-ink flex items-center justify-center">
               <User className="w-12 h-12 text-gray-600" strokeWidth={2.5} />
             </div>
             <div className="flex-1">
@@ -282,7 +282,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                       type="text"
                       value={editForm.username}
                       onChange={(e) => setEditForm({ ...editForm, username: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                      className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                     />
                   </div>
                   <div>
@@ -292,7 +292,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                     <textarea
                       value={editForm.bio}
                       onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] min-h-[100px]"
+                      className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft min-h-[100px]"
                       placeholder="Tell others about your AI journey..."
                     />
                   </div>
@@ -303,7 +303,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                     {profile.username}
                   </h2>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-sm bg-[#F4A261] border-2 border-black px-3 py-1 font-bold">
+                    <span className="text-sm bg-accent-soft border-2 border-ink px-3 py-1 font-bold">
                       {currentLevel.title}
                     </span>
                     <span className="text-sm text-gray-600">{currentLevel.subtitle}</span>
@@ -318,21 +318,21 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+          <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
             <BookOpen className="w-8 h-8 mb-3" strokeWidth={2.5} />
             <p className="text-3xl font-extrabold">{stats.completedPaths}</p>
             <p className="text-sm font-bold uppercase tracking-tight text-gray-600">
               Paths Completed
             </p>
           </div>
-          <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+          <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
             <Beaker className="w-8 h-8 mb-3" strokeWidth={2.5} />
             <p className="text-3xl font-extrabold">{stats.completedLabs}</p>
             <p className="text-sm font-bold uppercase tracking-tight text-gray-600">
               Labs Completed
             </p>
           </div>
-          <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+          <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
             <Share2 className="w-8 h-8 mb-3" strokeWidth={2.5} />
             <p className="text-3xl font-extrabold">{stats.sharedProjects}</p>
             <p className="text-sm font-bold uppercase tracking-tight text-gray-600">
@@ -341,7 +341,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           </div>
         </div>
 
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <Trophy className="w-6 h-6" strokeWidth={2.5} />
             <h3 className="font-extrabold text-xl uppercase tracking-tight">
@@ -354,7 +354,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 <select
                   value={newStrength}
                   onChange={(e) => setNewStrength(e.target.value)}
-                  className="flex-1 px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] bg-white"
+                  className="flex-1 px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft bg-white"
                 >
                   <option value="">Select a strength...</option>
                   {AI_STRENGTH_OPTIONS.filter(s => !editForm.declared_strengths.includes(s)).map((strength) => (
@@ -365,7 +365,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 </select>
                 <button
                   onClick={() => newStrength && addStrength(newStrength)}
-                  className="px-4 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+                  className="px-4 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
                 >
                   <Plus className="w-5 h-5" strokeWidth={2.5} />
                 </button>
@@ -374,7 +374,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 {editForm.declared_strengths.map((strength) => (
                   <span
                     key={strength}
-                    className="inline-flex items-center gap-2 bg-[#98C9A3] border-2 border-black px-3 py-2 font-bold text-sm"
+                    className="inline-flex items-center gap-2 bg-success-soft border-2 border-ink px-3 py-2 font-bold text-sm"
                   >
                     {strength}
                     <button onClick={() => removeStrength(strength)}>
@@ -390,7 +390,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 profile.declared_strengths.map((strength) => (
                   <span
                     key={strength}
-                    className="bg-[#98C9A3] border-2 border-black px-4 py-2 font-bold text-sm"
+                    className="bg-success-soft border-2 border-ink px-4 py-2 font-bold text-sm"
                   >
                     {strength}
                   </span>
@@ -402,7 +402,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           )}
         </div>
 
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <Target className="w-6 h-6" strokeWidth={2.5} />
             <h3 className="font-extrabold text-xl uppercase tracking-tight">Learning Goals</h3>
@@ -416,11 +416,11 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   onChange={(e) => setNewGoal(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addGoal()}
                   placeholder="Add a learning goal..."
-                  className="flex-1 px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                  className="flex-1 px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                 />
                 <button
                   onClick={addGoal}
-                  className="px-4 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+                  className="px-4 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
                 >
                   <Plus className="w-5 h-5" strokeWidth={2.5} />
                 </button>
@@ -429,7 +429,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 {editForm.learning_goals.map((goal) => (
                   <div
                     key={goal}
-                    className="flex items-center justify-between bg-[#E9E5E0] border-2 border-black px-4 py-3"
+                    className="flex items-center justify-between bg-paper-2 border-2 border-ink px-4 py-3"
                   >
                     <span className="text-sm">{goal}</span>
                     <button onClick={() => removeGoal(goal)}>
@@ -443,7 +443,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
             <div className="space-y-2">
               {profile.learning_goals && profile.learning_goals.length > 0 ? (
                 profile.learning_goals.map((goal) => (
-                  <div key={goal} className="bg-[#E9E5E0] border-2 border-black px-4 py-3">
+                  <div key={goal} className="bg-paper-2 border-2 border-ink px-4 py-3">
                     <p className="text-sm">{goal}</p>
                   </div>
                 ))
@@ -454,7 +454,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           )}
         </div>
 
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <Users className="w-6 h-6" strokeWidth={2.5} />
             <h3 className="font-extrabold text-xl uppercase tracking-tight">
@@ -463,14 +463,14 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           </div>
           {editing ? (
             <div className="space-y-4">
-              <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-black hover:bg-[#E9E5E0] transition-colors">
+              <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-ink hover:bg-paper-2 transition-colors">
                 <input
                   type="checkbox"
                   checked={editForm.open_to_mentoring}
                   onChange={(e) =>
                     setEditForm({ ...editForm, open_to_mentoring: e.target.checked })
                   }
-                  className="w-5 h-5 border-2 border-black"
+                  className="w-5 h-5 border-2 border-ink"
                 />
                 <div>
                   <p className="font-bold">Open to mentoring others</p>
@@ -479,14 +479,14 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   </p>
                 </div>
               </label>
-              <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-black hover:bg-[#E9E5E0] transition-colors">
+              <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-ink hover:bg-paper-2 transition-colors">
                 <input
                   type="checkbox"
                   checked={editForm.open_to_being_mentored}
                   onChange={(e) =>
                     setEditForm({ ...editForm, open_to_being_mentored: e.target.checked })
                   }
-                  className="w-5 h-5 border-2 border-black"
+                  className="w-5 h-5 border-2 border-ink"
                 />
                 <div>
                   <p className="font-bold">Open to being mentored</p>
@@ -524,14 +524,14 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   open_to_being_mentored: profile.open_to_being_mentored || false,
                 });
               }}
-              className="flex-1 px-6 py-3 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+              className="flex-1 px-6 py-3 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
               disabled={saving}
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="flex-1 px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
               disabled={saving}
             >
               <Save className="w-5 h-5" strokeWidth={2.5} />

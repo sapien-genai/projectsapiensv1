@@ -79,7 +79,7 @@ export default function AdminDashboard({ adminRole }: { adminRole: AdminRole }) 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+        <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
       </div>
     );
   }
@@ -132,14 +132,14 @@ export default function AdminDashboard({ adminRole }: { adminRole: AdminRole }) 
           const TrendIcon = card.trending === 'up' ? ArrowUp : ArrowDown;
 
           return (
-            <div key={card.label} className="bg-white border-2 border-black p-6 shadow-[2px_2px_0px_#000000]">
+            <div key={card.label} className="bg-white border-2 border-ink p-6 shadow-brutal-sm">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 border-2 border-black flex items-center justify-center" style={{ backgroundColor: card.color + '20' }}>
+                <div className="w-12 h-12 border-2 border-ink flex items-center justify-center" style={{ backgroundColor: card.color + '20' }}>
                   <Icon className="w-6 h-6" strokeWidth={2} style={{ color: card.color }} />
                 </div>
                 <div
                   className={`flex items-center gap-1 text-xs font-extrabold uppercase ${
-                    card.trending === 'up' ? 'text-[#10b981]' : 'text-red-600'
+                    card.trending === 'up' ? 'text-success' : 'text-red-600'
                   }`}
                 >
                   <TrendIcon className="w-4 h-4" strokeWidth={2} />
@@ -156,7 +156,7 @@ export default function AdminDashboard({ adminRole }: { adminRole: AdminRole }) 
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white border-2 border-black p-6 shadow-[2px_2px_0px_#000000]">
+        <div className="bg-white border-2 border-ink p-6 shadow-brutal-sm">
           <h3 className="text-lg font-extrabold uppercase tracking-tight mb-4">RECENT ACTIVITY</h3>
           <div className="space-y-4">
             <ActivityItem
@@ -186,7 +186,7 @@ export default function AdminDashboard({ adminRole }: { adminRole: AdminRole }) 
           </div>
         </div>
 
-        <div className="bg-white border-2 border-black p-6 shadow-[2px_2px_0px_#000000]">
+        <div className="bg-white border-2 border-ink p-6 shadow-brutal-sm">
           <h3 className="text-lg font-extrabold uppercase tracking-tight mb-4">SYSTEM HEALTH</h3>
           <div className="space-y-4">
             <HealthMetric label="API RESPONSE TIME" value="124ms" status="good" />
@@ -197,7 +197,7 @@ export default function AdminDashboard({ adminRole }: { adminRole: AdminRole }) 
         </div>
       </div>
 
-      <div className="bg-[#FFF9E6] border-2 border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-cream border-2 border-ink p-6 shadow-brutal-sm">
         <div className="flex items-start gap-3">
           <AlertCircle className="w-6 h-6 flex-shrink-0" strokeWidth={2} />
           <div>
@@ -226,8 +226,8 @@ function ActivityItem({
   color: string;
 }) {
   return (
-    <div className="flex items-start gap-3 p-3 border border-black">
-      <div className="w-8 h-8 border border-black flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '20' }}>
+    <div className="flex items-start gap-3 p-3 border border-ink">
+      <div className="w-8 h-8 border border-ink flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '20' }}>
         <Icon className="w-4 h-4" strokeWidth={2} style={{ color: color }} />
       </div>
       <div className="flex-1 min-w-0">
@@ -257,11 +257,11 @@ function HealthMetric({
   };
 
   return (
-    <div className="flex items-center justify-between p-3 border border-black bg-[#F4F4F4]">
+    <div className="flex items-center justify-between p-3 border border-ink bg-surface">
       <span className="text-xs font-extrabold uppercase">{label}</span>
       <div className="flex items-center gap-2">
         <span className="text-sm font-extrabold">{value}</span>
-        <div className="w-3 h-3 border border-black" style={{ backgroundColor: statusColors[status] }}></div>
+        <div className="w-3 h-3 border border-ink" style={{ backgroundColor: statusColors[status] }}></div>
       </div>
     </div>
   );

@@ -185,9 +185,9 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
           <p className="mt-4 font-semibold">LOADING...</p>
         </div>
       </div>
@@ -195,11 +195,11 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-accent transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           BACK TO DASHBOARD
@@ -218,7 +218,7 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
                 ) : (
                   <Home className="w-8 h-8" strokeWidth={2} />
                 )}
-                <div className="text-xs font-semibold px-3 py-1 border border-black bg-white">
+                <div className="text-xs font-semibold px-3 py-1 border border-ink bg-white">
                   LEARNING PATH
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
               return (
                 <div
                   key={module.id}
-                  className={`bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] ${
+                  className={`bg-white border border-ink p-6 md:p-8 shadow-brutal-sm md:shadow-brutal ${
                     !unlocked ? 'opacity-60' : ''
                   }`}
                 >
@@ -261,8 +261,8 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
                           key={lesson.id}
                           onClick={() => unlocked && onLessonSelect?.(module.id, lesson.id)}
                           disabled={!unlocked}
-                          className={`w-full flex items-center gap-4 p-4 border border-black ${
-                            completed ? 'bg-[#E8F5E9]' : 'bg-[#F4F4F4]'
+                          className={`w-full flex items-center gap-4 p-4 border border-ink ${
+                            completed ? 'bg-success-tint' : 'bg-surface'
                           } hover:bg-white transition-colors text-left ${
                             !unlocked ? 'cursor-not-allowed' : ''
                           }`}
@@ -288,7 +288,7 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] lg:sticky lg:top-8">
+            <div className="bg-white border border-ink p-6 shadow-brutal-sm md:shadow-brutal lg:sticky lg:top-8">
               <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
                 YOUR PROGRESS
               </h3>
@@ -298,9 +298,9 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
                   <span>{completedCount} / {totalLessons} LESSONS</span>
                   <span>{Math.round((completedCount / totalLessons) * 100)}%</span>
                 </div>
-                <div className="h-6 bg-[#F4F4F4] border border-black relative overflow-hidden">
+                <div className="h-6 bg-surface border border-ink relative overflow-hidden">
                   <div
-                    className="absolute inset-y-0 left-0 bg-[#FF6A00]"
+                    className="absolute inset-y-0 left-0 bg-accent"
                     style={{ width: `${(completedCount / totalLessons) * 100}%` }}
                   ></div>
                 </div>
@@ -324,13 +324,13 @@ export default function PathPage({ pathId, onBack, onLessonSelect }: PathPagePro
               <button
                 onClick={handleContinueLearning}
                 disabled={completedCount === totalLessons}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {completedCount === totalLessons ? 'PATH COMPLETED' : 'CONTINUE LEARNING'}
               </button>
             </div>
 
-            <div className="bg-[#0A74FF] border border-black p-6 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]">
+            <div className="bg-info border border-ink p-6 shadow-brutal-sm md:shadow-brutal">
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-3 text-white">
                 WHAT YOU'LL BUILD
               </h4>

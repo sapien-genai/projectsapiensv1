@@ -6,13 +6,13 @@ interface AboutPageProps {
 
 export default function AboutPage({ onBack }: AboutPageProps) {
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
-      <nav className="bg-[#F4F4F4] border-b-2 border-black">
+    <div className="min-h-screen bg-surface">
+      <nav className="bg-surface border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-8 py-4">
           {onBack && (
             <button
               onClick={onBack}
-              className="flex items-center gap-2 bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-2 bg-white border border-ink px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               Back
@@ -40,7 +40,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
         </div>
 
         <div className="space-y-8">
-          <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
+          <div className="bg-white border border-ink p-8 shadow-brutal">
             <div className="flex items-center gap-3 mb-6">
               <Target className="w-8 h-8" strokeWidth={2} />
               <h2 className="font-extrabold text-2xl uppercase tracking-tight">Why Project Sapiens Exists</h2>
@@ -68,7 +68,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             </div>
           </div>
 
-          <div className="bg-[#0A74FF] border border-black p-8 shadow-[3px_3px_0px_#000000]">
+          <div className="bg-info border border-ink p-8 shadow-brutal">
             <div className="flex items-center gap-3 mb-6">
               <Lightbulb className="w-8 h-8 text-white" strokeWidth={2} />
               <h2 className="font-extrabold text-2xl uppercase tracking-tight text-white">How Project Sapiens Is Different</h2>
@@ -82,19 +82,19 @@ export default function AboutPage({ onBack }: AboutPageProps) {
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white border border-black p-4">
+              <div className="bg-white border border-ink p-4">
                 <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">BUILD CONFIDENCE</h3>
                 <p className="text-sm">Through practice</p>
               </div>
-              <div className="bg-white border border-black p-4">
+              <div className="bg-white border border-ink p-4">
                 <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">DEVELOP WORKFLOWS</h3>
                 <p className="text-sm">Repeatable processes</p>
               </div>
-              <div className="bg-white border border-black p-4">
+              <div className="bg-white border border-ink p-4">
                 <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">UNDERSTAND AI</h3>
                 <p className="text-sm">How AI behaves</p>
               </div>
-              <div className="bg-white border border-black p-4">
+              <div className="bg-white border border-ink p-4">
                 <h3 className="font-extrabold text-sm uppercase tracking-tight mb-2">GROW CAPABILITY</h3>
                 <p className="text-sm">From beginner to integrator</p>
               </div>
@@ -104,14 +104,14 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             </p>
           </div>
 
-          <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
+          <div className="bg-white border border-ink p-8 shadow-brutal">
             <div className="flex items-center gap-3 mb-6">
               <User className="w-8 h-8" strokeWidth={2} />
               <h2 className="font-extrabold text-2xl uppercase tracking-tight">Built by Someone Who's Been in the Arena</h2>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="w-32 h-32 border-4 border-black bg-[#FF6A00] flex items-center justify-center shadow-[3px_3px_0px_#000000] flex-shrink-0">
+              <div className="w-32 h-32 border-4 border-ink bg-accent flex items-center justify-center shadow-brutal flex-shrink-0">
                 <User className="w-16 h-16 text-white" strokeWidth={2} />
               </div>
 
@@ -141,7 +141,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
                     These were production systems used by millions, built with real constraints around performance, security, and trust.
                   </p>
 
-                  <p className="font-semibold text-lg border-l-4 border-black pl-4">
+                  <p className="font-semibold text-lg border-l-4 border-ink pl-4">
                     "Powerful AI is only valuable when humans know how to use it well."
                   </p>
 
@@ -161,7 +161,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             </div>
           </div>
 
-          <div className="bg-[#FFD700] border border-black p-8 shadow-[3px_3px_0px_#000000]">
+          <div className="bg-gold border border-ink p-8 shadow-brutal">
             <div className="flex items-center gap-3 mb-6">
               <Zap className="w-8 h-8" strokeWidth={2} />
               <h2 className="font-extrabold text-2xl uppercase tracking-tight">The Long-Term Vision</h2>
@@ -182,7 +182,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             </div>
           </div>
 
-          <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000] text-center">
+          <div className="bg-white border border-ink p-8 shadow-brutal text-center">
             <p className="text-2xl md:text-3xl font-bold tracking-tight leading-relaxed">
               Learn AI. Build with AI. Lead with AI.
             </p>

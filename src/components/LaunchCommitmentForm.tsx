@@ -132,34 +132,34 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
 
   if (loading) {
     return (
-      <div className="bg-[#FF6A00] border border-black p-6 text-center">
-        <p className="text-black font-bold">Loading...</p>
+      <div className="bg-accent border border-ink p-6 text-center">
+        <p className="text-ink font-bold">Loading...</p>
       </div>
     );
   }
 
   if (completed) {
     return (
-      <div className="bg-[#FF6A00] border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-accent border border-ink p-6 md:p-8 shadow-brutal-sm">
         <div className="text-center mb-6">
           <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-green-600" strokeWidth={2} />
-          <h3 className="text-2xl font-extrabold uppercase tracking-tight text-black mb-2">
+          <h3 className="text-2xl font-extrabold uppercase tracking-tight text-ink mb-2">
             Commitment Signed!
           </h3>
-          <p className="text-black font-bold">You're officially committed to 30 days of AI mastery.</p>
+          <p className="text-ink font-bold">You're officially committed to 30 days of AI mastery.</p>
         </div>
 
         {badgeAwarded && (
-          <div className="bg-yellow-400 border border-black p-4 mb-6 flex items-center gap-3">
-            <Award className="w-8 h-8 text-black" strokeWidth={2} />
+          <div className="bg-yellow-400 border border-ink p-4 mb-6 flex items-center gap-3">
+            <Award className="w-8 h-8 text-ink" strokeWidth={2} />
             <div>
-              <p className="font-extrabold text-black uppercase tracking-tight">Badge Unlocked!</p>
-              <p className="text-sm text-black">Command Center Master</p>
+              <p className="font-extrabold text-ink uppercase tracking-tight">Badge Unlocked!</p>
+              <p className="text-sm text-ink">Command Center Master</p>
             </div>
           </div>
         )}
 
-        <div className="bg-white border border-black p-6 space-y-4 text-black">
+        <div className="bg-white border border-ink p-6 space-y-4 text-ink">
           <h4 className="font-extrabold uppercase tracking-tight mb-4">Your Commitment</h4>
 
           <div>
@@ -199,13 +199,13 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
             <p className="text-sm">{formData.reward}</p>
           </div>
 
-          <div className="pt-4 border-t-2 border-black">
+          <div className="pt-4 border-t-2 border-ink">
             <p className="text-sm">Signed: <span className="font-bold">{formData.signature}</span></p>
             <p className="text-sm">Date: <span className="font-bold">{new Date(formData.signed_date).toLocaleDateString()}</span></p>
           </div>
         </div>
 
-        <p className="text-xs text-black mt-4 text-center">
+        <p className="text-xs text-ink mt-4 text-center">
           Screenshot or save this. Review it on Day 15 when motivation dips.
         </p>
       </div>
@@ -213,65 +213,65 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#FF6A00] border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000]">
-      <h3 className="text-xl font-extrabold uppercase tracking-tight text-black mb-6">
+    <form onSubmit={handleSubmit} className="bg-accent border border-ink p-6 md:p-8 shadow-brutal-sm">
+      <h3 className="text-xl font-extrabold uppercase tracking-tight text-ink mb-6">
         Launch Commitment
       </h3>
 
       <div className="space-y-6">
-        <div className="bg-white border border-black p-4">
-          <p className="text-sm text-black mb-4">
+        <div className="bg-white border border-ink p-4">
+          <p className="text-sm text-ink mb-4">
             Complete this commitment statement to launch your Command Center and earn your badge:
           </p>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-black mb-2">Your Name *</label>
+              <label className="block text-sm font-bold text-ink mb-2">Your Name *</label>
               <input
                 type="text"
                 value={formData.student_name}
                 onChange={(e) => handleChange('student_name', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Your full name"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-black mb-2">Start Date *</label>
+              <label className="block text-sm font-bold text-ink mb-2">Start Date *</label>
               <input
                 type="date"
                 value={formData.start_date}
                 onChange={(e) => handleChange('start_date', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 required
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">MY WHY</h4>
-          <label className="block text-sm text-black mb-2">I'm doing this because...</label>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">MY WHY</h4>
+          <label className="block text-sm text-ink mb-2">I'm doing this because...</label>
           <textarea
             value={formData.why}
             onChange={(e) => handleChange('why', e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black resize-y"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink resize-y"
             rows={3}
             placeholder="What you want to change/improve"
             required
           />
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">MY METRICS</h4>
-          <p className="text-sm text-black mb-3">I'll track these to measure success:</p>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">MY METRICS</h4>
+          <p className="text-sm text-ink mb-3">I'll track these to measure success:</p>
           <div className="space-y-3">
             <input
               type="text"
               value={formData.metric_1}
               onChange={(e) => handleChange('metric_1', e.target.value)}
-              className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
               placeholder="Metric 1: e.g., time saved"
               required
             />
@@ -279,7 +279,7 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
               type="text"
               value={formData.metric_2}
               onChange={(e) => handleChange('metric_2', e.target.value)}
-              className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
               placeholder="Metric 2: e.g., stress level"
               required
             />
@@ -287,7 +287,7 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
               type="text"
               value={formData.metric_3}
               onChange={(e) => handleChange('metric_3', e.target.value)}
-              className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
               placeholder="Metric 3: e.g., work quality"
               required
             />
@@ -295,34 +295,34 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
               type="text"
               value={formData.metric_4}
               onChange={(e) => handleChange('metric_4', e.target.value)}
-              className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
               placeholder="Metric 4: e.g., things completed"
               required
             />
           </div>
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">MY ACCOUNTABILITY</h4>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">MY ACCOUNTABILITY</h4>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm text-black mb-2">I'm sharing this commitment with:</label>
+              <label className="block text-sm text-ink mb-2">I'm sharing this commitment with:</label>
               <input
                 type="text"
                 value={formData.accountability_person}
                 onChange={(e) => handleChange('accountability_person', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Person's name"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm text-black mb-2">I'll check in weekly on:</label>
+              <label className="block text-sm text-ink mb-2">I'll check in weekly on:</label>
               <input
                 type="text"
                 value={formData.checkin_schedule}
                 onChange={(e) => handleChange('checkin_schedule', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Day/time (e.g., Sundays at 7pm)"
                 required
               />
@@ -330,28 +330,28 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
           </div>
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">MY BACKUP PLAN</h4>
-          <p className="text-sm text-black mb-3">If something breaks or doesn't work:</p>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">MY BACKUP PLAN</h4>
+          <p className="text-sm text-ink mb-3">If something breaks or doesn't work:</p>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm text-black mb-2">What I'll do:</label>
+              <label className="block text-sm text-ink mb-2">What I'll do:</label>
               <input
                 type="text"
                 value={formData.backup_action}
                 onChange={(e) => handleChange('backup_action', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Your backup action"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm text-black mb-2">Who I'll ask for help:</label>
+              <label className="block text-sm text-ink mb-2">Who I'll ask for help:</label>
               <input
                 type="text"
                 value={formData.backup_help}
                 onChange={(e) => handleChange('backup_help', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Person or resource"
                 required
               />
@@ -359,40 +359,40 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
           </div>
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">MY REWARD</h4>
-          <label className="block text-sm text-black mb-2">When I complete 30 days successfully:</label>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">MY REWARD</h4>
+          <label className="block text-sm text-ink mb-2">When I complete 30 days successfully:</label>
           <textarea
             value={formData.reward}
             onChange={(e) => handleChange('reward', e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black resize-y"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink resize-y"
             rows={2}
             placeholder="How you'll celebrate"
             required
           />
         </div>
 
-        <div className="bg-white border border-black p-4">
-          <h4 className="font-bold text-black mb-3">SIGNATURE</h4>
+        <div className="bg-white border border-ink p-4">
+          <h4 className="font-bold text-ink mb-3">SIGNATURE</h4>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm text-black mb-2">Type your full name to sign:</label>
+              <label className="block text-sm text-ink mb-2">Type your full name to sign:</label>
               <input
                 type="text"
                 value={formData.signature}
                 onChange={(e) => handleChange('signature', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 placeholder="Your signature"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm text-black mb-2">Date:</label>
+              <label className="block text-sm text-ink mb-2">Date:</label>
               <input
                 type="date"
                 value={formData.signed_date}
                 onChange={(e) => handleChange('signed_date', e.target.value)}
-                className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                 required
               />
             </div>
@@ -402,12 +402,12 @@ export default function LaunchCommitmentForm({ onComplete }: LaunchCommitmentFor
         <button
           type="submit"
           disabled={submitting}
-          className="w-full px-6 py-3 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? 'SIGNING...' : 'SIGN COMMITMENT & EARN BADGE'}
         </button>
 
-        <p className="text-xs text-black text-center">
+        <p className="text-xs text-ink text-center">
           By signing, you commit to using your AI Command Center daily for 30 days.
         </p>
       </div>

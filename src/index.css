@@ -3,9 +3,33 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --ink: #000000;
+    --shadow-color: #000000;
+    --accent: #FF6A00;
+    --accent-hover: #e89350;
+    --accent-alt: #FF6B35;
+    --accent-soft: #F4A261;
+    --info: #0A74FF;
+    --info-hover: #0960d9;
+    --info-soft: #E3F2FD;
+    --surface: #F4F4F4;
+    --paper: #F8F5F2;
+    --paper-2: #E9E5E0;
+    --text-strong: #1C1A17;
+    --text-secondary: #57524D;
+    --success: #10b981;
+    --success-soft: #98C9A3;
+    --success-tint: #E8F5E9;
+    --warning: #F59E0B;
+    --gold: #FFD700;
+    --cream: #FFF9E6;
+    --peach: #FFE5D9;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #F4F4F4;
+    background-color: var(--surface);
     font-size: 17px;
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -64,15 +88,77 @@
 }
 
 @layer components {
-  .dark .bg-\[\#F8F5F2\] {
+  :root {
+    --brand-bg: #F4F4F4;
+    --brand-surface: #ffffff;
+    --brand-primary: #FF6A00;
+    --brand-secondary: #0A74FF;
+    --brand-success: #10b981;
+    --brand-warning: #F59E0B;
+    --brand-ink: #000000;
+    --brand-muted: #555555;
+  }
+
+  .brand-page {
+    background: var(--brand-bg);
+    color: var(--brand-ink);
+    min-height: 100vh;
+  }
+
+  .brand-card {
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-ink);
+    box-shadow: 2px 2px 0 var(--brand-ink);
+  }
+
+  .brand-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--brand-ink);
+    background: var(--brand-surface);
+    color: var(--brand-ink);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--brand-ink);
+    transition: box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease;
+  }
+
+  .brand-button:hover {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+  }
+
+  .brand-button-primary {
+    background: var(--brand-primary);
+  }
+
+  .brand-button-secondary {
+    background: var(--brand-secondary);
+    color: #ffffff;
+  }
+
+  .brand-progress {
+    background: var(--brand-primary);
+  }
+
+  .dark .bg-\[\#F8F5F2\],
+  .dark .bg-paper {
     background-color: #2a2a2a !important;
   }
 
-  .dark .bg-\[\#F4F4F4\] {
+  .dark .bg-\[\#F4F4F4\],
+  .dark .bg-surface {
     background-color: #1a1a1a !important;
   }
 
-  .dark .bg-\[\#E9E5E0\] {
+  .dark .bg-\[\#E9E5E0\],
+  .dark .bg-paper-2 {
     background-color: #333333 !important;
   }
 
@@ -80,19 +166,23 @@
     background-color: #252525 !important;
   }
 
-  .dark .bg-black {
+  .dark .bg-black,
+  .dark .bg-ink {
     background-color: #e5e5e5 !important;
   }
 
-  .dark .text-\[\#1C1A17\] {
+  .dark .text-\[\#1C1A17\],
+  .dark .text-strong {
     color: #e5e5e5 !important;
   }
 
-  .dark .text-\[\#57524D\] {
+  .dark .text-\[\#57524D\],
+  .dark .text-secondary {
     color: #a0a0a0 !important;
   }
 
-  .dark .text-black {
+  .dark .text-black,
+  .dark .text-ink {
     color: #1a1a1a !important;
   }
 
@@ -101,19 +191,24 @@
   }
 
   .dark .bg-black.text-white,
+  .dark .bg-ink.text-white,
   .dark button.bg-black,
+  .dark button.bg-ink,
   .dark a.bg-black {
     background-color: #e5e5e5 !important;
     color: #1a1a1a !important;
   }
 
-  .dark .border-black {
+  .dark .border-ink {
     border-color: #404040 !important;
   }
 
   .dark .shadow-\[2px_2px_0px_\#000000\],
   .dark .shadow-\[4px_4px_0px_\#000000\],
-  .dark .shadow-\[6px_6px_0px_\#000000\] {
+  .dark .shadow-\[6px_6px_0px_\#000000\],
+  .dark .shadow-brutal-sm,
+  .dark .shadow-brutal-md,
+  .dark .shadow-brutal-lg {
     box-shadow: none !important;
     border: 1px solid #404040 !important;
   }

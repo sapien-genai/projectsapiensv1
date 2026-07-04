@@ -183,7 +183,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
           Step 1: Identify Patterns
         </h3>
@@ -199,7 +199,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.timeSinks.mostTime}
                   onChange={(e) => updateTimeSinks('mostTime', e.target.value)}
                   placeholder="e.g., Email management and ad-hoc requests"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -209,7 +209,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.timeSinks.surprises}
                   onChange={(e) => updateTimeSinks('surprises', e.target.value)}
                   placeholder="e.g., Context switching took 4+ hours per week"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -219,7 +219,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.timeSinks.longerThanExpected}
                   onChange={(e) => updateTimeSinks('longerThanExpected', e.target.value)}
                   placeholder="e.g., Writing reports - 2x longer than I thought"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
             </div>
@@ -235,7 +235,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.interruptions.frequency}
                   onChange={(e) => updateInterruptions('frequency', e.target.value)}
                   placeholder="e.g., 10-15 times per day"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -245,7 +245,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.interruptions.causes}
                   onChange={(e) => updateInterruptions('causes', e.target.value)}
                   placeholder="e.g., Slack messages and urgent emails"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -255,7 +255,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.interruptions.contextSwitchCost}
                   onChange={(e) => updateInterruptions('contextSwitchCost', e.target.value)}
                   placeholder="e.g., 20 minutes to get back to deep work"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
             </div>
@@ -271,7 +271,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.valueAnalysis.highValue}
                   onChange={(e) => updateValueAnalysis('highValue', e.target.value)}
                   placeholder="e.g., 30%"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -281,7 +281,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.valueAnalysis.necessaryLowValue}
                   onChange={(e) => updateValueAnalysis('necessaryLowValue', e.target.value)}
                   placeholder="e.g., 50%"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -291,7 +291,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.valueAnalysis.waste}
                   onChange={(e) => updateValueAnalysis('waste', e.target.value)}
                   placeholder="e.g., 20%"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.aiOpportunities.tier1Activities}
                   onChange={(e) => updateAIOpportunities('tier1Activities', e.target.value)}
                   placeholder="e.g., Writing emails, research, report creation"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -317,7 +317,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.aiOpportunities.mostFrequent}
                   onChange={(e) => updateAIOpportunities('mostFrequent', e.target.value)}
                   placeholder="e.g., Email responses, status updates"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -327,7 +327,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={data.aiOpportunities.mostFrustrating}
                   onChange={(e) => updateAIOpportunities('mostFrustrating', e.target.value)}
                   placeholder="e.g., Formatting documents, finding information"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
             </div>
@@ -335,7 +335,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
         </div>
       </div>
 
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4 flex items-center gap-2">
           <Target className="w-5 h-5" strokeWidth={2} />
           Step 2: Rank Your Top 3 Workflows
@@ -345,7 +345,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
 
         <div className="space-y-4">
           {data.topWorkflows.map((workflow, index) => (
-            <div key={index} className="p-4 bg-[#FFF9E6] border border-black">
+            <div key={index} className="p-4 bg-cream border border-ink">
               <p className="font-extrabold text-xs uppercase mb-3">Workflow #{index + 1}</p>
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="md:col-span-2">
@@ -355,7 +355,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                     value={workflow.activity}
                     onChange={(e) => updateWorkflow(index, 'activity', e.target.value)}
                     placeholder="e.g., Email response workflow"
-                    className="w-full p-2 border border-black text-sm"
+                    className="w-full p-2 border border-ink text-sm"
                   />
                 </div>
                 <div>
@@ -363,7 +363,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   <select
                     value={workflow.tier}
                     onChange={(e) => updateWorkflow(index, 'tier', Number(e.target.value))}
-                    className="w-full p-2 border border-black text-sm"
+                    className="w-full p-2 border border-ink text-sm"
                   >
                     <option value={1}>Tier 1 - High Impact</option>
                     <option value={2}>Tier 2 - Medium Impact</option>
@@ -377,7 +377,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                     value={workflow.currentHours}
                     onChange={(e) => updateWorkflow(index, 'currentHours', e.target.value)}
                     placeholder="e.g., 5"
-                    className="w-full p-2 border border-black text-sm"
+                    className="w-full p-2 border border-ink text-sm"
                   />
                 </div>
                 <div>
@@ -387,7 +387,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                     value={workflow.targetHours}
                     onChange={(e) => updateWorkflow(index, 'targetHours', e.target.value)}
                     placeholder="e.g., 2.5"
-                    className="w-full p-2 border border-black text-sm"
+                    className="w-full p-2 border border-ink text-sm"
                   />
                 </div>
               </div>
@@ -396,7 +396,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
         </div>
       </div>
 
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
           Step 3: Define Quality Standards
         </h3>
@@ -413,7 +413,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={standard.activity}
                   onChange={(e) => updateQualityStandard(index, 'activity', e.target.value)}
                   placeholder="e.g., Email writing"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
               <div>
@@ -423,7 +423,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
                   value={standard.measure}
                   onChange={(e) => updateQualityStandard(index, 'measure', e.target.value)}
                   placeholder="e.g., Clear, professional, timely, achieves goal"
-                  className="w-full p-2 border border-black text-sm"
+                  className="w-full p-2 border border-ink text-sm"
                 />
               </div>
             </div>
@@ -431,7 +431,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
         </div>
       </div>
 
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
           Step 4: Output Baseline
         </h3>
@@ -446,7 +446,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.emailsSent}
               onChange={(e) => updateOutputBaseline('emailsSent', e.target.value)}
               placeholder="e.g., 50"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
           <div>
@@ -456,7 +456,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.documentsWritten}
               onChange={(e) => updateOutputBaseline('documentsWritten', e.target.value)}
               placeholder="e.g., 3"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
           <div>
@@ -466,7 +466,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.reportsDelivered}
               onChange={(e) => updateOutputBaseline('reportsDelivered', e.target.value)}
               placeholder="e.g., 2"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
           <div>
@@ -476,7 +476,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.meetingsConducted}
               onChange={(e) => updateOutputBaseline('meetingsConducted', e.target.value)}
               placeholder="e.g., 10"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
           <div>
@@ -486,7 +486,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.projectsCompleted}
               onChange={(e) => updateOutputBaseline('projectsCompleted', e.target.value)}
               placeholder="e.g., 1"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
           <div>
@@ -504,13 +504,13 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
               value={data.outputBaseline.customMetric}
               onChange={(e) => updateOutputBaseline('customMetric', e.target.value)}
               placeholder="Value"
-              className="w-full p-2 border border-black text-sm"
+              className="w-full p-2 border border-ink text-sm"
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
           Step 5: Satisfaction Baseline
         </h3>
@@ -546,7 +546,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
         </div>
       </div>
 
-      <div className="bg-[#10b981] border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-success border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center gap-2 mb-3">
           <TrendingUp className="w-6 h-6" strokeWidth={2} />
           <h3 className="font-extrabold text-xl uppercase tracking-tight">Your Baseline Summary</h3>
@@ -557,7 +557,7 @@ export default function BaselineAnalysis({ lessonId, pathId }: BaselineAnalysisP
         <button
           onClick={saveAnalysis}
           disabled={saving}
-          className="flex items-center gap-2 bg-black text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-ink text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
         >
           {saved ? (
             <>

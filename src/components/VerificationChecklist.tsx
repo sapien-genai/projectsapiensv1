@@ -83,11 +83,11 @@ export default function VerificationChecklist() {
 
   if (loading) {
     return (
-      <div className="my-6 p-6 bg-white rounded-lg border-l-4 border-[#F4A261]">
+      <div className="my-6 p-6 bg-white rounded-lg border-l-4 border-accent-soft">
         <div className="animate-pulse space-y-3">
-          <div className="h-6 bg-[#E9E5E0] rounded w-3/4"></div>
-          <div className="h-6 bg-[#E9E5E0] rounded w-2/3"></div>
-          <div className="h-6 bg-[#E9E5E0] rounded w-3/4"></div>
+          <div className="h-6 bg-paper-2 rounded w-3/4"></div>
+          <div className="h-6 bg-paper-2 rounded w-2/3"></div>
+          <div className="h-6 bg-paper-2 rounded w-3/4"></div>
         </div>
       </div>
     );
@@ -99,20 +99,20 @@ export default function VerificationChecklist() {
 
   return (
     <div className="my-6">
-      <div className="bg-white rounded-lg border-l-4 border-[#F4A261] p-6">
+      <div className="bg-white rounded-lg border-l-4 border-accent-soft p-6">
         {/* Progress Bar */}
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-[#1C1A17]">
+            <span className="text-sm font-semibold text-strong">
               {completedCount} of {totalCount} completed
             </span>
-            <span className="text-sm text-[#57524D]">
+            <span className="text-sm text-secondary">
               {Math.round(progressPercent)}%
             </span>
           </div>
-          <div className="h-2 bg-[#E9E5E0] rounded-full overflow-hidden">
+          <div className="h-2 bg-paper-2 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#F4A261] transition-all duration-300"
+              className="h-full bg-accent-soft transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             ></div>
           </div>
@@ -133,8 +133,8 @@ export default function VerificationChecklist() {
                     w-6 h-6 rounded border-2 flex items-center justify-center
                     transition-all duration-200 cursor-pointer
                     ${isChecked
-                      ? 'bg-[#F4A261] border-[#F4A261]'
-                      : 'bg-white border-[#57524D] group-hover:border-[#F4A261]'
+                      ? 'bg-accent-soft border-accent-soft'
+                      : 'bg-white border-secondary group-hover:border-accent-soft'
                     }
                   `}
                 >
@@ -144,8 +144,8 @@ export default function VerificationChecklist() {
                   className={`
                     text-base transition-all duration-200
                     ${isChecked
-                      ? 'text-[#57524D] line-through'
-                      : 'text-[#1C1A17] group-hover:text-[#F4A261]'
+                      ? 'text-secondary line-through'
+                      : 'text-strong group-hover:text-accent-soft'
                     }
                   `}
                 >
@@ -158,16 +158,16 @@ export default function VerificationChecklist() {
 
         {/* Completion Message */}
         {completedCount === totalCount && (
-          <div className="mt-4 p-3 bg-[#98C9A3] bg-opacity-20 border border-[#98C9A3] rounded-lg">
-            <p className="text-sm text-[#1C1A17] font-medium">
+          <div className="mt-4 p-3 bg-success-soft bg-opacity-20 border border-success-soft rounded-lg">
+            <p className="text-sm text-strong font-medium">
               Excellent! You've completed all verification checks. This habit will save you hours of wasted effort.
             </p>
           </div>
         )}
 
         {!user && (
-          <div className="mt-4 p-3 bg-[#E9E5E0] rounded-lg">
-            <p className="text-sm text-[#57524D]">
+          <div className="mt-4 p-3 bg-paper-2 rounded-lg">
+            <p className="text-sm text-secondary">
               Sign in to save your progress across devices.
             </p>
           </div>

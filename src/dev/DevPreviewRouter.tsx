@@ -88,7 +88,7 @@ function DevBanner({ route }: { route: string }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between px-4 py-2 bg-[#1C1A17] text-[#F4A261] text-xs font-mono border-b border-[#F4A261]/30 select-none">
+    <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between px-4 py-2 bg-strong text-accent-soft text-xs font-mono border-b border-[color:color-mix(in_srgb,var(--accent-soft)_30%,transparent)] select-none">
       <span className="font-bold tracking-widest uppercase">DEV PREVIEW</span>
       <span className="opacity-70">{labels[route] ?? route}</span>
       <span className="opacity-50">import.meta.env.DEV — not visible in production</span>
@@ -100,7 +100,7 @@ function PricingPreview() {
   return (
     <MockAuthProvider authenticated={true}>
       <MockBillingProvider plan="free">
-        <div className="min-h-screen bg-[#F8F5F2]">
+        <div className="min-h-screen bg-paper">
           <Navigation
             onAuthClick={() => {}}
             onPathsClick={() => {}}

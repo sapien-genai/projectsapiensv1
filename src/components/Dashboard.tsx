@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard, HelpCircle } from 'lucide-react';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard, HelpCircle, ArrowRight, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { logError, getErrorMessage } from '../utils/errorHandling';
-import OpenMoji from './OpenMoji';
 
 interface UserProfile {
   username: string;
@@ -42,10 +41,71 @@ interface DashboardProps {
 }
 
 const fluencyLevels = [
-  { level: 1, title: 'COLLABORATOR', subtitle: 'AI Fundamentals', xpRequired: 0 },
-  { level: 2, title: 'PRACTITIONER', subtitle: 'Workflow Designer', xpRequired: 1000 },
-  { level: 3, title: 'INTEGRATOR', subtitle: 'System Builder', xpRequired: 4000 },
-  { level: 4, title: 'LEADER', subtitle: 'Solution Architect', xpRequired: 10000 },
+  { level: 1, title: 'Collaborator', subtitle: 'AI Fundamentals', xpRequired: 0 },
+  { level: 2, title: 'Practitioner', subtitle: 'Workflow Designer', xpRequired: 1000 },
+  { level: 3, title: 'Integrator', subtitle: 'System Builder', xpRequired: 4000 },
+  { level: 4, title: 'Leader', subtitle: 'Solution Architect', xpRequired: 10000 },
+];
+
+const workspaceBrand = {
+  name: 'Project Sapiens Academy',
+  platformLabel: 'Project Sapiens',
+  logoUrl: '',
+  primaryColor: '#FF6A00',
+  secondaryColor: '#0A74FF',
+  backgroundColor: '#F4F4F4',
+};
+
+const dashboardActions = [
+  {
+    title: 'Learning programs',
+    description: 'Assign paths, continue modules, and build a structured AI practice plan.',
+    icon: BookOpen,
+    cta: 'Choose a path',
+    tone: 'primary' as const,
+  },
+  {
+    title: 'AI practice labs',
+    description: 'Practice writing, analysis, and creative workflows in guided AI environments.',
+    icon: Code,
+    cta: 'View all labs',
+    tone: 'primary' as const,
+  },
+  {
+    title: 'Prompt library',
+    description: 'Collect reusable prompts and workflow patterns for everyday work.',
+    icon: BookmarkPlus,
+    cta: 'Browse prompts',
+    tone: 'secondary' as const,
+  },
+  {
+    title: 'Projects',
+    description: 'Turn practice into portfolio-ready AI workflows and shareable outcomes.',
+    icon: Rocket,
+    cta: 'View projects',
+    tone: 'secondary' as const,
+  },
+  {
+    title: 'Network',
+    description: 'Connect with peers, share projects, and find examples from other learners.',
+    icon: Users,
+    cta: 'Explore network',
+    tone: 'secondary' as const,
+  },
+  {
+    title: 'Badges',
+    description: 'Track completion milestones and visible proof of AI fluency progress.',
+    icon: Trophy,
+    cta: 'View badges',
+    tone: 'secondary' as const,
+  },
+  {
+    title: 'Journal',
+    description: 'Review reflections and lessons learned from completed exercises.',
+    icon: BookOpen,
+    cta: 'View journal',
+    tone: 'secondary' as const,
+  },
 ];
 
 const getIconComponent = (iconName: string): LucideIcon => {
@@ -61,8 +121,60 @@ const getIconComponent = (iconName: string): LucideIcon => {
   return iconMap[iconName] || Trophy;
 };
 
+function ActionCard({
+  title,
+  description,
+  icon: Icon,
+  cta,
+  onClick,
+  primary = false,
+}: {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  cta: string;
+  onClick?: () => void;
+  primary?: boolean;
+}) {
+  return (
+    <div className="brand-card p-6 md:p-8">
+      <div className="mb-6 flex items-center gap-3">
+        <Icon className="h-8 w-8" strokeWidth={2} />
+        <h3 className="font-extrabold text-xl uppercase tracking-tight">{title}</h3>
+      </div>
+      <p className="mb-6 text-sm leading-relaxed">{description}</p>
+      <button
+        onClick={onClick}
+        className={`brand-button w-full ${primary ? 'brand-button-primary' : 'bg-white'}`}
+      >
+        {cta}
+        <ArrowRight className="h-4 w-4" strokeWidth={2} />
+      </button>
+    </div>
+  );
+}
+
+function WorkspaceLogo() {
+  if (workspaceBrand.logoUrl) {
+    return (
+      <img
+        src={workspaceBrand.logoUrl}
+        alt={`${workspaceBrand.name} logo`}
+        className="h-10 w-10 border border-ink object-cover"
+      />
+    );
+  }
+
+  return (
+    <div className="flex h-10 w-10 items-center justify-center border border-ink bg-[var(--brand-primary)] font-extrabold text-sm uppercase text-ink shadow-[2px_2px_0px_var(--brand-ink)]">
+      PS
+    </div>
+  );
+}
+
 export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick, onHelpClick }: DashboardProps) {
   const { user, signOut } = useAuth();
+  const isDevDashboardPreview = import.meta.env.DEV && window.location.pathname === '/dev/pro-dashboard-preview';
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
@@ -77,6 +189,25 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
 
       try {
         setError(null);
+
+        if (isDevDashboardPreview) {
+          setProfile({ username: 'Preview User', fluency_level: 2, xp: 2600 });
+          setSkills([
+            { skill_name: 'Prompt design', progress_percentage: 72 },
+            { skill_name: 'Workflow mapping', progress_percentage: 58 },
+            { skill_name: 'AI review habits', progress_percentage: 44 },
+          ]);
+          setBadges([
+            { badge_id: 'starter', name: 'First workflow', icon: 'Footprints', color: '#2563eb', rarity: 'common' },
+            { badge_id: 'builder', name: 'Workflow builder', icon: 'Flask', color: '#16a34a', rarity: 'rare' },
+            { badge_id: 'spark', name: 'Prompt spark', icon: 'Sparkles', color: '#d97706', rarity: 'rare' },
+          ]);
+          setIsAdmin(true);
+          setCommandCenterUnlocked(true);
+          setLoading(false);
+          return;
+        }
+
         const { data: profileData, error: profileError } = await supabase
           .from('user_profiles')
           .select('username, fluency_level, xp')
@@ -166,7 +297,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
     }
 
     loadUserData();
-  }, [user]);
+  }, [user, isDevDashboardPreview]);
 
   const currentLevel = fluencyLevels.find(l => l.level === profile?.fluency_level) || fluencyLevels[0];
   const nextLevel = fluencyLevels.find(l => l.level === (profile?.fluency_level || 0) + 1);
@@ -174,12 +305,22 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
     ? ((profile?.xp || 0) - currentLevel.xpRequired) / (nextLevel.xpRequired - currentLevel.xpRequired) * 100
     : 100;
 
+  const actionHandlers: Record<string, (() => void) | undefined> = {
+    'Learning programs': onPathsListClick,
+    'AI practice labs': onLabsClick,
+    'Prompt library': onPromptsClick,
+    'Projects': onProjectsClick,
+    'Network': onNetworkClick,
+    'Badges': onBadgesClick,
+    'Journal': onJournalClick,
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center">
+      <div className="brand-page flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
-          <p className="mt-4 font-semibold">LOADING...</p>
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-[var(--brand-primary)] animate-spin"></div>
+          <p className="mt-4 font-semibold uppercase tracking-tight">Loading...</p>
         </div>
       </div>
     );
@@ -187,10 +328,10 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-8">
+      <div className="brand-page flex items-center justify-center p-4">
+        <div className="brand-card w-full max-w-md p-8">
           <div className="flex items-start gap-4 mb-6">
-            <div className="bg-red-500 border-2 border-black p-3">
+            <div className="bg-red-500 border-2 border-ink p-3">
               <AlertCircle className="w-8 h-8 text-white" strokeWidth={2.5} />
             </div>
             <div>
@@ -204,7 +345,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="w-full px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+            className="brand-button brand-button-primary w-full"
           >
             Try Again
           </button>
@@ -214,137 +355,119 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
-      <nav className="bg-[#F4F4F4] border-b-2 border-black">
+    <div
+      className="brand-page"
+      style={{
+        '--brand-primary': workspaceBrand.primaryColor,
+        '--brand-secondary': workspaceBrand.secondaryColor,
+        '--brand-bg': workspaceBrand.backgroundColor,
+      } as CSSProperties}
+    >
+      <nav className="bg-[var(--brand-bg)] border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
-          <h1 className="font-extrabold text-xl uppercase tracking-tight">
-            PROJECT SAPIENS
-          </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <WorkspaceLogo />
+            <div>
+              <h1 className="font-extrabold text-base md:text-xl uppercase tracking-tight leading-tight">
+                {workspaceBrand.name}
+              </h1>
+              <p className="hidden text-xs font-semibold text-[var(--brand-muted)] sm:block">
+                Powered by {workspaceBrand.platformLabel}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
             {isAdmin && (
               <button
                 onClick={onAdminClick}
-                className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="brand-button brand-button-primary px-3 py-2"
+                title="Admin"
               >
                 <Shield className="w-4 h-4" strokeWidth={2} />
-                ADMIN
+                <span className="hidden sm:inline">ADMIN</span>
               </button>
             )}
             <button
               onClick={() => signOut()}
-              className="flex items-center gap-2 bg-white text-black border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="brand-button bg-white px-3 py-2"
+              title="Sign out"
             >
               <LogOut className="w-4 h-4" strokeWidth={2} />
-              SIGN OUT
+              <span className="hidden sm:inline">SIGN OUT</span>
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div>
-              <h2 className="font-extrabold text-2xl md:text-3xl lg:text-4xl uppercase tracking-tighter mb-2">
-                WELCOME BACK, {profile?.username || 'SAPIENS'}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed">
-                Continue building your AI mastery.
-              </p>
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+        <section className="mb-8 grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <h2 className="font-extrabold text-2xl md:text-3xl lg:text-4xl uppercase tracking-tighter mb-2">
+              Welcome back, {profile?.username || 'Sapiens'}
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed">
+              Continue building your AI mastery.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button onClick={onPathsListClick} className="brand-button brand-button-primary">
+                Continue learning
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              </button>
+              <button onClick={onLabsClick} className="brand-button bg-white">
+                Open labs
+              </button>
+            </div>
+          </div>
+
+          <aside className="brand-card p-4 md:p-6">
+            <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
+              AI Fluency
+            </h3>
+            <div className="mb-6">
+              <div className="text-3xl font-extrabold uppercase mb-1">
+                Level {currentLevel.level}: {currentLevel.title}
+              </div>
+              <p className="text-sm">{currentLevel.subtitle}</p>
             </div>
 
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
-                    MY LEARNING PATH
-                  </h3>
-                  <p className="text-sm">Start your AI learning journey</p>
+            {nextLevel && (
+              <div>
+                <div className="flex justify-between text-xs font-semibold mb-2">
+                  <span>{profile?.xp || 0} XP</span>
+                  <span>{nextLevel.xpRequired} XP TO LEVEL {nextLevel.level}</span>
                 </div>
-                <BookOpen className="w-8 h-8" strokeWidth={2} />
+                <div className="h-6 bg-surface border border-ink relative overflow-hidden">
+                  <div
+                    className="brand-progress absolute inset-y-0 left-0"
+                    style={{ width: `${Math.min(xpProgress, 100)}%` }}
+                  ></div>
+                </div>
               </div>
+            )}
+          </aside>
+        </section>
 
-              <button
-                onClick={onPathsListClick}
-                className="bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                CHOOSE A PATH
-              </button>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <section className="lg:col-span-2 space-y-8">
+            <div className="grid md:grid-cols-2 gap-6">
+              {dashboardActions.map((action) => (
+                <ActionCard
+                  key={action.title}
+                  title={action.title}
+                  description={action.description}
+                  icon={action.icon}
+                  cta={action.cta}
+                  onClick={actionHandlers[action.title]}
+                  primary={action.tone === 'primary'}
+                />
+              ))}
             </div>
 
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
+            <div className={`brand-card p-6 md:p-8 ${commandCenterUnlocked ? 'bg-gradient-to-br from-cream to-[#FFE4B5]' : 'bg-gray-100 opacity-75'}`}>
               <div className="flex items-center gap-3 mb-6">
-                <Code className="w-8 h-8" strokeWidth={2} />
+                <Target className={`w-8 h-8 ${commandCenterUnlocked ? 'text-[var(--brand-primary)]' : 'text-gray-400'}`} strokeWidth={2} />
                 <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY LABS
-                </h3>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-4 mb-4">
-                {[
-                  { name: 'WRITING LAB', id: 'writing-lab' },
-                  { name: 'ANALYSIS LAB', id: 'analysis-lab' },
-                  { name: 'CREATIVE LAB', id: 'creative-lab' }
-                ].map((lab) => (
-                  <button
-                    key={lab.id}
-                    onClick={() => onLabSelect?.(lab.id)}
-                    className="bg-white text-black border border-black px-4 py-3 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-                  >
-                    {lab.name}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={onLabsClick}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW ALL LABS
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Users className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  THE NETWORK
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Connect with peers, share projects, and find mentors.
-              </p>
-              <button
-                onClick={onNetworkClick}
-                className="w-full bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                EXPLORE NETWORK
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <BookmarkPlus className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  PROMPT LIBRARY
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Discover powerful prompts, create your own, and organize your favorites.
-              </p>
-              <button
-                onClick={onPromptsClick}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                BROWSE PROMPTS
-              </button>
-            </div>
-
-            <div className={`border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] ${commandCenterUnlocked ? 'bg-gradient-to-br from-[#FFF9E6] to-[#FFE4B5]' : 'bg-gray-100 opacity-75'}`}>
-              <div className="flex items-center gap-3 mb-6">
-                <Target className={`w-8 h-8 ${commandCenterUnlocked ? 'text-[#F4A261]' : 'text-gray-400'}`} strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  COMMAND CENTER
+                  Command Center
                 </h3>
               </div>
               <p className="text-sm leading-relaxed mb-6">
@@ -355,132 +478,48 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
               <button
                 onClick={commandCenterUnlocked ? onCommandCenterClick : undefined}
                 disabled={!commandCenterUnlocked}
-                className={`w-full border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] transition-all ${
+                className={`brand-button w-full ${
                   commandCenterUnlocked
-                    ? 'bg-[#F4A261] text-white hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] cursor-pointer'
+                    ? 'brand-button-primary cursor-pointer'
                     : 'bg-gray-300 text-gray-600 cursor-not-allowed opacity-60'
                 }`}
               >
                 {commandCenterUnlocked ? (
-                  'OPEN COMMAND CENTER'
+                  'Open Command Center'
                 ) : (
                   <span className="flex items-center justify-center gap-2">
                     <Lock className="w-4 h-4" strokeWidth={2} />
-                    LOCKED - REACH MODULE 5
+                    Locked - Reach Module 5
                   </span>
                 )}
               </button>
             </div>
 
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Rocket className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  PROJECTS
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Build AI-powered projects, showcase your work, and learn from the community.
-              </p>
-              <button
-                onClick={onProjectsClick}
-                className="w-full bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW PROJECTS
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <Trophy className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY BADGES
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Track your achievements, earn badges, and showcase your AI fluency journey.
-              </p>
-              <button
-                onClick={onBadgesClick}
-                className="w-full bg-[#F59E0B] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW BADGES
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <div className="flex items-center gap-3 mb-6">
-                <BookOpen className="w-8 h-8" strokeWidth={2} />
-                <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  MY JOURNAL
-                </h3>
-              </div>
-              <p className="text-sm leading-relaxed mb-6">
-                Review your reflections and insights from completed lessons.
-              </p>
-              <button
-                onClick={onJournalClick}
-                className="w-full bg-[#10b981] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-              >
-                VIEW JOURNAL
-              </button>
-            </div>
-
-            <div className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
+            <div className="brand-card p-6 md:p-8">
               <div className="flex items-center gap-3 mb-6">
                 <Zap className="w-8 h-8" strokeWidth={2} />
                 <h3 className="font-extrabold text-xl uppercase tracking-tight">
-                  COMMUNITY FEED
+                  Community Feed
                 </h3>
               </div>
-
               <div className="space-y-4">
-                <div className="border border-black p-4">
-                  <p className="text-sm font-semibold mb-1">NEW CHALLENGE LIVE</p>
+                <div className="border border-ink p-4">
+                  <p className="text-sm font-semibold mb-1">New Challenge Live</p>
                   <p className="text-sm">Build an AI-powered content pipeline. 7 days left.</p>
                 </div>
-                <div className="border border-black p-4">
-                  <p className="text-sm font-semibold mb-1">WEEKLY PROMPT DROP</p>
+                <div className="border border-ink p-4">
+                  <p className="text-sm font-semibold mb-1">Weekly Prompt Drop</p>
                   <p className="text-sm">Check out the latest community-shared workflows.</p>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div className="space-y-6">
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
+          <aside className="space-y-6">
+            <div className="brand-card p-4 md:p-6">
               <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
-                AI FLUENCY
+                Skill Progress
               </h3>
-
-              <div className="mb-6">
-                <div className="text-3xl font-extrabold uppercase mb-1">
-                  LEVEL {currentLevel.level}: {currentLevel.title}
-                </div>
-                <p className="text-sm">{currentLevel.subtitle}</p>
-              </div>
-
-              {nextLevel && (
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-2">
-                    <span>{profile?.xp || 0} XP</span>
-                    <span>{nextLevel.xpRequired} XP TO LEVEL {nextLevel.level}</span>
-                  </div>
-                  <div className="h-6 bg-[#F4F4F4] border border-black relative overflow-hidden">
-                    <div
-                      className="absolute inset-y-0 left-0 bg-[#FF6A00]"
-                      style={{ width: `${Math.min(xpProgress, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-              <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">
-                SKILL PROGRESS
-              </h3>
-
               {skills.length > 0 ? (
                 <div className="space-y-4">
                   {skills.map((skill) => (
@@ -489,9 +528,9 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                         <span className="uppercase">{skill.skill_name}</span>
                         <span>{skill.progress_percentage}%</span>
                       </div>
-                      <div className="h-4 bg-[#F4F4F4] border border-black relative overflow-hidden">
+                      <div className="h-4 bg-surface border border-ink relative overflow-hidden">
                         <div
-                          className="absolute inset-y-0 left-0 bg-[#0A74FF]"
+                          className="absolute inset-y-0 left-0 bg-[var(--brand-secondary)]"
                           style={{ width: `${skill.progress_percentage}%` }}
                         ></div>
                       </div>
@@ -503,11 +542,11 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
               )}
             </div>
 
-            <div className="bg-white border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
+            <div className="brand-card p-4 md:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Trophy className="w-6 h-6" strokeWidth={2} />
                 <h3 className="font-extrabold text-lg uppercase tracking-tight">
-                  MY BADGES
+                  My Badges
                 </h3>
               </div>
 
@@ -519,7 +558,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                       return (
                         <div
                           key={badge.badge_id}
-                          className="aspect-square border border-black flex items-center justify-center"
+                          className="aspect-square border border-ink flex items-center justify-center"
                           style={{ backgroundColor: badge.color + '20' }}
                           title={badge.name}
                         >
@@ -536,7 +575,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                     {Array.from({ length: Math.max(0, 6 - badges.length) }).map((_, i) => (
                       <div
                         key={`empty-${i}`}
-                        className="aspect-square border border-black bg-[#F4F4F4] flex items-center justify-center"
+                        className="aspect-square border border-ink bg-surface flex items-center justify-center"
                       >
                         <span className="text-2xl opacity-30">?</span>
                       </div>
@@ -546,7 +585,7 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                   Array.from({ length: 6 }).map((_, i) => (
                     <div
                       key={`empty-${i}`}
-                      className="aspect-square border border-black bg-[#F4F4F4] flex items-center justify-center"
+                      className="aspect-square border border-ink bg-surface flex items-center justify-center"
                     >
                       <span className="text-2xl opacity-30">?</span>
                     </div>
@@ -554,32 +593,27 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
                 )}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="mt-12 flex justify-center gap-4 pb-8">
-          <button
-            onClick={onHelpClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
-          >
-            <HelpCircle className="w-4 h-4" strokeWidth={2} />
-            HELP
-          </button>
-          <button
-            onClick={onBillingClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
-          >
-            <CreditCard className="w-4 h-4" strokeWidth={2} />
-            BILLING
-          </button>
-          <button
-            onClick={onProfileClick}
-            className="bg-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-          >
-            SETTINGS
-          </button>
+            <div className="brand-card p-4 md:p-6">
+              <h3 className="font-extrabold text-lg uppercase tracking-tight mb-4">Quick Settings</h3>
+              <div className="grid gap-3">
+                <button onClick={onHelpClick} className="brand-button w-full justify-start bg-white">
+                  <HelpCircle className="h-4 w-4" strokeWidth={2} />
+                  Help
+                </button>
+                <button onClick={onBillingClick} className="brand-button w-full justify-start bg-white">
+                  <CreditCard className="h-4 w-4" strokeWidth={2} />
+                  Billing
+                </button>
+                <button onClick={onProfileClick} className="brand-button w-full justify-start bg-white">
+                  <Settings className="h-4 w-4" strokeWidth={2} />
+                  Settings
+                </button>
+              </div>
+            </div>
+          </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -70,22 +70,22 @@ export default function PaymentSuccessPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
+    <div className="min-h-screen bg-paper">
       <div
         className={`transition-all duration-700 ease-out ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
         {/* Hero confirmation */}
-        <div className="bg-[#1C1A17] text-[#F8F5F2]">
+        <div className="bg-strong text-paper">
           <div className="max-w-3xl mx-auto px-6 py-20 text-center">
             <div
               className={`transition-all duration-700 delay-100 ease-out ${
                 visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
               }`}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#F4A261] mb-8">
-                <CheckCircle className="w-8 h-8 text-[#1C1A17]" strokeWidth={2} />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent-soft mb-8">
+                <CheckCircle className="w-8 h-8 text-strong" strokeWidth={2} />
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export default function PaymentSuccessPage({
                 visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
               }`}
             >
-              <p className="text-sm font-semibold tracking-widest text-[#F4A261] uppercase mb-4">
+              <p className="text-sm font-semibold tracking-widest text-accent-soft uppercase mb-4">
                 Payment confirmed
               </p>
               <h1
@@ -115,17 +115,17 @@ export default function PaymentSuccessPage({
             >
               <div className="inline-flex items-center gap-6 bg-white/5 border border-white/10 rounded-xl px-8 py-5">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-[#F4A261]">120</p>
+                  <p className="text-2xl font-bold text-accent-soft">120</p>
                   <p className="text-xs text-[#9E9990] mt-1">Daily AI sessions</p>
                 </div>
                 <div className="w-px h-10 bg-white/10" />
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-[#F4A261]">5</p>
+                  <p className="text-2xl font-bold text-accent-soft">5</p>
                   <p className="text-xs text-[#9E9990] mt-1">AI Labs</p>
                 </div>
                 <div className="w-px h-10 bg-white/10" />
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-[#F4A261]">∞</p>
+                  <p className="text-2xl font-bold text-accent-soft">∞</p>
                   <p className="text-xs text-[#9E9990] mt-1">Learning paths</p>
                 </div>
               </div>
@@ -141,13 +141,13 @@ export default function PaymentSuccessPage({
             }`}
           >
             <div className="flex items-center gap-3 mb-2">
-              <Zap className="w-4 h-4 text-[#F4A261]" strokeWidth={2} />
-              <p className="text-xs font-semibold tracking-widest text-[#57524D] uppercase">
+              <Zap className="w-4 h-4 text-accent-soft" strokeWidth={2} />
+              <p className="text-xs font-semibold tracking-widest text-secondary uppercase">
                 Your next steps
               </p>
             </div>
             <h2
-              className="text-2xl font-bold text-[#1C1A17] mb-10"
+              className="text-2xl font-bold text-strong mb-10"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Where to begin
@@ -167,24 +167,24 @@ export default function PaymentSuccessPage({
                     transform: visible ? 'translateY(0)' : 'translateY(12px)',
                   }}
                 >
-                  <div className="group bg-white border border-[#E9E5E0] rounded-xl p-6 hover:border-[#F4A261] hover:shadow-sm transition-all duration-200">
+                  <div className="group bg-white border border-paper-2 rounded-xl p-6 hover:border-accent-soft hover:shadow-sm transition-all duration-200">
                     <div className="flex items-start gap-5">
                       <div className="flex-shrink-0">
-                        <div className="w-10 h-10 rounded-lg bg-[#FEF3E8] flex items-center justify-center group-hover:bg-[#F4A261] transition-colors duration-200">
-                          <Icon className="w-5 h-5 text-[#F4A261] group-hover:text-white transition-colors duration-200" strokeWidth={1.75} />
+                        <div className="w-10 h-10 rounded-lg bg-[#FEF3E8] flex items-center justify-center group-hover:bg-accent-soft transition-colors duration-200">
+                          <Icon className="w-5 h-5 text-accent-soft group-hover:text-white transition-colors duration-200" strokeWidth={1.75} />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <p className="text-xs font-semibold tracking-widest text-[#F4A261] mb-1">{step.number}</p>
-                            <h3 className="text-base font-bold text-[#1C1A17] mb-2">{step.title}</h3>
-                            <p className="text-sm text-[#57524D] leading-relaxed">{step.description}</p>
+                            <p className="text-xs font-semibold tracking-widest text-accent-soft mb-1">{step.number}</p>
+                            <h3 className="text-base font-bold text-strong mb-2">{step.title}</h3>
+                            <p className="text-sm text-secondary leading-relaxed">{step.description}</p>
                           </div>
                         </div>
                         <button
                           onClick={() => handleAction(step.key)}
-                          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#1C1A17] hover:text-[#F4A261] transition-colors duration-150 group/btn"
+                          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-strong hover:text-accent-soft transition-colors duration-150 group/btn"
                         >
                           {step.action}
                           <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-150" strokeWidth={2} />
@@ -206,13 +206,13 @@ export default function PaymentSuccessPage({
               transform: visible ? 'translateY(0)' : 'translateY(12px)',
             }}
           >
-            <div className="bg-[#E9E5E0] rounded-xl p-8">
-              <p className="text-sm text-[#57524D] mb-6 leading-relaxed">
+            <div className="bg-paper-2 rounded-xl p-8">
+              <p className="text-sm text-secondary mb-6 leading-relaxed">
                 Not sure where to start? Head to your dashboard — it tracks your progress, surfaces recommended lessons, and gives you a clear view of everything you've unlocked.
               </p>
               <button
                 onClick={onGoToDashboard}
-                className="inline-flex items-center gap-2 bg-[#1C1A17] text-[#F8F5F2] px-8 py-3.5 rounded-lg font-semibold text-sm hover:bg-[#F4A261] hover:text-[#1C1A17] transition-all duration-200"
+                className="inline-flex items-center gap-2 bg-strong text-paper px-8 py-3.5 rounded-lg font-semibold text-sm hover:bg-accent-soft hover:text-strong transition-all duration-200"
               >
                 Go to my dashboard
                 <ArrowRight className="w-4 h-4" strokeWidth={2} />

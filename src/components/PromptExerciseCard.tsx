@@ -81,13 +81,13 @@ export default function PromptExerciseCard({
   };
 
   return (
-    <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] overflow-hidden">
-      <div className="bg-[#FF6A00] border-b border-black px-6 py-4">
+    <div className="bg-white border border-ink shadow-brutal-sm md:shadow-brutal overflow-hidden">
+      <div className="bg-accent border-b border-ink px-6 py-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-extrabold text-lg uppercase tracking-tight text-black">
+          <h3 className="font-extrabold text-lg uppercase tracking-tight text-ink">
             Exercise {exerciseNumber}: {title}
           </h3>
-          <span className="text-xs font-semibold bg-black text-white px-3 py-1 uppercase tracking-tight">
+          <span className="text-xs font-semibold bg-ink text-white px-3 py-1 uppercase tracking-tight">
             Prompt Practice
           </span>
         </div>
@@ -95,17 +95,17 @@ export default function PromptExerciseCard({
 
       <div className="p-6 space-y-6">
         <div>
-          <p className="text-[#1C1A17] leading-relaxed mb-4">{description}</p>
+          <p className="text-strong leading-relaxed mb-4">{description}</p>
 
-          <div className="bg-[#FFF9E6] border border-[#E6D5A0] p-4 rounded-lg">
+          <div className="bg-cream border border-[#E6D5A0] p-4 rounded-lg">
             <div className="flex gap-3">
-              <Lightbulb className="w-5 h-5 flex-shrink-0 text-[#F4A261] mt-0.5" strokeWidth={2} />
+              <Lightbulb className="w-5 h-5 flex-shrink-0 text-accent-soft mt-0.5" strokeWidth={2} />
               <div className="flex-1">
-                <p className="font-semibold text-sm mb-2 text-[#1C1A17]">Your prompt should include:</p>
+                <p className="font-semibold text-sm mb-2 text-strong">Your prompt should include:</p>
                 <ul className="space-y-1.5">
                   {guidancePoints.map((point, index) => (
-                    <li key={index} className="text-sm text-[#57524D] flex items-start gap-2">
-                      <span className="text-[#F4A261] mt-0.5">•</span>
+                    <li key={index} className="text-sm text-secondary flex items-start gap-2">
+                      <span className="text-accent-soft mt-0.5">•</span>
                       <span>{point}</span>
                     </li>
                   ))}
@@ -121,7 +121,7 @@ export default function PromptExerciseCard({
                   <p className="text-xs font-semibold text-[#CC0000] uppercase tracking-tight mb-1">
                     Bad Example
                   </p>
-                  <p className="text-sm text-[#57524D] italic">{exampleBad}</p>
+                  <p className="text-sm text-secondary italic">{exampleBad}</p>
                 </div>
               )}
               {exampleGood && (
@@ -129,7 +129,7 @@ export default function PromptExerciseCard({
                   <p className="text-xs font-semibold text-[#006600] uppercase tracking-tight mb-1">
                     Good Example
                   </p>
-                  <p className="text-sm text-[#57524D] italic">{exampleGood}</p>
+                  <p className="text-sm text-secondary italic">{exampleGood}</p>
                 </div>
               )}
             </div>
@@ -137,7 +137,7 @@ export default function PromptExerciseCard({
         </div>
 
         <div>
-          <label className="block font-semibold text-sm mb-2 text-[#1C1A17] uppercase tracking-tight">
+          <label className="block font-semibold text-sm mb-2 text-strong uppercase tracking-tight">
             Write Your Prompt
           </label>
           <textarea
@@ -147,7 +147,7 @@ export default function PromptExerciseCard({
               if (saved) setSaved(false);
             }}
             placeholder="Write your detailed prompt here..."
-            className="w-full min-h-[140px] p-4 bg-[#F8F5F2] border-2 border-[#E9E5E0] focus:border-[#F4A261] focus:outline-none text-[#1C1A17] placeholder-[#B0ABA5] text-base leading-relaxed resize-y transition-colors"
+            className="w-full min-h-[140px] p-4 bg-paper border-2 border-paper-2 focus:border-accent-soft focus:outline-none text-strong placeholder-[#B0ABA5] text-base leading-relaxed resize-y transition-colors"
             rows={5}
           />
         </div>
@@ -156,10 +156,10 @@ export default function PromptExerciseCard({
           <button
             onClick={savePrompt}
             disabled={saving || !promptDraft.trim()}
-            className={`flex items-center gap-2 px-5 py-2.5 font-bold text-sm uppercase tracking-tight transition-all border border-black ${
+            className={`flex items-center gap-2 px-5 py-2.5 font-bold text-sm uppercase tracking-tight transition-all border border-ink ${
               saved
-                ? 'bg-[#98C9A3] text-black'
-                : 'bg-[#F4A261] text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                ? 'bg-success-soft text-ink'
+                : 'bg-accent-soft text-white shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {saved ? (
@@ -180,7 +180,7 @@ export default function PromptExerciseCard({
           {onOpenPromptLibrary && (
             <button
               onClick={onOpenPromptLibrary}
-              className="flex items-center gap-2 px-5 py-2.5 bg-black text-white border border-black font-bold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 bg-ink text-white border border-ink font-bold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <ExternalLink className="w-4 h-4" strokeWidth={2} />
               Open Prompt Library

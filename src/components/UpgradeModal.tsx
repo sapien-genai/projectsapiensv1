@@ -24,13 +24,13 @@ export default function UpgradeModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white border-2 border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b-2 border-black p-4 sm:p-6 flex items-center justify-between gap-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink bg-opacity-50 p-4">
+      <div className="bg-white border-2 border-ink shadow-brutal-md sm:shadow-brutal-xl max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b-2 border-ink p-4 sm:p-6 flex items-center justify-between gap-2">
           <h2 className="font-extrabold text-xl sm:text-2xl md:text-3xl uppercase tracking-tighter">UPGRADE TO PRO</h2>
           <button
             onClick={onClose}
-            className="p-2 min-h-[44px] min-w-[44px] hover:text-[#FF6A00] transition-colors flex items-center justify-center"
+            className="p-2 min-h-[44px] min-w-[44px] hover:text-accent transition-colors flex items-center justify-center"
             aria-label="Close modal"
           >
             <X className="w-6 h-6" strokeWidth={2} />
@@ -39,8 +39,8 @@ export default function UpgradeModal({
 
         <div className="p-4 sm:p-6 space-y-6">
           {checkoutError && (
-            <div className="bg-[#FF6A00] border-2 border-black p-4 flex items-start justify-between gap-4">
-              <p className="text-sm font-semibold text-black">{checkoutError}</p>
+            <div className="bg-accent border-2 border-ink p-4 flex items-start justify-between gap-4">
+              <p className="text-sm font-semibold text-ink">{checkoutError}</p>
               {onClearError && (
                 <button
                   onClick={onClearError}
@@ -52,7 +52,7 @@ export default function UpgradeModal({
             </div>
           )}
           {currentUsed !== undefined && currentLimit !== undefined && (
-            <div className="bg-[#F4F4F4] border-2 border-black p-4">
+            <div className="bg-surface border-2 border-ink p-4">
               <p className="text-sm font-semibold mb-2">CURRENT USAGE TODAY:</p>
               <p className="text-2xl font-extrabold">
                 {currentUsed} / {currentLimit} AI practice sessions
@@ -61,9 +61,9 @@ export default function UpgradeModal({
           )}
 
           <div className="space-y-4">
-            <div className="border-2 border-black p-6 bg-white">
+            <div className="border-2 border-ink p-6 bg-white">
               <div className="flex items-start gap-4">
-                <div className="bg-[#FF6A00] border-2 border-black p-3">
+                <div className="bg-accent border-2 border-ink p-3">
                   <Zap className="w-6 h-6" strokeWidth={2} />
                 </div>
                 <div className="flex-1">
@@ -75,15 +75,15 @@ export default function UpgradeModal({
                   </p>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
-                      <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                      <span className="text-accent font-extrabold">&gt;</span>
                       <span>15 AI practice sessions per day</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                      <span className="text-accent font-extrabold">&gt;</span>
                       <span>Access to all learning paths</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-[#FF6A00] font-extrabold">&gt;</span>
+                      <span className="text-accent font-extrabold">&gt;</span>
                       <span>Interactive lab environments</span>
                     </li>
                   </ul>
@@ -91,9 +91,9 @@ export default function UpgradeModal({
               </div>
             </div>
 
-            <div className="border-2 border-black p-6 bg-[#FF6A00]">
+            <div className="border-2 border-ink p-6 bg-accent">
               <div className="flex items-start gap-4">
-                <div className="bg-black border-2 border-black p-3">
+                <div className="bg-ink border-2 border-ink p-3">
                   <TrendingUp className="w-6 h-6 text-white" strokeWidth={2} />
                 </div>
                 <div className="flex-1">
@@ -130,7 +130,7 @@ export default function UpgradeModal({
             </div>
           </div>
 
-          <div className="border-2 border-black p-6 bg-[#F4F4F4]">
+          <div className="border-2 border-ink p-6 bg-surface">
             <div className="flex items-center gap-3 mb-4">
               <Target className="w-5 h-5" strokeWidth={2} />
               <h3 className="font-extrabold text-lg uppercase">WHY UPGRADE?</h3>
@@ -145,7 +145,7 @@ export default function UpgradeModal({
             </div>
           </div>
 
-          <div className="border-2 border-black p-4 sm:p-6 bg-white text-center">
+          <div className="border-2 border-ink p-4 sm:p-6 bg-white text-center">
             <div className="inline-flex items-center gap-2 mb-4">
               <Users className="w-5 h-5" strokeWidth={2} />
               <p className="font-extrabold text-sm uppercase">UPGRADE TO PRO</p>
@@ -156,7 +156,7 @@ export default function UpgradeModal({
             <button
               onClick={onCheckout}
               disabled={!onCheckout || checkoutLoading}
-              className="bg-black text-white border-2 border-black px-6 sm:px-8 py-3 min-h-[44px] font-extrabold text-sm uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+              className="bg-ink text-white border-2 border-ink px-6 sm:px-8 py-3 min-h-[44px] font-extrabold text-sm uppercase tracking-tight hover:bg-accent hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-ink disabled:hover:text-white"
             >
               {checkoutLoading ? 'REDIRECTING...' : 'UPGRADE TO PRO'}
             </button>
@@ -165,7 +165,7 @@ export default function UpgradeModal({
           <div className="text-center">
             <button
               onClick={onClose}
-              className="px-6 py-3 min-h-[44px] text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+              className="px-6 py-3 min-h-[44px] text-sm font-semibold hover:text-accent transition-colors"
             >
               CLOSE
             </button>

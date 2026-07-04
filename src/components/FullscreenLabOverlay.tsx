@@ -30,7 +30,7 @@ export default function FullscreenLabOverlay({ isOpen, onClose, children, title,
             <div className="flex items-center gap-4">
               <button
                 onClick={onClose}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] rounded-lg transition-colors text-[#57524D] hover:text-[#1C1A17]"
+                className="flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] rounded-lg transition-colors text-secondary hover:text-strong"
                 aria-label="Return to lesson"
               >
                 <ArrowLeft className="w-5 h-5" strokeWidth={2} />
@@ -38,7 +38,7 @@ export default function FullscreenLabOverlay({ isOpen, onClose, children, title,
               </button>
               <div className="h-6 w-px bg-[#E0E0E0]"></div>
               <div>
-                <h1 className="font-bold text-base uppercase tracking-wide text-black">{title || 'LAB'}</h1>
+                <h1 className="font-bold text-base uppercase tracking-wide text-ink">{title || 'LAB'}</h1>
                 {subtitle && (
                   <p className="text-sm text-[#666666] mt-0.5">{subtitle}</p>
                 )}
@@ -49,7 +49,7 @@ export default function FullscreenLabOverlay({ isOpen, onClose, children, title,
               className="p-2 hover:bg-[#F5F5F5] rounded-lg transition-colors"
               aria-label="Close lab"
             >
-              <X className="w-5 h-5 text-[#57524D]" strokeWidth={2} />
+              <X className="w-5 h-5 text-secondary" strokeWidth={2} />
             </button>
           </div>
         </div>

@@ -20,7 +20,7 @@ export default function Hero({ onStartJourney, onExploreLabs }: HeroProps = {}) 
 
         <button
           onClick={onStartJourney}
-          className="bg-[#FF6A00] text-black border-2 border-black px-8 md:px-10 py-3 md:py-4 font-extrabold text-sm md:text-base tracking-tight shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all mb-4"
+          className="bg-accent text-ink border-2 border-ink px-8 md:px-10 py-3 md:py-4 font-extrabold text-sm md:text-base tracking-tight shadow-brutal-md hover:shadow-brutal-lg hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all mb-4"
         >
           Start for Free
         </button>

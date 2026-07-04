@@ -174,12 +174,12 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         {onBack && (
           <button
             onClick={onBack}
-            className="bg-white border border-black px-4 py-2 mb-8 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
+            className="bg-white border border-ink px-4 py-2 mb-8 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all inline-flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" strokeWidth={2} />
             BACK
@@ -207,7 +207,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
               placeholder="SEARCH FOR HELP..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-black focus:border-[#FF6A00] focus:outline-none transition-colors font-medium uppercase tracking-tight placeholder:text-gray-400"
+              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-ink focus:border-accent focus:outline-none transition-colors font-medium uppercase tracking-tight placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -225,10 +225,10 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
                 <button
                   key={category.name}
                   onClick={() => setSelectedCategory(isSelected ? null : category.name)}
-                  className={`p-6 border-2 border-black transition-all ${
+                  className={`p-6 border-2 border-ink transition-all ${
                     isSelected
-                      ? 'bg-[#FF6A00] text-black shadow-none translate-x-[2px] translate-y-[2px]'
-                      : 'bg-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                      ? 'bg-accent text-ink shadow-none translate-x-[2px] translate-y-[2px]'
+                      : 'bg-white shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                   }`}
                 >
                   <Icon
@@ -251,7 +251,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
           </h2>
 
           {filteredFAQs.length === 0 ? (
-            <div className="bg-white border-2 border-black p-12 text-center shadow-[2px_2px_0px_#000000]">
+            <div className="bg-white border-2 border-ink p-12 text-center shadow-brutal-sm">
               <p className="font-medium">
                 NO RESULTS FOUND. TRY ADJUSTING YOUR SEARCH OR CATEGORY FILTER.
               </p>
@@ -261,14 +261,14 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
               {filteredFAQs.map((faq) => (
                 <div
                   key={faq.id}
-                  className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000]"
+                  className="bg-white border-2 border-ink shadow-brutal-sm"
                 >
                   <button
                     onClick={() => toggleFAQ(faq.id)}
                     className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex-1 text-left">
-                      <div className="text-xs font-extrabold mb-2 text-[#FF6A00] uppercase tracking-tight">
+                      <div className="text-xs font-extrabold mb-2 text-accent uppercase tracking-tight">
                         {faq.category}
                       </div>
                       <div className="font-bold text-base">
@@ -283,7 +283,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
                   </button>
 
                   {expandedFAQ === faq.id && (
-                    <div className="px-6 pb-6 pt-2 border-t-2 border-black">
+                    <div className="px-6 pb-6 pt-2 border-t-2 border-ink">
                       <p className="leading-relaxed">{faq.answer}</p>
                     </div>
                   )}
@@ -293,7 +293,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
           )}
         </div>
 
-        <div className="bg-white border-2 border-black p-8 shadow-[2px_2px_0px_#000000] mb-8">
+        <div className="bg-white border-2 border-ink p-8 shadow-brutal-sm mb-8">
           <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-4">
             STILL NEED HELP?
           </h2>
@@ -304,9 +304,9 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
           <div className="grid md:grid-cols-2 gap-4">
             <a
               href="mailto:support@projectsapiens.xyz"
-              className="flex items-center gap-4 p-6 bg-[#F4F4F4] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-4 p-6 bg-surface border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
-              <div className="bg-[#FF6A00] border-2 border-black p-3">
+              <div className="bg-accent border-2 border-ink p-3">
                 <Mail size={24} strokeWidth={2} />
               </div>
               <div>
@@ -321,9 +321,9 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
 
             <a
               href="/admin/tickets"
-              className="flex items-center gap-4 p-6 bg-[#F4F4F4] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-4 p-6 bg-surface border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
-              <div className="bg-[#FF6A00] border-2 border-black p-3">
+              <div className="bg-accent border-2 border-ink p-3">
                 <MessageCircle size={24} strokeWidth={2} />
               </div>
               <div>
@@ -341,7 +341,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
         <div className="grid md:grid-cols-3 gap-4">
           <button
             onClick={() => onNavigate?.('about')}
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
+            className="p-6 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <BookOpen size={20} strokeWidth={2} />
@@ -356,7 +356,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
 
           <button
             onClick={() => onNavigate?.('terms')}
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
+            className="p-6 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <ExternalLink size={20} strokeWidth={2} />
@@ -371,7 +371,7 @@ export default function HelpCenter({ onBack, onNavigate }: HelpCenterProps) {
 
           <button
             onClick={() => onNavigate?.('privacy')}
-            className="p-6 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
+            className="p-6 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-left cursor-pointer"
           >
             <div className="flex items-center gap-2 mb-2">
               <ExternalLink size={20} strokeWidth={2} />

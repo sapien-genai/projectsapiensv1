@@ -115,9 +115,9 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
           <p className="mt-4 font-semibold">LOADING...</p>
         </div>
       </div>
@@ -368,7 +368,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <Navigation
         onAuthClick={() => setView('auth')}
         onPathsClick={() => {

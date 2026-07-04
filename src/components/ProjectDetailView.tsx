@@ -210,8 +210,8 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
   if (loading || !project) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-        <div className="bg-white border border-black shadow-[8px_8px_0px_#000000] p-12 text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+        <div className="bg-white border border-ink shadow-brutal-xl p-12 text-center">
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
           <p className="mt-4 font-semibold">LOADING PROJECT...</p>
         </div>
       </div>
@@ -220,22 +220,22 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white border border-black shadow-[8px_8px_0px_#000000] max-w-4xl w-full my-8">
-        <div className="sticky top-0 bg-white border-b-2 border-black p-6 flex items-center justify-between z-10">
+      <div className="bg-white border border-ink shadow-brutal-xl max-w-4xl w-full my-8">
+        <div className="sticky top-0 bg-white border-b-2 border-ink p-6 flex items-center justify-between z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="p-2 hover:bg-[#F4F4F4] rounded transition-colors"
+              className="p-2 hover:bg-surface rounded transition-colors"
             >
               <ArrowLeft className="w-5 h-5" strokeWidth={2} />
             </button>
-            <div className="text-xs font-semibold px-2 py-1 border border-black bg-[#F4F4F4]">
+            <div className="text-xs font-semibold px-2 py-1 border border-ink bg-surface">
               {project.project_type.toUpperCase().replace('_', ' ')}
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#F4F4F4] rounded transition-colors"
+            className="p-2 hover:bg-surface rounded transition-colors"
           >
             <X className="w-5 h-5" strokeWidth={2} />
           </button>
@@ -271,7 +271,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
               className={`flex items-center gap-2 text-sm font-semibold transition-colors ${
                 hasLiked
                   ? 'text-red-500'
-                  : 'hover:text-[#FF6A00]'
+                  : 'hover:text-accent'
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <Heart
@@ -298,7 +298,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-black text-white border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2"
+                  className="bg-ink text-white border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2"
                 >
                   <Github className="w-4 h-4" strokeWidth={2} />
                   VIEW CODE
@@ -309,7 +309,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
                   href={project.demo_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#0A74FF] text-white border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2"
+                  className="bg-info text-white border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" strokeWidth={2} />
                   VIEW DEMO
@@ -318,7 +318,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
             </div>
           )}
 
-          <div className="border-t-2 border-black pt-6">
+          <div className="border-t-2 border-ink pt-6">
             <h2 className="font-extrabold text-lg uppercase tracking-tight mb-4">
               ABOUT THIS PROJECT
             </h2>
@@ -337,7 +337,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
                 {project.tags.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-xs font-semibold px-3 py-1 bg-[#E3F2FD] border border-black"
+                    className="text-xs font-semibold px-3 py-1 bg-info-soft border border-ink"
                   >
                     {tag}
                   </span>
@@ -346,7 +346,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
             </div>
           )}
 
-          <div className="border-t-2 border-black pt-6">
+          <div className="border-t-2 border-ink pt-6">
             <h2 className="font-extrabold text-lg uppercase tracking-tight mb-4">
               COMMENTS ({project.comments_count})
             </h2>
@@ -359,12 +359,12 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="flex-1 px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="flex-1 px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                   <button
                     type="submit"
                     disabled={!newComment.trim() || submittingComment}
-                    className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-4 h-4" strokeWidth={2} />
                   </button>
@@ -373,7 +373,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
             )}
 
             {!user && (
-              <div className="bg-[#F4F4F4] border border-black p-4 text-center mb-6">
+              <div className="bg-surface border border-ink p-4 text-center mb-6">
                 <p className="text-sm font-semibold">
                   Sign in to leave a comment
                 </p>
@@ -382,7 +382,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
 
             <div className="space-y-4">
               {comments.length === 0 ? (
-                <div className="bg-[#F4F4F4] border border-black p-8 text-center">
+                <div className="bg-surface border border-ink p-8 text-center">
                   <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-400" strokeWidth={2} />
                   <p className="text-sm font-semibold text-gray-600">
                     No comments yet. Be the first to comment!
@@ -392,7 +392,7 @@ export default function ProjectDetailView({ projectId, onClose }: ProjectDetailV
                 comments.map((comment) => (
                   <div
                     key={comment.id}
-                    className="bg-[#F4F4F4] border border-black p-4"
+                    className="bg-surface border border-ink p-4"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <User className="w-4 h-4" strokeWidth={2} />

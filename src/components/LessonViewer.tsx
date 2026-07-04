@@ -68,9 +68,9 @@ function SnapshotCallout({ snapshotId, label, onOpen }: { snapshotId: string; la
   const { lastReviewed, reviewIntervalDays } = useSnapshotMeta(snapshotId);
 
   return (
-    <div className="bg-[#F7FAFF] p-5 border border-black shadow-[2px_2px_0px_#000000]">
+    <div className="bg-[#F7FAFF] p-5 border border-ink shadow-brutal-sm">
       <div className="flex gap-3">
-        <Info className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+        <Info className="w-5 h-5 flex-shrink-0 text-info" strokeWidth={2} />
         <div>
           <a
             href={`/snapshots/${snapshotId}`}
@@ -79,11 +79,11 @@ function SnapshotCallout({ snapshotId, label, onOpen }: { snapshotId: string; la
               e.preventDefault();
               onOpen(snapshotId);
             }}
-            className="font-extrabold uppercase tracking-tight text-[#0A74FF] hover:underline"
+            className="font-extrabold uppercase tracking-tight text-info hover:underline"
           >
             {label} →
           </a>
-          <p className="text-xs text-[#57524D] mt-1">
+          <p className="text-xs text-secondary mt-1">
             Last reviewed {lastReviewed || 'Unknown'} · review every {reviewIntervalDays ?? '?'} days
           </p>
         </div>
@@ -272,17 +272,17 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <div className="mx-auto px-4 md:px-8 py-8 md:py-12 max-w-4xl">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-accent transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           BACK TO PATH
         </button>
 
-        <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] p-6 md:p-8 mb-8">
+        <div className="bg-white border border-ink shadow-brutal-sm md:shadow-brutal p-6 md:p-8 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="w-6 h-6" strokeWidth={2} />
             <span className="text-xs font-semibold">{lesson.duration}</span>
@@ -300,10 +300,10 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                   <div key={index} className="whitespace-pre-line font-sans leading-relaxed">
                     {content.split('\n').map((line, i) => {
                       if (line.startsWith('# ')) {
-                        return <h2 key={i} className="font-extrabold text-2xl uppercase tracking-tight mt-8 mb-4 text-[#1C1A17]">{line.substring(2)}</h2>;
+                        return <h2 key={i} className="font-extrabold text-2xl uppercase tracking-tight mt-8 mb-4 text-strong">{line.substring(2)}</h2>;
                       }
                       if (line.startsWith('## ')) {
-                        return <h3 key={i} className="font-extrabold text-xl uppercase tracking-tight mt-6 mb-4 text-[#1C1A17]">{line.substring(3)}</h3>;
+                        return <h3 key={i} className="font-extrabold text-xl uppercase tracking-tight mt-6 mb-4 text-strong">{line.substring(3)}</h3>;
                       }
                       if (line.startsWith('**') && line.endsWith('**')) {
                         return <p key={i} className="font-semibold mb-3">{line.slice(2, -2)}</p>;
@@ -325,9 +325,9 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
 
               if (block.type === 'tip') {
                 return (
-                  <div key={index} className="bg-[#FFF9E6] p-6 border border-black shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
+                  <div key={index} className="bg-cream p-6 border border-ink shadow-brutal-sm md:shadow-brutal-sm">
                     <div className="flex gap-4">
-                      <Lightbulb className="w-6 h-6 flex-shrink-0 text-[#FF6A00]" strokeWidth={2} />
+                      <Lightbulb className="w-6 h-6 flex-shrink-0 text-accent" strokeWidth={2} />
                       <div>
                         <p className="font-extrabold text-sm uppercase tracking-tight mb-2">Pro Tip</p>
                         <p className="text-sm leading-relaxed">{block.content}</p>
@@ -344,11 +344,11 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 }
 
                 return (
-                  <p key={index} className="text-sm italic text-[#57524D] -mt-2">
+                  <p key={index} className="text-sm italic text-secondary -mt-2">
                     (
                     <a
                       href={`/snapshots/${block.snapshotId}`}
-                      className="text-[#FF6A00] underline hover:text-[#CC5500] transition-colors"
+                      className="text-accent underline hover:text-[#CC5500] transition-colors"
                       onClick={(e) => {
                         if (!onSnapshotOpen) return;
                         e.preventDefault();
@@ -375,7 +375,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 const isDecisionMaking = lessonId === 'lesson-2-4' && content.includes('Medium Decision Prompt');
 
                 return (
-                  <div key={index} className="bg-[#E3F2FD] p-4 md:p-6 border border-black shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] relative">
+                  <div key={index} className="bg-info-soft p-4 md:p-6 border border-ink shadow-brutal-sm md:shadow-brutal-sm relative">
                     <div className="absolute top-4 right-4 flex gap-2">
                       {isScheduleOptimizer && (
                         <button
@@ -385,7 +385,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                             setActiveLabTitle('Try This Prompt');
                             setActiveLabSubtitle('Practice the schedule optimization prompt in our AI chat');
                           }}
-                          className="p-2 bg-[#0A74FF] hover:bg-[#0960d9] text-white rounded transition-colors shadow-sm"
+                          className="p-2 bg-info hover:bg-info-hover text-white rounded transition-colors shadow-sm"
                           title="Try this prompt in AI chat"
                         >
                           <ExternalLink className="w-4 h-4" strokeWidth={2} />
@@ -399,7 +399,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                             setActiveLabTitle('Try This Prompt');
                             setActiveLabSubtitle('Practice the decision-making prompt in our AI chat');
                           }}
-                          className="p-2 bg-[#0A74FF] hover:bg-[#0960d9] text-white rounded transition-colors shadow-sm"
+                          className="p-2 bg-info hover:bg-info-hover text-white rounded transition-colors shadow-sm"
                           title="Try this prompt in AI chat"
                         >
                           <ExternalLink className="w-4 h-4" strokeWidth={2} />
@@ -408,7 +408,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                       {hasPrompt && promptText && (
                         <button
                           onClick={() => copyToClipboard(promptText, index)}
-                          className="p-2 bg-[#0A74FF] hover:bg-[#0960d9] text-white rounded transition-colors shadow-sm"
+                          className="p-2 bg-info hover:bg-info-hover text-white rounded transition-colors shadow-sm"
                           title="Copy prompt"
                         >
                           {copiedBlocks[index] ? (
@@ -420,7 +420,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                       )}
                     </div>
                     <div className="flex gap-4">
-                      <Zap className="w-6 h-6 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                      <Zap className="w-6 h-6 flex-shrink-0 text-info" strokeWidth={2} />
                       <div className="text-sm leading-relaxed whitespace-pre-line pr-20">
                         {lines.map((line, i) => {
                           if (line.startsWith('**') && line.endsWith('**')) {
@@ -445,7 +445,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 const isLearningPath = lessonId === 'lesson-3-1' && content.includes('Sample Learning Path Prompt');
 
                 return (
-                  <div key={index} className="bg-[#E3F2FD] p-4 md:p-6 border border-black shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000] relative">
+                  <div key={index} className="bg-info-soft p-4 md:p-6 border border-ink shadow-brutal-sm md:shadow-brutal-sm relative">
                     <div className="absolute top-4 right-4 flex gap-2">
                       {isLearningPath && (
                         <button
@@ -455,7 +455,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                             setActiveLabTitle('Try This Prompt');
                             setActiveLabSubtitle('Practice creating your personal learning path in our AI chat');
                           }}
-                          className="p-2 bg-[#0A74FF] hover:bg-[#0960d9] text-white rounded transition-colors shadow-sm"
+                          className="p-2 bg-info hover:bg-info-hover text-white rounded transition-colors shadow-sm"
                           title="Try this prompt in AI chat"
                         >
                           <ExternalLink className="w-4 h-4" strokeWidth={2} />
@@ -464,7 +464,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                       {hasPrompt && promptText && (
                         <button
                           onClick={() => copyToClipboard(promptText, index)}
-                          className="p-2 bg-[#0A74FF] hover:bg-[#0960d9] text-white rounded transition-colors shadow-sm"
+                          className="p-2 bg-info hover:bg-info-hover text-white rounded transition-colors shadow-sm"
                           title="Copy prompt"
                         >
                           {copiedBlocks[index] ? (
@@ -476,17 +476,17 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                       )}
                     </div>
                     <div className="flex gap-4">
-                      <Zap className="w-6 h-6 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                      <Zap className="w-6 h-6 flex-shrink-0 text-info" strokeWidth={2} />
                       <div className="text-sm leading-relaxed whitespace-pre-line pr-20">
                         {lines.map((line, i) => {
                           if (line.startsWith('**') && line.endsWith('**')) {
-                            return <p key={i} className="font-extrabold uppercase tracking-tight mb-2 text-black">{line.slice(2, -2)}</p>;
+                            return <p key={i} className="font-extrabold uppercase tracking-tight mb-2 text-ink">{line.slice(2, -2)}</p>;
                           }
                           if (line.startsWith('"') && line.endsWith('"')) {
-                            return <p key={i} className="italic text-black font-medium mb-2">{line}</p>;
+                            return <p key={i} className="italic text-ink font-medium mb-2">{line}</p>;
                           }
                           if (line.trim()) {
-                            return <p key={i} className="mb-2 text-black">{line}</p>;
+                            return <p key={i} className="mb-2 text-ink">{line}</p>;
                           }
                           return null;
                         })}
@@ -578,8 +578,8 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 };
 
                 return (
-                  <div key={index} className="bg-[#FF6A00] border border-black p-4 md:p-6 shadow-[2px_2px_0px_#000000] md:shadow-[2px_2px_0px_#000000]">
-                    <div className="text-sm leading-relaxed text-black whitespace-pre-line mb-4">
+                  <div key={index} className="bg-accent border border-ink p-4 md:p-6 shadow-brutal-sm md:shadow-brutal-sm">
+                    <div className="text-sm leading-relaxed text-ink whitespace-pre-line mb-4">
                       {content.split('\n').map((line, i) => {
                         if (line.startsWith('**') && line.endsWith('**')) {
                           return <p key={i} className="font-extrabold uppercase tracking-tight mb-3">{line.slice(2, -2)}</p>;
@@ -604,16 +604,16 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                           }
                         }}
                         placeholder="Write your reflections here..."
-                        className="w-full min-h-[120px] p-4 bg-white border border-black text-black placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-y"
+                        className="w-full min-h-[120px] p-4 bg-white border border-ink text-ink placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-ink resize-y"
                         rows={4}
                       />
                       <button
                         onClick={() => saveJournalEntry(index, content, journalEntries[index] || '')}
                         disabled={savingJournal[index] || savedJournal[index] || !journalEntries[index]?.trim()}
-                        className={`flex items-center gap-2 border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight transition-all disabled:cursor-not-allowed ${
+                        className={`flex items-center gap-2 border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight transition-all disabled:cursor-not-allowed ${
                           savedJournal[index]
-                            ? 'bg-[#98C9A3] text-black border-black'
-                            : 'bg-black text-white shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                            ? 'bg-success-soft text-ink border-ink'
+                            : 'bg-ink text-white shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                         } ${(savingJournal[index] || !journalEntries[index]?.trim()) && !savedJournal[index] ? 'opacity-50' : ''}`}
                       >
                         {savedJournal[index] ? (
@@ -702,7 +702,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                   const isMealPlanning = lessonId === 'lesson-2-1';
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">
                             {isMealPlanning ? 'AI Meal Planning Practice' : 'Practice Prompting Lab'}
@@ -713,13 +713,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle(isMealPlanning ? 'MEAL PLANNING LAB' : 'WRITING LAB');
                               setActiveLabSubtitle(isMealPlanning ? 'Test your meal planning prompts with AI' : 'Generate, edit, and refine written content');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           {isMealPlanning
                             ? 'Test your meal planning prompts with AI. Try the sample prompt above, then customize it with your own dietary preferences, time constraints, and budget. The lab opens in fullscreen for a focused practice session.'
                             : 'Practice writing effective prompts with real-time AI feedback. The lab opens in fullscreen so you can focus on experimenting with different approaches.'
@@ -732,7 +732,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'baseline-tracker') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Baseline Tracker</h3>
                           <button
@@ -741,13 +741,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('BASELINE TRACKER');
                               setActiveLabSubtitle('Track your current workflows and time usage');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Track your current workflows and time usage to establish a baseline before implementing AI tools.
                         </p>
                       </div>
@@ -757,7 +757,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'baseline-analysis') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Baseline Analysis</h3>
                           <button
@@ -766,13 +766,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('BASELINE ANALYSIS');
                               setActiveLabSubtitle('Review your baseline data and identify opportunities');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Review your baseline data and identify opportunities for AI-powered improvements.
                         </p>
                       </div>
@@ -783,7 +783,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                   return (
                     <div key={index} className="my-6 space-y-4">
                       {lessonId === 'lesson-1-4' && onPromptsClick && (
-                        <div className="bg-[#FF6A00] border border-black p-6 shadow-[2px_2px_0px_#000000]">
+                        <div className="bg-accent border border-ink p-6 shadow-brutal-sm">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
                               <h3 className="font-extrabold text-lg uppercase tracking-tight mb-2 flex items-center gap-2">
@@ -795,7 +795,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               </p>
                               <button
                                 onClick={onPromptsClick}
-                                className="flex items-center gap-2 px-6 py-3 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                                className="flex items-center gap-2 px-6 py-3 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                               >
                                 <BookOpen className="w-4 h-4" strokeWidth={2} />
                                 OPEN PROMPT LIBRARY
@@ -804,7 +804,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                           </div>
                         </div>
                       )}
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Prompt Tester</h3>
                           <button
@@ -813,13 +813,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('PROMPT TESTER');
                               setActiveLabSubtitle('Test and compare different prompt strategies');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Test and compare different prompt strategies to see how they affect AI responses.
                         </p>
                       </div>
@@ -829,7 +829,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'integration-checklist') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Integration Checklist</h3>
                           <button
@@ -838,13 +838,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('INTEGRATION CHECKLIST');
                               setActiveLabSubtitle('Track your progress integrating AI into your workflow');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Track your progress integrating AI tools into your daily workflow.
                         </p>
                       </div>
@@ -854,7 +854,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'creative-voice-practice') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Creative Voice Practice</h3>
                           <button
@@ -863,13 +863,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('CREATIVE VOICE PRACTICE');
                               setActiveLabSubtitle('Practice using AI while maintaining authenticity');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Practice using AI to enhance your creative voice while maintaining authenticity.
                         </p>
                       </div>
@@ -879,7 +879,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'production-checklist') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Production Checklist</h3>
                           <button
@@ -888,13 +888,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('PRODUCTION CHECKLIST');
                               setActiveLabSubtitle('Track your content production workflow');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Track your content production workflow and AI integration milestones.
                         </p>
                       </div>
@@ -904,7 +904,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'finishing-checklist') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#E3F2FD] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-info-soft border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight">Finishing Checklist</h3>
                           <button
@@ -913,13 +913,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('FINISHING CHECKLIST');
                               setActiveLabSubtitle('Complete your AI integration journey');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-accent-alt text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Lab
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] leading-relaxed">
+                        <p className="text-sm text-secondary leading-relaxed">
                           Complete your AI integration journey with final optimization steps.
                         </p>
                       </div>
@@ -936,7 +936,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'aim-practice-lab') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#FF6A00] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-accent border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight flex items-center gap-2">
                             <OpenMoji emoji="🎯" size={24} />
@@ -949,13 +949,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('AIM FRAMEWORK PRACTICE LAB');
                               setActiveLabSubtitle('Practice writing prompts using Actor, Input, and Mission');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Practice Window
                           </button>
                         </div>
-                        <p className="text-sm text-black leading-relaxed">
+                        <p className="text-sm text-ink leading-relaxed">
                           Open the practice window to write and test your own AIM prompts with live AI feedback. Try rewriting your old prompts using the Actor-Input-Mission structure and see how much better the responses become.
                         </p>
                       </div>
@@ -965,7 +965,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'map-practice-lab') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#FF6A00] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-accent border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight flex items-center gap-2">
                             <OpenMoji emoji="🗺️" size={24} />
@@ -978,13 +978,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('MAP FRAMEWORK PRACTICE LAB');
                               setActiveLabSubtitle('Practice adding context layers: Memory, Assets, Actions, and Prompt');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Practice Window
                           </button>
                         </div>
-                        <p className="text-sm text-black leading-relaxed">
+                        <p className="text-sm text-ink leading-relaxed">
                           Open the practice window to build rich, context-aware prompts. Practice layering Memory, Assets, Actions, and Prompt to see how context dramatically improves AI responses. Try the proposal example from the lesson or create your own.
                         </p>
                       </div>
@@ -994,7 +994,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'debug-prompting-lab') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#FF6A00] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-accent border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight flex items-center gap-2">
                             <OpenMoji emoji="🔧" size={24} />
@@ -1007,13 +1007,13 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('PROMPT DEBUGGING LAB');
                               setActiveLabSubtitle('Practice the 3 debugging patterns: Chain of Thought, Verifier, and Refinement');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Practice Window
                           </button>
                         </div>
-                        <p className="text-sm text-black leading-relaxed">
+                        <p className="text-sm text-ink leading-relaxed">
                           Open the practice window to test the three debugging patterns. Start with a weak prompt, then apply Chain of Thought, Verifier, or Refinement patterns to see how they transform AI responses. Compare results side-by-side.
                         </p>
                       </div>
@@ -1026,18 +1026,18 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tool === 'ocean-practice-lab') {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#FF6A00] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-accent border border-ink shadow-brutal-sm p-6">
                         <div className="mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight mb-3">
                             OCEAN Practice
                           </h3>
                           <ul className="space-y-2 mb-4">
-                            <li className="text-black">• Take a prompt you've been working with</li>
-                            <li className="text-black">• Rewrite it to include all five OCEAN elements</li>
-                            <li className="text-black">• Compare the original output to the OCEAN-enhanced output</li>
-                            <li className="text-black">• Note which elements made the biggest difference</li>
+                            <li className="text-ink">• Take a prompt you've been working with</li>
+                            <li className="text-ink">• Rewrite it to include all five OCEAN elements</li>
+                            <li className="text-ink">• Compare the original output to the OCEAN-enhanced output</li>
+                            <li className="text-ink">• Note which elements made the biggest difference</li>
                           </ul>
-                          <p className="text-sm text-black font-semibold mb-4">
+                          <p className="text-sm text-ink font-semibold mb-4">
                             Save your best OCEAN prompts as templates for future use.
                           </p>
                         </div>
@@ -1048,7 +1048,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                             setActiveLabTitle('OCEAN PRACTICE LAB');
                             setActiveLabSubtitle('Practice enhancing prompts with Original, Concrete, Evident, Assertive, and Narrative elements');
                           }}
-                          className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black rounded-lg font-semibold text-sm hover:bg-[#333333] transition-colors shadow-sm"
+                          className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink rounded-lg font-semibold text-sm hover:bg-[#333333] transition-colors shadow-sm"
                         >
                           <ExternalLink className="w-4 h-4" strokeWidth={2} />
                           Open Practice Window
@@ -1066,7 +1066,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                 if (tools.includes('prompt-practice')) {
                   return (
                     <div key={index} className="my-6">
-                      <div className="bg-[#FF6A00] border border-black shadow-[2px_2px_0px_#000000] p-6">
+                      <div className="bg-accent border border-ink shadow-brutal-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-extrabold text-lg uppercase tracking-tight flex items-center gap-2">
                             <OpenMoji emoji="🧪" size={24} />
@@ -1078,7 +1078,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
                               setActiveLabTitle('WRITING LAB');
                               setActiveLabSubtitle('Test prompts with AI');
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                           >
                             <ExternalLink className="w-4 h-4" strokeWidth={2} />
                             Open Practice Window
@@ -1101,7 +1101,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
         <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={onBack}
-            className="flex items-center justify-center gap-2 bg-white text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="flex items-center justify-center gap-2 bg-white text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <ArrowLeft className="w-4 h-4" strokeWidth={2} />
             BACK TO PATH
@@ -1110,7 +1110,7 @@ export default function LessonViewer({ pathId, moduleId, lessonId, onBack, onCom
           <button
             onClick={handleComplete}
             disabled={completing || completed}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 flex items-center justify-center gap-2 bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {completed ? (
               <>

@@ -169,7 +169,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="inline-block w-8 h-8 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+        <div className="inline-block w-8 h-8 border-4 border-ink border-t-accent animate-spin"></div>
       </div>
     );
   }
@@ -177,31 +177,31 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-extrabold uppercase tracking-tight text-black mb-2">Support Tickets</h2>
-        <p className="text-sm font-semibold text-black">Manage customer support requests and inquiries</p>
+        <h2 className="text-2xl font-extrabold uppercase tracking-tight text-ink mb-2">Support Tickets</h2>
+        <p className="text-sm font-semibold text-ink">Manage customer support requests and inquiries</p>
       </div>
 
       {/* Status Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatusCard label="Open" count={statusCounts.open} color="bg-red-500" />
-        <StatusCard label="In Progress" count={statusCounts.in_progress} color="bg-[#F59E0B]" />
-        <StatusCard label="Resolved" count={statusCounts.resolved} color="bg-[#10b981]" />
-        <StatusCard label="Closed" count={statusCounts.closed} color="bg-black" />
+        <StatusCard label="In Progress" count={statusCounts.in_progress} color="bg-warning" />
+        <StatusCard label="Resolved" count={statusCounts.resolved} color="bg-success" />
+        <StatusCard label="Closed" count={statusCounts.closed} color="bg-ink" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Tickets List */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] p-4">
+          <div className="bg-white border-2 border-ink shadow-brutal-sm p-4">
             <div className="space-y-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black" strokeWidth={2} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink" strokeWidth={2} />
                 <input
                   type="text"
                   placeholder="Search tickets..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="w-full pl-9 pr-3 py-3 min-h-[44px] border-2 border-ink text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-accent"
                 />
               </div>
 
@@ -209,7 +209,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="px-3 py-3 min-h-[44px] border-2 border-ink text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   <option value="all">All Status</option>
                   <option value="open">Open</option>
@@ -221,7 +221,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                 <select
                   value={filterPriority}
                   onChange={(e) => setFilterPriority(e.target.value)}
-                  className="px-3 py-3 min-h-[44px] border-2 border-black text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="px-3 py-3 min-h-[44px] border-2 border-ink text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   <option value="all">All Priority</option>
                   <option value="urgent">Urgent</option>
@@ -238,10 +238,10 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
               <button
                 key={ticket.id}
                 onClick={() => setSelectedTicket(ticket)}
-                className={`w-full text-left p-4 border-2 border-black transition-all ${
+                className={`w-full text-left p-4 border-2 border-ink transition-all ${
                   selectedTicket?.id === ticket.id
-                    ? 'bg-[#FF6A00] text-white shadow-[2px_2px_0px_#000000]'
-                    : 'bg-white hover:shadow-[2px_2px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                    ? 'bg-accent text-white shadow-brutal-sm'
+                    : 'bg-white hover:shadow-brutal-sm hover:translate-x-[2px] hover:translate-y-[2px]'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
@@ -251,17 +251,17 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                   </div>
                 </div>
                 <h4 className={`font-extrabold mb-1 line-clamp-1 uppercase tracking-tight ${
-                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-black'
+                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-ink'
                 }`}>
                   {ticket.title}
                 </h4>
                 <p className={`text-sm mb-2 line-clamp-2 font-semibold ${
-                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-black'
+                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-ink'
                 }`}>
                   {ticket.description}
                 </p>
                 <div className={`flex items-center gap-3 text-xs font-semibold ${
-                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-black'
+                  selectedTicket?.id === ticket.id ? 'text-white' : 'text-ink'
                 }`}>
                   <span className="flex items-center gap-1">
                     <User className="w-3 h-3" strokeWidth={2} />
@@ -276,7 +276,7 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
             ))}
 
             {filteredTickets.length === 0 && (
-              <div className="text-center py-8 font-semibold text-black">
+              <div className="text-center py-8 font-semibold text-ink">
                 No tickets found
               </div>
             )}
@@ -286,23 +286,23 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
         {/* Ticket Detail */}
         <div className="lg:col-span-2">
           {selectedTicket ? (
-            <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
+            <div className="bg-white border-2 border-ink shadow-brutal-sm overflow-hidden">
               {/* Ticket Header */}
-              <div className="p-6 border-b-2 border-black">
+              <div className="p-6 border-b-2 border-ink">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <PriorityBadge priority={selectedTicket.priority} />
                       <StatusBadge status={selectedTicket.status} />
-                      <span className="px-2 py-1 bg-[#F4F4F4] border-2 border-black text-black text-xs font-extrabold uppercase">
+                      <span className="px-2 py-1 bg-surface border-2 border-ink text-ink text-xs font-extrabold uppercase">
                         {selectedTicket.category}
                       </span>
                     </div>
-                    <h3 className="text-xl font-extrabold uppercase tracking-tight text-black mb-2">
+                    <h3 className="text-xl font-extrabold uppercase tracking-tight text-ink mb-2">
                       {selectedTicket.title}
                     </h3>
-                    <p className="text-black font-semibold mb-4">{selectedTicket.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-black font-semibold">
+                    <p className="text-ink font-semibold mb-4">{selectedTicket.description}</p>
+                    <div className="flex items-center gap-4 text-sm text-ink font-semibold">
                       <span className="flex items-center gap-1">
                         <User className="w-4 h-4" strokeWidth={2} />
                         {selectedTicket.user_profiles?.display_name || 'Unknown'}
@@ -319,21 +319,21 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'in_progress')}
                     disabled={selectedTicket.status === 'in_progress'}
-                    className="px-4 py-3 min-h-[44px] bg-[#F59E0B] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-warning text-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     In Progress
                   </button>
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'resolved')}
                     disabled={selectedTicket.status === 'resolved'}
-                    className="px-4 py-3 min-h-[44px] bg-[#10b981] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-success text-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Resolve
                   </button>
                   <button
                     onClick={() => updateTicketStatus(selectedTicket.id, 'closed')}
                     disabled={selectedTicket.status === 'closed'}
-                    className="px-4 py-3 min-h-[44px] bg-black text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 min-h-[44px] bg-ink text-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Close
                   </button>
@@ -341,65 +341,65 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
               </div>
 
               {/* Messages */}
-              <div className="p-6 space-y-4 max-h-[400px] overflow-y-auto bg-[#F4F4F4]">
+              <div className="p-6 space-y-4 max-h-[400px] overflow-y-auto bg-surface">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`p-4 border-2 border-black ${
+                    className={`p-4 border-2 border-ink ${
                       message.is_internal
-                        ? 'bg-[#F59E0B] text-white'
+                        ? 'bg-warning text-white'
                         : 'bg-white'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className={`font-extrabold ${message.is_internal ? 'text-white' : 'text-black'}`}>
+                        <span className={`font-extrabold ${message.is_internal ? 'text-white' : 'text-ink'}`}>
                           {message.user_profiles?.display_name || 'Unknown'}
                         </span>
                         {message.is_internal && (
-                          <span className="px-2 py-0.5 bg-white text-black border-2 border-black text-xs font-extrabold uppercase">
+                          <span className="px-2 py-0.5 bg-white text-ink border-2 border-ink text-xs font-extrabold uppercase">
                             Internal
                           </span>
                         )}
                       </div>
-                      <span className={`text-xs font-semibold ${message.is_internal ? 'text-white' : 'text-black'}`}>
+                      <span className={`text-xs font-semibold ${message.is_internal ? 'text-white' : 'text-ink'}`}>
                         {new Date(message.created_at).toLocaleString()}
                       </span>
                     </div>
-                    <p className={`font-semibold ${message.is_internal ? 'text-white' : 'text-black'}`}>{message.message}</p>
+                    <p className={`font-semibold ${message.is_internal ? 'text-white' : 'text-ink'}`}>{message.message}</p>
                   </div>
                 ))}
 
                 {messages.length === 0 && (
-                  <div className="text-center py-8 font-semibold text-black">
+                  <div className="text-center py-8 font-semibold text-ink">
                     No messages yet. Start the conversation!
                   </div>
                 )}
               </div>
 
               {/* Reply Box */}
-              <div className="p-4 md:p-6 border-t-2 border-black">
+              <div className="p-4 md:p-6 border-t-2 border-ink">
                 <textarea
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type your response..."
-                  className="w-full px-4 py-3 min-h-[88px] border-2 border-black resize-none focus:outline-none focus:ring-2 focus:ring-[#FF6A00] font-semibold"
+                  className="w-full px-4 py-3 min-h-[88px] border-2 border-ink resize-none focus:outline-none focus:ring-2 focus:ring-accent font-semibold"
                   rows={3}
                 />
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-3">
-                  <label className="flex items-center gap-2 text-xs font-extrabold uppercase text-black cursor-pointer min-h-[44px]">
+                  <label className="flex items-center gap-2 text-xs font-extrabold uppercase text-ink cursor-pointer min-h-[44px]">
                     <input
                       type="checkbox"
                       checked={isInternal}
                       onChange={(e) => setIsInternal(e.target.checked)}
-                      className="w-5 h-5 border-2 border-black"
+                      className="w-5 h-5 border-2 border-ink"
                     />
                     Internal note (not visible to user)
                   </label>
                   <button
                     onClick={sendMessage}
                     disabled={!newMessage.trim()}
-                    className="flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] w-full sm:w-auto bg-[#FF6A00] text-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] w-full sm:w-auto bg-accent text-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-extrabold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-4 h-4" strokeWidth={2} />
                     Send
@@ -408,10 +408,10 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
               </div>
             </div>
           ) : (
-            <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] p-12 text-center">
-              <Ticket className="w-16 h-16 text-black mx-auto mb-4" strokeWidth={2} />
-              <h3 className="text-xl font-extrabold uppercase tracking-tight text-black mb-2">Select a Ticket</h3>
-              <p className="font-semibold text-black">Choose a ticket from the list to view details and respond</p>
+            <div className="bg-white border-2 border-ink shadow-brutal-sm p-12 text-center">
+              <Ticket className="w-16 h-16 text-ink mx-auto mb-4" strokeWidth={2} />
+              <h3 className="text-xl font-extrabold uppercase tracking-tight text-ink mb-2">Select a Ticket</h3>
+              <p className="font-semibold text-ink">Choose a ticket from the list to view details and respond</p>
             </div>
           )}
         </div>
@@ -422,12 +422,12 @@ export default function TicketSystem({ adminRole }: { adminRole: AdminRole }) {
 
 function StatusCard({ label, count, color }: { label: string; count: number; color: string }) {
   return (
-    <div className="bg-white border-2 border-black shadow-[2px_2px_0px_#000000] p-4">
+    <div className="bg-white border-2 border-ink shadow-brutal-sm p-4">
       <div className="flex items-center gap-3">
-        <div className={`w-3 h-3 ${color} border-2 border-black`}></div>
+        <div className={`w-3 h-3 ${color} border-2 border-ink`}></div>
         <div>
-          <div className="text-2xl font-extrabold text-black">{count}</div>
-          <div className="text-xs font-extrabold uppercase tracking-tight text-black">{label}</div>
+          <div className="text-2xl font-extrabold text-ink">{count}</div>
+          <div className="text-xs font-extrabold uppercase tracking-tight text-ink">{label}</div>
         </div>
       </div>
     </div>
@@ -436,10 +436,10 @@ function StatusCard({ label, count, color }: { label: string; count: number; col
 
 function PriorityBadge({ priority, active = false }: { priority: string; active?: boolean }) {
   const colors: Record<string, string> = {
-    urgent: active ? 'bg-white text-red-600 border-white' : 'bg-red-500 text-white border-black',
-    high: active ? 'bg-white text-[#FF6A00] border-white' : 'bg-[#FF6A00] text-white border-black',
-    medium: active ? 'bg-white text-[#F59E0B] border-white' : 'bg-[#F59E0B] text-white border-black',
-    low: active ? 'bg-white text-black border-white' : 'bg-[#F4F4F4] text-black border-black',
+    urgent: active ? 'bg-white text-red-600 border-white' : 'bg-red-500 text-white border-ink',
+    high: active ? 'bg-white text-accent border-white' : 'bg-accent text-white border-ink',
+    medium: active ? 'bg-white text-warning border-white' : 'bg-warning text-white border-ink',
+    low: active ? 'bg-white text-ink border-white' : 'bg-surface text-ink border-ink',
   };
 
   return (
@@ -451,10 +451,10 @@ function PriorityBadge({ priority, active = false }: { priority: string; active?
 
 function StatusBadge({ status, active = false }: { status: string; active?: boolean }) {
   const colors: Record<string, string> = {
-    open: active ? 'bg-white text-red-600 border-white' : 'bg-red-500 text-white border-black',
-    in_progress: active ? 'bg-white text-[#F59E0B] border-white' : 'bg-[#F59E0B] text-white border-black',
-    resolved: active ? 'bg-white text-[#10b981] border-white' : 'bg-[#10b981] text-white border-black',
-    closed: active ? 'bg-white text-black border-white' : 'bg-black text-white border-black',
+    open: active ? 'bg-white text-red-600 border-white' : 'bg-red-500 text-white border-ink',
+    in_progress: active ? 'bg-white text-warning border-white' : 'bg-warning text-white border-ink',
+    resolved: active ? 'bg-white text-success border-white' : 'bg-success text-white border-ink',
+    closed: active ? 'bg-white text-ink border-white' : 'bg-ink text-white border-ink',
   };
 
   return (
