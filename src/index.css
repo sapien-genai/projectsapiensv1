@@ -109,13 +109,14 @@
 
 @layer components {
   :root {
-    --brand-bg: #F4F4F4;
+    --brand-bg: var(--surface);
+    /* Brand surface and muted are intentionally distinct from the core theme tokens. */
     --brand-surface: #ffffff;
-    --brand-primary: #FF6A00;
-    --brand-secondary: #0A74FF;
-    --brand-success: #10b981;
-    --brand-warning: #F59E0B;
-    --brand-ink: #000000;
+    --brand-primary: var(--accent);
+    --brand-secondary: var(--info);
+    --brand-success: var(--success);
+    --brand-warning: var(--warning);
+    --brand-ink: var(--ink);
     --brand-muted: #555555;
   }
 
