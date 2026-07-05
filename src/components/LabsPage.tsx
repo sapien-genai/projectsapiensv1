@@ -50,12 +50,12 @@ const labs = [
 
 export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         {onBack && (
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-[#FF6A00] transition-colors"
+            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold hover:text-accent transition-colors"
           >
             <ArrowLeft className="w-4 h-4" strokeWidth={2} />
             BACK TO DASHBOARD
@@ -75,11 +75,11 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
           {labs.map((lab) => (
             <div
               key={lab.id}
-              className="bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] hover:shadow-[2px_2px_0px_#000000] md:hover:shadow-[8px_8px_0px_#000000] transition-shadow"
+              className="bg-white border border-ink p-6 md:p-8 shadow-brutal-sm md:shadow-brutal hover:shadow-brutal-sm md:hover:shadow-brutal-xl transition-shadow"
             >
               <div className="flex items-start justify-between mb-6">
                 <lab.icon className="w-12 h-12" strokeWidth={2} />
-                <div className="text-xs font-semibold px-3 py-1 border border-black bg-[#F4F4F4]">
+                <div className="text-xs font-semibold px-3 py-1 border border-ink bg-surface">
                   SANDBOX
                 </div>
               </div>
@@ -100,7 +100,7 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
                   {lab.useCases.map((useCase) => (
                     <span
                       key={useCase}
-                      className="text-xs font-semibold px-3 py-1 border border-black bg-white"
+                      className="text-xs font-semibold px-3 py-1 border border-ink bg-white"
                     >
                       {useCase}
                     </span>
@@ -110,7 +110,7 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
 
               <button
                 onClick={() => onLabSelect?.(lab.id)}
-                className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="w-full bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 ENTER LAB
               </button>
@@ -118,13 +118,13 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
           ))}
         </div>
 
-        <div className="mt-12 bg-white border border-black p-6 md:p-8 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]">
+        <div className="mt-12 bg-white border border-ink p-6 md:p-8 shadow-brutal-sm md:shadow-brutal">
           <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
             HOW LABS WORK
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">01</div>
+              <div className="text-3xl font-extrabold text-accent mb-2">01</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
                 EXPERIMENT FREELY
               </h4>
@@ -133,7 +133,7 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
               </p>
             </div>
             <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">02</div>
+              <div className="text-3xl font-extrabold text-accent mb-2">02</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
                 GET INSTANT FEEDBACK
               </h4>
@@ -142,7 +142,7 @@ export default function LabsPage({ onLabSelect, onBack }: LabsPageProps) {
               </p>
             </div>
             <div>
-              <div className="text-3xl font-extrabold text-[#FF6A00] mb-2">03</div>
+              <div className="text-3xl font-extrabold text-accent mb-2">03</div>
               <h4 className="font-extrabold text-sm uppercase tracking-tight mb-2">
                 COMPARE & LEARN
               </h4>

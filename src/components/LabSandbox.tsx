@@ -343,11 +343,11 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
   // ── Render ─────────────────────────────────────────────────
   return (
-    <div className="flex h-screen bg-[#F4F4F4] overflow-hidden">
+    <div className="flex h-screen bg-surface overflow-hidden">
 
       {/* ── Sidebar ── */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-[#F4F4F4] border-r-2 border-black
+        fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r-2 border-ink
         transform transition-transform duration-200 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:relative lg:translate-x-0
@@ -355,7 +355,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
         <div className="flex flex-col h-full">
 
           {/* Sidebar header */}
-          <div className="px-4 py-4 border-b-2 border-black flex items-center justify-between">
+          <div className="px-4 py-4 border-b-2 border-ink flex items-center justify-between">
             <h2 className="font-extrabold text-sm uppercase tracking-tight">Labs</h2>
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 hover:bg-white transition-colors">
               <X className="w-5 h-5" strokeWidth={2} />
@@ -363,10 +363,10 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
           </div>
 
           {onBack && (
-            <div className="px-4 py-3 border-b-2 border-black">
+            <div className="px-4 py-3 border-b-2 border-ink">
               <button
                 onClick={onBack}
-                className="text-xs font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+                className="text-xs font-extrabold uppercase tracking-tight hover:text-accent transition-colors"
               >
                 ← Back to Dashboard
               </button>
@@ -384,8 +384,8 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                   onClick={() => onLabSwitch?.(id)}
                   className={`w-full text-left px-3 py-2.5 text-xs font-extrabold uppercase tracking-tight flex items-center gap-2.5 transition-colors mb-1 border ${
                     labId === id
-                      ? 'bg-black text-white border-black'
-                      : 'bg-white border-black hover:bg-[#FF6A00] hover:text-black hover:border-[#FF6A00]'
+                      ? 'bg-ink text-white border-ink'
+                      : 'bg-white border-ink hover:bg-accent hover:text-ink hover:border-accent'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" strokeWidth={2} />
@@ -396,7 +396,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
           </div>
 
           {/* History */}
-          <div className="border-t-2 border-black">
+          <div className="border-t-2 border-ink">
             <button
               onClick={() => setShowHistory(s => !s)}
               className="w-full px-4 py-3 flex items-center justify-between hover:bg-white transition-colors"
@@ -409,15 +409,15 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
             </button>
 
             {showHistory && (
-              <div className="max-h-56 overflow-y-auto border-t-2 border-black">
+              <div className="max-h-56 overflow-y-auto border-t-2 border-ink">
                 {historyLoading ? (
                   <div className="p-4 text-center">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#FF6A00]" strokeWidth={2} />
+                    <RefreshCw className="w-5 h-5 animate-spin mx-auto text-accent" strokeWidth={2} />
                   </div>
                 ) : historyError ? (
                   <div className="p-4">
                     <p className="text-xs text-red-600 mb-2">{historyError}</p>
-                    <button onClick={loadHistory} className="text-xs text-[#FF6A00] hover:underline font-semibold">Try again</button>
+                    <button onClick={loadHistory} className="text-xs text-accent hover:underline font-semibold">Try again</button>
                   </div>
                 ) : history.length > 0 ? (
                   <div className="p-2 space-y-1">
@@ -425,7 +425,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                       <button
                         key={exp.id}
                         onClick={() => loadExperiment(exp)}
-                        className="w-full text-left px-2 py-2 text-xs hover:bg-white transition-colors border border-transparent hover:border-black"
+                        className="w-full text-left px-2 py-2 text-xs hover:bg-white transition-colors border border-transparent hover:border-ink"
                       >
                         <p className="font-semibold truncate">{exp.prompt}</p>
                         <p className="text-[#888888] mt-0.5">{new Date(exp.created_at).toLocaleDateString()}</p>
@@ -445,11 +445,11 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-ink bg-white shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1 hover:bg-[#F4F4F4] transition-colors"
+              className="lg:hidden p-1 hover:bg-surface transition-colors"
             >
               <Menu className="w-5 h-5" strokeWidth={2} />
             </button>
@@ -471,7 +471,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
             {hasOutputs && (
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-tight px-3 py-1.5 border-2 border-black hover:bg-black hover:text-white transition-colors"
+                className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-tight px-3 py-1.5 border-2 border-ink hover:bg-ink hover:text-white transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
                 New
@@ -482,7 +482,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
         {/* Limit banner */}
         {limitReached && limitInfo && (
-          <div className="bg-[#FF6A00] border-b-2 border-black px-4 py-3 shrink-0">
+          <div className="bg-accent border-b-2 border-ink px-4 py-3 shrink-0">
             <div className="max-w-3xl mx-auto flex items-start gap-3">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" strokeWidth={2} />
               <div className="flex-1">
@@ -493,14 +493,14 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                 {limitInfo.plan === 'free' && (
                   <button
                     onClick={() => setShowUpgradeModal(true)}
-                    className="px-3 py-1.5 bg-black text-white border-2 border-black text-xs font-extrabold uppercase tracking-tight hover:bg-white hover:text-black transition-colors"
+                    className="px-3 py-1.5 bg-ink text-white border-2 border-ink text-xs font-extrabold uppercase tracking-tight hover:bg-white hover:text-ink transition-colors"
                   >
                     Upgrade
                   </button>
                 )}
                 <button
                   onClick={() => setLimitReached(false)}
-                  className="px-3 py-1.5 bg-white border-2 border-black text-xs font-extrabold uppercase tracking-tight hover:bg-[#F4F4F4] transition-colors"
+                  className="px-3 py-1.5 bg-white border-2 border-ink text-xs font-extrabold uppercase tracking-tight hover:bg-surface transition-colors"
                 >
                   Dismiss
                 </button>
@@ -533,7 +533,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                           <button
                             key={i}
                             onClick={() => setInput(s)}
-                            className="text-left text-xs px-4 py-3 border-2 border-black bg-white hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors font-medium leading-snug shadow-[2px_2px_0px_#000] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
+                            className="text-left text-xs px-4 py-3 border-2 border-ink bg-white hover:bg-accent hover:border-accent transition-colors font-medium leading-snug shadow-brutal-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
                           >
                             {s}
                           </button>
@@ -545,9 +545,9 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
 
                 {/* Loading state for first output */}
                 {loading && (
-                  <div className="border-2 border-black bg-white p-6 shadow-[3px_3px_0px_#000]">
+                  <div className="border-2 border-ink bg-white p-6 shadow-brutal">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-accent bg-peach text-accent flex items-center gap-1.5">
                         <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
                         Writing…
                       </span>
@@ -569,15 +569,15 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                     <div key={o.id}>
                       {/* User prompt bubble */}
                       <div className="flex justify-end mb-2">
-                        <div className="max-w-[80%] bg-[#F4F4F4] border-2 border-black px-4 py-3 text-sm font-medium text-right shadow-[2px_2px_0px_#000]">
+                        <div className="max-w-[80%] bg-surface border-2 border-ink px-4 py-3 text-sm font-medium text-right shadow-brutal-sm">
                           {o.userPrompt.length > 120 ? o.userPrompt.slice(0, 120) + '…' : o.userPrompt}
                         </div>
                       </div>
 
                       {/* Version label */}
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-black ${
-                          isLatest ? 'bg-[#FF6A00] text-black border-[#FF6A00]' : 'bg-white text-[#888888]'
+                        <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-ink ${
+                          isLatest ? 'bg-accent text-ink border-accent' : 'bg-white text-[#888888]'
                         }`}>
                           {oi === 0 ? 'Response' : o.label}
                         </span>
@@ -589,13 +589,13 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                       {/* Output text */}
                       <div className={`relative group border-2 p-5 text-sm leading-relaxed whitespace-pre-wrap transition-colors ${
                         isLatest
-                          ? 'border-black bg-white shadow-[3px_3px_0px_#000]'
-                          : 'border-black/20 bg-white text-[#777]'
+                          ? 'border-ink bg-white shadow-brutal'
+                          : 'border-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] bg-white text-[#777]'
                       }`}>
                         {o.text}
                         <button
                           onClick={() => copy(o.text, o.id)}
-                          className="absolute top-3 right-3 p-1.5 bg-[#F4F4F4] border border-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#FF6A00] hover:border-[#FF6A00]"
+                          className="absolute top-3 right-3 p-1.5 bg-surface border border-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:border-accent"
                         >
                           {copied === o.id
                             ? <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />
@@ -611,12 +611,12 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                 {loading && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                      <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-accent bg-peach text-accent flex items-center gap-1.5">
                         <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
                         Writing…
                       </span>
                     </div>
-                    <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
+                    <div className="border-2 border-ink bg-white shadow-brutal p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
                       {streamingText || <span className="text-[#999]">…</span>}
                     </div>
                   </div>
@@ -634,7 +634,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
                       key={a.mode}
                       onClick={() => handleImprove(a.mode, a.label)}
                       disabled={loading}
-                      className="flex items-center gap-1.5 px-3 py-2 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors disabled:opacity-40 shadow-[2px_2px_0px_#000] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
+                      className="flex items-center gap-1.5 px-3 py-2 border-2 border-ink bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-accent hover:border-accent transition-colors disabled:opacity-40 shadow-brutal-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
                     >
                       <a.icon className="w-3.5 h-3.5" strokeWidth={2} />
                       {a.label}
@@ -649,7 +649,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
         </div>
 
         {/* ── Bottom input bar ── */}
-        <div className="border-t-2 border-black bg-white px-4 py-3 shrink-0">
+        <div className="border-t-2 border-ink bg-white px-4 py-3 shrink-0">
           <div className="max-w-3xl mx-auto">
             {/* Suggestions when empty (non-writing labs) */}
             {!hasOutputs && !loading && (
@@ -657,7 +657,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
             )}
 
             <div className="flex gap-2 items-end">
-              <div className="flex-1 border-2 border-black bg-[#F4F4F4] flex items-end">
+              <div className="flex-1 border-2 border-ink bg-surface flex items-end">
                 <textarea
                   ref={hasOutputs ? bottomTextareaRef : textareaRef}
                   value={input}
@@ -672,7 +672,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
-                className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black hover:border-[#FF6A00] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="p-3 bg-ink text-white border-2 border-ink hover:bg-accent hover:text-ink hover:border-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {loading
                   ? <RefreshCw className="w-5 h-5 animate-spin" strokeWidth={2} />
@@ -688,7 +688,7 @@ export default function LabSandbox({ labId, onBack, onLabSwitch }: LabSandboxPro
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-ink bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

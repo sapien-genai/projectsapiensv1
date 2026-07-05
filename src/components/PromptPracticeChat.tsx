@@ -285,10 +285,10 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
   return (
     <div className="flex h-screen bg-white">
       {/* Sidebar */}
-      <div className="hidden lg:block w-64 bg-[#F4F4F4] border-r-2 border-black">
+      <div className="hidden lg:block w-64 bg-surface border-r-2 border-ink">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b-2 border-black">
+          <div className="p-4 border-b-2 border-ink">
             <h2 className="font-extrabold text-sm uppercase tracking-tight mb-4">Practice Lab</h2>
             <p className="text-xs text-[#666666] leading-relaxed">
               Practice using the {config.title.toLowerCase()} pattern to improve your prompting skills.
@@ -322,7 +322,7 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
           </div>
 
           {/* Stats */}
-          <div className="border-t-2 border-black p-4">
+          <div className="border-t-2 border-ink p-4">
             <p className="text-xs font-semibold uppercase tracking-tight text-[#666666]">
               Messages: {messages.length - 1}
             </p>
@@ -333,12 +333,12 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
+        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-ink bg-white">
           <div>
             <h1 className="font-extrabold text-base uppercase tracking-tight">{config.title}</h1>
             <p className="text-xs text-[#666666]">Interactive practice environment</p>
           </div>
-          <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+          <Sparkles className="w-5 h-5 text-accent" strokeWidth={2} />
         </div>
 
         {/* Messages Area */}
@@ -346,7 +346,7 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((message, index) => (
               <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-[#F4F4F4] border border-black' : 'bg-white'} p-4`}>
+                <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-surface border border-ink' : 'bg-white'} p-4`}>
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <p className="text-xs font-extrabold uppercase tracking-tight">
                       {message.role === 'user' ? 'You' : config.title}
@@ -354,7 +354,7 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
                     {message.role === 'assistant' && (
                       <button
                         onClick={() => handleCopy(message.content, index)}
-                        className="flex-shrink-0 p-1 hover:bg-[#F4F4F4] transition-colors"
+                        className="flex-shrink-0 p-1 hover:bg-surface transition-colors"
                         title="Copy response"
                       >
                         {copiedIndex === index ? (
@@ -376,9 +376,9 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
               <div className="flex justify-start">
                 <div className="bg-white p-4">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                   </div>
                 </div>
               </div>
@@ -387,7 +387,7 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
         </div>
 
         {/* Input Area */}
-        <div className="border-t-2 border-black bg-white p-4">
+        <div className="border-t-2 border-ink bg-white p-4">
           <div className="max-w-3xl mx-auto">
             {/* Example Prompts */}
             {messages.length === 1 && (
@@ -398,7 +398,7 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
                     <button
                       key={idx}
                       onClick={() => setInput(prompt)}
-                      className="text-xs px-3 py-2 bg-[#F4F4F4] border border-black hover:bg-[#FFE5D9] hover:border-[#FF6A00] transition-all"
+                      className="text-xs px-3 py-2 bg-surface border border-ink hover:bg-peach hover:border-accent transition-all"
                     >
                       {prompt}
                     </button>
@@ -415,13 +415,13 @@ export default function PromptPracticeChat({ labType = 'writing' }: PromptPracti
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={config.placeholder}
-                className="flex-1 bg-[#F4F4F4] border border-black px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black max-h-32"
+                className="flex-1 bg-surface border border-ink px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ink max-h-32"
                 rows={1}
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isTyping}
-                className="bg-black text-white border border-black p-3 hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+                className="bg-ink text-white border border-ink p-3 hover:bg-accent hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-ink disabled:hover:text-white"
                 aria-label="Send message"
               >
                 <Send className="w-5 h-5" strokeWidth={2} />

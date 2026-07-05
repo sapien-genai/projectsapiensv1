@@ -77,13 +77,13 @@ export default function JournalPage({ onBack }: JournalPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4]">
-      <nav className="bg-[#F4F4F4] border-b-2 border-black">
+    <div className="min-h-screen bg-surface">
+      <nav className="bg-surface border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-8 py-4">
           {onBack && (
             <button
               onClick={onBack}
-              className="flex items-center gap-2 bg-white border border-black px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-2 bg-white border border-ink px-4 py-2 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               Back
@@ -107,11 +107,11 @@ export default function JournalPage({ onBack }: JournalPageProps) {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+            <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
             <p className="mt-4 font-semibold">LOADING YOUR JOURNAL...</p>
           </div>
         ) : entries.length === 0 ? (
-          <div className="bg-white border border-black p-8 text-center shadow-[3px_3px_0px_#000000]">
+          <div className="bg-white border border-ink p-8 text-center shadow-brutal">
             <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-30" strokeWidth={2} />
             <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
               NO JOURNAL ENTRIES YET
@@ -121,7 +121,7 @@ export default function JournalPage({ onBack }: JournalPageProps) {
             </p>
             <button
               onClick={onBack}
-              className="bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               START LEARNING
             </button>
@@ -131,7 +131,7 @@ export default function JournalPage({ onBack }: JournalPageProps) {
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000]"
+                className="bg-white border border-ink p-6 shadow-brutal"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -146,15 +146,15 @@ export default function JournalPage({ onBack }: JournalPageProps) {
                   <button
                     onClick={() => deleteEntry(entry.id)}
                     disabled={deleting === entry.id}
-                    className="p-2 hover:bg-red-50 border border-black hover:border-red-500 transition-colors disabled:opacity-50"
+                    className="p-2 hover:bg-red-50 border border-ink hover:border-red-500 transition-colors disabled:opacity-50"
                     title="Delete entry"
                   >
                     <Trash2 className="w-4 h-4" strokeWidth={2} />
                   </button>
                 </div>
 
-                <div className="bg-[#FF6A00] bg-opacity-10 border-l-4 border-[#FF6A00] p-4 mb-4">
-                  <p className="text-xs font-semibold uppercase tracking-tight mb-2 text-[#FF6A00]">
+                <div className="bg-accent bg-opacity-10 border-l-4 border-accent p-4 mb-4">
+                  <p className="text-xs font-semibold uppercase tracking-tight mb-2 text-accent">
                     PROMPT
                   </p>
                   <p className="text-sm leading-relaxed whitespace-pre-line">

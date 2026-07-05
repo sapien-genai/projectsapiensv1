@@ -307,10 +307,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+      <div className="min-h-screen bg-paper flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent"></div>
-          <p className="mt-4 text-[#57524D] font-semibold">Loading settings...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ink border-t-transparent"></div>
+          <p className="mt-4 text-secondary font-semibold">Loading settings...</p>
         </div>
       </div>
     );
@@ -324,11 +324,11 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
+    <div className="min-h-screen bg-paper">
       <div className="max-w-5xl mx-auto px-4 py-6 md:py-12">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 mb-6 text-[#57524D] hover:text-[#1C1A17] transition-colors font-semibold"
+          className="flex items-center gap-2 mb-6 text-secondary hover:text-strong transition-colors font-semibold"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Dashboard
@@ -338,14 +338,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
           <h1 className="font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-2 font-sans">
             SETTINGS
           </h1>
-          <p className="text-[#57524D] text-lg font-sans">
+          <p className="text-secondary text-lg font-sans">
             Manage your account preferences and security settings
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
-            <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
+            <div className="bg-white border border-ink shadow-brutal-sm overflow-hidden">
               <nav>
                 {sections.map((section) => {
                   const Icon = section.icon;
@@ -354,10 +354,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                     <button
                       key={section.id}
                       onClick={() => setActiveSection(section.id as any)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 border-b border-black font-semibold text-left transition-colors ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 border-b border-ink font-semibold text-left transition-colors ${
                         isActive
-                          ? 'bg-[#E67E22] text-black'
-                          : 'bg-white text-[#57524D] hover:bg-[#E9E5E0]'
+                          ? 'bg-[#E67E22] text-ink'
+                          : 'bg-white text-secondary hover:bg-paper-2'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -371,13 +371,13 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
           <div className="lg:col-span-3">
             {activeSection === 'profile' && (
-              <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] p-6">
+              <div className="bg-white border border-ink shadow-brutal-sm p-6">
                 <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6">
                   Profile Information
                 </h2>
 
                 {profileSuccess && (
-                  <div className="mb-6 bg-[#98C9A3] border border-black p-4 flex items-center gap-3">
+                  <div className="mb-6 bg-success-soft border border-ink p-4 flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="font-semibold">Profile updated successfully!</span>
                   </div>
@@ -395,11 +395,11 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                     <label className="block text-sm font-bold mb-2 uppercase tracking-tight">
                       Email Address
                     </label>
-                    <div className="flex items-center gap-3 px-4 py-3 bg-[#E9E5E0] border border-black">
-                      <Mail className="w-5 h-5 text-[#57524D]" />
-                      <span className="font-semibold text-[#57524D]">{profile?.email}</span>
+                    <div className="flex items-center gap-3 px-4 py-3 bg-paper-2 border border-ink">
+                      <Mail className="w-5 h-5 text-secondary" />
+                      <span className="font-semibold text-secondary">{profile?.email}</span>
                     </div>
-                    <p className="text-sm text-[#57524D] mt-2">
+                    <p className="text-sm text-secondary mt-2">
                       Email address cannot be changed. Contact support if needed.
                     </p>
                   </div>
@@ -412,7 +412,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       type="text"
                       value={editedUsername}
                       onChange={(e) => setEditedUsername(e.target.value)}
-                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
+                      className="w-full px-4 py-3 border border-ink font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
                       placeholder="Enter username"
                     />
                   </div>
@@ -425,7 +425,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       type="text"
                       value={editedAvatarUrl}
                       onChange={(e) => setEditedAvatarUrl(e.target.value)}
-                      className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
+                      className="w-full px-4 py-3 border border-ink font-semibold focus:outline-none focus:ring-2 focus:ring-[#E67E22]"
                       placeholder="https://example.com/avatar.jpg"
                     />
                   </div>
@@ -433,7 +433,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                   <button
                     onClick={handleSaveProfile}
                     disabled={savingProfile}
-                    className="flex items-center gap-2 bg-[#0A74FF] text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 bg-info text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                   >
                     <Save className="w-4 h-4" />
                     {savingProfile ? 'Saving...' : 'Save Changes'}
@@ -443,14 +443,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
             )}
 
             {activeSection === 'security' && (
-              <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] p-6">
+              <div className="bg-white border border-ink shadow-brutal-sm p-6">
                 <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6 flex items-center gap-2">
                   <Shield className="w-6 h-6" />
                   Security Settings
                 </h2>
 
                 {passwordSuccess && (
-                  <div className="mb-6 bg-[#98C9A3] border border-black p-4 flex items-center gap-3">
+                  <div className="mb-6 bg-success-soft border border-ink p-4 flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="font-semibold">Password changed successfully!</span>
                   </div>
@@ -478,13 +478,13 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                             type={showCurrentPassword ? 'text' : 'password'}
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261] pr-12"
+                            className="w-full px-4 py-3 border border-ink font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft pr-12"
                             placeholder="Enter current password"
                           />
                           <button
                             type="button"
                             onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#57524D] hover:text-[#1C1A17]"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-strong"
                           >
                             {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
@@ -500,18 +500,18 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                             type={showNewPassword ? 'text' : 'password'}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261] pr-12"
+                            className="w-full px-4 py-3 border border-ink font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft pr-12"
                             placeholder="Enter new password"
                           />
                           <button
                             type="button"
                             onClick={() => setShowNewPassword(!showNewPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#57524D] hover:text-[#1C1A17]"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-strong"
                           >
                             {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
                         </div>
-                        <p className="text-sm text-[#57524D] mt-1">
+                        <p className="text-sm text-secondary mt-1">
                           Must be at least 6 characters
                         </p>
                       </div>
@@ -525,13 +525,13 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                             type={showConfirmPassword ? 'text' : 'password'}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-4 py-3 border border-black font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261] pr-12"
+                            className="w-full px-4 py-3 border border-ink font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft pr-12"
                             placeholder="Confirm new password"
                           />
                           <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#57524D] hover:text-[#1C1A17]"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-strong"
                           >
                             {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
@@ -541,7 +541,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       <button
                         onClick={handleChangePassword}
                         disabled={savingPassword || !newPassword || !confirmPassword}
-                        className="flex items-center gap-2 bg-[#0A74FF] text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                        className="flex items-center gap-2 bg-info text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                       >
                         <Lock className="w-4 h-4" />
                         {savingPassword ? 'Changing...' : 'Change Password'}
@@ -553,14 +553,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
             )}
 
             {activeSection === 'preferences' && (
-              <div className="bg-white border border-black shadow-[2px_2px_0px_#000000]  p-6">
+              <div className="bg-white border border-ink shadow-brutal-sm  p-6">
                 <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6 flex items-center gap-2">
                   <Globe className="w-6 h-6" />
                   Preferences
                 </h2>
 
                 {preferencesSuccess && (
-                  <div className="mb-6 bg-[#98C9A3] border border-black p-4  flex items-center gap-3">
+                  <div className="mb-6 bg-success-soft border border-ink p-4  flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="font-semibold">Preferences saved!</span>
                   </div>
@@ -574,19 +574,19 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                     <div className="space-y-4">
                       <button
                         onClick={toggleDarkMode}
-                        className="w-full flex items-center justify-between p-4 border border-black cursor-pointer hover:bg-[#E9E5E0] transition-colors"
+                        className="w-full flex items-center justify-between p-4 border border-ink cursor-pointer hover:bg-paper-2 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           {isDarkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                           <div className="text-left">
                             <div className="font-bold">Dark Mode</div>
-                            <div className="text-sm text-[#57524D]">
+                            <div className="text-sm text-secondary">
                               {isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                             </div>
                           </div>
                         </div>
-                        <div className={`w-12 h-6 border border-black relative transition-colors ${isDarkMode ? 'bg-[#E67E22]' : 'bg-[#E9E5E0]'}`}>
-                          <div className={`absolute top-0 w-6 h-full bg-black border-r border-black transition-transform ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                        <div className={`w-12 h-6 border border-ink relative transition-colors ${isDarkMode ? 'bg-[#E67E22]' : 'bg-paper-2'}`}>
+                          <div className={`absolute top-0 w-6 h-full bg-ink border-r border-ink transition-transform ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                         </div>
                       </button>
                     </div>
@@ -597,10 +597,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       Notifications
                     </h3>
                     <div className="space-y-4">
-                      <label className="flex items-center justify-between p-4 border border-black  cursor-pointer hover:bg-[#E9E5E0] transition-colors">
+                      <label className="flex items-center justify-between p-4 border border-ink  cursor-pointer hover:bg-paper-2 transition-colors">
                         <div>
                           <div className="font-bold">Email Notifications</div>
-                          <div className="text-sm text-[#57524D]">
+                          <div className="text-sm text-secondary">
                             Receive emails about important updates
                           </div>
                         </div>
@@ -608,14 +608,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={emailNotifications}
                           onChange={(e) => setEmailNotifications(e.target.checked)}
-                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
+                          className="w-5 h-5 text-[#E67E22] border border-ink focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
 
-                      <label className="flex items-center justify-between p-4 border border-black  cursor-pointer hover:bg-[#E9E5E0] transition-colors">
+                      <label className="flex items-center justify-between p-4 border border-ink  cursor-pointer hover:bg-paper-2 transition-colors">
                         <div>
                           <div className="font-bold">Progress Updates</div>
-                          <div className="text-sm text-[#57524D]">
+                          <div className="text-sm text-secondary">
                             Get notified when you complete milestones
                           </div>
                         </div>
@@ -623,14 +623,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={progressUpdates}
                           onChange={(e) => setProgressUpdates(e.target.checked)}
-                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
+                          className="w-5 h-5 text-[#E67E22] border border-ink focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
 
-                      <label className="flex items-center justify-between p-4 border border-black  cursor-pointer hover:bg-[#E9E5E0] transition-colors">
+                      <label className="flex items-center justify-between p-4 border border-ink  cursor-pointer hover:bg-paper-2 transition-colors">
                         <div>
                           <div className="font-bold">Weekly Digest</div>
-                          <div className="text-sm text-[#57524D]">
+                          <div className="text-sm text-secondary">
                             Receive a summary of your weekly activity
                           </div>
                         </div>
@@ -638,7 +638,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           type="checkbox"
                           checked={weeklyDigest}
                           onChange={(e) => setWeeklyDigest(e.target.checked)}
-                          className="w-5 h-5 text-[#E67E22] border border-black focus:ring-2 focus:ring-[#E67E22]"
+                          className="w-5 h-5 text-[#E67E22] border border-ink focus:ring-2 focus:ring-[#E67E22]"
                         />
                       </label>
                     </div>
@@ -647,7 +647,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                   <button
                     onClick={handleSavePreferences}
                     disabled={savingPreferences}
-                    className="flex items-center gap-2 bg-[#0A74FF] text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 bg-info text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                   >
                     <Save className="w-4 h-4" />
                     {savingPreferences ? 'Saving...' : 'Save Preferences'}
@@ -658,14 +658,14 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
             {activeSection === 'support' && (
               <div className="space-y-6">
-                <div className="bg-white border border-black shadow-[2px_2px_0px_#000000]  p-6">
+                <div className="bg-white border border-ink shadow-brutal-sm  p-6">
                   <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6 flex items-center gap-2">
                     <LifeBuoy className="w-6 h-6" />
                     Support Center
                   </h2>
 
                   {ticketSuccess && (
-                    <div className="mb-6 bg-[#98C9A3] border border-black p-4  flex items-center gap-3">
+                    <div className="mb-6 bg-success-soft border border-ink p-4  flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5" />
                       <span className="font-semibold">Support ticket submitted successfully! We'll get back to you soon.</span>
                     </div>
@@ -680,10 +680,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 border border-black  bg-[#E9E5E0]">
+                      <div className="p-4 border border-ink  bg-paper-2">
                         <Ticket className="w-6 h-6 mb-2" />
                         <h3 className="font-bold uppercase tracking-tight mb-1">Open a Ticket</h3>
-                        <p className="text-sm text-[#57524D] mb-2">Track your support request</p>
+                        <p className="text-sm text-secondary mb-2">Track your support request</p>
                         <button
                           onClick={() => {
                             setShowTicketForm(true);
@@ -695,10 +695,10 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                         </button>
                       </div>
 
-                      <div className="p-4 border border-black  bg-[#E9E5E0]">
+                      <div className="p-4 border border-ink  bg-paper-2">
                         <Globe className="w-6 h-6 mb-2" />
                         <h3 className="font-bold uppercase tracking-tight mb-1">Help Center</h3>
-                        <p className="text-sm text-[#57524D] mb-2">Browse documentation</p>
+                        <p className="text-sm text-secondary mb-2">Browse documentation</p>
                         <button
                           onClick={onBack}
                           className="text-sm font-bold text-[#E67E22] hover:underline flex items-center gap-1"
@@ -710,12 +710,12 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                     </div>
 
                     {showTicketForm && (
-                      <div className="border border-black  p-6 bg-[#F8F5F2]">
+                      <div className="border border-ink  p-6 bg-paper">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-bold text-lg uppercase tracking-tight">Create Support Ticket</h3>
                           <button
                             onClick={() => setShowTicketForm(false)}
-                            className="text-[#57524D] hover:text-[#1C1A17]"
+                            className="text-secondary hover:text-strong"
                           >
                             Cancel
                           </button>
@@ -730,7 +730,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                               type="text"
                               value={ticketSubject}
                               onChange={(e) => setTicketSubject(e.target.value)}
-                              className="w-full px-4 py-3 border border-black  font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                              className="w-full px-4 py-3 border border-ink  font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft"
                               placeholder="Brief description of your issue"
                             />
                           </div>
@@ -743,7 +743,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                               <select
                                 value={ticketCategory}
                                 onChange={(e) => setTicketCategory(e.target.value)}
-                                className="w-full px-4 py-3 border border-black  font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                                className="w-full px-4 py-3 border border-ink  font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft"
                               >
                                 <option value="general">General Question</option>
                                 <option value="technical">Technical Issue</option>
@@ -759,7 +759,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                               <select
                                 value={ticketPriority}
                                 onChange={(e) => setTicketPriority(e.target.value)}
-                                className="w-full px-4 py-3 border border-black  font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                                className="w-full px-4 py-3 border border-ink  font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft"
                               >
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
@@ -776,7 +776,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                               value={ticketDescription}
                               onChange={(e) => setTicketDescription(e.target.value)}
                               rows={6}
-                              className="w-full px-4 py-3 border border-black  font-semibold focus:outline-none focus:ring-2 focus:ring-[#F4A261] resize-none"
+                              className="w-full px-4 py-3 border border-ink  font-semibold focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"
                               placeholder="Provide detailed information about your issue or question..."
                             />
                           </div>
@@ -784,7 +784,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                           <button
                             onClick={handleSubmitTicket}
                             disabled={submittingTicket}
-                            className="flex items-center gap-2 bg-[#0A74FF] text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                            className="flex items-center gap-2 bg-info text-white px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                           >
                             <Send className="w-4 h-4" />
                             {submittingTicket ? 'Submitting...' : 'Submit Ticket'}
@@ -795,7 +795,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                   </div>
                 </div>
 
-                <div className="bg-white border border-black shadow-[2px_2px_0px_#000000]  p-6">
+                <div className="bg-white border border-ink shadow-brutal-sm  p-6">
                   <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4 flex items-center gap-2">
                     <Ticket className="w-5 h-5" />
                     Your Support Tickets
@@ -803,11 +803,11 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
 
                   {loadingTickets ? (
                     <div className="text-center py-8">
-                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-black border-t-transparent"></div>
-                      <p className="mt-2 text-[#57524D] font-semibold">Loading tickets...</p>
+                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-ink border-t-transparent"></div>
+                      <p className="mt-2 text-secondary font-semibold">Loading tickets...</p>
                     </div>
                   ) : tickets.length === 0 ? (
-                    <div className="text-center py-8 text-[#57524D]">
+                    <div className="text-center py-8 text-secondary">
                       <Ticket className="w-12 h-12 mx-auto mb-2 opacity-50" />
                       <p className="font-semibold">No support tickets yet</p>
                       <p className="text-sm">Create a ticket to get help from our support team</p>
@@ -817,9 +817,9 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                       {tickets.map((ticket) => {
                         const statusColors: Record<string, string> = {
                           open: 'bg-[#5B7DB1] text-white',
-                          in_progress: 'bg-[#E67E22] text-black',
-                          resolved: 'bg-[#98C9A3] text-black',
-                          closed: 'bg-[#E9E5E0] text-[#57524D]'
+                          in_progress: 'bg-[#E67E22] text-ink',
+                          resolved: 'bg-success-soft text-ink',
+                          closed: 'bg-paper-2 text-secondary'
                         };
 
                         const priorityLabels: Record<string, string> = {
@@ -831,7 +831,7 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                         return (
                           <div
                             key={ticket.id}
-                            className="border border-black  p-4 hover:bg-[#E9E5E0] transition-colors"
+                            className="border border-ink  p-4 hover:bg-paper-2 transition-colors"
                           >
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1">
@@ -840,19 +840,19 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
                                   <span className={`px-2 py-1 font-bold uppercase text-xs ${statusColors[ticket.status]}`}>
                                     {ticket.status.replace('_', ' ')}
                                   </span>
-                                  <span className="px-2 py-1 bg-white border border-black font-bold uppercase text-xs">
+                                  <span className="px-2 py-1 bg-white border border-ink font-bold uppercase text-xs">
                                     {ticket.category.replace('_', ' ')}
                                   </span>
-                                  <span className="text-[#57524D]">
+                                  <span className="text-secondary">
                                     Priority: {priorityLabels[ticket.priority]}
                                   </span>
                                 </div>
                               </div>
                             </div>
-                            <p className="text-sm text-[#57524D] mb-2 line-clamp-2">
+                            <p className="text-sm text-secondary mb-2 line-clamp-2">
                               {ticket.description}
                             </p>
-                            <p className="text-xs text-[#57524D]">
+                            <p className="text-xs text-secondary">
                               Created: {new Date(ticket.created_at).toLocaleDateString()} at{' '}
                               {new Date(ticket.created_at).toLocaleTimeString()}
                             </p>

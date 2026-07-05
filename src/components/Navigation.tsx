@@ -14,7 +14,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-[#F4F4F4] border-b border-black">
+    <nav className="bg-surface border-b border-ink">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-3">
@@ -27,44 +27,44 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <button
               onClick={onPathsClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LEARNING PATHS
             </button>
             <button
               onClick={onLabsClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LABS
             </button>
             <button
               onClick={onPricingClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               PRICING
             </button>
             <button
               onClick={onCommunityClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               COMMUNITY
             </button>
             <button
               onClick={onHelpClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               HELP
             </button>
             <button
               onClick={onAuthClick}
-              className="font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LOG IN
             </button>
 
             <button
               onClick={onAuthClick}
-              className="bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               SIGN UP
             </button>
@@ -72,7 +72,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 border border-black bg-white shadow-[2px_2px_0px_#000000]"
+            className="md:hidden p-2 border border-ink bg-white shadow-brutal-sm"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" strokeWidth={2} />
@@ -83,13 +83,13 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-black space-y-4">
+          <div className="md:hidden mt-4 pt-4 border-t border-ink space-y-4">
             <button
               onClick={() => {
                 onPathsClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LEARNING PATHS
             </button>
@@ -98,7 +98,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onLabsClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LABS
             </button>
@@ -107,7 +107,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onPricingClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               PRICING
             </button>
@@ -116,7 +116,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onCommunityClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               COMMUNITY
             </button>
@@ -125,7 +125,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onHelpClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               HELP
             </button>
@@ -134,7 +134,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onAuthClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="block w-full text-left font-extrabold text-sm uppercase tracking-tight hover:text-accent transition-colors"
             >
               LOG IN
             </button>
@@ -144,7 +144,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
                 onAuthClick?.();
                 setMobileMenuOpen(false);
               }}
-              className="w-full bg-[#FF6A00] text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="w-full bg-accent text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               SIGN UP
             </button>

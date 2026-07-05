@@ -477,7 +477,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
     if (lastIndex < block.template.length) tokens.push(block.template.slice(lastIndex));
 
     return (
-      <div className="bg-[#F4F4F4] border border-black p-4 text-sm leading-loose">
+      <div className="bg-surface border border-ink p-4 text-sm leading-loose">
         {tokens.map((tok, i) =>
           typeof tok === 'string' ? (
             <span key={i} className="whitespace-pre-wrap">{tok}</span>
@@ -490,7 +490,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
               disabled={!isEditable}
               placeholder={tok.name.replace(/_/g, ' ')}
               aria-label={tok.name.replace(/_/g, ' ')}
-              className="inline-block min-w-[140px] mx-1 px-2 py-1 bg-white border border-black text-sm font-semibold disabled:bg-[#EFEFEF] disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="inline-block min-w-[140px] mx-1 px-2 py-1 bg-white border border-ink text-sm font-semibold disabled:bg-[#EFEFEF] disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent"
             />
           )
         )}
@@ -499,9 +499,9 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
   };
 
   return (
-    <div className="bg-white border border-black shadow-[2px_2px_0px_#000000] p-6">
+    <div className="bg-white border border-ink shadow-brutal-sm p-6">
       <div className="flex items-center gap-3 mb-4">
-        <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+        <Sparkles className="w-5 h-5 text-accent" strokeWidth={2} />
         <h3 className="font-extrabold text-lg uppercase tracking-tight">{block.label}</h3>
       </div>
 
@@ -516,7 +516,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
         <button
           onClick={handleSubmit}
           disabled={!allFilled}
-          className="flex items-center gap-2 bg-black text-white border border-black px-5 py-2.5 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[2px_2px_0px_#000000]"
+          className="flex items-center gap-2 bg-ink text-white border border-ink px-5 py-2.5 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-brutal-sm"
         >
           Submit
         </button>
@@ -524,7 +524,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
 
       {state.status === 'submitting' && (
         <div className="flex items-center gap-2 text-sm text-[#666] mt-2">
-          <RefreshCw className="w-4 h-4 animate-spin text-[#FF6A00]" strokeWidth={2} />
+          <RefreshCw className="w-4 h-4 animate-spin text-accent" strokeWidth={2} />
           Generating response…
         </div>
       )}
@@ -532,7 +532,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
       {showAiResponse && (
         <div className="mt-6">
           <p className="text-xs font-extrabold uppercase tracking-tight text-[#666] mb-2">AI Response</p>
-          <div className="bg-[#F4F4F4] border border-black p-4 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
+          <div className="bg-surface border border-ink p-4 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
             {aiResponseText || <span className="text-[#999]">…</span>}
           </div>
         </div>
@@ -540,13 +540,13 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
 
       {state.status === 'response_received' && (
         <div className="flex items-center gap-2 text-sm text-[#666] mt-4">
-          <RefreshCw className="w-4 h-4 animate-spin text-[#FF6A00]" strokeWidth={2} />
+          <RefreshCw className="w-4 h-4 animate-spin text-accent" strokeWidth={2} />
           Evaluating your prompt…
         </div>
       )}
 
       {(state.status === 'complete' || state.status === 'revealed') && (
-        <div className="mt-6 bg-[#E8F5E9] border border-black p-4">
+        <div className="mt-6 bg-success-tint border border-ink p-4">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-5 h-5 text-[#2E7D32]" strokeWidth={2} />
             <p className="font-extrabold text-sm uppercase tracking-tight">Feedback</p>
@@ -587,9 +587,9 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
       )}
 
       {state.status === 'revealed' && (
-        <div className="mt-4 bg-[#FFF9E6] border border-black p-4">
+        <div className="mt-4 bg-cream border border-ink p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Lightbulb className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+            <Lightbulb className="w-5 h-5 text-accent" strokeWidth={2} />
             <p className="font-extrabold text-sm uppercase tracking-tight">Reference Solution</p>
           </div>
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{block.referenceSolution}</p>
@@ -597,9 +597,9 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
       )}
 
       {state.status === 'error_parse' && (
-        <div className="mt-4 bg-[#FFF3E0] border border-black p-4">
+        <div className="mt-4 bg-[#FFF3E0] border border-ink p-4">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-[#FF6A00] flex-shrink-0 mt-0.5" strokeWidth={2} />
+            <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" strokeWidth={2} />
             <p className="text-sm leading-relaxed">
               We couldn't generate detailed feedback this time. Your prompt and the AI's response are above — feel free to revise and try again.
             </p>
@@ -608,7 +608,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
       )}
 
       {state.status === 'error_api' && (
-        <div className="mt-4 bg-[#FFEBEE] border border-black p-4">
+        <div className="mt-4 bg-[#FFEBEE] border border-ink p-4">
           <div className="flex items-start gap-2">
             <AlertCircle className="w-5 h-5 text-[#C62828] flex-shrink-0 mt-0.5" strokeWidth={2} />
             <p className="text-sm leading-relaxed">Something went wrong. Try submitting again.</p>
@@ -617,9 +617,9 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
       )}
 
       {state.status === 'error_rate_limit' && (
-        <div className="mt-4 bg-[#FFF3E0] border border-black p-4">
+        <div className="mt-4 bg-[#FFF3E0] border border-ink p-4">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-[#FF6A00] flex-shrink-0 mt-0.5" strokeWidth={2} />
+            <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" strokeWidth={2} />
             <p className="text-sm leading-relaxed">
               You've hit the request limit. Try again in a minute
               {state.retryAfterSeconds ? ` (about ${state.retryAfterSeconds}s)` : ''}.
@@ -632,7 +632,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
         <div className="flex flex-wrap gap-2 mt-4">
           <button
             onClick={handleTryAgain}
-            className="flex items-center gap-2 bg-white text-black border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="flex items-center gap-2 bg-white text-ink border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
             Try Again
@@ -641,7 +641,7 @@ export default function PromptExerciseBlock({ block, lessonId }: Props) {
           {(state.status === 'complete' || state.status === 'revealed') && (
             <button
               onClick={handleToggleReference}
-              className="flex items-center gap-2 bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex items-center gap-2 bg-accent text-ink border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <BookOpen className="w-3.5 h-3.5" strokeWidth={2} />
               {state.status === 'revealed' ? 'Hide Reference' : 'Show Reference Solution'}

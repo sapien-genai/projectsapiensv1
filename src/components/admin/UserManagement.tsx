@@ -108,7 +108,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+        <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
       </div>
     );
   }
@@ -122,14 +122,14 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
         </div>
         <button
           onClick={exportUsers}
-          className="flex items-center gap-2 px-6 py-3 bg-[#FF6A00] text-black border-2 border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          className="flex items-center gap-2 px-6 py-3 bg-accent text-ink border-2 border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           <Download className="w-4 h-4" strokeWidth={2} />
           EXPORT
         </button>
       </div>
 
-      <div className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border-2 border-ink p-4 shadow-brutal-sm">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" strokeWidth={2} />
@@ -138,7 +138,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
               placeholder="Search users by name or ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 min-h-[44px] border-2 border-black focus:outline-none font-medium"
+              className="w-full pl-10 pr-4 py-3 min-h-[44px] border-2 border-ink focus:outline-none font-medium"
             />
           </div>
 
@@ -147,7 +147,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
-              className="px-4 py-3 min-h-[44px] border-2 border-black focus:outline-none font-semibold"
+              className="px-4 py-3 min-h-[44px] border-2 border-ink focus:outline-none font-semibold"
             >
               <option value="all">All Users</option>
               <option value="active">Active (30d)</option>
@@ -158,16 +158,16 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
+        <div className="bg-white border-2 border-ink p-4 shadow-brutal-sm">
           <div className="text-2xl font-extrabold">{users.length}</div>
           <div className="text-xs font-extrabold uppercase tracking-tight">TOTAL USERS</div>
         </div>
-        <div className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
-          <div className="text-2xl font-extrabold text-[#10b981]">{filteredUsers.length}</div>
+        <div className="bg-white border-2 border-ink p-4 shadow-brutal-sm">
+          <div className="text-2xl font-extrabold text-success">{filteredUsers.length}</div>
           <div className="text-xs font-extrabold uppercase tracking-tight">FILTERED RESULTS</div>
         </div>
-        <div className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
-          <div className="text-2xl font-extrabold text-[#FF6A00]">
+        <div className="bg-white border-2 border-ink p-4 shadow-brutal-sm">
+          <div className="text-2xl font-extrabold text-accent">
             {Math.round((users.filter(u => u.last_active).length / users.length) * 100)}%
           </div>
           <div className="text-xs font-extrabold uppercase tracking-tight">ACTIVE RATE</div>
@@ -177,10 +177,10 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
       {/* Mobile Card Layout */}
       <div className="md:hidden space-y-3">
         {filteredUsers.map((user) => (
-          <div key={user.id} className="bg-white border-2 border-black p-4 shadow-[2px_2px_0px_#000000]">
+          <div key={user.id} className="bg-white border-2 border-ink p-4 shadow-brutal-sm">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-12 h-12 border-2 border-black bg-[#FF6A00] bg-opacity-20 flex items-center justify-center flex-shrink-0">
-                <span className="text-[#FF6A00] font-extrabold text-lg">
+              <div className="w-12 h-12 border-2 border-ink bg-accent bg-opacity-20 flex items-center justify-center flex-shrink-0">
+                <span className="text-accent font-extrabold text-lg">
                   {(user.display_name || 'U')[0].toUpperCase()}
                 </span>
               </div>
@@ -204,7 +204,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
               </div>
               <div>
                 <div className="font-semibold mb-1">Last Active</div>
-                <div className={user.last_active ? "text-[#10b981]" : "opacity-50"}>
+                <div className={user.last_active ? "text-success" : "opacity-50"}>
                   {user.last_active ? new Date(user.last_active).toLocaleDateString() : 'Never'}
                 </div>
               </div>
@@ -230,14 +230,14 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                     display_name: user.display_name,
                   });
                 }}
-                className="flex-1 flex items-center justify-center gap-2 min-h-[44px] px-4 py-2 border-2 border-black hover:bg-black hover:text-white transition-all font-extrabold text-xs uppercase"
+                className="flex-1 flex items-center justify-center gap-2 min-h-[44px] px-4 py-2 border-2 border-ink hover:bg-ink hover:text-white transition-all font-extrabold text-xs uppercase"
                 aria-label="View Details"
               >
                 <Eye className="w-4 h-4" strokeWidth={2} />
                 View
               </button>
               <button
-                className="px-4 min-h-[44px] min-w-[44px] border-2 border-black hover:bg-black hover:text-white transition-all"
+                className="px-4 min-h-[44px] min-w-[44px] border-2 border-ink hover:bg-ink hover:text-white transition-all"
                 aria-label="More Actions"
               >
                 <MoreVertical className="w-4 h-4" strokeWidth={2} />
@@ -247,17 +247,17 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
         ))}
 
         {filteredUsers.length === 0 && (
-          <div className="bg-white border-2 border-black p-12 text-center">
+          <div className="bg-white border-2 border-ink p-12 text-center">
             <p className="font-semibold">No users found matching your criteria.</p>
           </div>
         )}
       </div>
 
       {/* Desktop Table Layout */}
-      <div className="hidden md:block bg-white border-2 border-black shadow-[2px_2px_0px_#000000] overflow-hidden">
+      <div className="hidden md:block bg-white border-2 border-ink shadow-brutal-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-[#F4F4F4] border-b-2 border-black">
+            <thead className="bg-surface border-b-2 border-ink">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-extrabold uppercase tracking-tight">
                   USER
@@ -276,13 +276,13 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-black">
+            <tbody className="divide-y-2 divide-ink">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-[#F4F4F4] transition-colors">
+                <tr key={user.id} className="hover:bg-surface transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 border-2 border-black bg-[#FF6A00] bg-opacity-20 flex items-center justify-center">
-                        <span className="text-[#FF6A00] font-extrabold">
+                      <div className="w-10 h-10 border-2 border-ink bg-accent bg-opacity-20 flex items-center justify-center">
+                        <span className="text-accent font-extrabold">
                           {(user.display_name || 'U')[0].toUpperCase()}
                         </span>
                       </div>
@@ -304,7 +304,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                   </td>
                   <td className="px-6 py-4 text-sm font-semibold">
                     {user.last_active ? (
-                      <span className="text-[#10b981]">
+                      <span className="text-success">
                         {new Date(user.last_active).toLocaleDateString()}
                       </span>
                     ) : (
@@ -332,13 +332,13 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                             display_name: user.display_name,
                           });
                         }}
-                        className="p-2 min-h-[44px] min-w-[44px] border border-black hover:bg-black hover:text-white transition-all"
+                        className="p-2 min-h-[44px] min-w-[44px] border border-ink hover:bg-ink hover:text-white transition-all"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" strokeWidth={2} />
                       </button>
                       <button
-                        className="p-2 min-h-[44px] min-w-[44px] border border-black hover:bg-black hover:text-white transition-all"
+                        className="p-2 min-h-[44px] min-w-[44px] border border-ink hover:bg-ink hover:text-white transition-all"
                         title="More Actions"
                       >
                         <MoreVertical className="w-4 h-4" strokeWidth={2} />
@@ -352,7 +352,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
         </div>
 
         {filteredUsers.length === 0 && (
-          <div className="text-center py-12 border-t-2 border-black">
+          <div className="text-center py-12 border-t-2 border-ink">
             <p className="font-semibold">No users found matching your criteria.</p>
           </div>
         )}
@@ -360,11 +360,11 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
 
       {selectedUser && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 bg-ink bg-opacity-50 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedUser(null)}
         >
           <div
-            className="bg-white border-4 border-black p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-[4px_4px_0px_#000000]"
+            className="bg-white border-4 border-ink p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-brutal-md"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
@@ -376,7 +376,7 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
               </div>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="text-3xl font-extrabold hover:text-[#FF6A00] transition-colors"
+                className="text-3xl font-extrabold hover:text-accent transition-colors"
               >
                 ×
               </button>
@@ -384,13 +384,13 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
 
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-[#F4F4F4] border-2 border-black">
+                <div className="p-4 bg-surface border-2 border-ink">
                   <div className="text-xs font-extrabold uppercase mb-1">JOINED</div>
                   <div className="font-bold">
                     {new Date(selectedUser.created_at).toLocaleDateString()}
                   </div>
                 </div>
-                <div className="p-4 bg-[#F4F4F4] border-2 border-black">
+                <div className="p-4 bg-surface border-2 border-ink">
                   <div className="text-xs font-extrabold uppercase mb-1">LAST ACTIVE</div>
                   <div className="font-bold">
                     {selectedUser.last_active
@@ -398,29 +398,29 @@ export default function UserManagement({ adminRole }: { adminRole: AdminRole }) 
                       : 'Never'}
                   </div>
                 </div>
-                <div className="p-4 bg-[#F4F4F4] border-2 border-black">
+                <div className="p-4 bg-surface border-2 border-ink">
                   <div className="text-xs font-extrabold uppercase mb-1">BADGES EARNED</div>
                   <div className="font-bold">{selectedUser.total_badges || 0}</div>
                 </div>
-                <div className="p-4 bg-[#F4F4F4] border-2 border-black">
+                <div className="p-4 bg-surface border-2 border-ink">
                   <div className="text-xs font-extrabold uppercase mb-1">LESSONS COMPLETED</div>
                   <div className="font-bold">{selectedUser.total_lessons || 0}</div>
                 </div>
               </div>
 
               {selectedUser.bio && (
-                <div className="p-4 bg-[#F4F4F4] border-2 border-black">
+                <div className="p-4 bg-surface border-2 border-ink">
                   <div className="text-xs font-extrabold uppercase mb-2">BIO</div>
                   <div>{selectedUser.bio}</div>
                 </div>
               )}
 
               <div className="flex gap-2 pt-4">
-                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                   <Mail className="w-4 h-4" strokeWidth={2} />
                   MESSAGE
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-black font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                   <UserCheck className="w-4 h-4" strokeWidth={2} />
                   ACTIVITY
                 </button>

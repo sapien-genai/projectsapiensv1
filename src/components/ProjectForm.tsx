@@ -109,8 +109,8 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-white border border-black shadow-[4px_4px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b-2 border-black p-4 sm:p-6 flex items-center justify-between gap-2">
+      <div className="bg-white border border-ink shadow-brutal-md sm:shadow-brutal-xl max-w-full sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b-2 border-ink p-4 sm:p-6 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
             <Rocket className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={2} />
             <h2 className="font-extrabold text-lg sm:text-xl md:text-2xl uppercase tracking-tight truncate">
@@ -119,7 +119,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
           </div>
           <button
             onClick={onClose}
-            className="p-2 min-h-[44px] min-w-[44px] hover:bg-[#F4F4F4] rounded transition-colors flex items-center justify-center flex-shrink-0"
+            className="p-2 min-h-[44px] min-w-[44px] hover:bg-surface rounded transition-colors flex items-center justify-center flex-shrink-0"
             aria-label="Close form"
           >
             <X className="w-5 h-5" strokeWidth={2} />
@@ -142,7 +142,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="Give your project a descriptive title..."
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
               required
             />
           </div>
@@ -154,7 +154,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
             <select
               value={formData.project_type}
               onChange={(e) => setFormData({ ...formData, project_type: e.target.value })}
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             >
               <option value="personal">Personal Project</option>
               <option value="lab_experiment">Lab Experiment</option>
@@ -172,7 +172,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Describe your project, what it does, and what you learned..."
               rows={6}
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
               required
             />
           </div>
@@ -189,7 +189,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
               value={formData.tags}
               onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
               placeholder="ai, chatbot, automation, nlp..."
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -205,7 +205,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
               value={formData.github_url}
               onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
               placeholder="https://github.com/username/repo"
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -221,7 +221,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
               value={formData.demo_url}
               onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
               placeholder="https://your-project-demo.com"
-              className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -231,7 +231,7 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
                 type="checkbox"
                 checked={formData.is_public}
                 onChange={(e) => setFormData({ ...formData, is_public: e.target.checked })}
-                className="w-5 h-5 border border-black"
+                className="w-5 h-5 border border-ink"
               />
               <span className="text-sm font-semibold">
                 SHARE WITH COMMUNITY (make this project public)
@@ -239,18 +239,18 @@ export default function ProjectForm({ onClose, onSuccess, projectId, initialData
             </label>
           </div>
 
-          <div className="flex gap-4 pt-4 border-t-2 border-black">
+          <div className="flex gap-4 pt-4 border-t-2 border-ink">
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (isEditMode ? 'UPDATING...' : 'CREATING...') : (isEditMode ? 'UPDATE PROJECT' : 'CREATE PROJECT')}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-white text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="flex-1 bg-white text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               CANCEL
             </button>

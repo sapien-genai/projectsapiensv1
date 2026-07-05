@@ -137,7 +137,7 @@ export default function FinishingChecklist() {
 
   if (isLoading) {
     return (
-      <div className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal">
         <div className="flex items-center justify-center py-12">
           <div className="text-sm text-[#555555]">Loading checklist...</div>
         </div>
@@ -146,7 +146,7 @@ export default function FinishingChecklist() {
   }
 
   return (
-    <div className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000]">
+    <div className="bg-white border border-ink p-6 shadow-brutal">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="font-extrabold text-lg uppercase tracking-tight mb-1">
@@ -158,7 +158,7 @@ export default function FinishingChecklist() {
         </div>
         <button
           onClick={resetChecklist}
-          className="p-2 border border-black bg-white hover:bg-[#F4F4F4] transition-colors"
+          className="p-2 border border-ink bg-white hover:bg-surface transition-colors"
           title="Reset checklist"
           disabled={isSaving}
         >
@@ -167,7 +167,7 @@ export default function FinishingChecklist() {
       </div>
 
       {!user && (
-        <div className="mb-6 bg-[#FFF9E6] border border-black p-4">
+        <div className="mb-6 bg-cream border border-ink p-4">
           <p className="text-xs font-semibold mb-1">SIGN IN TO SAVE PROGRESS</p>
           <p className="text-xs leading-relaxed">
             Your checklist progress will be saved automatically when you're signed in.
@@ -184,10 +184,10 @@ export default function FinishingChecklist() {
             {totalProgress.completed} / {totalProgress.total}
           </span>
         </div>
-        <div className="w-full h-3 bg-[#F4F4F4] border border-black">
+        <div className="w-full h-3 bg-surface border border-ink">
           <div
             className={`h-full transition-all duration-300 ${
-              isComplete ? 'bg-[#4CAF50]' : 'bg-[#0A74FF]'
+              isComplete ? 'bg-[#4CAF50]' : 'bg-info'
             }`}
             style={{ width: `${progressPercentage}%` }}
           />
@@ -211,19 +211,19 @@ export default function FinishingChecklist() {
               <button
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`w-full flex items-start gap-3 p-3 border border-black transition-all text-left ${
+                className={`w-full flex items-start gap-3 p-3 border border-ink transition-all text-left ${
                   completedItems.has(item.id)
-                    ? 'bg-[#E3F2FD] shadow-none'
-                    : 'bg-white hover:bg-[#F4F4F4] shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                    ? 'bg-info-soft shadow-none'
+                    : 'bg-white hover:bg-surface shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                 }`}
                 disabled={isSaving}
               >
                 {completedItems.has(item.id) ? (
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-info" strokeWidth={2} />
                 ) : (
                   <Circle className="w-5 h-5 flex-shrink-0 text-[#555555]" strokeWidth={2} />
                 )}
-                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-black'}`}>
+                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-ink'}`}>
                   {item.label}
                 </span>
               </button>
@@ -246,19 +246,19 @@ export default function FinishingChecklist() {
               <button
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`w-full flex items-start gap-3 p-3 border border-black transition-all text-left ${
+                className={`w-full flex items-start gap-3 p-3 border border-ink transition-all text-left ${
                   completedItems.has(item.id)
-                    ? 'bg-[#E3F2FD] shadow-none'
-                    : 'bg-white hover:bg-[#F4F4F4] shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                    ? 'bg-info-soft shadow-none'
+                    : 'bg-white hover:bg-surface shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                 }`}
                 disabled={isSaving}
               >
                 {completedItems.has(item.id) ? (
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-info" strokeWidth={2} />
                 ) : (
                   <Circle className="w-5 h-5 flex-shrink-0 text-[#555555]" strokeWidth={2} />
                 )}
-                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-black'}`}>
+                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-ink'}`}>
                   {item.label}
                 </span>
               </button>
@@ -281,19 +281,19 @@ export default function FinishingChecklist() {
               <button
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`w-full flex items-start gap-3 p-3 border border-black transition-all text-left ${
+                className={`w-full flex items-start gap-3 p-3 border border-ink transition-all text-left ${
                   completedItems.has(item.id)
-                    ? 'bg-[#E3F2FD] shadow-none'
-                    : 'bg-white hover:bg-[#F4F4F4] shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                    ? 'bg-info-soft shadow-none'
+                    : 'bg-white hover:bg-surface shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                 }`}
                 disabled={isSaving}
               >
                 {completedItems.has(item.id) ? (
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-info" strokeWidth={2} />
                 ) : (
                   <Circle className="w-5 h-5 flex-shrink-0 text-[#555555]" strokeWidth={2} />
                 )}
-                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-black'}`}>
+                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-ink'}`}>
                   {item.label}
                 </span>
               </button>
@@ -316,19 +316,19 @@ export default function FinishingChecklist() {
               <button
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`w-full flex items-start gap-3 p-3 border border-black transition-all text-left ${
+                className={`w-full flex items-start gap-3 p-3 border border-ink transition-all text-left ${
                   completedItems.has(item.id)
-                    ? 'bg-[#E3F2FD] shadow-none'
-                    : 'bg-white hover:bg-[#F4F4F4] shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
+                    ? 'bg-info-soft shadow-none'
+                    : 'bg-white hover:bg-surface shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]'
                 }`}
                 disabled={isSaving}
               >
                 {completedItems.has(item.id) ? (
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0A74FF]" strokeWidth={2} />
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-info" strokeWidth={2} />
                 ) : (
                   <Circle className="w-5 h-5 flex-shrink-0 text-[#555555]" strokeWidth={2} />
                 )}
-                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-black'}`}>
+                <span className={`text-sm ${completedItems.has(item.id) ? 'line-through text-[#555555]' : 'text-ink'}`}>
                   {item.label}
                 </span>
               </button>
@@ -338,7 +338,7 @@ export default function FinishingChecklist() {
       </div>
 
       {isComplete ? (
-        <div className="mt-6 bg-[#4CAF50] border border-black p-4 text-black">
+        <div className="mt-6 bg-[#4CAF50] border border-ink p-4 text-ink">
           <p className="font-extrabold text-sm uppercase tracking-tight mb-1">
             PROFESSIONAL QUALITY ACHIEVED!
           </p>
@@ -347,7 +347,7 @@ export default function FinishingChecklist() {
           </p>
         </div>
       ) : (
-        <div className="mt-6 bg-[#E3F2FD] border border-black p-3">
+        <div className="mt-6 bg-info-soft border border-ink p-3">
           <p className="text-xs font-semibold mb-1">REMEMBER:</p>
           <p className="text-xs leading-relaxed">
             If any checkbox is empty, it's not done yet. The difference between amateur and professional is in the finishing. AI gets you 80% there. The final 20% is what makes it excellent.

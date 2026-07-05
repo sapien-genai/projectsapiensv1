@@ -60,22 +60,22 @@ export default function BillingCancelPage({
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
+    <div className="min-h-screen bg-paper">
       <div
         className={`transition-all duration-700 ease-out ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
         {/* Top banner */}
-        <div className="bg-[#F8F5F2] border-b border-[#E9E5E0]">
+        <div className="bg-paper border-b border-paper-2">
           <div className="max-w-2xl mx-auto px-6 py-16 text-center">
             <div
               className={`transition-all duration-700 delay-100 ease-out ${
                 visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
               }`}
             >
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#E9E5E0] mb-7">
-                <XCircle className="w-7 h-7 text-[#57524D]" strokeWidth={1.75} />
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-paper-2 mb-7">
+                <XCircle className="w-7 h-7 text-secondary" strokeWidth={1.75} />
               </div>
             </div>
 
@@ -84,16 +84,16 @@ export default function BillingCancelPage({
                 visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
               }`}
             >
-              <p className="text-xs font-semibold tracking-widest text-[#57524D] uppercase mb-3">
+              <p className="text-xs font-semibold tracking-widest text-secondary uppercase mb-3">
                 Checkout cancelled
               </p>
               <h1
-                className="text-3xl md:text-4xl font-bold text-[#1C1A17] leading-tight mb-5"
+                className="text-3xl md:text-4xl font-bold text-strong leading-tight mb-5"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
                 No charge was made.
               </h1>
-              <p className="text-base text-[#57524D] leading-relaxed max-w-lg mx-auto">
+              <p className="text-base text-secondary leading-relaxed max-w-lg mx-auto">
                 You left before completing the upgrade — that's completely fine. Your free account is still active. Whenever you're ready, Pro is here.
               </p>
             </div>
@@ -105,14 +105,14 @@ export default function BillingCancelPage({
             >
               <button
                 onClick={onTryAgain}
-                className="inline-flex items-center gap-2 bg-[#1C1A17] text-[#F8F5F2] px-7 py-3.5 rounded-lg font-semibold text-sm hover:bg-[#F4A261] hover:text-[#1C1A17] transition-all duration-200"
+                className="inline-flex items-center gap-2 bg-strong text-paper px-7 py-3.5 rounded-lg font-semibold text-sm hover:bg-accent-soft hover:text-strong transition-all duration-200"
               >
                 Try upgrading again
                 <ArrowRight className="w-4 h-4" strokeWidth={2} />
               </button>
               <button
                 onClick={onGoToDashboard}
-                className="inline-flex items-center gap-2 bg-transparent text-[#57524D] border border-[#C8C4BF] px-7 py-3.5 rounded-lg font-semibold text-sm hover:border-[#1C1A17] hover:text-[#1C1A17] transition-all duration-200"
+                className="inline-flex items-center gap-2 bg-transparent text-secondary border border-[#C8C4BF] px-7 py-3.5 rounded-lg font-semibold text-sm hover:border-strong hover:text-strong transition-all duration-200"
               >
                 Continue with free plan
               </button>
@@ -128,7 +128,7 @@ export default function BillingCancelPage({
             }`}
           >
             <h2
-              className="text-lg font-bold text-[#1C1A17] mb-6"
+              className="text-lg font-bold text-strong mb-6"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               What Pro unlocks
@@ -141,7 +141,7 @@ export default function BillingCancelPage({
               return (
                 <div
                   key={item.label}
-                  className="bg-white border border-[#E9E5E0] rounded-xl p-5 flex items-start gap-4 transition-all duration-700 ease-out"
+                  className="bg-white border border-paper-2 rounded-xl p-5 flex items-start gap-4 transition-all duration-700 ease-out"
                   style={{
                     transitionDelay: `${420 + index * 70}ms`,
                     opacity: visible ? 1 : 0,
@@ -149,11 +149,11 @@ export default function BillingCancelPage({
                   }}
                 >
                   <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-[#FEF3E8] flex items-center justify-center">
-                    <Icon className="w-4 h-4 text-[#F4A261]" strokeWidth={1.75} />
+                    <Icon className="w-4 h-4 text-accent-soft" strokeWidth={1.75} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#1C1A17]">{item.label}</p>
-                    <p className="text-xs text-[#57524D] mt-0.5">{item.sub}</p>
+                    <p className="text-sm font-semibold text-strong">{item.label}</p>
+                    <p className="text-xs text-secondary mt-0.5">{item.sub}</p>
                   </div>
                 </div>
               );
@@ -167,7 +167,7 @@ export default function BillingCancelPage({
             }`}
           >
             <h2
-              className="text-lg font-bold text-[#1C1A17] mb-5"
+              className="text-lg font-bold text-strong mb-5"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Common questions
@@ -177,15 +177,15 @@ export default function BillingCancelPage({
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-white border border-[#E9E5E0] rounded-xl overflow-hidden"
+                  className="bg-white border border-paper-2 rounded-xl overflow-hidden"
                 >
                   <button
                     onClick={() => setOpenFaq(openFaq === index ? null : index)}
                     className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#FAFAF9] transition-colors duration-150"
                   >
-                    <span className="text-sm font-semibold text-[#1C1A17]">{faq.q}</span>
+                    <span className="text-sm font-semibold text-strong">{faq.q}</span>
                     <span
-                      className={`flex-shrink-0 w-5 h-5 text-[#57524D] transition-transform duration-200 ${
+                      className={`flex-shrink-0 w-5 h-5 text-secondary transition-transform duration-200 ${
                         openFaq === index ? 'rotate-45' : ''
                       }`}
                     >
@@ -196,7 +196,7 @@ export default function BillingCancelPage({
                   </button>
                   {openFaq === index && (
                     <div className="px-5 pb-4">
-                      <p className="text-sm text-[#57524D] leading-relaxed border-t border-[#E9E5E0] pt-4">
+                      <p className="text-sm text-secondary leading-relaxed border-t border-paper-2 pt-4">
                         {faq.a}
                       </p>
                     </div>
@@ -214,7 +214,7 @@ export default function BillingCancelPage({
           >
             <button
               onClick={onGoToHelp}
-              className="inline-flex items-center gap-2 text-sm text-[#57524D] hover:text-[#1C1A17] transition-colors duration-150"
+              className="inline-flex items-center gap-2 text-sm text-secondary hover:text-strong transition-colors duration-150"
             >
               <HelpCircle className="w-4 h-4" strokeWidth={1.75} />
               Have a question? Visit the Help Center

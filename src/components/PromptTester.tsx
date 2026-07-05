@@ -358,15 +358,15 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
   return (
     <div className="flex h-screen bg-white">
       {/* Sidebar */}
-      <div className="hidden lg:block w-64 bg-[#F4F4F4] border-r-2 border-black">
+      <div className="hidden lg:block w-64 bg-surface border-r-2 border-ink">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b-2 border-black">
+          <div className="p-4 border-b-2 border-ink">
             <h2 className="font-extrabold text-sm uppercase tracking-tight mb-4">Prompt Testing</h2>
             {messages.length > 1 && (
               <button
                 onClick={handleClearChat}
-                className="w-full text-left px-3 py-2 text-xs font-medium hover:bg-white border border-transparent hover:border-black transition-all"
+                className="w-full text-left px-3 py-2 text-xs font-medium hover:bg-white border border-transparent hover:border-ink transition-all"
               >
                 <RotateCcw className="w-3 h-3 inline mr-2" strokeWidth={2} />
                 Clear Chat
@@ -391,7 +391,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                   <h3 className="text-xs font-extrabold uppercase tracking-tight mb-2">Variables</h3>
                   <div className="space-y-1">
                     {promptVariables.map(v => (
-                      <div key={v.key} className="text-xs text-[#666666] bg-white px-2 py-1 border border-black">
+                      <div key={v.key} className="text-xs text-[#666666] bg-white px-2 py-1 border border-ink">
                         {v.label}
                       </div>
                     ))}
@@ -412,7 +412,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
           </div>
 
           {/* Stats */}
-          <div className="border-t-2 border-black p-4">
+          <div className="border-t-2 border-ink p-4">
             <p className="text-xs font-semibold uppercase tracking-tight text-[#666666]">
               Messages: {messages.length - 1}
             </p>
@@ -423,14 +423,14 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
+        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-ink bg-white">
           <div>
             <h1 className="font-extrabold text-base uppercase tracking-tight">Prompt Tester</h1>
             <p className="text-xs text-[#666666]">
               {initialPrompt ? "Interactive prompt builder with AI testing" : "Practice and refine your AI prompts"}
             </p>
           </div>
-          <Sparkles className="w-5 h-5 text-[#FF6A00]" strokeWidth={2} />
+          <Sparkles className="w-5 h-5 text-accent" strokeWidth={2} />
         </div>
 
         {/* Messages Area */}
@@ -438,7 +438,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((message, index) => (
               <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-[#F4F4F4] border border-black' : 'bg-white'} p-4`}>
+                <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-surface border border-ink' : 'bg-white'} p-4`}>
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <p className="text-xs font-extrabold uppercase tracking-tight">
                       {message.role === 'user' ? 'You' : 'Prompt Tester'}
@@ -446,7 +446,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                     {message.role === 'assistant' && (
                       <button
                         onClick={() => handleCopy(message.content, index)}
-                        className="flex-shrink-0 p-1 hover:bg-[#F4F4F4] transition-colors"
+                        className="flex-shrink-0 p-1 hover:bg-surface transition-colors"
                         title="Copy response"
                       >
                         {copiedIndex === index ? (
@@ -468,9 +468,9 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
               <div className="flex justify-start">
                 <div className="bg-white p-4">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-ink rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                   </div>
                 </div>
               </div>
@@ -480,7 +480,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
         </div>
 
         {/* Input Area */}
-        <div className="border-t-2 border-black bg-white p-4">
+        <div className="border-t-2 border-ink bg-white p-4">
           <div className="max-w-3xl mx-auto">
             {/* Free-form input (no template) */}
             {!initialPrompt && (
@@ -493,7 +493,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                         <button
                           key={idx}
                           onClick={() => setInput(prompt)}
-                          className="text-xs px-3 py-2 bg-[#F4F4F4] border border-black hover:bg-white hover:border-[#FF6A00] transition-all"
+                          className="text-xs px-3 py-2 bg-surface border border-ink hover:bg-white hover:border-accent transition-all"
                         >
                           {prompt}
                         </button>
@@ -509,13 +509,13 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your prompt here..."
-                    className="flex-1 bg-[#F4F4F4] border border-black px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black max-h-32"
+                    className="flex-1 bg-surface border border-ink px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ink max-h-32"
                     rows={1}
                   />
                   <button
                     onClick={handleSend}
                     disabled={!input.trim() || isTyping}
-                    className="bg-black text-white border border-black p-3 hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+                    className="bg-ink text-white border border-ink p-3 hover:bg-accent hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-ink disabled:hover:text-white"
                   >
                     <Send className="w-5 h-5" strokeWidth={2} />
                   </button>
@@ -533,10 +533,10 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                     <div className="mb-4">
                       <button
                         onClick={() => setFormExpanded(!formExpanded)}
-                        className="w-full flex items-center justify-between p-3 bg-[#F4F4F4] border border-black hover:bg-white transition-colors mb-2"
+                        className="w-full flex items-center justify-between p-3 bg-surface border border-ink hover:bg-white transition-colors mb-2"
                       >
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-[#FF6A00]" strokeWidth={2} />
+                          <Sparkles className="w-4 h-4 text-accent" strokeWidth={2} />
                           <span className="text-xs font-extrabold uppercase tracking-tight">
                             {formExpanded ? 'Customize Prompt' : 'Expand Form'}
                           </span>
@@ -545,20 +545,20 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                       </button>
 
                       {formExpanded && (
-                        <div className="border-2 border-black p-4 bg-[#F4F4F4]">
+                        <div className="border-2 border-ink p-4 bg-surface">
                           <div className="flex items-center justify-between mb-4">
                             <p className="text-xs text-[#666666]">Fill in the fields below to customize your prompt</p>
                             <div className="flex gap-2">
                               <button
                                 onClick={fillWithExample}
-                                className="text-xs px-2 py-1 bg-white border border-black hover:bg-[#FFE5D9] hover:border-[#FF6A00] transition-all"
+                                className="text-xs px-2 py-1 bg-white border border-ink hover:bg-peach hover:border-accent transition-all"
                               >
                                 <Wand2 className="w-3 h-3 inline mr-1" strokeWidth={2} />
                                 Example
                               </button>
                               <button
                                 onClick={handleResetForm}
-                                className="text-xs px-2 py-1 bg-white border border-black hover:bg-[#FFE5D9] hover:border-[#FF6A00] transition-all"
+                                className="text-xs px-2 py-1 bg-white border border-ink hover:bg-peach hover:border-accent transition-all"
                               >
                                 <RotateCcw className="w-3 h-3 inline mr-1" strokeWidth={2} />
                                 Reset
@@ -579,7 +579,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                                     [variable.key]: e.target.value
                                   }))}
                                   placeholder={variable.placeholder}
-                                  className="w-full bg-white border border-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none min-h-[60px]"
+                                  className="w-full bg-white border border-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ink resize-none min-h-[60px]"
                                   rows={2}
                                 />
                               </div>
@@ -592,7 +592,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                     <button
                       onClick={handleSend}
                       disabled={!canSendPrompt || isTyping}
-                      className="w-full bg-black text-white border border-black px-6 py-3 text-sm font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+                      className="w-full bg-ink text-white border border-ink px-6 py-3 text-sm font-extrabold uppercase tracking-tight hover:bg-accent hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-ink disabled:hover:text-white"
                     >
                       <Send className="w-4 h-4 inline mr-2" strokeWidth={2} />
                       Send Prompt to AI
@@ -603,7 +603,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                   </>
                 ) : (
                   <>
-                    <div className="mb-4 p-4 bg-[#F4F4F4] border border-black">
+                    <div className="mb-4 p-4 bg-surface border border-ink">
                       <p className="text-xs font-extrabold uppercase tracking-tight mb-2">Prompt Template</p>
                       <p className="text-sm whitespace-pre-wrap">{originalPrompt}</p>
                     </div>
@@ -611,7 +611,7 @@ Try asking about weekly planning, daily scheduling, or any specific task you nee
                     <button
                       onClick={handleSend}
                       disabled={isTyping}
-                      className="w-full bg-black text-white border border-black px-6 py-3 text-sm font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-50"
+                      className="w-full bg-ink text-white border border-ink px-6 py-3 text-sm font-extrabold uppercase tracking-tight hover:bg-accent hover:text-ink transition-colors disabled:opacity-50"
                     >
                       <Send className="w-4 h-4 inline mr-2" strokeWidth={2} />
                       Send Prompt to AI

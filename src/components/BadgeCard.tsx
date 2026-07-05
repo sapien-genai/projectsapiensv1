@@ -31,22 +31,22 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
   return (
     <div
       onClick={onClick}
-      className={`relative bg-white border border-black p-6 transition-all ${
+      className={`relative bg-white border border-ink p-6 transition-all ${
         earned
-          ? 'shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] cursor-pointer'
+          ? 'shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] cursor-pointer'
           : 'opacity-50 cursor-not-allowed'
-      } ${featured ? 'shadow-[6px_6px_0px_#FFD700]' : ''}`}
+      } ${featured ? 'shadow-brutal-gold' : ''}`}
     >
       {featured && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#FFD700] text-black text-xs font-extrabold px-3 py-1 border border-black uppercase tracking-tight">
+        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gold text-ink text-xs font-extrabold px-3 py-1 border border-ink uppercase tracking-tight">
           Featured
         </div>
       )}
 
       <div className="flex flex-col items-center text-center space-y-4">
         <div
-          className={`p-4 border border-black transition-all ${
-            earned ? 'shadow-[2px_2px_0px_#000000]' : ''
+          className={`p-4 border border-ink transition-all ${
+            earned ? 'shadow-brutal-sm' : ''
           }`}
           style={
             earned
@@ -55,13 +55,13 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
           }
         >
           <Icon
-            className={`w-10 h-10 ${earned ? 'text-black' : 'text-gray-400'}`}
+            className={`w-10 h-10 ${earned ? 'text-ink' : 'text-gray-400'}`}
             strokeWidth={2}
           />
         </div>
 
         <div>
-          <h3 className={`font-extrabold text-lg uppercase tracking-tight ${earned ? 'text-black' : 'text-gray-400'}`}>
+          <h3 className={`font-extrabold text-lg uppercase tracking-tight ${earned ? 'text-ink' : 'text-gray-400'}`}>
             {earned ? badge.name : '???'}
           </h3>
           <p className="text-xs font-semibold uppercase tracking-wide mt-1">
@@ -69,7 +69,7 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
           </p>
         </div>
 
-        <p className={`text-sm leading-relaxed ${earned ? 'text-black' : 'text-gray-400'}`}>
+        <p className={`text-sm leading-relaxed ${earned ? 'text-ink' : 'text-gray-400'}`}>
           {earned ? badge.description : 'Complete challenges to unlock'}
         </p>
 
@@ -85,9 +85,9 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
               <span>Progress</span>
               <span>{progressPercentage}%</span>
             </div>
-            <div className="w-full bg-[#E5E5E5] border border-black h-4">
+            <div className="w-full bg-[#E5E5E5] border border-ink h-4">
               <div
-                className="h-full border-r-2 border-black transition-all duration-300"
+                className="h-full border-r-2 border-ink transition-all duration-300"
                 style={{
                   width: `${progressPercentage}%`,
                   backgroundColor: badge.color,
@@ -101,14 +101,14 @@ function BadgeCardComponent({ badge, earned = false, earnedAt, progress, feature
         )}
 
         {!earned && !hasProgress && badge.criteria.details && (
-          <p className="text-xs font-semibold uppercase tracking-wide bg-[#E5E5E5] px-3 py-2 border border-black">
+          <p className="text-xs font-semibold uppercase tracking-wide bg-[#E5E5E5] px-3 py-2 border border-ink">
             {badge.criteria.details}
           </p>
         )}
       </div>
 
       {badge.rarity === 'legendary' && earned && (
-        <div className="absolute -top-1 -right-1 bg-[#FFD700] text-black text-xs font-extrabold px-2 py-1 border border-black uppercase tracking-tight rotate-12">
+        <div className="absolute -top-1 -right-1 bg-gold text-ink text-xs font-extrabold px-2 py-1 border border-ink uppercase tracking-tight rotate-12">
           Legendary!
         </div>
       )}

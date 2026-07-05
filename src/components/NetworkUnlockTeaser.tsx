@@ -38,11 +38,11 @@ export default function NetworkUnlockTeaser({
   const anyMet = requirements.some(r => r.met);
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-paper flex items-center justify-center p-6">
       <div className="max-w-2xl w-full">
-        <div className="bg-white border-4 border-black shadow-[12px_12px_0px_#000000] p-8 mb-6">
+        <div className="bg-white border-4 border-ink shadow-brutal-2xl p-8 mb-6">
           <div className="flex items-start gap-4 mb-6">
-            <div className="bg-[#E9E5E0] border-2 border-black p-4">
+            <div className="bg-paper-2 border-2 border-ink p-4">
               <Lock className="w-8 h-8" strokeWidth={2.5} />
             </div>
             <div className="flex-1">
@@ -64,9 +64,9 @@ export default function NetworkUnlockTeaser({
               return (
                 <div
                   key={index}
-                  className={`flex items-center gap-4 p-5 border-2 border-black ${
+                  className={`flex items-center gap-4 p-5 border-2 border-ink ${
                     req.met
-                      ? 'bg-[#98C9A3] shadow-[4px_4px_0px_#000000]'
+                      ? 'bg-success-soft shadow-brutal-md'
                       : 'bg-white'
                   }`}
                 >
@@ -89,7 +89,7 @@ export default function NetworkUnlockTeaser({
           </div>
 
           {anyMet && (
-            <div className="mt-6 p-4 bg-[#98C9A3] border-2 border-black">
+            <div className="mt-6 p-4 bg-success-soft border-2 border-ink">
               <p className="font-bold text-center">
                 You've completed a milestone! The Network should unlock soon.
               </p>
@@ -97,7 +97,7 @@ export default function NetworkUnlockTeaser({
           )}
         </div>
 
-        <div className="bg-[#E9E5E0] border-2 border-black p-6">
+        <div className="bg-paper-2 border-2 border-ink p-6">
           <h2 className="font-bold text-lg uppercase tracking-tight mb-3">
             What You'll Find in the Network
           </h2>

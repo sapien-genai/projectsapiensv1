@@ -197,7 +197,7 @@ export default function MentorshipPanel() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="inline-block w-8 h-8 border-4 border-black border-t-[#F4A261] animate-spin"></div>
+        <div className="inline-block w-8 h-8 border-4 border-ink border-t-accent-soft animate-spin"></div>
       </div>
     );
   }
@@ -211,16 +211,16 @@ export default function MentorshipPanel() {
       )}
 
       {incomingRequests.length > 0 && (
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
           <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
             Incoming Requests
           </h3>
           <div className="space-y-3">
             {incomingRequests.map((request) => (
-              <div key={request.id} className="border-2 border-black p-4 bg-[#E9E5E0]">
+              <div key={request.id} className="border-2 border-ink p-4 bg-paper-2">
                 <div className="flex justify-between items-start mb-2">
                   <p className="font-bold">{request.mentee_username}</p>
-                  <span className="text-xs bg-white border border-black px-2 py-1">
+                  <span className="text-xs bg-white border border-ink px-2 py-1">
                     {request.status}
                   </span>
                 </div>
@@ -230,14 +230,14 @@ export default function MentorshipPanel() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleRespondToRequest(request.id, 'accepted')}
-                      className="flex items-center gap-2 px-4 py-2 bg-[#98C9A3] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase"
+                      className="flex items-center gap-2 px-4 py-2 bg-success-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase"
                     >
                       <CheckCircle className="w-4 h-4" strokeWidth={2.5} />
                       Accept
                     </button>
                     <button
                       onClick={() => handleRespondToRequest(request.id, 'declined')}
-                      className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase"
+                      className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase"
                     >
                       <XCircle className="w-4 h-4" strokeWidth={2.5} />
                       Decline
@@ -251,19 +251,19 @@ export default function MentorshipPanel() {
       )}
 
       {outgoingRequests.length > 0 && (
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+        <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
           <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
             Your Requests
           </h3>
           <div className="space-y-3">
             {outgoingRequests.map((request) => (
-              <div key={request.id} className="border-2 border-black p-4 bg-[#E9E5E0]">
+              <div key={request.id} className="border-2 border-ink p-4 bg-paper-2">
                 <div className="flex justify-between items-start mb-2">
                   <p className="font-bold">To: {request.mentor_username}</p>
                   <span
-                    className={`text-xs border border-black px-2 py-1 ${
+                    className={`text-xs border border-ink px-2 py-1 ${
                       request.status === 'accepted'
-                        ? 'bg-[#98C9A3]'
+                        ? 'bg-success-soft'
                         : request.status === 'declined'
                         ? 'bg-red-200'
                         : 'bg-white'
@@ -280,16 +280,16 @@ export default function MentorshipPanel() {
         </div>
       )}
 
-      <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+      <div className="bg-white border-4 border-ink shadow-brutal-xl p-6">
         <h3 className="font-extrabold text-xl uppercase tracking-tight mb-4">
           Available Mentors
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
           {availableMentors.map((mentor) => (
-            <div key={mentor.user_id} className="border-2 border-black p-4 bg-[#E9E5E0]">
+            <div key={mentor.user_id} className="border-2 border-ink p-4 bg-paper-2">
               <div className="flex justify-between items-start mb-2">
                 <p className="font-bold text-lg">{mentor.username}</p>
-                <span className="text-xs bg-white border border-black px-2 py-1">
+                <span className="text-xs bg-white border border-ink px-2 py-1">
                   Level {mentor.fluency_level}
                 </span>
               </div>
@@ -299,7 +299,7 @@ export default function MentorshipPanel() {
                   {mentor.declared_strengths.map((strength, idx) => (
                     <span
                       key={idx}
-                      className="text-xs bg-white border border-black px-2 py-1"
+                      className="text-xs bg-white border border-ink px-2 py-1"
                     >
                       {strength}
                     </span>
@@ -308,7 +308,7 @@ export default function MentorshipPanel() {
               )}
               <button
                 onClick={() => handleRequestMentorship(mentor)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase w-full justify-center"
+                className="flex items-center gap-2 px-4 py-2 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm uppercase w-full justify-center"
               >
                 <UserPlus className="w-4 h-4" strokeWidth={2.5} />
                 Request Mentorship
@@ -320,14 +320,14 @@ export default function MentorshipPanel() {
 
       {showRequestForm && selectedMentor && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_#000000] max-w-lg w-full">
-            <div className="bg-[#E9E5E0] border-b-4 border-black p-6 flex justify-between items-center">
+          <div className="bg-white border-4 border-ink shadow-brutal-2xl max-w-lg w-full">
+            <div className="bg-paper-2 border-b-4 border-ink p-6 flex justify-between items-center">
               <h3 className="font-extrabold text-xl uppercase tracking-tight">
                 Request Mentorship
               </h3>
               <button
                 onClick={() => setShowRequestForm(false)}
-                className="p-2 hover:bg-white border-2 border-black transition-colors"
+                className="p-2 hover:bg-white border-2 border-ink transition-colors"
               >
                 <X className="w-5 h-5" strokeWidth={2.5} />
               </button>
@@ -348,7 +348,7 @@ export default function MentorshipPanel() {
                   type="text"
                   value={requestForm.topic}
                   onChange={(e) => setRequestForm({ ...requestForm, topic: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                  className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                   placeholder="e.g., Prompt engineering, workflow automation"
                   required
                 />
@@ -361,7 +361,7 @@ export default function MentorshipPanel() {
                 <textarea
                   value={requestForm.message}
                   onChange={(e) => setRequestForm({ ...requestForm, message: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] min-h-[120px]"
+                  className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft min-h-[120px]"
                   placeholder="Tell them what you're working on and how they could help..."
                   required
                 />
@@ -371,13 +371,13 @@ export default function MentorshipPanel() {
                 <button
                   type="button"
                   onClick={() => setShowRequestForm(false)}
-                  className="flex-1 px-6 py-3 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+                  className="flex-1 px-6 py-3 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center justify-center gap-2"
                 >
                   <Send className="w-5 h-5" strokeWidth={2.5} />
                   Send Request

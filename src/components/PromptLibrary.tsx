@@ -261,13 +261,13 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
         {testPrompt && <PromptTester initialPrompt={testPrompt.prompt_text} />}
       </FullscreenLabOverlay>
 
-      <div className="min-h-screen bg-[#F4F4F4]">
+      <div className="min-h-screen bg-surface">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div className="mb-8">
           {onBack && (
             <button
               onClick={onBack}
-              className="flex items-center gap-2 mb-6 text-sm font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="flex items-center gap-2 mb-6 text-sm font-extrabold uppercase tracking-tight hover:text-accent transition-colors"
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               BACK TO DASHBOARD
@@ -275,7 +275,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           )}
           <div className="flex items-center gap-3 mb-4">
             <BookmarkPlus className="w-8 h-8" strokeWidth={2} />
-            <div className="text-xs font-semibold px-3 py-1 border border-black bg-white">
+            <div className="text-xs font-semibold px-3 py-1 border border-ink bg-white">
               RESOURCES
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 <button
                   onClick={handleSeedLibrary}
                   disabled={seeding}
-                  className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                  className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                 >
                   <div className="flex items-center gap-2">
                     <Download className="w-4 h-4" strokeWidth={2} />
@@ -305,7 +305,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 <button
                   onClick={handleUpdateLibrary}
                   disabled={updating}
-                  className="bg-[#FF6A00] text-black border-2 border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[3px_3px_0px_#000000] hover:shadow-[5px_5px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
+                  className="bg-accent text-ink border-2 border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal hover:shadow-brutal-5 hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
                 >
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4" strokeWidth={2} />
@@ -320,10 +320,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
         <div className="flex flex-wrap gap-3 mb-8">
           <button
             onClick={() => setActiveTab('discover')}
-            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all ${
+            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all ${
               activeTab === 'discover'
-                ? 'bg-[#FF6A00] text-black'
-                : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                ? 'bg-accent text-ink'
+                : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -333,10 +333,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           </button>
           <button
             onClick={() => setActiveTab('my-prompts')}
-            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all ${
+            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all ${
               activeTab === 'my-prompts'
-                ? 'bg-[#FF6A00] text-black'
-                : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                ? 'bg-accent text-ink'
+                : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -346,10 +346,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           </button>
           <button
             onClick={() => setActiveTab('collections')}
-            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all ${
+            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all ${
               activeTab === 'collections'
-                ? 'bg-[#FF6A00] text-black'
-                : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                ? 'bg-accent text-ink'
+                : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -359,10 +359,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           </button>
           <button
             onClick={() => setActiveTab('create')}
-            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all ${
+            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all ${
               activeTab === 'create'
-                ? 'bg-[#0A74FF] text-white'
-                : 'bg-[#0A74FF] text-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                ? 'bg-info text-white'
+                : 'bg-info text-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -382,17 +382,17 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   placeholder="Search prompts, tags..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                  className="w-full pl-12 pr-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                 />
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+                  className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                     selectedCategory === null
-                      ? 'bg-black text-white'
-                      : 'bg-white text-black hover:bg-[#F4F4F4]'
+                      ? 'bg-ink text-white'
+                      : 'bg-white text-ink hover:bg-surface'
                   }`}
                 >
                   ALL
@@ -403,10 +403,10 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
-                      className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+                      className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                         selectedCategory === category.id
-                          ? 'bg-black text-white'
-                          : 'bg-white text-black hover:bg-[#F4F4F4]'
+                          ? 'bg-ink text-white'
+                          : 'bg-white text-ink hover:bg-surface'
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -422,8 +422,8 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 <span className="text-xs font-semibold uppercase">SORT BY:</span>
                 <button
                   onClick={() => setSortBy('popular')}
-                  className={`px-3 py-1 text-xs font-semibold uppercase border border-black ${
-                    sortBy === 'popular' ? 'bg-black text-white' : 'bg-white'
+                  className={`px-3 py-1 text-xs font-semibold uppercase border border-ink ${
+                    sortBy === 'popular' ? 'bg-ink text-white' : 'bg-white'
                   }`}
                 >
                   <div className="flex items-center gap-1">
@@ -433,8 +433,8 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 </button>
                 <button
                   onClick={() => setSortBy('rated')}
-                  className={`px-3 py-1 text-xs font-semibold uppercase border border-black ${
-                    sortBy === 'rated' ? 'bg-black text-white' : 'bg-white'
+                  className={`px-3 py-1 text-xs font-semibold uppercase border border-ink ${
+                    sortBy === 'rated' ? 'bg-ink text-white' : 'bg-white'
                   }`}
                 >
                   <div className="flex items-center gap-1">
@@ -444,8 +444,8 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 </button>
                 <button
                   onClick={() => setSortBy('recent')}
-                  className={`px-3 py-1 text-xs font-semibold uppercase border border-black ${
-                    sortBy === 'recent' ? 'bg-black text-white' : 'bg-white'
+                  className={`px-3 py-1 text-xs font-semibold uppercase border border-ink ${
+                    sortBy === 'recent' ? 'bg-ink text-white' : 'bg-white'
                   }`}
                 >
                   <div className="flex items-center gap-1">
@@ -458,11 +458,11 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+                <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
                 <p className="mt-4 font-semibold">LOADING PROMPTS...</p>
               </div>
             ) : filteredPrompts.length === 0 ? (
-              <div className="bg-white border border-black p-12 text-center shadow-[3px_3px_0px_#000000]">
+              <div className="bg-white border border-ink p-12 text-center shadow-brutal">
                 <BookmarkPlus className="w-16 h-16 mx-auto mb-4" strokeWidth={2} />
                 <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
                   NO PROMPTS FOUND
@@ -475,7 +475,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 {activeTab === 'my-prompts' && (
                   <button
                     onClick={() => setActiveTab('create')}
-                    className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                    className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                   >
                     CREATE YOUR FIRST PROMPT
                   </button>
@@ -486,12 +486,12 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 {filteredPrompts.map((prompt) => (
                   <div
                     key={prompt.id}
-                    className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] transition-shadow"
+                    className="bg-white border border-ink p-6 shadow-brutal hover:shadow-brutal-xl transition-shadow"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         {prompt.is_featured && (
-                          <div className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 border border-black bg-[#FFD700] mb-2">
+                          <div className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 border border-ink bg-gold mb-2">
                             <OpenMoji emoji="⭐" size={14} />
                             FEATURED
                           </div>
@@ -501,7 +501,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                         </h3>
                         <div className="flex items-center gap-2 mb-2">
                           {prompt.prompt_categories && (
-                            <span className="text-xs font-semibold px-2 py-1 border border-black bg-[#F4F4F4]">
+                            <span className="text-xs font-semibold px-2 py-1 border border-ink bg-surface">
                               {prompt.prompt_categories.name}
                             </span>
                           )}
@@ -516,7 +516,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                       {prompt.description}
                     </p>
 
-                    <div className="bg-[#F4F4F4] border border-black p-3 mb-4 text-xs">
+                    <div className="bg-surface border border-ink p-3 mb-4 text-xs">
                       <p className="line-clamp-3">{prompt.prompt_text}</p>
                     </div>
 
@@ -525,7 +525,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                         {prompt.tags.map((tag, idx) => (
                           <span
                             key={idx}
-                            className="text-xs font-semibold px-2 py-1 bg-[#E3F2FD] border border-black"
+                            className="text-xs font-semibold px-2 py-1 bg-info-soft border border-ink"
                           >
                             {tag}
                           </span>
@@ -533,17 +533,17 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-4 border-t-2 border-black">
+                    <div className="flex items-center justify-between pt-4 border-t-2 border-ink">
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => handleLikePrompt(prompt.id)}
-                          className="flex items-center gap-1 text-xs font-semibold hover:text-[#FF6A00] transition-colors"
+                          className="flex items-center gap-1 text-xs font-semibold hover:text-accent transition-colors"
                         >
                           <Heart className="w-4 h-4" strokeWidth={2} />
                           {prompt.likes_count}
                         </button>
                         <div className="flex items-center gap-1 text-xs font-semibold">
-                          <Star className="w-4 h-4 fill-[#FFD700] text-[#FFD700]" strokeWidth={2} />
+                          <Star className="w-4 h-4 fill-gold text-gold" strokeWidth={2} />
                           {prompt.avg_rating > 0 ? prompt.avg_rating.toFixed(1) : '—'}
                         </div>
                         <div className="flex items-center gap-1 text-xs font-semibold">
@@ -554,7 +554,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleTestPrompt(prompt)}
-                          className="bg-[#FF6A00] text-black border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                          className="bg-accent text-ink border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                         >
                           <div className="flex items-center gap-1">
                             <Zap className="w-4 h-4" strokeWidth={2} />
@@ -563,7 +563,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                         </button>
                         <button
                           onClick={() => handleCopyPrompt(prompt)}
-                          className="bg-[#0A74FF] text-white border border-black px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                          className="bg-info text-white border border-ink px-4 py-2 font-extrabold text-xs uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                         >
                           COPY
                         </button>
@@ -580,11 +580,11 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
           <div>
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+                <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
                 <p className="mt-4 font-semibold">LOADING COLLECTIONS...</p>
               </div>
             ) : collections.length === 0 ? (
-              <div className="bg-white border border-black p-12 text-center shadow-[3px_3px_0px_#000000]">
+              <div className="bg-white border border-ink p-12 text-center shadow-brutal">
                 <BookmarkPlus className="w-16 h-16 mx-auto mb-4" strokeWidth={2} />
                 <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
                   NO COLLECTIONS YET
@@ -592,7 +592,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 <p className="text-sm mb-6">
                   Organize your favorite prompts into collections. Create your first collection to get started!
                 </p>
-                <button className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                <button className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                   CREATE COLLECTION
                 </button>
               </div>
@@ -601,7 +601,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 {collections.map((collection) => (
                   <div
                     key={collection.id}
-                    className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] transition-shadow"
+                    className="bg-white border border-ink p-6 shadow-brutal hover:shadow-brutal-xl transition-shadow"
                   >
                     <BookmarkPlus className="w-8 h-8 mb-4" strokeWidth={2} />
                     <h3 className="font-extrabold text-lg uppercase tracking-tight mb-2">
@@ -617,7 +617,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                         {collection.prompt_count} PROMPTS
                       </span>
                       {collection.is_public && (
-                        <span className="text-xs font-semibold px-2 py-1 border border-black bg-[#E3F2FD]">
+                        <span className="text-xs font-semibold px-2 py-1 border border-ink bg-info-soft">
                           PUBLIC
                         </span>
                       )}
@@ -631,7 +631,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
 
         {activeTab === 'create' && (
           <div className="max-w-3xl mx-auto">
-            <div className="bg-white border border-black p-8 shadow-[3px_3px_0px_#000000]">
+            <div className="bg-white border border-ink p-8 shadow-brutal">
               <h2 className="font-extrabold text-2xl uppercase tracking-tight mb-6">
                 CREATE NEW PROMPT
               </h2>
@@ -647,7 +647,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <input
                     type="text"
                     placeholder="Give your prompt a descriptive title..."
-                    className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
 
@@ -655,7 +655,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <label className="block text-xs font-semibold uppercase mb-2">
                     CATEGORY
                   </label>
-                  <select className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]">
+                  <select className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent">
                     <option>Select a category...</option>
                     {categories.map((cat) => (
                       <option key={cat.id} value={cat.id}>
@@ -672,7 +672,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <textarea
                     placeholder="What does this prompt do? What problem does it solve?"
                     rows={3}
-                    className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
 
@@ -683,7 +683,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <textarea
                     placeholder="Enter your complete prompt here..."
                     rows={8}
-                    className="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="w-full px-4 py-3 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
 
@@ -694,7 +694,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <textarea
                     placeholder="When should someone use this prompt?"
                     rows={3}
-                    className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
 
@@ -705,7 +705,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <input
                     type="text"
                     placeholder="writing, email, professional, business..."
-                    className="w-full px-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                    className="w-full px-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
 
@@ -713,7 +713,7 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      className="w-5 h-5 border border-black"
+                      className="w-5 h-5 border border-ink"
                     />
                     <span className="text-sm font-semibold">
                       SHARE WITH COMMUNITY (make this prompt public)
@@ -722,12 +722,12 @@ export default function PromptLibrary({ onBack }: PromptLibraryProps) {
                 </div>
 
                 <div className="flex gap-4 pt-4">
-                  <button className="flex-1 bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                  <button className="flex-1 bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                     CREATE PROMPT
                   </button>
                   <button
                     onClick={() => setActiveTab('discover')}
-                    className="flex-1 bg-white text-black border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                    className="flex-1 bg-white text-ink border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                   >
                     CANCEL
                   </button>

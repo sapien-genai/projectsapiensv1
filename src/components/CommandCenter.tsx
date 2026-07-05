@@ -68,71 +68,71 @@ export default function CommandCenter({ onBack, onLessonClick }: CommandCenterPr
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
-        <div className="text-lg text-[#57524D]">Loading Command Center...</div>
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <div className="text-lg text-secondary">Loading Command Center...</div>
       </div>
     );
   }
 
   if (!isEnabled) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full bg-white border border-black shadow-[8px_8px_0px_#000000] p-8">
+      <div className="min-h-screen bg-paper flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full bg-white border border-ink shadow-brutal-xl p-8">
           <div className="text-center mb-8">
-            <Target className="w-16 h-16 mx-auto mb-4 text-[#F4A261]" strokeWidth={2} />
+            <Target className="w-16 h-16 mx-auto mb-4 text-accent-soft" strokeWidth={2} />
             <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-4">
               Activate Your AI Command Center
             </h1>
-            <p className="text-lg text-[#57524D] leading-relaxed">
+            <p className="text-lg text-secondary leading-relaxed">
               You're about to build your personal AI-powered system for managing work, learning, and life.
             </p>
           </div>
 
           <div className="space-y-4 mb-8">
-            <div className="flex gap-4 p-4 bg-[#FFF9E6] border border-black">
-              <Sun className="w-6 h-6 flex-shrink-0 text-[#F4A261]" strokeWidth={2} />
+            <div className="flex gap-4 p-4 bg-cream border border-ink">
+              <Sun className="w-6 h-6 flex-shrink-0 text-accent-soft" strokeWidth={2} />
               <div>
                 <h3 className="font-bold mb-1">Morning Dashboard</h3>
-                <p className="text-sm text-[#57524D]">Start each day with AI-generated priorities and energy-optimized scheduling</p>
+                <p className="text-sm text-secondary">Start each day with AI-generated priorities and energy-optimized scheduling</p>
               </div>
             </div>
 
-            <div className="flex gap-4 p-4 bg-[#E3F2FD] border border-black">
+            <div className="flex gap-4 p-4 bg-info-soft border border-ink">
               <ListTodo className="w-6 h-6 flex-shrink-0 text-[#5B7DB1]" strokeWidth={2} />
               <div>
                 <h3 className="font-bold mb-1">Work Management Hub</h3>
-                <p className="text-sm text-[#57524D]">Capture, organize, and complete tasks with AI assistance</p>
+                <p className="text-sm text-secondary">Capture, organize, and complete tasks with AI assistance</p>
               </div>
             </div>
 
-            <div className="flex gap-4 p-4 bg-[#F3E5F5] border border-black">
+            <div className="flex gap-4 p-4 bg-[#F3E5F5] border border-ink">
               <Brain className="w-6 h-6 flex-shrink-0 text-[#9C27B0]" strokeWidth={2} />
               <div>
                 <h3 className="font-bold mb-1">Learning & Growth Station</h3>
-                <p className="text-sm text-[#57524D]">Track learning projects and skill development</p>
+                <p className="text-sm text-secondary">Track learning projects and skill development</p>
               </div>
             </div>
 
-            <div className="flex gap-4 p-4 bg-[#E8F5E9] border border-black">
+            <div className="flex gap-4 p-4 bg-success-tint border border-ink">
               <Home className="w-6 h-6 flex-shrink-0 text-[#4CAF50]" strokeWidth={2} />
               <div>
                 <h3 className="font-bold mb-1">Life Operations Center</h3>
-                <p className="text-sm text-[#57524D]">Manage meals, travel, finances, and health</p>
+                <p className="text-sm text-secondary">Manage meals, travel, finances, and health</p>
               </div>
             </div>
 
-            <div className="flex gap-4 p-4 bg-[#FFF3E0] border border-black">
+            <div className="flex gap-4 p-4 bg-[#FFF3E0] border border-ink">
               <Moon className="w-6 h-6 flex-shrink-0 text-[#FF9800]" strokeWidth={2} />
               <div>
                 <h3 className="font-bold mb-1">Evening Review</h3>
-                <p className="text-sm text-[#57524D]">Reflect on your day and prep for tomorrow</p>
+                <p className="text-sm text-secondary">Reflect on your day and prep for tomorrow</p>
               </div>
             </div>
           </div>
 
           <button
             onClick={enableCommandCenter}
-            className="w-full bg-[#F4A261] text-white border border-black px-8 py-4 font-extrabold text-lg uppercase tracking-tight shadow-[3px_3px_0px_#000000] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all"
+            className="w-full bg-accent-soft text-white border border-ink px-8 py-4 font-extrabold text-lg uppercase tracking-tight shadow-brutal hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all"
           >
             Activate Command Center
           </button>
@@ -142,9 +142,9 @@ export default function CommandCenter({ onBack, onLessonClick }: CommandCenterPr
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
+    <div className="min-h-screen bg-paper">
       {/* Header */}
-      <div className="bg-white border-b-2 border-black">
+      <div className="bg-white border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-extrabold uppercase tracking-tight">
@@ -153,7 +153,7 @@ export default function CommandCenter({ onBack, onLessonClick }: CommandCenterPr
             {onBack && (
               <button
                 onClick={onBack}
-                className="px-4 py-2 bg-white border border-black text-sm font-bold hover:bg-[#F8F5F2] transition-colors"
+                className="px-4 py-2 bg-white border border-ink text-sm font-bold hover:bg-paper transition-colors"
               >
                 Back to Lessons
               </button>
@@ -163,7 +163,7 @@ export default function CommandCenter({ onBack, onLessonClick }: CommandCenterPr
       </div>
 
       {/* Navigation */}
-      <div className="bg-[#E9E5E0] border-b-2 border-black">
+      <div className="bg-paper-2 border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto">
             {[
@@ -180,8 +180,8 @@ export default function CommandCenter({ onBack, onLessonClick }: CommandCenterPr
                 onClick={() => setActiveView(tab.id)}
                 className={`flex items-center gap-2 px-6 py-3 font-bold text-sm whitespace-nowrap transition-colors ${
                   activeView === tab.id
-                    ? 'bg-white border-2 border-b-0 border-black -mb-[2px]'
-                    : 'bg-[#E9E5E0] hover:bg-[#ddd9d4]'
+                    ? 'bg-white border-2 border-b-0 border-ink -mb-[2px]'
+                    : 'bg-paper-2 hover:bg-[#ddd9d4]'
                 }`}
               >
                 <tab.icon className="w-4 h-4" strokeWidth={2} />
@@ -287,21 +287,21 @@ function DashboardView() {
   return (
     <div className="space-y-6">
       {/* Morning Greeting */}
-      <div className="bg-gradient-to-r from-[#FFF9E6] to-[#FFE4B5] border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-gradient-to-r from-cream to-[#FFE4B5] border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center gap-3 mb-2">
-          <Sun className="w-8 h-8 text-[#F4A261]" strokeWidth={2} />
+          <Sun className="w-8 h-8 text-accent-soft" strokeWidth={2} />
           <h2 className="text-2xl font-bold">Good Morning!</h2>
         </div>
-        <p className="text-[#57524D]">Ready to make today productive?</p>
+        <p className="text-secondary">Ready to make today productive?</p>
       </div>
 
       {/* Today's Priorities */}
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold uppercase tracking-tight">Today's Priorities</h3>
           <button
             onClick={generatePriorities}
-            className="flex items-center gap-2 px-4 py-2 bg-[#F4A261] text-white border border-black text-sm font-bold hover:bg-[#e89350] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-accent-soft text-white border border-ink text-sm font-bold hover:bg-accent-hover transition-colors"
           >
             <Lightbulb className="w-4 h-4" strokeWidth={2} />
             AI Generate
@@ -309,24 +309,24 @@ function DashboardView() {
         </div>
 
         {priorities.length === 0 ? (
-          <div className="text-center py-8 text-[#57524D]">
+          <div className="text-center py-8 text-secondary">
             <p className="mb-4">No priorities set for today</p>
             <p className="text-sm">Click "AI Generate" to create your daily priorities</p>
           </div>
         ) : (
           <div className="space-y-3">
             {priorities.map((priority) => (
-              <div key={priority.id} className="flex items-start gap-3 p-3 bg-[#F8F5F2] border border-[#E9E5E0]">
+              <div key={priority.id} className="flex items-start gap-3 p-3 bg-paper border border-paper-2">
                 {priority.status === 'completed' ? (
                   <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 ) : (
-                  <Circle className="w-5 h-5 text-[#57524D] flex-shrink-0 mt-0.5" strokeWidth={2} />
+                  <Circle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" strokeWidth={2} />
                 )}
                 <div className="flex-1">
                   <h4 className="font-bold mb-1">{priority.title}</h4>
-                  <p className="text-sm text-[#57524D]">{priority.description}</p>
+                  <p className="text-sm text-secondary">{priority.description}</p>
                 </div>
-                <span className={`px-2 py-1 text-xs font-bold border border-black ${
+                <span className={`px-2 py-1 text-xs font-bold border border-ink ${
                   priority.priority === 'high' ? 'bg-red-100' : 'bg-blue-100'
                 }`}>
                   {priority.priority}
@@ -338,31 +338,31 @@ function DashboardView() {
       </div>
 
       {/* Decision Queue */}
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold uppercase tracking-tight">Decision Queue</h3>
-          <span className="px-3 py-1 bg-[#FF6A00] text-white text-sm font-bold border border-black">
+          <span className="px-3 py-1 bg-accent text-white text-sm font-bold border border-ink">
             {decisions.length} Pending
           </span>
         </div>
 
         {decisions.length === 0 ? (
-          <p className="text-center py-8 text-[#57524D]">No decisions waiting</p>
+          <p className="text-center py-8 text-secondary">No decisions waiting</p>
         ) : (
           <div className="space-y-3">
             {decisions.map((decision) => (
-              <div key={decision.id} className="p-3 bg-[#FFF9E6] border border-black">
+              <div key={decision.id} className="p-3 bg-cream border border-ink">
                 <div className="flex items-start justify-between mb-2">
                   <h4 className="font-bold">{decision.title}</h4>
-                  <span className="text-xs font-bold px-2 py-1 bg-white border border-black">
+                  <span className="text-xs font-bold px-2 py-1 bg-white border border-ink">
                     {decision.category}
                   </span>
                 </div>
                 {decision.description && (
-                  <p className="text-sm text-[#57524D] mb-2">{decision.description}</p>
+                  <p className="text-sm text-secondary mb-2">{decision.description}</p>
                 )}
                 {decision.deadline && (
-                  <div className="flex items-center gap-1 text-xs text-[#57524D]">
+                  <div className="flex items-center gap-1 text-xs text-secondary">
                     <Clock className="w-3 h-3" strokeWidth={2} />
                     Due: {new Date(decision.deadline).toLocaleDateString()}
                   </div>
@@ -374,12 +374,12 @@ function DashboardView() {
       </div>
 
       {/* Today's Calendar */}
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold uppercase tracking-tight">Today's Calendar</h3>
           <button
             onClick={() => setShowAddEvent(!showAddEvent)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#5B7DB1] text-white border border-black text-sm font-bold hover:bg-[#4a6a95] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#5B7DB1] text-white border border-ink text-sm font-bold hover:bg-[#4a6a95] transition-colors"
           >
             <Plus className="w-4 h-4" strokeWidth={2} />
             Add Event
@@ -389,34 +389,34 @@ function DashboardView() {
         {showAddEvent && <AddEventForm onClose={() => { setShowAddEvent(false); loadDashboard(); }} />}
 
         {calendarEvents.length === 0 && !showAddEvent ? (
-          <div className="text-center py-8 text-[#57524D]">
-            <Calendar className="w-12 h-12 mx-auto mb-3 text-[#E9E5E0]" strokeWidth={2} />
+          <div className="text-center py-8 text-secondary">
+            <Calendar className="w-12 h-12 mx-auto mb-3 text-paper-2" strokeWidth={2} />
             <p className="mb-2">No events scheduled for today</p>
             <p className="text-sm">Click "Add Event" to create your first calendar event</p>
           </div>
         ) : (
           <div className="space-y-3">
             {calendarEvents.map((event) => (
-              <div key={event.id} className="p-4 bg-[#E3F2FD] border border-black">
+              <div key={event.id} className="p-4 bg-info-soft border border-ink">
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h4 className="font-bold mb-1">{event.title}</h4>
-                    <div className="flex items-center gap-2 text-sm text-[#57524D]">
+                    <div className="flex items-center gap-2 text-sm text-secondary">
                       <Clock className="w-4 h-4" strokeWidth={2} />
                       {event.event_time || 'All day'} {event.duration_minutes && `(${event.duration_minutes} min)`}
                     </div>
                   </div>
-                  <span className="text-xs font-bold px-2 py-1 bg-white border border-black">
+                  <span className="text-xs font-bold px-2 py-1 bg-white border border-ink">
                     {event.event_type}
                   </span>
                 </div>
                 {event.description && (
-                  <p className="text-sm text-[#57524D] mb-2">{event.description}</p>
+                  <p className="text-sm text-secondary mb-2">{event.description}</p>
                 )}
                 {event.ai_generated_prep && (
                   <div className="mt-2 p-2 bg-white border border-[#5B7DB1] rounded">
                     <p className="text-xs font-bold text-[#5B7DB1] mb-1">AI PREP NOTES</p>
-                    <p className="text-xs text-[#57524D]">Prep notes available</p>
+                    <p className="text-xs text-secondary">Prep notes available</p>
                   </div>
                 )}
               </div>
@@ -427,7 +427,7 @@ function DashboardView() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#E3F2FD] border border-black p-4">
+        <div className="bg-info-soft border border-ink p-4">
           <div className="flex items-center gap-2 mb-2">
             <ListTodo className="w-5 h-5 text-[#5B7DB1]" strokeWidth={2} />
             <h4 className="font-bold text-sm">Active Tasks</h4>
@@ -435,7 +435,7 @@ function DashboardView() {
           <p className="text-2xl font-bold">8</p>
         </div>
 
-        <div className="bg-[#F3E5F5] border border-black p-4">
+        <div className="bg-[#F3E5F5] border border-ink p-4">
           <div className="flex items-center gap-2 mb-2">
             <Brain className="w-5 h-5 text-[#9C27B0]" strokeWidth={2} />
             <h4 className="font-bold text-sm">Learning Projects</h4>
@@ -443,7 +443,7 @@ function DashboardView() {
           <p className="text-2xl font-bold">2</p>
         </div>
 
-        <div className="bg-[#E8F5E9] border border-black p-4">
+        <div className="bg-success-tint border border-ink p-4">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-[#4CAF50]" strokeWidth={2} />
             <h4 className="font-bold text-sm">Weekly Progress</h4>
@@ -535,27 +535,27 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <div className="flex items-center gap-3 mb-4">
           <BookOpen className="w-6 h-6 text-[#9C27B0]" strokeWidth={2} />
           <h2 className="text-2xl font-bold uppercase tracking-tight">My Journal</h2>
         </div>
-        <p className="text-[#57524D] mb-6">
+        <p className="text-secondary mb-6">
           Reflect on your AI learning journey. All your reflections and responses from lessons are saved here.
         </p>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block w-12 h-12 border-4 border-black border-t-[#9C27B0] animate-spin rounded-full"></div>
-            <p className="mt-4 font-semibold text-[#57524D]">Loading your journal...</p>
+            <div className="inline-block w-12 h-12 border-4 border-ink border-t-[#9C27B0] animate-spin rounded-full"></div>
+            <p className="mt-4 font-semibold text-secondary">Loading your journal...</p>
           </div>
         ) : entries.length === 0 ? (
-          <div className="text-center py-12 bg-[#F8F5F2] border-2 border-[#E9E5E0]">
-            <BookOpen className="w-12 h-12 mx-auto mb-4 text-[#E9E5E0]" strokeWidth={2} />
+          <div className="text-center py-12 bg-paper border-2 border-paper-2">
+            <BookOpen className="w-12 h-12 mx-auto mb-4 text-paper-2" strokeWidth={2} />
             <h3 className="font-bold text-lg uppercase tracking-tight mb-2">
               No Journal Entries Yet
             </h3>
-            <p className="text-sm text-[#57524D] leading-relaxed">
+            <p className="text-sm text-secondary leading-relaxed">
               Complete lessons and answer reflection questions to start building your AI learning journal.
             </p>
           </div>
@@ -564,7 +564,7 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="bg-[#F8F5F2] border-2 border-[#E9E5E0] p-4"
+                className="bg-paper border-2 border-paper-2 p-4"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -580,7 +580,7 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
                         {getLessonTitle(entry.lesson_id)}
                       </h3>
                     )}
-                    <div className="flex items-center gap-2 text-xs text-[#57524D]">
+                    <div className="flex items-center gap-2 text-xs text-secondary">
                       <Calendar className="w-3 h-3" strokeWidth={2} />
                       {formatDate(entry.created_at)}
                     </div>
@@ -588,7 +588,7 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
                   <button
                     onClick={() => deleteEntry(entry.id)}
                     disabled={deleting === entry.id}
-                    className="p-2 hover:bg-red-50 border border-[#E9E5E0] hover:border-red-500 transition-colors disabled:opacity-50 flex-shrink-0"
+                    className="p-2 hover:bg-red-50 border border-paper-2 hover:border-red-500 transition-colors disabled:opacity-50 flex-shrink-0"
                     title="Delete entry"
                   >
                     <Trash2 className="w-4 h-4" strokeWidth={2} />
@@ -599,16 +599,16 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
                   <p className="text-[10px] font-bold uppercase tracking-wide mb-2 text-[#9C27B0]">
                     Prompt
                   </p>
-                  <p className="text-sm leading-relaxed text-[#1C1A17] whitespace-pre-line">
+                  <p className="text-sm leading-relaxed text-strong whitespace-pre-line">
                     {entry.prompt_text}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wide mb-2 text-[#57524D]">
+                  <p className="text-[10px] font-bold uppercase tracking-wide mb-2 text-secondary">
                     Your Reflection
                   </p>
-                  <p className="text-sm leading-relaxed text-[#1C1A17] whitespace-pre-line">
+                  <p className="text-sm leading-relaxed text-strong whitespace-pre-line">
                     {entry.user_response}
                   </p>
                 </div>
@@ -623,18 +623,18 @@ function LearningView({ onLessonClick }: { onLessonClick?: (pathId: string, less
 
 function LifeOpsView() {
   return (
-    <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+    <div className="bg-white border border-ink p-6 shadow-brutal-sm">
       <h2 className="text-2xl font-bold uppercase tracking-tight mb-6">Life Operations</h2>
-      <p className="text-[#57524D]">Life operations interface coming in the interactive lessons...</p>
+      <p className="text-secondary">Life operations interface coming in the interactive lessons...</p>
     </div>
   );
 }
 
 function ReviewView() {
   return (
-    <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+    <div className="bg-white border border-ink p-6 shadow-brutal-sm">
       <h2 className="text-2xl font-bold uppercase tracking-tight mb-6">Daily Review</h2>
-      <p className="text-[#57524D]">Review interface coming in the interactive lessons...</p>
+      <p className="text-secondary">Review interface coming in the interactive lessons...</p>
     </div>
   );
 }
@@ -671,7 +671,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 p-4 bg-[#F8F5F2] border border-black">
+    <form onSubmit={handleSubmit} className="mb-6 p-4 bg-paper border border-ink">
       <div className="flex items-center justify-between mb-4">
         <h4 className="font-bold uppercase tracking-tight">Add Calendar Event</h4>
         <button
@@ -690,7 +690,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             required
           />
         </div>
@@ -700,7 +700,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
           <select
             value={eventType}
             onChange={(e) => setEventType(e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           >
             <option value="meeting">Meeting</option>
             <option value="task">Task</option>
@@ -716,7 +716,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
             type="date"
             value={eventDate}
             onChange={(e) => setEventDate(e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
 
@@ -726,7 +726,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
             type="time"
             value={eventTime}
             onChange={(e) => setEventTime(e.target.value)}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
 
@@ -736,7 +736,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
             type="number"
             value={duration}
             onChange={(e) => setDuration(parseInt(e.target.value))}
-            className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+            className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
             min="15"
             step="15"
           />
@@ -748,7 +748,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-3 py-2 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261] resize-y"
+          className="w-full px-3 py-2 border border-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft resize-y"
           rows={3}
         />
       </div>
@@ -757,14 +757,14 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
         <button
           type="submit"
           disabled={saving || !title.trim()}
-          className="flex items-center gap-2 px-4 py-2 bg-[#F4A261] text-white border border-black font-bold text-sm hover:bg-[#e89350] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-accent-soft text-white border border-ink font-bold text-sm hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save Event'}
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-white border border-black font-bold text-sm hover:bg-[#F8F5F2] transition-colors"
+          className="px-4 py-2 bg-white border border-ink font-bold text-sm hover:bg-paper transition-colors"
         >
           Cancel
         </button>
@@ -826,21 +826,21 @@ function IntegrationsView() {
     { id: 'google_calendar', name: 'Google Calendar', icon: Calendar, description: 'Sync events from Google Calendar', color: 'bg-[#4285F4]' },
     { id: 'outlook_calendar', name: 'Outlook Calendar', icon: Calendar, description: 'Sync events from Outlook', color: 'bg-[#0078D4]' },
     { id: 'gmail', name: 'Gmail', icon: Lightbulb, description: 'Process emails with AI', color: 'bg-[#EA4335]' },
-    { id: 'notion', name: 'Notion', icon: BookOpen, description: 'Sync notes and documents', color: 'bg-black' },
+    { id: 'notion', name: 'Notion', icon: BookOpen, description: 'Sync notes and documents', color: 'bg-ink' },
     { id: 'todoist', name: 'Todoist', icon: ListTodo, description: 'Import tasks automatically', color: 'bg-[#E44332]' },
     { id: 'slack', name: 'Slack', icon: LinkIcon, description: 'Get updates from team channels', color: 'bg-[#4A154B]' },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-white border border-ink p-6 shadow-brutal-sm">
         <h2 className="text-2xl font-bold uppercase tracking-tight mb-4">External Integrations</h2>
-        <p className="text-[#57524D] mb-6">
+        <p className="text-secondary mb-6">
           Connect your external tools to bring all your data into the Command Center. Enable AI-powered processing and automated workflows.
         </p>
 
         {loading ? (
-          <div className="text-center py-8 text-[#57524D]">Loading integrations...</div>
+          <div className="text-center py-8 text-secondary">Loading integrations...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {integrationOptions.map((option) => {
@@ -848,7 +848,7 @@ function IntegrationsView() {
               const isConnected = integration?.is_connected || false;
 
               return (
-                <div key={option.id} className="p-4 border border-black bg-[#F8F5F2]">
+                <div key={option.id} className="p-4 border border-ink bg-paper">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className={`p-2 ${option.color} rounded`}>
@@ -856,24 +856,24 @@ function IntegrationsView() {
                       </div>
                       <div>
                         <h3 className="font-bold">{option.name}</h3>
-                        <p className="text-xs text-[#57524D]">{option.description}</p>
+                        <p className="text-xs text-secondary">{option.description}</p>
                       </div>
                     </div>
                   </div>
 
                   <button
                     onClick={() => toggleIntegration(option.id)}
-                    className={`w-full px-4 py-2 border border-black font-bold text-sm transition-colors ${
+                    className={`w-full px-4 py-2 border border-ink font-bold text-sm transition-colors ${
                       isConnected
                         ? 'bg-green-500 text-white hover:bg-green-600'
-                        : 'bg-white hover:bg-[#F4A261] hover:text-white'
+                        : 'bg-white hover:bg-accent-soft hover:text-white'
                     }`}
                   >
                     {isConnected ? 'Connected ✓' : 'Connect'}
                   </button>
 
                   {isConnected && (
-                    <div className="mt-2 text-xs text-[#57524D]">
+                    <div className="mt-2 text-xs text-secondary">
                       <p>Last sync: {integration.last_sync ? new Date(integration.last_sync).toLocaleString() : 'Never'}</p>
                     </div>
                   )}
@@ -884,12 +884,12 @@ function IntegrationsView() {
         )}
       </div>
 
-      <div className="bg-[#FFF9E6] border border-black p-6 shadow-[2px_2px_0px_#000000]">
+      <div className="bg-cream border border-ink p-6 shadow-brutal-sm">
         <h3 className="font-bold mb-3 flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-[#F4A261]" strokeWidth={2} />
+          <Lightbulb className="w-5 h-5 text-accent-soft" strokeWidth={2} />
           Integration Tips
         </h3>
-        <ul className="space-y-2 text-sm text-[#57524D]">
+        <ul className="space-y-2 text-sm text-secondary">
           <li>• Start with 2-3 integrations you use daily</li>
           <li>• Google Calendar is the most popular first integration</li>
           <li>• Test each integration before adding more</li>

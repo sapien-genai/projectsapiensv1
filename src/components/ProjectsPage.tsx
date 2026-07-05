@@ -214,13 +214,13 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
         />
       )}
 
-      <div className="min-h-screen bg-[#F4F4F4]">
+      <div className="min-h-screen bg-surface">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div className="mb-8">
           {onBack && (
             <button
               onClick={onBack}
-              className="flex items-center gap-2 mb-6 text-sm font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors"
+              className="flex items-center gap-2 mb-6 text-sm font-extrabold uppercase tracking-tight hover:text-accent transition-colors"
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               BACK TO DASHBOARD
@@ -228,7 +228,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
           )}
           <div className="flex items-center gap-3 mb-4">
             <Rocket className="w-8 h-8" strokeWidth={2} />
-            <div className="text-xs font-semibold px-3 py-1 border border-black bg-white">
+            <div className="text-xs font-semibold px-3 py-1 border border-ink bg-white">
               BUILD & SHARE
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
             {user && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 <div className="flex items-center gap-2">
                   <Plus className="w-4 h-4" strokeWidth={2} />
@@ -258,10 +258,10 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
         <div className="flex gap-3 mb-6 overflow-x-auto">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all whitespace-nowrap ${
+            className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all whitespace-nowrap ${
               activeTab === 'all'
-                ? 'bg-[#FF6A00] text-black'
-                : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                ? 'bg-accent text-ink'
+                : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -273,20 +273,20 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
             <>
               <button
                 onClick={() => setActiveTab('my-projects')}
-                className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all whitespace-nowrap ${
+                className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all whitespace-nowrap ${
                   activeTab === 'my-projects'
-                    ? 'bg-[#FF6A00] text-black'
-                    : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                    ? 'bg-accent text-ink'
+                    : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
                 }`}
               >
                 MY PROJECTS
               </button>
               <button
                 onClick={() => setActiveTab('drafts')}
-                className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-black shadow-[2px_2px_0px_#000000] transition-all whitespace-nowrap ${
+                className={`px-6 py-3 font-extrabold text-sm uppercase tracking-tight border border-ink shadow-brutal-sm transition-all whitespace-nowrap ${
                   activeTab === 'drafts'
-                    ? 'bg-[#FF6A00] text-black'
-                    : 'bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#000000]'
+                    ? 'bg-accent text-ink'
+                    : 'bg-white text-ink hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm'
                 }`}
               >
                 DRAFTS
@@ -303,7 +303,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
               placeholder="Search projects, tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-black font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+              className="w-full pl-12 pr-4 py-3 border border-ink font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -312,40 +312,40 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
             <span className="text-xs font-semibold uppercase">FILTER:</span>
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+              className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                 filter === 'all'
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black hover:bg-[#F4F4F4]'
+                  ? 'bg-ink text-white'
+                  : 'bg-white text-ink hover:bg-surface'
               }`}
             >
               ALL
             </button>
             <button
               onClick={() => setFilter('personal')}
-              className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+              className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                 filter === 'personal'
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black hover:bg-[#F4F4F4]'
+                  ? 'bg-ink text-white'
+                  : 'bg-white text-ink hover:bg-surface'
               }`}
             >
               PERSONAL
             </button>
             <button
               onClick={() => setFilter('course')}
-              className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+              className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                 filter === 'course'
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black hover:bg-[#F4F4F4]'
+                  ? 'bg-ink text-white'
+                  : 'bg-white text-ink hover:bg-surface'
               }`}
             >
               COURSE
             </button>
             <button
               onClick={() => setFilter('challenge')}
-              className={`px-4 py-2 font-semibold text-xs uppercase border border-black transition-all ${
+              className={`px-4 py-2 font-semibold text-xs uppercase border border-ink transition-all ${
                 filter === 'challenge'
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black hover:bg-[#F4F4F4]'
+                  ? 'bg-ink text-white'
+                  : 'bg-white text-ink hover:bg-surface'
               }`}
             >
               CHALLENGE
@@ -355,11 +355,11 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block w-12 h-12 border-4 border-black border-t-[#FF6A00] animate-spin"></div>
+            <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
             <p className="mt-4 font-semibold">LOADING PROJECTS...</p>
           </div>
         ) : filteredProjects.length === 0 ? (
-          <div className="bg-white border border-black p-12 text-center shadow-[3px_3px_0px_#000000]">
+          <div className="bg-white border border-ink p-12 text-center shadow-brutal">
             <Rocket className="w-16 h-16 mx-auto mb-4" strokeWidth={2} />
             <h3 className="font-extrabold text-xl uppercase tracking-tight mb-2">
               NO PROJECTS YET
@@ -372,7 +372,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
             {user && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-[#0A74FF] text-white border border-black px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="bg-info text-white border border-ink px-6 py-3 font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 CREATE YOUR FIRST PROJECT
               </button>
@@ -384,16 +384,16 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
               <div
                 key={project.id}
                 onClick={() => setSelectedProjectId(project.id)}
-                className="bg-white border border-black p-6 shadow-[3px_3px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] transition-shadow flex flex-col cursor-pointer"
+                className="bg-white border border-ink p-6 shadow-brutal hover:shadow-brutal-xl transition-shadow flex flex-col cursor-pointer"
               >
                 {project.image_url && (
-                  <div className="w-full h-40 bg-[#F4F4F4] border border-black mb-4 flex items-center justify-center">
-                    <Rocket className="w-12 h-12 text-[#FF6A00]" strokeWidth={2} />
+                  <div className="w-full h-40 bg-surface border border-ink mb-4 flex items-center justify-center">
+                    <Rocket className="w-12 h-12 text-accent" strokeWidth={2} />
                   </div>
                 )}
 
                 <div className="flex items-start justify-between mb-3">
-                  <div className="text-xs font-semibold px-2 py-1 border border-black bg-[#F4F4F4]">
+                  <div className="text-xs font-semibold px-2 py-1 border border-ink bg-surface">
                     {project.project_type.toUpperCase().replace('_', ' ')}
                   </div>
                   {project.user_profiles && (
@@ -422,7 +422,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
                     {project.tags.slice(0, 3).map((tag, idx) => (
                       <span
                         key={idx}
-                        className="text-xs font-semibold px-2 py-1 bg-[#E3F2FD] border border-black"
+                        className="text-xs font-semibold px-2 py-1 bg-info-soft border border-ink"
                       >
                         {tag}
                       </span>
@@ -436,7 +436,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
                       href={project.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs font-semibold hover:text-[#FF6A00] transition-colors"
+                      className="flex items-center gap-1 text-xs font-semibold hover:text-accent transition-colors"
                     >
                       <Github className="w-4 h-4" strokeWidth={2} />
                     </a>
@@ -446,18 +446,18 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
                       href={project.demo_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs font-semibold hover:text-[#FF6A00] transition-colors"
+                      className="flex items-center gap-1 text-xs font-semibold hover:text-accent transition-colors"
                     >
                       <ExternalLink className="w-4 h-4" strokeWidth={2} />
                     </a>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t-2 border-black">
+                <div className="flex items-center justify-between pt-4 border-t-2 border-ink">
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLikeProject(project.id)}
-                      className="flex items-center gap-1 text-xs font-semibold hover:text-[#FF6A00] transition-colors"
+                      className="flex items-center gap-1 text-xs font-semibold hover:text-accent transition-colors"
                     >
                       <Heart className="w-4 h-4" strokeWidth={2} />
                       {project.likes_count}
@@ -475,7 +475,7 @@ export default function ProjectsPage({ onBack }: ProjectsPageProps) {
                   {user && project.user_id === user.id && (
                     <button
                       onClick={() => setEditingProject(project)}
-                      className="p-2 hover:bg-[#F4F4F4] rounded transition-colors"
+                      className="p-2 hover:bg-surface rounded transition-colors"
                       title="Edit project"
                     >
                       <Edit className="w-4 h-4" strokeWidth={2} />

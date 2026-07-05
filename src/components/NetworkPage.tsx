@@ -193,9 +193,9 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
+      <div className="min-h-screen bg-paper flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-black border-t-[#F4A261] animate-spin"></div>
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent-soft animate-spin"></div>
           <p className="mt-4 font-semibold">LOADING...</p>
         </div>
       </div>
@@ -222,15 +222,15 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F5F2]">
-      <nav className="bg-white border-b-4 border-black sticky top-0 z-40">
+    <div className="min-h-screen bg-paper">
+      <nav className="bg-white border-b-4 border-ink sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               {onBack && (
                 <button
                   onClick={onBack}
-                  className="p-2 hover:bg-[#E9E5E0] border-2 border-black transition-colors"
+                  className="p-2 hover:bg-paper-2 border-2 border-ink transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
                 </button>
@@ -244,7 +244,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
             </div>
             <button
               onClick={() => setShowShareForm(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-[#F4A261] border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
+              className="flex items-center gap-2 px-6 py-3 bg-accent-soft border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight"
             >
               <Share2 className="w-5 h-5" strokeWidth={2.5} />
               Share Project
@@ -254,13 +254,13 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex gap-3 mb-8 border-b-2 border-black pb-4">
+        <div className="flex gap-3 mb-8 border-b-2 border-ink pb-4">
           <button
             onClick={() => setActiveTab('projects')}
-            className={`px-6 py-3 border-2 border-black font-bold uppercase tracking-tight transition-all ${
+            className={`px-6 py-3 border-2 border-ink font-bold uppercase tracking-tight transition-all ${
               activeTab === 'projects'
-                ? 'bg-[#F4A261] shadow-[4px_4px_0px_#000000]'
-                : 'bg-white hover:bg-[#E9E5E0]'
+                ? 'bg-accent-soft shadow-brutal-md'
+                : 'bg-white hover:bg-paper-2'
             }`}
           >
             <Share2 className="w-5 h-5 inline mr-2" strokeWidth={2.5} />
@@ -268,10 +268,10 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
           </button>
           <button
             onClick={() => setActiveTab('mentorship')}
-            className={`px-6 py-3 border-2 border-black font-bold uppercase tracking-tight transition-all ${
+            className={`px-6 py-3 border-2 border-ink font-bold uppercase tracking-tight transition-all ${
               activeTab === 'mentorship'
-                ? 'bg-[#F4A261] shadow-[4px_4px_0px_#000000]'
-                : 'bg-white hover:bg-[#E9E5E0]'
+                ? 'bg-accent-soft shadow-brutal-md'
+                : 'bg-white hover:bg-paper-2'
             }`}
           >
             <Users className="w-5 h-5 inline mr-2" strokeWidth={2.5} />
@@ -287,7 +287,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
 
         {activeTab === 'projects' && (
           <>
-            <div className="mb-6 bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6">
+            <div className="mb-6 bg-white border-4 border-ink shadow-brutal-xl p-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative">
                   <Search
@@ -299,12 +299,12 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search projects by title, description, or tags..."
-                    className="w-full pl-12 pr-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
                   />
                 </div>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="px-6 py-3 bg-white border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center gap-2"
+                  className="px-6 py-3 bg-white border-2 border-ink shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold uppercase tracking-tight flex items-center gap-2"
                 >
                   <Filter className="w-5 h-5" strokeWidth={2.5} />
                   Filters
@@ -312,7 +312,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
               </div>
 
               {showFilters && (
-                <div className="mt-4 pt-4 border-t-2 border-black grid md:grid-cols-2 gap-4">
+                <div className="mt-4 pt-4 border-t-2 border-ink grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-bold uppercase tracking-tight text-sm mb-2">
                       Domain
@@ -320,7 +320,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
                     <select
                       value={domainFilter}
                       onChange={(e) => setDomainFilter(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] bg-white"
+                      className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft bg-white"
                     >
                       {AI_DOMAINS.map((domain) => (
                         <option key={domain} value={domain}>
@@ -336,7 +336,7 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
                     <select
                       value={skillFilter}
                       onChange={(e) => setSkillFilter(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-[#F4A261] bg-white"
+                      className="w-full px-4 py-3 border-2 border-ink focus:outline-none focus:ring-2 focus:ring-accent-soft bg-white"
                     >
                       {SKILL_LEVELS.map((level) => (
                         <option key={level} value={level}>
@@ -360,14 +360,14 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
                 <div
                   key={project.id}
                   onClick={() => setSelectedProject(project)}
-                  className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] hover:shadow-[4px_4px_0px_#000000] hover:translate-x-[4px] hover:translate-y-[4px] transition-all cursor-pointer p-6"
+                  className="bg-white border-4 border-ink shadow-brutal-xl hover:shadow-brutal-md hover:translate-x-[4px] hover:translate-y-[4px] transition-all cursor-pointer p-6"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-extrabold text-lg uppercase tracking-tight flex-1">
                       {project.title}
                     </h3>
                     {project.skill_level && (
-                      <span className="text-xs bg-[#E9E5E0] border border-black px-2 py-1 ml-2">
+                      <span className="text-xs bg-paper-2 border border-ink px-2 py-1 ml-2">
                         {project.skill_level}
                       </span>
                     )}
@@ -376,16 +376,16 @@ export default function NetworkPage({ onBack }: NetworkPageProps) {
                   {project.domain && (
                     <p className="text-xs font-bold mb-2 text-gray-600">{project.domain}</p>
                   )}
-                  <div className="flex items-center justify-between pt-3 border-t-2 border-black">
+                  <div className="flex items-center justify-between pt-3 border-t-2 border-ink">
                     <p className="text-sm font-bold">{project.user_profiles?.username}</p>
                     <div className="flex gap-2">
                       {project.open_to_feedback && (
-                        <span className="text-xs bg-[#98C9A3] border border-black px-2 py-1">
+                        <span className="text-xs bg-success-soft border border-ink px-2 py-1">
                           Feedback
                         </span>
                       )}
                       {project.looking_for_collaborators && (
-                        <span className="text-xs bg-[#F4A261] border border-black px-2 py-1">
+                        <span className="text-xs bg-accent-soft border border-ink px-2 py-1">
                           Collab
                         </span>
                       )}

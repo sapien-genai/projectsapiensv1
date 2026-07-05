@@ -37,9 +37,9 @@ export default function FluencySpectrum() {
         {levels.map((item) => (
           <div
             key={item.level}
-            className="bg-white border-2 border-black p-6 hover:shadow-[4px_4px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+            className="bg-white border-2 border-ink p-6 hover:shadow-brutal-md hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
           >
-            <div className="text-5xl font-extrabold mb-4 text-[#FF6A00]">
+            <div className="text-5xl font-extrabold mb-4 text-accent">
               {item.level}
             </div>
             <h3 className="font-extrabold text-xl uppercase tracking-tight mb-3">

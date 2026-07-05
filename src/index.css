@@ -3,9 +3,53 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --ink: #000000;
+    --ink-rgb: 0 0 0;
+    --shadow-color: #000000;
+    --accent: #FF6A00;
+    --accent-rgb: 255 106 0;
+    --accent-hover: #e89350;
+    --accent-hover-rgb: 232 147 80;
+    --accent-alt: #FF6B35;
+    --accent-alt-rgb: 255 107 53;
+    --accent-soft: #F4A261;
+    --accent-soft-rgb: 244 162 97;
+    --info: #0A74FF;
+    --info-rgb: 10 116 255;
+    --info-hover: #0960d9;
+    --info-hover-rgb: 9 96 217;
+    --info-soft: #E3F2FD;
+    --info-soft-rgb: 227 242 253;
+    --surface: #F4F4F4;
+    --surface-rgb: 244 244 244;
+    --paper: #F8F5F2;
+    --paper-rgb: 248 245 242;
+    --paper-2: #E9E5E0;
+    --paper-2-rgb: 233 229 224;
+    --text-strong: #1C1A17;
+    --text-strong-rgb: 28 26 23;
+    --text-secondary: #57524D;
+    --text-secondary-rgb: 87 82 77;
+    --success: #10b981;
+    --success-rgb: 16 185 129;
+    --success-soft: #98C9A3;
+    --success-soft-rgb: 152 201 163;
+    --success-tint: #E8F5E9;
+    --success-tint-rgb: 232 245 233;
+    --warning: #F59E0B;
+    --warning-rgb: 245 158 11;
+    --gold: #FFD700;
+    --gold-rgb: 255 215 0;
+    --cream: #FFF9E6;
+    --cream-rgb: 255 249 230;
+    --peach: #FFE5D9;
+    --peach-rgb: 255 229 217;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #F4F4F4;
+    background-color: var(--surface);
     font-size: 17px;
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -64,15 +108,77 @@
 }
 
 @layer components {
-  .dark .bg-\[\#F8F5F2\] {
+  :root {
+    --brand-bg: #F4F4F4;
+    --brand-surface: #ffffff;
+    --brand-primary: #FF6A00;
+    --brand-secondary: #0A74FF;
+    --brand-success: #10b981;
+    --brand-warning: #F59E0B;
+    --brand-ink: #000000;
+    --brand-muted: #555555;
+  }
+
+  .brand-page {
+    background: var(--brand-bg);
+    color: var(--brand-ink);
+    min-height: 100vh;
+  }
+
+  .brand-card {
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-ink);
+    box-shadow: 2px 2px 0 var(--brand-ink);
+  }
+
+  .brand-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--brand-ink);
+    background: var(--brand-surface);
+    color: var(--brand-ink);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--brand-ink);
+    transition: box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease;
+  }
+
+  .brand-button:hover {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+  }
+
+  .brand-button-primary {
+    background: var(--brand-primary);
+  }
+
+  .brand-button-secondary {
+    background: var(--brand-secondary);
+    color: #ffffff;
+  }
+
+  .brand-progress {
+    background: var(--brand-primary);
+  }
+
+  .dark .bg-\[\#F8F5F2\],
+  .dark .bg-paper {
     background-color: #2a2a2a !important;
   }
 
-  .dark .bg-\[\#F4F4F4\] {
+  .dark .bg-\[\#F4F4F4\],
+  .dark .bg-surface {
     background-color: #1a1a1a !important;
   }
 
-  .dark .bg-\[\#E9E5E0\] {
+  .dark .bg-\[\#E9E5E0\],
+  .dark .bg-paper-2 {
     background-color: #333333 !important;
   }
 
@@ -80,19 +186,23 @@
     background-color: #252525 !important;
   }
 
-  .dark .bg-black {
+  .dark .bg-black,
+  .dark .bg-ink {
     background-color: #e5e5e5 !important;
   }
 
-  .dark .text-\[\#1C1A17\] {
+  .dark .text-\[\#1C1A17\],
+  .dark .text-strong {
     color: #e5e5e5 !important;
   }
 
-  .dark .text-\[\#57524D\] {
+  .dark .text-\[\#57524D\],
+  .dark .text-secondary {
     color: #a0a0a0 !important;
   }
 
-  .dark .text-black {
+  .dark .text-black,
+  .dark .text-ink {
     color: #1a1a1a !important;
   }
 
@@ -101,19 +211,24 @@
   }
 
   .dark .bg-black.text-white,
+  .dark .bg-ink.text-white,
   .dark button.bg-black,
+  .dark button.bg-ink,
   .dark a.bg-black {
     background-color: #e5e5e5 !important;
     color: #1a1a1a !important;
   }
 
-  .dark .border-black {
+  .dark .border-ink {
     border-color: #404040 !important;
   }
 
   .dark .shadow-\[2px_2px_0px_\#000000\],
   .dark .shadow-\[4px_4px_0px_\#000000\],
-  .dark .shadow-\[6px_6px_0px_\#000000\] {
+  .dark .shadow-\[6px_6px_0px_\#000000\],
+  .dark .shadow-brutal-sm,
+  .dark .shadow-brutal-md,
+  .dark .shadow-brutal-lg {
     box-shadow: none !important;
     border: 1px solid #404040 !important;
   }

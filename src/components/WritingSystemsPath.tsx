@@ -230,16 +230,16 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
   return (
     <>
-      <div className="flex h-screen bg-[#F4F4F4] overflow-hidden">
+      <div className="flex h-screen bg-surface overflow-hidden">
 
         {/* ── Left context rail ── */}
-        <aside className="hidden lg:flex flex-col w-64 xl:w-72 shrink-0 h-full border-r-2 border-black bg-[#F4F4F4] overflow-y-auto">
+        <aside className="hidden lg:flex flex-col w-64 xl:w-72 shrink-0 h-full border-r-2 border-ink bg-surface overflow-y-auto">
 
           {/* Back */}
-          <div className="px-4 py-4 border-b-2 border-black">
+          <div className="px-4 py-4 border-b-2 border-ink">
             <button
               onClick={onBack}
-              className="flex items-center gap-2 text-sm font-semibold hover:text-[#FF6A00] transition-colors uppercase tracking-tight"
+              className="flex items-center gap-2 text-sm font-semibold hover:text-accent transition-colors uppercase tracking-tight"
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               Back
@@ -247,15 +247,15 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
           </div>
 
           {/* Path title */}
-          <div className="px-4 pt-5 pb-4 border-b-2 border-black">
-            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Writing Path</p>
+          <div className="px-4 pt-5 pb-4 border-b-2 border-ink">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-accent mb-1">Writing Path</p>
             <h2 className="font-extrabold text-base uppercase tracking-tight leading-tight">
               AI Writing Systems
             </h2>
             {/* Progress bar */}
-            <div className="mt-3 h-1.5 bg-white border border-black overflow-hidden">
+            <div className="mt-3 h-1.5 bg-white border border-ink overflow-hidden">
               <div
-                className="h-full bg-[#FF6A00] transition-all duration-700"
+                className="h-full bg-accent transition-all duration-700"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
@@ -279,14 +279,14 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                       setUserInput('');
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                      active ? 'bg-black text-white' : 'hover:bg-white'
+                      active ? 'bg-ink text-white' : 'hover:bg-white'
                     }`}
                   >
                     <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-black ${
-                        done  ? 'bg-[#FF6A00] text-black border-[#FF6A00]' :
-                        active ? 'bg-white text-black' :
-                                 'bg-[#F4F4F4] text-black'
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 border border-ink ${
+                        done  ? 'bg-accent text-ink border-accent' :
+                        active ? 'bg-white text-ink' :
+                                 'bg-surface text-ink'
                       }`}
                     >
                       {done ? <CheckCircle2 className="w-3 h-3" strokeWidth={2.5} /> : mi + 1}
@@ -301,8 +301,8 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
           </div>
 
           {/* Current step */}
-          <div className="mx-4 mt-4 border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
-            <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">
+          <div className="mx-4 mt-4 border-2 border-ink bg-white p-4 shadow-brutal-sm">
+            <p className="text-xs font-extrabold uppercase tracking-tight text-accent mb-1">
               Step {activeStepIndex + 1} of {activeMission.steps.length}
             </p>
             <p className="text-sm font-extrabold uppercase tracking-tight mb-2">
@@ -314,15 +314,15 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
           {/* Next hint */}
           {!currentStepDone && (
             <div className="mx-4 mt-3 flex items-start gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF6A00] mt-0.5 shrink-0" strokeWidth={2} />
+              <Sparkles className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" strokeWidth={2} />
               <p className="text-xs text-[#666666] leading-relaxed">{activeMission.goal}</p>
             </div>
           )}
 
           {/* Key lesson after completion */}
           {currentStepDone && (
-            <div className="mx-4 mt-3 border-2 border-black bg-[#FFE5D9] p-3 shadow-[2px_2px_0px_#000]">
-              <p className="text-xs font-extrabold uppercase tracking-tight text-black mb-1">Key Lesson</p>
+            <div className="mx-4 mt-3 border-2 border-ink bg-peach p-3 shadow-brutal-sm">
+              <p className="text-xs font-extrabold uppercase tracking-tight text-ink mb-1">Key Lesson</p>
               <p className="text-xs leading-relaxed text-[#333]">{activeMission.keyLesson}</p>
             </div>
           )}
@@ -331,11 +331,11 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
           <div className="flex-1" />
 
           {/* Skills footer */}
-          <div className="px-4 py-4 border-t-2 border-black">
+          <div className="px-4 py-4 border-t-2 border-ink">
             <p className="text-xs font-extrabold uppercase tracking-tight text-[#666666] mb-2">Skills</p>
             <div className="flex flex-wrap gap-1.5">
               {writingSystemsPath.skills.map(s => (
-                <span key={s} className="text-xs font-semibold px-2 py-1 bg-white border border-black">
+                <span key={s} className="text-xs font-semibold px-2 py-1 bg-white border border-ink">
                   {s}
                 </span>
               ))}
@@ -347,8 +347,8 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
           {/* Top bar — mobile only */}
-          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b-2 border-black bg-white">
-            <button onClick={onBack} className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-tight hover:text-[#FF6A00] transition-colors">
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b-2 border-ink bg-white">
+            <button onClick={onBack} className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-tight hover:text-accent transition-colors">
               <ArrowLeft className="w-4 h-4" strokeWidth={2} />
               Back
             </button>
@@ -356,7 +356,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
               <p className="text-xs font-extrabold uppercase tracking-tight">AI Writing Systems</p>
               <p className="text-xs text-[#666666]">Mission {activeMissionIndex + 1} · Step {activeStepIndex + 1}</p>
             </div>
-            <span className="text-xs font-extrabold text-[#FF6A00]">{progressPct}%</span>
+            <span className="text-xs font-extrabold text-accent">{progressPct}%</span>
           </div>
 
           {/* Scrollable thread */}
@@ -366,7 +366,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
               {/* Mission heading */}
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-1 border-2 border-black bg-[#FF6A00]">
+                  <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-1 border-2 border-ink bg-accent">
                     Mission {activeMissionIndex + 1}
                   </span>
                   <span className="text-xs font-semibold text-[#666666]">{writingSystemsPath.estimatedTime}</span>
@@ -381,18 +381,18 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
               {/* ── Initial input card ── */}
               {isFirstInput && (
-                <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000]">
+                <div className="border-2 border-ink bg-white shadow-brutal">
                   {/* Step label */}
-                  <div className="flex items-center justify-between px-5 py-3 border-b-2 border-black bg-[#F4F4F4]">
+                  <div className="flex items-center justify-between px-5 py-3 border-b-2 border-ink bg-surface">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center justify-center w-5 h-5 bg-[#FF6A00] border border-black text-xs font-extrabold">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-accent border border-ink text-xs font-extrabold">
                         {activeStepIndex + 1}
                       </span>
                       <span className="text-xs font-extrabold uppercase tracking-tight">{activeStep.title}</span>
                     </div>
                     <button
                       onClick={useExample}
-                      className="text-xs font-semibold text-[#FF6A00] hover:underline"
+                      className="text-xs font-semibold text-accent hover:underline"
                     >
                       Use example
                     </button>
@@ -408,12 +408,12 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                     style={{ minHeight: '100px', maxHeight: '200px' }}
                   />
 
-                  <div className="flex items-center justify-between px-4 py-3 border-t-2 border-black bg-[#F4F4F4]">
+                  <div className="flex items-center justify-between px-4 py-3 border-t-2 border-ink bg-surface">
                     <span className="text-xs text-[#888888]">⌘↵ to send</span>
                     <button
                       onClick={handleSend}
                       disabled={!userInput.trim() || streaming}
-                      className="flex items-center gap-2 px-4 py-2 bg-black text-white border border-black text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-4 py-2 bg-ink text-white border border-ink text-xs font-extrabold uppercase tracking-tight hover:bg-accent hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       {streaming ? <RefreshCw className="w-3.5 h-3.5 animate-spin" strokeWidth={2} /> : <Send className="w-3.5 h-3.5" strokeWidth={2} />}
                       Send
@@ -432,8 +432,8 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                         {/* Version label row */}
                         <div className="flex items-center gap-2 mb-2">
                           {vi > 0 && <div className="ml-2 w-px h-4 bg-black/20" />}
-                          <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-black ${
-                            isLatest ? 'bg-[#FF6A00] text-black' : 'bg-white text-[#888888]'
+                          <span className={`text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-ink ${
+                            isLatest ? 'bg-accent text-ink' : 'bg-white text-[#888888]'
                           }`}>
                             {vi === 0 ? 'Original' : v.label}
                           </span>
@@ -442,16 +442,16 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                         {/* Output bubble */}
                         <div className={`relative group border-2 p-5 text-sm leading-relaxed whitespace-pre-wrap ${
                           isLatest
-                            ? 'border-black bg-white shadow-[3px_3px_0px_#000] text-black'
-                            : 'border-black/25 bg-[#F4F4F4] text-[#777]'
+                            ? 'border-ink bg-white shadow-brutal text-ink'
+                            : 'border-[color:color-mix(in_srgb,var(--ink)_25%,transparent)] bg-surface text-[#777]'
                         }`}>
                           {v.text}
                           <button
                             onClick={() => copy(v.text, v.id)}
-                            className="absolute top-3 right-3 p-1.5 bg-[#F4F4F4] border border-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#FF6A00] hover:border-[#FF6A00]"
+                            className="absolute top-3 right-3 p-1.5 bg-surface border border-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:border-accent"
                           >
                             {copied === v.id
-                              ? <CheckCircle2 className="w-3.5 h-3.5 text-black" strokeWidth={2} />
+                              ? <CheckCircle2 className="w-3.5 h-3.5 text-ink" strokeWidth={2} />
                               : <Copy className="w-3.5 h-3.5" strokeWidth={2} />
                             }
                           </button>
@@ -464,12 +464,12 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                   {streaming && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-[#FF6A00] bg-[#FFE5D9] text-[#FF6A00] flex items-center gap-1.5">
+                        <span className="text-xs font-extrabold uppercase tracking-tight px-2 py-0.5 border border-accent bg-peach text-accent flex items-center gap-1.5">
                           <RefreshCw className="w-3 h-3 animate-spin" strokeWidth={2} />
                           Writing…
                         </span>
                       </div>
-                      <div className="border-2 border-black bg-white shadow-[3px_3px_0px_#000] p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
+                      <div className="border-2 border-ink bg-white shadow-brutal p-5 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px]">
                         {streamingText || <span className="text-[#999]">…</span>}
                       </div>
                     </div>
@@ -490,7 +490,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                           key={a.mode}
                           onClick={() => handleImprove(a.mode, a.label)}
                           disabled={streaming}
-                          className="flex items-center gap-1.5 px-3 py-2 border-2 border-black bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-colors disabled:opacity-40"
+                          className="flex items-center gap-1.5 px-3 py-2 border-2 border-ink bg-white text-xs font-extrabold uppercase tracking-tight hover:bg-accent hover:border-accent transition-colors disabled:opacity-40"
                         >
                           <a.icon className="w-3.5 h-3.5" strokeWidth={2} />
                           {a.label}
@@ -498,7 +498,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                       ))}
                       <button
                         onClick={handleReset}
-                        className="flex items-center gap-1.5 px-3 py-2 border-2 border-black/30 bg-[#F4F4F4] text-xs font-extrabold uppercase tracking-tight text-[#888888] hover:border-black hover:text-black transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-2 border-2 border-[color:color-mix(in_srgb,var(--ink)_30%,transparent)] bg-surface text-xs font-extrabold uppercase tracking-tight text-[#888888] hover:border-ink hover:text-ink transition-colors"
                       >
                         <RotateCcw className="w-3.5 h-3.5" strokeWidth={2} />
                         Reset
@@ -508,7 +508,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
                   {/* Next step row */}
                   {!allDone && (
-                    <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[2px_2px_0px_#000]">
+                    <div className="flex items-center justify-between border-2 border-ink bg-white p-4 shadow-brutal-sm">
                       <div>
                         <p className="text-xs text-[#666666] font-semibold uppercase tracking-tight">Next</p>
                         <p className="text-sm font-extrabold uppercase tracking-tight">
@@ -519,7 +519,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                       </div>
                       <button
                         onClick={handleNextStep}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#FF6A00] border-2 border-black text-black text-xs font-extrabold uppercase tracking-tight hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_#000] hover:shadow-none"
+                        className="flex items-center gap-2 px-4 py-2 bg-accent border-2 border-ink text-ink text-xs font-extrabold uppercase tracking-tight hover:bg-ink hover:text-white transition-colors shadow-brutal-sm hover:shadow-none"
                       >
                         Continue
                         <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
@@ -529,8 +529,8 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
                   {/* Challenge */}
                   {currentStepDone && (
-                    <div className="border-2 border-black bg-[#FFE5D9] p-4 shadow-[2px_2px_0px_#000]">
-                      <p className="text-xs font-extrabold uppercase tracking-tight text-[#FF6A00] mb-1">Your Challenge</p>
+                    <div className="border-2 border-ink bg-peach p-4 shadow-brutal-sm">
+                      <p className="text-xs font-extrabold uppercase tracking-tight text-accent mb-1">Your Challenge</p>
                       <p className="text-sm leading-relaxed">{activeMission.challenge}</p>
                     </div>
                   )}
@@ -539,8 +539,8 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
               {/* ── All done ── */}
               {allDone && (
-                <div className="border-2 border-black bg-black text-white p-8 shadow-[4px_4px_0px_#FF6A00] text-center">
-                  <CheckCircle2 className="w-8 h-8 text-[#FF6A00] mx-auto mb-4" strokeWidth={2} />
+                <div className="border-2 border-ink bg-ink text-white p-8 shadow-brutal-accent text-center">
+                  <CheckCircle2 className="w-8 h-8 text-accent mx-auto mb-4" strokeWidth={2} />
                   <h3 className="font-extrabold text-2xl uppercase tracking-tighter mb-3">Path Complete</h3>
                   <p className="text-sm text-[#CCCCCC] leading-relaxed mb-6 max-w-sm mx-auto">
                     All three missions done. You now have a repeatable AI writing system.
@@ -549,7 +549,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                     {onLabOpen && (
                       <button
                         onClick={() => onLabOpen('writing-lab')}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#FF6A00] border-2 border-[#FF6A00] text-black font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:border-white transition-colors"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-accent border-2 border-accent text-ink font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:border-white transition-colors"
                       >
                         Open Writing Lab
                         <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
@@ -557,7 +557,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                     )}
                     <button
                       onClick={onBack}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-transparent border-2 border-white text-white font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-black transition-colors"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-transparent border-2 border-white text-white font-extrabold text-xs uppercase tracking-tight hover:bg-white hover:text-ink transition-colors"
                     >
                       All Paths
                     </button>
@@ -571,9 +571,9 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
 
           {/* ── Sticky bottom input (after first send) ── */}
           {!isFirstInput && !allDone && (
-            <div className="border-t-2 border-black bg-white px-4 md:px-6 py-3">
+            <div className="border-t-2 border-ink bg-white px-4 md:px-6 py-3">
               <div className="max-w-2xl mx-auto flex items-end gap-2">
-                <div className="flex-1 border-2 border-black bg-[#F4F4F4] flex items-end">
+                <div className="flex-1 border-2 border-ink bg-surface flex items-end">
                   <textarea
                     ref={bottomInputRef}
                     value={userInput}
@@ -586,7 +586,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                   />
                   <button
                     onClick={useExample}
-                    className="self-end px-3 py-3 text-xs font-semibold text-[#888888] hover:text-[#FF6A00] transition-colors whitespace-nowrap border-l-2 border-black"
+                    className="self-end px-3 py-3 text-xs font-semibold text-[#888888] hover:text-accent transition-colors whitespace-nowrap border-l-2 border-ink"
                   >
                     Example
                   </button>
@@ -594,7 +594,7 @@ export default function WritingSystemsPath({ onBack, onLabOpen }: WritingSystems
                 <button
                   onClick={handleSend}
                   disabled={!userInput.trim() || streaming}
-                  className="p-3 bg-black text-white border-2 border-black hover:bg-[#FF6A00] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-3 bg-ink text-white border-2 border-ink hover:bg-accent hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {streaming
                     ? <RefreshCw className="w-4 h-4 animate-spin" strokeWidth={2} />

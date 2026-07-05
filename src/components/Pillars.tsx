@@ -36,7 +36,7 @@ const features = [
 
 export default function Pillars() {
   return (
-    <section id="features" className="bg-[#FFEB99] border-y-2 border-black py-16 md:py-24">
+    <section id="features" className="bg-[#FFEB99] border-y-2 border-ink py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="max-w-3xl mb-12 md:mb-16">
           <h2 className="font-extrabold text-4xl sm:text-5xl md:text-6xl tracking-tight leading-none mb-6">
