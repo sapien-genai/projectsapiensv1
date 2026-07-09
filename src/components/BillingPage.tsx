@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, CreditCard, TrendingUp, RefreshCw, Zap, Clock } from 'lucide-react';
 import { useBilling } from '../contexts/BillingContext';
+import { useBrand } from '../contexts/BrandContext';
+import { formatPageTitle } from '../lib/brand';
 import UpgradeModal from './UpgradeModal';
 
 interface BillingPageProps {
@@ -8,6 +10,7 @@ interface BillingPageProps {
 }
 
 export default function BillingPage({ onBack }: BillingPageProps) {
+  const { brand } = useBrand();
   const {
     usageStatus,
     loading,
@@ -28,8 +31,8 @@ export default function BillingPage({ onBack }: BillingPageProps) {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    document.title = 'Billing & Usage – Project Sapiens';
-  }, []);
+    document.title = formatPageTitle('Billing & Usage', brand);
+  }, [brand]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

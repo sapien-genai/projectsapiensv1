@@ -27,6 +27,19 @@ export const DEFAULT_BRAND: WorkspaceBrand = {
   backgroundColor: '#F4F4F4',
 };
 
+/**
+ * The user-facing label for the active brand: the platform label for the
+ * default workspace, the workspace's own name for white-label tenants.
+ */
+export function brandDisplayLabel(brand: WorkspaceBrand): string {
+  return brand.name === DEFAULT_BRAND.name ? brand.platformLabel : brand.name;
+}
+
+/** Builds a document title like 'Billing & Usage – Project Sapiens'. */
+export function formatPageTitle(page: string, brand: WorkspaceBrand): string {
+  return `${page} – ${brandDisplayLabel(brand)}`;
+}
+
 /** Parses '#rgb' or '#rrggbb' into an 'r g b' triplet, or null if invalid. */
 export function hexToRgbTriplet(hex: string): string | null {
   const normalized = hex.trim().replace(/^#/, '');

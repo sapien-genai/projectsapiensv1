@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthContext';
-import { applyBrandTokens, DEFAULT_BRAND, WorkspaceBrand } from '../lib/brand';
+import { applyBrandTokens, brandDisplayLabel, DEFAULT_BRAND, WorkspaceBrand } from '../lib/brand';
 import { logError } from '../utils/errorHandling';
 
 interface BrandContextType {
@@ -86,9 +86,10 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user]);
 
-  // Push the brand colors into the runtime theme tokens.
+  // Push the brand colors into the runtime theme tokens and base title.
   useEffect(() => {
     applyBrandTokens(brand);
+    document.title = brandDisplayLabel(brand);
   }, [brand]);
 
   return (
