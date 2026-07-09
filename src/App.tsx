@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { BrandProvider } from './contexts/BrandContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { BillingProvider } from './contexts/BillingContext';
@@ -36,6 +37,8 @@ import HelpCenter from './components/HelpCenter';
 import AboutPage from './components/AboutPage';
 import PaymentSuccessPage from './components/PaymentSuccessPage';
 import BillingCancelPage from './components/BillingCancelPage';
+import TosAcceptanceGate from './components/TosAcceptanceGate';
+import { useTosAcceptance } from './hooks/useTosAcceptance';
 import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
 import DevPreviewRouter from './dev/DevPreviewRouter';
 import SnapshotPage from './pages/SnapshotPage';
@@ -44,6 +47,7 @@ type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'l
 
 function AppContent() {
   const { user, loading } = useAuth();
+  const { accepted: tosAccepted, loading: tosLoading, recordAcceptance } = useTosAcceptance();
   const [initialized, setInitialized] = useState(false);
   const [view, setView] = useState<View>('home');
   const [selectedLab, setSelectedLab] = useState<string>('');
@@ -84,6 +88,13 @@ function AppContent() {
         setInitialized(true);
         return;
       }
+      // Deep link: /admin opens the admin view (AdminPortal enforces access).
+      if (pathname === '/admin') {
+        window.history.replaceState({}, '', '/');
+        setView('admin');
+        setInitialized(true);
+        return;
+      }
       const savedState = loadAppState(user.id);
       if (savedState) {
         if (savedState.view) setView(savedState.view);
@@ -95,6 +106,11 @@ function AppContent() {
       setInitialized(true);
     } else if (!loading && !user) {
       clearAppState();
+      // Deep link: /admin for a signed-out visitor goes to the login page.
+      if ((window.location.pathname.replace(/\/+$/, '') || '/') === '/admin') {
+        window.history.replaceState({}, '', '/');
+        setView('auth');
+      }
       setInitialized(true);
     }
   }, [user, loading, initialized]);
@@ -137,6 +153,23 @@ function AppContent() {
   }
 
   if (user) {
+    // Explicit ToS acceptance gate: signed-in users must have accepted the
+    // current ToS version before using the app.
+    if (tosLoading) {
+      return (
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
+            <p className="mt-4 font-semibold">LOADING...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (!tosAccepted) {
+      return <TosAcceptanceGate onAccept={recordAcceptance} />;
+    }
+
     if (view === 'lesson') {
       return (
         <LessonViewer
@@ -345,18 +378,24 @@ function AppContent() {
     return (
       <AuthPage
         onSuccess={() => setView('home')}
-        onTermsClick={() => setView('terms')}
-        onPrivacyClick={() => setView('privacy')}
+        onTermsClick={() => {
+          setPreviousView('auth');
+          setView('terms');
+        }}
+        onPrivacyClick={() => {
+          setPreviousView('auth');
+          setView('privacy');
+        }}
       />
     );
   }
 
   if (view === 'terms') {
-    return <TermsPage onBack={() => setView('home')} />;
+    return <TermsPage onBack={() => setView(previousView === 'auth' ? 'auth' : 'home')} />;
   }
 
   if (view === 'privacy') {
-    return <PrivacyPage onBack={() => setView('home')} />;
+    return <PrivacyPage onBack={() => setView(previousView === 'auth' ? 'auth' : 'home')} />;
   }
 
   if (view === 'help') {
@@ -402,8 +441,14 @@ function AppContent() {
       <PricingSection onGetStarted={() => setView('auth')} />
       <CTASection onStartJourney={() => setView('auth')} />
       <Footer
-        onTermsClick={() => setView('terms')}
-        onPrivacyClick={() => setView('privacy')}
+        onTermsClick={() => {
+          setPreviousView('home');
+          setView('terms');
+        }}
+        onPrivacyClick={() => {
+          setPreviousView('home');
+          setView('privacy');
+        }}
       />
     </div>
   );
@@ -426,11 +471,13 @@ function App() {
     <ErrorBoundary>
       <DarkModeProvider>
         <AuthProvider>
-          <BillingProvider>
-            <ToastProvider>
-              <AppContent />
-            </ToastProvider>
-          </BillingProvider>
+          <BrandProvider>
+            <BillingProvider>
+              <ToastProvider>
+                <AppContent />
+              </ToastProvider>
+            </BillingProvider>
+          </BrandProvider>
         </AuthProvider>
       </DarkModeProvider>
     </ErrorBoundary>

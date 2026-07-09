@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { CURRENT_TOS_VERSION } from '../lib/tos';
 import { logError, getErrorMessage } from '../utils/errorHandling';
 
 interface AuthContextType {
@@ -72,6 +73,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             status: 500
           } as any
         };
+      }
+
+      // Record explicit ToS acceptance (the checkbox is required on the
+      // signup form). Non-fatal: if this insert fails, the in-app
+      // acceptance gate will prompt the user again on their next visit.
+      const { error: tosError } = await supabase.from('tos_acceptances').insert({
+        user_id: data.user.id,
+        tos_version: CURRENT_TOS_VERSION,
+      });
+
+      if (tosError) {
+        logError(tosError, 'AuthContext - signUp ToS acceptance');
       }
     }
 

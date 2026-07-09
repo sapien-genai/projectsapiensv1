@@ -18,6 +18,7 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +38,11 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
       } else {
         if (!username.trim()) {
           setError('Username is required');
+          setLoading(false);
+          return;
+        }
+        if (!agreedToTerms) {
+          setError('You must accept the Terms of Service and Privacy Policy to create an account');
           setLoading(false);
           return;
         }
@@ -154,26 +160,62 @@ export default function AuthPage({ onSuccess, onTermsClick, onPrivacyClick }: Au
               </div>
             </div>
 
-            <div className="text-xs text-[#888888] text-center leading-relaxed">
-              By continuing, you agree to our{' '}
-              {onTermsClick && (
-                <button
-                  onClick={onTermsClick}
-                  className="text-accent font-semibold hover:underline"
-                >
-                  Terms of Service
-                </button>
-              )}
-              {' '}and{' '}
-              {onPrivacyClick && (
-                <button
-                  onClick={onPrivacyClick}
-                  className="text-accent font-semibold hover:underline"
-                >
-                  Privacy Policy
-                </button>
-              )}.
-            </div>
+            {isLogin ? (
+              <div className="text-xs text-[#888888] text-center leading-relaxed">
+                By continuing, you agree to our{' '}
+                {onTermsClick && (
+                  <button
+                    type="button"
+                    onClick={onTermsClick}
+                    className="text-accent font-semibold hover:underline"
+                  >
+                    Terms of Service
+                  </button>
+                )}
+                {' '}and{' '}
+                {onPrivacyClick && (
+                  <button
+                    type="button"
+                    onClick={onPrivacyClick}
+                    className="text-accent font-semibold hover:underline"
+                  >
+                    Privacy Policy
+                  </button>
+                )}.
+              </div>
+            ) : (
+              <label className="flex items-start gap-3 text-xs leading-relaxed cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  required={!isLogin}
+                  className="mt-0.5 h-4 w-4 flex-shrink-0 border-2 border-ink cursor-pointer"
+                />
+                <span className="text-[#555555]">
+                  I have read and agree to the{' '}
+                  {onTermsClick && (
+                    <button
+                      type="button"
+                      onClick={onTermsClick}
+                      className="text-accent font-semibold hover:underline"
+                    >
+                      Terms of Service
+                    </button>
+                  )}
+                  {' '}and{' '}
+                  {onPrivacyClick && (
+                    <button
+                      type="button"
+                      onClick={onPrivacyClick}
+                      className="text-accent font-semibold hover:underline"
+                    >
+                      Privacy Policy
+                    </button>
+                  )}.
+                </span>
+              </label>
+            )}
 
             <button
               type="submit"
