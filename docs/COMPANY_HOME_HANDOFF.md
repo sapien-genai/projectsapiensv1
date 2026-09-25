@@ -7,3 +7,7 @@ Preservation: local Git history was bundled and the dirty patch plus both untrac
 Release hold: production audit showed workspace-branding behavior present in unpublished July commits, whereas fetched origin/main is 122cfe8. This branch intentionally does not sweep those commits or the uncommitted admin/migration changes into a cosmetic homepage PR. Reconcile the actual deployed revision before merging/deploying to avoid rolling back academy behavior. No subscription/customer inventory or backend snapshot has been performed. The academy remains accessible regardless of subscription status; nothing is retired or deleted.
 
 Validation: TypeScript and production build pass; new homepage and entry-point ESLint pass. Existing repository-wide lint debt was previously recorded (118 errors, 40 warnings in the local working copy), not represented as fixed. Browser-check company page and academy login before release.
+
+## Release reconciliation
+
+Reconciled the four unpublished July commits through c9df690 into this branch, preserving workspace branding, ToS acceptance, admin checks, and full writing lesson content. Their original App.tsx is now AcademyApp.tsx with only the academy-login initial-view adjustment. Existing uncommitted workspace-management work remains backed up and outside this release. Migration files are preserved as history; this release does not run migrations or seed scripts. The repository has only a content-freshness workflow, no automatic migration deploy.

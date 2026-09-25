@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle, ArrowRight, BookOpen, FlaskConical, Library, Users, Zap } from 'lucide-react';
 import { useBilling } from '../contexts/BillingContext';
+import { useBrand } from '../contexts/BrandContext';
+import { formatPageTitle } from '../lib/brand';
 
 interface PaymentSuccessPageProps {
   onGoToDashboard: () => void;
@@ -51,10 +53,14 @@ export default function PaymentSuccessPage({
   onGoToPrompts,
 }: PaymentSuccessPageProps) {
   const { refreshUsageStatus } = useBilling();
+  const { brand } = useBrand();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    document.title = 'Welcome to Pro – Project Sapiens';
+    document.title = formatPageTitle('Welcome to Pro', brand);
+  }, [brand]);
+
+  useEffect(() => {
     refreshUsageStatus();
     const timer = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(timer);

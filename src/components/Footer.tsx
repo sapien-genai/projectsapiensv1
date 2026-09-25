@@ -1,3 +1,6 @@
+import { useBrand } from '../contexts/BrandContext';
+import { brandDisplayLabel } from '../lib/brand';
+
 interface FooterProps {
   onTermsClick?: () => void;
   onPrivacyClick?: () => void;
@@ -7,6 +10,8 @@ interface FooterProps {
 }
 
 export default function Footer({ onTermsClick, onPrivacyClick, onPathsClick, onLabsClick, onCommunityClick }: FooterProps) {
+  const { brand } = useBrand();
+
   return (
     <footer className="bg-ink text-surface mt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16">
@@ -84,8 +89,8 @@ export default function Footer({ onTermsClick, onPrivacyClick, onPathsClick, onL
               </button>
             )}
           </div>
-          <p className="text-sm text-center">
-            &copy; 2026 PROJECT SAPIENS
+          <p className="text-sm text-center uppercase">
+            &copy; 2026 {brandDisplayLabel(brand)}
           </p>
         </div>
       </div>

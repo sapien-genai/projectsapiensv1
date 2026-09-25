@@ -56,6 +56,752 @@ interface LessonContent {
 }
 
 export const lessonContent: Record<string, LessonContent> = {
+  'writing-step-1-1': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Dump Your Thoughts',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Start Messy on Purpose
+
+Most writing stalls because people try to sound polished too early.
+
+The first step in an AI writing system is not "write well." It is "get the raw material out of your head."
+
+AI is very good at organizing messy thoughts, but it cannot organize what you never give it. Your job in this step is to capture the facts, feelings, constraints, and desired outcome without editing yourself.`
+      },
+      {
+        type: 'text',
+        content: `## What Belongs in a Thought Dump
+
+A useful thought dump usually includes:
+
+- The situation: what happened or what needs to be communicated
+- The audience: who will read it
+- The goal: what you want them to understand or do
+- The constraints: tone, timing, sensitivity, length
+- The messy parts: worries, half-formed ideas, phrases you might use
+
+Do not worry about grammar. Do not worry about order. Do not worry about whether every sentence is usable.`
+      },
+      {
+        type: 'example',
+        content: `Messy input:
+
+"client email. project delayed because vendor sent files late and we found another issue. need to be honest but not panic them. want them to know we are still on it and have a plan. maybe say revised date is next friday. also thank them for patience."
+
+Useful prompt:
+
+"Take the following rough thoughts and turn them into a clear, structured client update. Keep it honest, calm, and professional:
+
+[paste messy thoughts]" `
+      },
+      {
+        type: 'tip',
+        content: `Messy does not mean careless. Include enough context for AI to make smart choices. A vague dump creates vague writing; a detailed dump creates useful drafts.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and paste one real messy message you have been avoiding. Ask AI to turn it into a clear, structured message. Save the first output without editing it yet.`
+      },
+      {
+        type: 'exercise',
+        content: `Your Turn:
+
+Pick one message from your real life:
+- A delayed reply
+- A client or coworker update
+- A request you need to make
+- A difficult explanation
+
+Write a 5-line thought dump. Include audience, goal, constraints, and every messy detail that might matter.`
+      }
+    ]
+  },
+  'writing-step-1-2': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Make It Clearer',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Clarity Comes Before Style
+
+After you have a rough draft, your next move is clarity.
+
+Clear writing helps the reader answer three questions quickly:
+
+1. What is this about?
+2. Why does it matter?
+3. What should I do next?
+
+If the reader has to work too hard, they will skim, misunderstand, or ignore the message.`
+      },
+      {
+        type: 'text',
+        content: `## The Clearer Rewrite Pattern
+
+Ask AI to improve only clarity first.
+
+That means:
+- Put the main point near the top
+- Remove repeated ideas
+- Break long sentences into shorter ones
+- Group related ideas together
+- Add a clear next step
+
+Do not ask for "professional," "persuasive," or "shorter" yet. One pass, one job.`
+      },
+      {
+        type: 'example',
+        content: `Before:
+
+"Just checking in because the timeline changed after a few things shifted and I wanted to make sure you knew where things stood."
+
+Clearer:
+
+"Quick update: the project timeline has shifted. We found one issue during review, and we are adjusting the delivery date to protect quality."
+
+The clearer version names the purpose immediately and explains the reason without wandering.`
+      },
+      {
+        type: 'tip',
+        content: `A clearer draft is not always shorter. Sometimes clarity means adding a sentence that explains the reason, the context, or the next step.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and use this prompt:
+
+"Rewrite this to be clearer and easier to understand. Keep the meaning the same. Put the main point first and end with a clear next step:
+
+[paste draft]" `
+      },
+      {
+        type: 'exercise',
+        content: `Clarity Check:
+
+After AI rewrites your message, answer:
+- Is the main point in the first two sentences?
+- Would the reader know what changed?
+- Would the reader know what happens next?
+- Did AI remove anything important?
+
+Edit the output until all four answers are yes.`
+      }
+    ]
+  },
+  'writing-step-1-3': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Polish the Tone',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Tone Is the Relationship Layer
+
+Once the message is clear, polish the tone.
+
+Tone changes how the reader feels while receiving the same information. A clear message can still feel cold, defensive, vague, or too casual. A polished message sounds intentional.
+
+The goal is not to sound fancy. The goal is to sound like the right version of yourself for the situation.`
+      },
+      {
+        type: 'text',
+        content: `## Choose the Tone You Actually Need
+
+Common tone directions:
+
+- Professional: calm, direct, appropriate for work
+- Warm: human, appreciative, relationship-aware
+- Confident: decisive, not apologizing for every sentence
+- Diplomatic: careful around conflict or disagreement
+- Simple: plain language, no extra formality
+
+Use tone words as controls. "Make this better" is vague. "Make this professional and reassuring without sounding defensive" is useful.`
+      },
+      {
+        type: 'example',
+        content: `Clear but rough:
+
+"The delivery date changed because we found a problem. We are working on it and will send the final version next Friday."
+
+Polished:
+
+"I wanted to share a quick timeline update. During review, we found one issue we want to resolve before sending the final version. We are adjusting delivery to next Friday so we can protect quality and avoid sending something incomplete."
+
+The facts are the same. The polished version feels calmer and more responsible.`
+      },
+      {
+        type: 'tip',
+        content: `Do not let AI over-polish you into corporate fog. If a sentence sounds like something no human would say out loud, simplify it.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and run a tone pass:
+
+"Make this sound more professional and confident while keeping the message intact. Avoid jargon. Keep it human:
+
+[paste clearer draft]" `
+      },
+      {
+        type: 'exercise',
+        content: `Final Pass:
+
+Read the polished version out loud. Mark any sentence that feels unlike you.
+
+Then ask AI:
+
+"Make this sound more like a real person while keeping it professional."
+
+Your final output should be clear, calm, and ready to send.`
+      }
+    ]
+  },
+  'writing-step-2-1': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Make It Clearer',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Rewrite for Understanding
+
+In Mission 1, you used clarity to clean up messy thinking.
+
+Now you will use clarity as a rewrite skill. The difference is important: you may already have a decent sentence, update, caption, or announcement. Your job is to make it easier to understand without changing the meaning.`
+      },
+      {
+        type: 'text',
+        content: `## What Clear Rewriting Fixes
+
+Clear rewriting improves:
+
+- Order: the idea appears in the right sequence
+- Specificity: vague words become concrete
+- Friction: long or tangled sentences become easier to scan
+- Reader focus: the message centers what the reader needs
+- Action: the next step is obvious
+
+It does not add hype. It does not change your opinion. It does not turn a simple update into a sales pitch.`
+      },
+      {
+        type: 'example',
+        content: `Original:
+
+"We launched a new feature that helps users organize their tasks better."
+
+Clearer:
+
+"We launched a new task organization feature that helps users group related work, see priorities, and decide what to do next."
+
+The clearer version answers "organize how?" and "better in what way?"`
+      },
+      {
+        type: 'tip',
+        content: `If AI changes the claim, pull it back. A clarity pass should make your message easier to understand, not more dramatic than the truth.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and paste one sentence or short paragraph. Use:
+
+"Rewrite this to be clearer. Keep the same meaning. Replace vague words with specific language where possible:
+
+[paste text]" `
+      },
+      {
+        type: 'exercise',
+        content: `Compare Versions:
+
+Place the original and clearer rewrite side by side.
+
+Underline:
+- The main point
+- The concrete details
+- The reader benefit
+
+If the clearer version has no stronger details, ask AI for another pass.`
+      }
+    ]
+  },
+  'writing-step-2-2': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Make It Shorter',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Shorter Means Sharper
+
+Short writing is not just fewer words. It is fewer obstacles.
+
+When you ask AI to shorten something, your goal is to preserve the point while removing anything the reader does not need. Good compression keeps the meaning intact and increases momentum.`
+      },
+      {
+        type: 'text',
+        content: `## What to Cut First
+
+Ask AI to look for:
+
+- Repeated ideas
+- Soft openers like "I just wanted to"
+- Filler phrases like "in order to" or "at this point in time"
+- Explanations that belong in a follow-up, not the first message
+- Multiple calls to action
+
+Shorter writing should feel easier, not thinner.`
+      },
+      {
+        type: 'example',
+        content: `Before:
+
+"I just wanted to reach out and let you know that we have made some updates to the way the dashboard is organized so that it should hopefully be easier for people to find the tasks that matter most."
+
+Shorter:
+
+"We updated the dashboard so people can find their highest-priority tasks faster."
+
+Same idea. Less drag.`
+      },
+      {
+        type: 'tip',
+        content: `Do not shorten sensitive messages until they become blunt. If context protects trust, keep it. Brevity is useful only when it still respects the reader.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and use:
+
+"Rewrite this to be shorter while keeping the core message and tone. Give me three versions: concise, very concise, and one-sentence:
+
+[paste text]" `
+      },
+      {
+        type: 'exercise',
+        content: `Pick the Best Length:
+
+Choose the version that fits the channel:
+- Email: clear with enough context
+- Text or chat: short and direct
+- Social post: punchy but complete
+- Announcement: concise with the key benefit
+
+Do not automatically choose the shortest version. Choose the most useful one.`
+      }
+    ]
+  },
+  'writing-step-2-3': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Make It More Persuasive',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Persuasion Is Helpfully Framed Value
+
+Persuasive writing does not mean pressure, tricks, or exaggeration.
+
+Persuasive writing helps the reader see why the message matters to them. It connects the feature to the benefit, the request to the reason, and the idea to a real outcome.`
+      },
+      {
+        type: 'text',
+        content: `## The Persuasion Controls
+
+When you ask AI to make something more persuasive, guide it toward:
+
+- Audience: who needs to care
+- Benefit: what improves for them
+- Evidence: why the claim is believable
+- Urgency: why now matters, if it truly does
+- Action: what to do next
+
+The safest persuasive rewrite is specific, useful, and honest.`
+      },
+      {
+        type: 'example',
+        content: `Original:
+
+"We launched a new feature that helps users organize their tasks better."
+
+More persuasive:
+
+"We launched a task organization feature that helps users stop hunting through scattered lists and focus on the next priority faster."
+
+It works because it names the pain and the outcome.`
+      },
+      {
+        type: 'tip',
+        content: `If AI adds claims you cannot prove, remove them. Persuasion gets stronger when it is believable.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and run:
+
+"Rewrite this to be more persuasive for [audience]. Emphasize the reader benefit, keep the claim honest, and end with one clear next step:
+
+[paste text]" `
+      },
+      {
+        type: 'exercise',
+        content: `Persuasion Audit:
+
+After the rewrite, answer:
+- What pain or desire does it speak to?
+- What benefit is clearer now?
+- Is every claim true?
+- Is the next step obvious?
+
+If any answer is weak, ask AI for a more specific version.`
+      }
+    ]
+  },
+  'writing-step-2-4': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Generate Variations',
+    duration: '10 min',
+    content: [
+      {
+        type: 'text',
+        content: `# One Message, Many Useful Versions
+
+Strong writers rarely stop at the first version.
+
+AI makes variation fast. Instead of asking "is this good?" you can ask "which version works best for this audience and context?"
+
+Generating variations helps you compare tone, length, angle, and emphasis without starting over.`
+      },
+      {
+        type: 'text',
+        content: `## Useful Variation Types
+
+Try asking for versions by:
+
+- Tone: excited, calm, professional, casual, bold
+- Channel: email, social post, landing page, text message
+- Audience: beginner, executive, teammate, customer
+- Length: one sentence, short paragraph, full announcement
+- Angle: benefit-led, problem-led, story-led, direct
+
+Each variation teaches you what the message could become.`
+      },
+      {
+        type: 'example',
+        content: `Base message:
+
+"We launched a new task organization feature."
+
+Professional:
+"We launched a new task organization feature to help teams clarify priorities and manage work more efficiently."
+
+Casual:
+"Your task list just got easier to manage. The new organization feature helps you find what matters next."
+
+Bold:
+"Stop letting scattered tasks decide your day. Our new organization feature helps you take control of the next priority."`
+      },
+      {
+        type: 'tip',
+        content: `Do not use variations blindly. Use them as options. The final version should still sound like you and fit the situation.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and use:
+
+"Create 5 variations of this message with different tones: excited, professional, bold, casual, and persuasive. Keep each version honest and useful:
+
+[paste message]" `
+      },
+      {
+        type: 'exercise',
+        content: `Variation Selection:
+
+Choose your favorite version, then explain why:
+- Best fit for the audience
+- Clearest benefit
+- Most natural voice
+- Strongest next step
+
+Then ask AI to combine the best parts of two versions into one final draft.`
+      }
+    ]
+  },
+  'writing-step-3-1': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Start With an Idea',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Every Content Engine Starts Small
+
+A content engine does not begin with a perfect post. It begins with one idea worth developing.
+
+Your raw idea can be simple:
+- A lesson you learned
+- A problem your audience has
+- A mistake you see often
+- A question people keep asking
+- A belief you want to explain
+
+AI helps turn that seed into structure.`
+      },
+      {
+        type: 'text',
+        content: `## Turn an Idea into a Draftable Angle
+
+A useful content idea needs three parts:
+
+1. Topic: what it is about
+2. Point of view: what you believe about it
+3. Reader value: what someone gets from reading
+
+Weak idea: "Consistency"
+
+Stronger angle: "Consistency matters because it lowers decision fatigue. Here is how to build a repeatable weekly content habit."`
+      },
+      {
+        type: 'example',
+        content: `Raw idea:
+
+"Why consistency matters when building a startup"
+
+Structured prompt:
+
+"Turn this idea into a structured post with an intro, key points, and conclusion:
+
+Idea: Why consistency matters when building a startup
+Audience: early founders who start too many initiatives
+Point of view: consistency creates learning loops faster than scattered effort
+Tone: practical and direct" `
+      },
+      {
+        type: 'tip',
+        content: `If the idea feels too broad, narrow the audience. "Consistency" is huge. "Consistency for a founder juggling product, sales, and hiring" is writable.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and turn one raw idea into a structured post outline. Include audience, point of view, and reader value in your prompt.`
+      },
+      {
+        type: 'exercise',
+        content: `Idea Bank:
+
+Write five raw ideas from your work or life. For each, add:
+- Who needs this?
+- What do I believe?
+- What can the reader do after reading?
+
+Pick the strongest one for the next lesson.`
+      }
+    ]
+  },
+  'writing-step-3-2': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Improve the Draft',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Drafts Need Direction
+
+The first AI draft is usually a starting point, not the final product.
+
+Your job is to improve the structure, sharpen the logic, and make the piece easier to follow. This is where a raw idea becomes a useful piece of writing.`
+      },
+      {
+        type: 'text',
+        content: `## The Draft Improvement Pass
+
+Ask AI to improve:
+
+- Flow: does each section lead naturally to the next?
+- Specificity: are the examples concrete?
+- Usefulness: does the reader get practical value?
+- Focus: does every section support the main point?
+- Ending: does the piece land with a clear takeaway?
+
+This pass is about quality of thinking, not decoration.`
+      },
+      {
+        type: 'example',
+        content: `Improvement prompt:
+
+"Rewrite this post to be clearer and better structured. Keep the main point, but improve the flow, add concrete examples where useful, and remove generic filler. End with one practical action:
+
+[paste draft]" `
+      },
+      {
+        type: 'tip',
+        content: `Generic filler often sounds pleasant but teaches nothing. Watch for sentences like "in today's fast-paced world" and replace them with specific context.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK], paste your draft from the previous step, and ask for a clearer, better-structured version. Then edit the output yourself for accuracy.`
+      },
+      {
+        type: 'exercise',
+        content: `Draft Score:
+
+Rate your improved draft from 1 to 5 on:
+- Clear main idea
+- Concrete examples
+- Logical flow
+- Useful ending
+
+Ask AI for one more pass on the lowest-scoring area only.`
+      }
+    ]
+  },
+  'writing-step-3-3': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Polish the Voice',
+    duration: '5 min',
+    content: [
+      {
+        type: 'text',
+        content: `# Voice Makes the Draft Yours
+
+AI can help structure and polish, but your voice is what makes the content worth reading.
+
+Voice is the combination of word choice, rhythm, examples, opinions, and level of directness. A polished voice does not mean "more formal." It means the piece sounds intentional and recognizably yours.`
+      },
+      {
+        type: 'text',
+        content: `## Build a Simple Voice Direction
+
+Before polishing, give AI a voice target:
+
+- Conversational but sharp
+- Warm and practical
+- Direct and no-fluff
+- Professional but human
+- Encouraging and concrete
+
+Then add constraints:
+- Keep paragraphs short
+- Avoid jargon
+- Use specific examples
+- Preserve my point of view`
+      },
+      {
+        type: 'example',
+        content: `Voice polish prompt:
+
+"Make this post sound more polished and professional, but keep it human. Use short paragraphs, remove generic phrases, preserve my point of view, and make the ending stronger:
+
+[paste improved draft]" `
+      },
+      {
+        type: 'tip',
+        content: `A voice pass should not erase your edge. If AI makes every sentence smoother but less interesting, ask for a more direct and specific version.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and run a voice polish on your improved draft. Then manually replace at least three generic phrases with phrases you would actually say.`
+      },
+      {
+        type: 'exercise',
+        content: `Voice Check:
+
+Read your post out loud.
+
+Highlight:
+- One sentence that sounds exactly like you
+- One sentence that sounds generic
+- One place where a personal example would help
+
+Revise those before moving to repurposing.`
+      }
+    ]
+  },
+  'writing-step-3-4': {
+    lastReviewed: '2026-07-09',
+    volatility: 'low',
+    reviewIntervalDays: 365,
+    title: 'Repurpose the Content',
+    duration: '10 min',
+    content: [
+      {
+        type: 'text',
+        content: `# One Strong Idea Can Become a System
+
+Repurposing is how you turn one finished piece into multiple useful assets.
+
+The goal is not to spam every channel with the same text. The goal is to adapt the core idea for different contexts, lengths, and reader moments.`
+      },
+      {
+        type: 'text',
+        content: `## The Repurposing Map
+
+From one polished post, AI can help create:
+
+- 3 short social posts
+- 2 professional network versions
+- 5 title or hook options
+- 1 short summary
+- 1 email intro
+- 1 list of follow-up ideas
+
+Each asset should preserve the main idea while fitting the channel.`
+      },
+      {
+        type: 'example',
+        content: `Repurposing prompt:
+
+"Create:
+- 3 short social posts
+- 2 professional network versions
+- 5 title options
+- 1 short summary
+
+Based on this content:
+
+[paste polished post]
+
+Keep the core idea intact. Make each version useful on its own."`
+      },
+      {
+        type: 'tip',
+        content: `Repurposing works best after the main piece is strong. If the source post is vague, every derivative will be vague too.`
+      },
+      {
+        type: 'lab',
+        content: `[LINK:writing-lab]Open the Writing Lab[/LINK] and repurpose your polished post into at least five assets. Pick two you would actually publish and edit them for the channel.`
+      },
+      {
+        type: 'exercise',
+        content: `Content Engine Checklist:
+
+For your finished idea, save:
+- Original polished post
+- Three short versions
+- Two title options
+- One summary
+- One follow-up idea
+
+This is your first repeatable AI writing workflow: idea, draft, improve, polish, repurpose.`
+      }
+    ]
+  },
   'lesson-1-1': {
     lastReviewed: '2026-05-02',
     volatility: 'low',

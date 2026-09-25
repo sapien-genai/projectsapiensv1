@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "lint:file": "eslint",
-    "check:content": "tsx scripts/checkContentFreshness.ts"
+    "check:content": "tsx scripts/checkContentFreshness.ts",
+    "seed:content": "tsx scripts/seed-content.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
