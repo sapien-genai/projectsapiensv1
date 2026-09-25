@@ -1,6 +1,9 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useState } from 'react';
 import { BookOpen, Code, Zap, Trophy, LogOut, Users, BookmarkPlus, Footprints, Flame, Compass, Beaker, Network as NetworkIcon, Sparkles, Rocket, Target, Shield, Lock, LucideIcon, AlertCircle, CreditCard, HelpCircle, ArrowRight, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useBrand } from '../contexts/BrandContext';
+import type { WorkspaceBrand } from '../lib/brand';
+import { useAdminStatus } from '../hooks/useAdminStatus';
 import { supabase } from '../lib/supabase';
 import { logError, getErrorMessage } from '../utils/errorHandling';
 
@@ -46,15 +49,6 @@ const fluencyLevels = [
   { level: 3, title: 'Integrator', subtitle: 'System Builder', xpRequired: 4000 },
   { level: 4, title: 'Leader', subtitle: 'Solution Architect', xpRequired: 10000 },
 ];
-
-const workspaceBrand = {
-  name: 'Project Sapiens Academy',
-  platformLabel: 'Project Sapiens',
-  logoUrl: '',
-  primaryColor: '#FF6A00',
-  secondaryColor: '#0A74FF',
-  backgroundColor: '#F4F4F4',
-};
 
 const dashboardActions = [
   {
@@ -154,34 +148,45 @@ function ActionCard({
   );
 }
 
-function WorkspaceLogo() {
-  if (workspaceBrand.logoUrl) {
+function WorkspaceLogo({ brand }: { brand: WorkspaceBrand }) {
+  if (brand.logoUrl) {
     return (
       <img
-        src={workspaceBrand.logoUrl}
-        alt={`${workspaceBrand.name} logo`}
+        src={brand.logoUrl}
+        alt={`${brand.name} logo`}
         className="h-10 w-10 border border-ink object-cover"
       />
     );
   }
 
+  const initials = brand.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('') || 'PS';
+
   return (
     <div className="flex h-10 w-10 items-center justify-center border border-ink bg-[var(--brand-primary)] font-extrabold text-sm uppercase text-ink shadow-[2px_2px_0px_var(--brand-ink)]">
-      PS
+      {initials}
     </div>
   );
 }
 
 export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick, onBadgesClick, onProfileClick, onJournalClick, onProjectsClick, onCommandCenterClick, onPathSelect, onLabSelect, onPathsListClick, onAdminClick, onBillingClick, onHelpClick }: DashboardProps) {
   const { user, signOut } = useAuth();
+  const { brand } = useBrand();
   const isDevDashboardPreview = import.meta.env.DEV && window.location.pathname === '/dev/pro-dashboard-preview';
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin: isAdminUser, loading: adminLoading } = useAdminStatus();
   const [commandCenterUnlocked, setCommandCenterUnlocked] = useState(false);
+
+  // Only show the Admin button once the admin check has resolved positively.
+  const showAdminButton = isDevDashboardPreview || (!adminLoading && isAdminUser);
 
   useEffect(() => {
     async function loadUserData() {
@@ -202,7 +207,6 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
             { badge_id: 'builder', name: 'Workflow builder', icon: 'Flask', color: '#16a34a', rarity: 'rare' },
             { badge_id: 'spark', name: 'Prompt spark', icon: 'Sparkles', color: '#d97706', rarity: 'rare' },
           ]);
-          setIsAdmin(true);
           setCommandCenterUnlocked(true);
           setLoading(false);
           return;
@@ -229,16 +233,6 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
 
         if (skillsData) {
           setSkills(skillsData);
-        }
-
-        const { data: adminData } = await supabase
-          .from('admin_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (adminData) {
-          setIsAdmin(true);
         }
 
         const { data: progressData } = await supabase
@@ -355,29 +349,22 @@ export default function Dashboard({ onLabsClick, onNetworkClick, onPromptsClick,
   }
 
   return (
-    <div
-      className="brand-page"
-      style={{
-        '--brand-primary': workspaceBrand.primaryColor,
-        '--brand-secondary': workspaceBrand.secondaryColor,
-        '--brand-bg': workspaceBrand.backgroundColor,
-      } as CSSProperties}
-    >
+    <div className="brand-page">
       <nav className="bg-[var(--brand-bg)] border-b-2 border-ink">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <WorkspaceLogo />
+            <WorkspaceLogo brand={brand} />
             <div>
               <h1 className="font-extrabold text-base md:text-xl uppercase tracking-tight leading-tight">
-                {workspaceBrand.name}
+                {brand.name}
               </h1>
               <p className="hidden text-xs font-semibold text-[var(--brand-muted)] sm:block">
-                Powered by {workspaceBrand.platformLabel}
+                Powered by {brand.platformLabel}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {isAdmin && (
+            {showAdminButton && (
               <button
                 onClick={onAdminClick}
                 className="brand-button brand-button-primary px-3 py-2"

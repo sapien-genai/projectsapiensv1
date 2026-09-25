@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { XCircle, ArrowRight, Zap, FlaskConical, BookOpen, Library, HelpCircle } from 'lucide-react';
+import { useBrand } from '../contexts/BrandContext';
+import { formatPageTitle } from '../lib/brand';
 
 interface BillingCancelPageProps {
   onTryAgain: () => void;
@@ -50,11 +52,15 @@ export default function BillingCancelPage({
   onGoToDashboard,
   onGoToHelp,
 }: BillingCancelPageProps) {
+  const { brand } = useBrand();
   const [visible, setVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
-    document.title = 'Checkout cancelled – Project Sapiens';
+    document.title = formatPageTitle('Checkout cancelled', brand);
+  }, [brand]);
+
+  useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(timer);
   }, []);

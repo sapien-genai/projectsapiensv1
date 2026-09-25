@@ -1,0 +1,487 @@
+import { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { BrandProvider } from './contexts/BrandContext';
+import { DarkModeProvider } from './contexts/DarkModeContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { BillingProvider } from './contexts/BillingContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import Navigation from './components/Navigation';
+import Hero from './components/Hero';
+import Pillars from './components/Pillars';
+import FeaturedPaths from './components/FeaturedPaths';
+import FluencySpectrum from './components/FluencySpectrum';
+import PricingSection from './components/PricingSection';
+import CTASection from './components/CTASection';
+import Footer from './components/Footer';
+import AuthPage from './components/AuthPage';
+import Dashboard from './components/Dashboard';
+import LabsPage from './components/LabsPage';
+import LabSandbox from './components/LabSandbox';
+import PathPage from './components/PathPage';
+import LessonViewer from './components/LessonViewer';
+import PathsListPage from './components/PathsListPage';
+import NetworkPage from './components/NetworkPage';
+import PromptLibrary from './components/PromptLibrary';
+import { BadgeDisplay } from './components/BadgeDisplay';
+import ProfilePage from './components/ProfilePage';
+import SettingsPage from './components/SettingsPage';
+import JournalPage from './components/JournalPage';
+import ProjectsPage from './components/ProjectsPage';
+import CommandCenter from './components/CommandCenter';
+import AdminPortal from './components/AdminPortal';
+import WritingSystemsPath from './components/WritingSystemsPath';
+import TermsPage from './components/TermsPage';
+import PrivacyPage from './components/PrivacyPage';
+import BillingPage from './components/BillingPage';
+import HelpCenter from './components/HelpCenter';
+import AboutPage from './components/AboutPage';
+import PaymentSuccessPage from './components/PaymentSuccessPage';
+import BillingCancelPage from './components/BillingCancelPage';
+import TosAcceptanceGate from './components/TosAcceptanceGate';
+import { useTosAcceptance } from './hooks/useTosAcceptance';
+import { saveAppState, loadAppState, clearAppState } from './utils/appStateStorage';
+import DevPreviewRouter from './dev/DevPreviewRouter';
+import SnapshotPage from './pages/SnapshotPage';
+
+type View = 'home' | 'auth' | 'dashboard' | 'labs' | 'lab-sandbox' | 'path' | 'lesson' | 'paths-list' | 'network' | 'prompts' | 'badges' | 'profile' | 'settings' | 'journal' | 'projects' | 'command-center' | 'admin' | 'billing' | 'terms' | 'privacy' | 'help' | 'about' | 'payment-success' | 'billing-cancel' | 'snapshot';
+
+function AppContent() {
+  const { user, loading } = useAuth();
+  const { accepted: tosAccepted, loading: tosLoading, recordAcceptance } = useTosAcceptance();
+  const [initialized, setInitialized] = useState(false);
+  const [view, setView] = useState<View>(window.location.pathname === '/academy/login' ? 'auth' : 'home');
+  const [selectedLab, setSelectedLab] = useState<string>('');
+  const [selectedPath, setSelectedPath] = useState<string>('');
+  const [selectedModule, setSelectedModule] = useState<string>('');
+  const [selectedLesson, setSelectedLesson] = useState<string>('');
+  const [pathRefreshKey, setPathRefreshKey] = useState<number>(0);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<string>('');
+  const [previousView, setPreviousView] = useState<View>(window.location.pathname === '/academy/login' ? 'auth' : 'home');
+  const [previousPathname, setPreviousPathname] = useState<string>('/');
+
+  useEffect(() => {
+    const snapshotMatch = window.location.pathname.match(/^\/snapshots\/([^/]+)$/);
+    if (snapshotMatch) {
+      setSelectedSnapshot(snapshotMatch[1]);
+      setPreviousView(user ? 'dashboard' : 'home');
+      setPreviousPathname(user ? '/' : '/');
+      setView('snapshot');
+    }
+  }, [user]);
+
+  // Load saved state on mount (only for authenticated users)
+  useEffect(() => {
+    if (!loading && user && !initialized) {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+      const params = new URLSearchParams(window.location.search);
+      const paymentParam = params.get('payment');
+      const paymentPathView =
+        pathname === '/billing/success'
+          ? 'payment-success'
+          : pathname === '/billing/cancel'
+            ? 'billing-cancel'
+            : null;
+
+      if (paymentParam === 'success' || paymentParam === 'cancel' || paymentPathView) {
+        window.history.replaceState({}, '', '/');
+        setView(paymentPathView || (paymentParam === 'success' ? 'payment-success' : 'billing-cancel'));
+        setInitialized(true);
+        return;
+      }
+      // Deep link: /admin opens the admin view (AdminPortal enforces access).
+      if (pathname === '/admin') {
+        window.history.replaceState({}, '', '/');
+        setView('admin');
+        setInitialized(true);
+        return;
+      }
+      const savedState = loadAppState(user.id);
+      if (savedState) {
+        if (savedState.view) setView(savedState.view);
+        if (savedState.selectedLab) setSelectedLab(savedState.selectedLab);
+        if (savedState.selectedPath) setSelectedPath(savedState.selectedPath);
+        if (savedState.selectedModule) setSelectedModule(savedState.selectedModule);
+        if (savedState.selectedLesson) setSelectedLesson(savedState.selectedLesson);
+      }
+      setInitialized(true);
+    } else if (!loading && !user) {
+      clearAppState();
+      // Deep link: /admin for a signed-out visitor goes to the login page.
+      if ((window.location.pathname.replace(/\/+$/, '') || '/') === '/admin') {
+        window.history.replaceState({}, '', '/');
+        setView('auth');
+      }
+      setInitialized(true);
+    }
+  }, [user, loading, initialized]);
+
+  // Save state whenever it changes (only for authenticated users)
+  // Don't save state for informational pages like terms/privacy/billing/about/help
+  useEffect(() => {
+    if (user && initialized && view !== 'terms' && view !== 'privacy' && view !== 'billing' && view !== 'about' && view !== 'help' && view !== 'payment-success' && view !== 'billing-cancel') {
+      saveAppState({
+        view,
+        selectedLab,
+        selectedPath,
+        selectedModule,
+        selectedLesson,
+      }, user.id);
+    }
+  }, [user, initialized, view, selectedLab, selectedPath, selectedModule, selectedLesson]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
+          <p className="mt-4 font-semibold">LOADING...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (view === 'snapshot') {
+    return (
+      <SnapshotPage
+        snapshotId={selectedSnapshot}
+        onBack={() => {
+          setView(previousView);
+          window.history.replaceState({}, '', previousPathname);
+        }}
+      />
+    );
+  }
+
+  if (user) {
+    // Explicit ToS acceptance gate: signed-in users must have accepted the
+    // current ToS version before using the app.
+    if (tosLoading) {
+      return (
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block w-12 h-12 border-4 border-ink border-t-accent animate-spin"></div>
+            <p className="mt-4 font-semibold">LOADING...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (!tosAccepted) {
+      return <TosAcceptanceGate onAccept={recordAcceptance} />;
+    }
+
+    if (view === 'lesson') {
+      return (
+        <LessonViewer
+          pathId={selectedPath}
+          moduleId={selectedModule}
+          lessonId={selectedLesson}
+          onBack={() => setView('path')}
+          onComplete={() => {
+            setPathRefreshKey(prev => prev + 1);
+            setView('path');
+          }}
+          onPromptsClick={() => setView('prompts')}
+          onCommandCenterClick={() => setView('command-center')}
+          onSnapshotOpen={(snapshotId) => {
+            setPreviousView('lesson');
+            setPreviousPathname(window.location.pathname);
+            setSelectedSnapshot(snapshotId);
+            setView('snapshot');
+            window.history.pushState({}, '', `/snapshots/${snapshotId}`);
+          }}
+        />
+      );
+    }
+
+    if (view === 'path') {
+      if (selectedPath === 'ai-writing-systems') {
+        return (
+          <WritingSystemsPath
+            onBack={() => setView('paths-list')}
+            onLabOpen={(labId) => {
+              setSelectedLab(labId);
+              setView('lab-sandbox');
+            }}
+          />
+        );
+      }
+      return (
+        <PathPage
+          key={pathRefreshKey}
+          pathId={selectedPath}
+          onBack={() => setView('paths-list')}
+          onLessonSelect={(moduleId, lessonId) => {
+            setSelectedModule(moduleId);
+            setSelectedLesson(lessonId);
+            setView('lesson');
+          }}
+        />
+      );
+    }
+
+    if (view === 'paths-list') {
+      return (
+        <PathsListPage
+          onBack={() => setView('dashboard')}
+          onPathSelect={(pathId) => {
+            setSelectedPath(pathId);
+            setView('path');
+          }}
+        />
+      );
+    }
+
+    if (view === 'lab-sandbox') {
+      return (
+        <LabSandbox
+          labId={selectedLab}
+          onBack={() => setView('labs')}
+          onLabSwitch={(labId) => {
+            setSelectedLab(labId);
+          }}
+        />
+      );
+    }
+
+    if (view === 'labs') {
+      return (
+        <LabsPage
+          onLabSelect={(labId) => {
+            setSelectedLab(labId);
+            setView('lab-sandbox');
+          }}
+          onBack={() => setView('dashboard')}
+        />
+      );
+    }
+
+    if (view === 'network') {
+      return (
+        <NetworkPage
+          onBack={() => setView('dashboard')}
+        />
+      );
+    }
+
+    if (view === 'prompts') {
+      return (
+        <PromptLibrary
+          onBack={() => setView('dashboard')}
+        />
+      );
+    }
+
+    if (view === 'badges') {
+      return <BadgeDisplay onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'profile') {
+      return <ProfilePage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'settings') {
+      return <SettingsPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'journal') {
+      return <JournalPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'projects') {
+      return <ProjectsPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'command-center') {
+      return (
+        <CommandCenter
+          onBack={() => setView('dashboard')}
+          onLessonClick={(pathId, lessonId) => {
+            setSelectedPath(pathId);
+            setSelectedLesson(lessonId);
+            const match = lessonId.match(/lesson-(\d+)-\d+/);
+            const moduleId = match ? `module-${match[1]}` : 'module-1';
+            setSelectedModule(moduleId);
+            setView('lesson');
+          }}
+        />
+      );
+    }
+
+    if (view === 'admin') {
+      return <AdminPortal onBackToPlatform={() => setView('dashboard')} />;
+    }
+
+    if (view === 'billing') {
+      return <BillingPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'help') {
+      return <HelpCenter onBack={() => setView('dashboard')} onNavigate={(view) => setView(view)} />;
+    }
+
+    if (view === 'about') {
+      return <AboutPage onBack={() => setView('dashboard')} />;
+    }
+
+    if (view === 'payment-success') {
+      return (
+        <PaymentSuccessPage
+          onGoToDashboard={() => setView('dashboard')}
+          onGoToLabs={() => {
+            setSelectedLab('writing-lab');
+            setView('lab-sandbox');
+          }}
+          onGoToPaths={() => setView('paths-list')}
+          onGoToPrompts={() => setView('prompts')}
+        />
+      );
+    }
+
+    if (view === 'billing-cancel') {
+      return (
+        <BillingCancelPage
+          onTryAgain={() => setView('billing')}
+          onGoToDashboard={() => setView('dashboard')}
+          onGoToHelp={() => setView('help')}
+        />
+      );
+    }
+
+    return (
+      <Dashboard
+        onLabsClick={() => setView('labs')}
+        onNetworkClick={() => setView('network')}
+        onPromptsClick={() => setView('prompts')}
+        onBadgesClick={() => setView('badges')}
+        onProfileClick={() => setView('settings')}
+        onJournalClick={() => setView('journal')}
+        onProjectsClick={() => setView('projects')}
+        onCommandCenterClick={() => setView('command-center')}
+        onPathsListClick={() => setView('paths-list')}
+        onAdminClick={() => setView('admin')}
+        onBillingClick={() => setView('billing')}
+        onHelpClick={() => setView('help')}
+        onPathSelect={(pathId) => {
+          setSelectedPath(pathId);
+          setView('path');
+        }}
+        onLabSelect={(labId) => {
+          setSelectedLab(labId);
+          setView('lab-sandbox');
+        }}
+      />
+    );
+  }
+
+  if (view === 'auth') {
+    return (
+      <AuthPage
+        onSuccess={() => setView('home')}
+        onTermsClick={() => {
+          setPreviousView('auth');
+          setView('terms');
+        }}
+        onPrivacyClick={() => {
+          setPreviousView('auth');
+          setView('privacy');
+        }}
+      />
+    );
+  }
+
+  if (view === 'terms') {
+    return <TermsPage onBack={() => setView(previousView === 'auth' ? 'auth' : 'home')} />;
+  }
+
+  if (view === 'privacy') {
+    return <PrivacyPage onBack={() => setView(previousView === 'auth' ? 'auth' : 'home')} />;
+  }
+
+  if (view === 'help') {
+    return <HelpCenter onBack={() => setView(user ? 'dashboard' : 'home')} onNavigate={(view) => setView(view)} />;
+  }
+
+  if (view === 'about') {
+    return <AboutPage onBack={() => setView('home')} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-surface">
+      <Navigation
+        onAuthClick={() => setView('auth')}
+        onPathsClick={() => {
+          const pathsSection = document.getElementById('paths');
+          pathsSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onLabsClick={() => {
+          const labsSection = document.getElementById('labs');
+          labsSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onPricingClick={() => {
+          const pricingSection = document.getElementById('pricing');
+          pricingSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onCommunityClick={() => {
+          const communitySection = document.getElementById('community');
+          communitySection?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onHelpClick={() => setView('help')}
+      />
+      <Hero
+        onStartJourney={() => setView('auth')}
+        onExploreLabs={() => {
+          const labsSection = document.getElementById('labs');
+          labsSection?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+      <Pillars />
+      <FeaturedPaths />
+      <FluencySpectrum />
+      <PricingSection onGetStarted={() => setView('auth')} />
+      <CTASection onStartJourney={() => setView('auth')} />
+      <Footer
+        onTermsClick={() => {
+          setPreviousView('home');
+          setView('terms');
+        }}
+        onPrivacyClick={() => {
+          setPreviousView('home');
+          setView('privacy');
+        }}
+      />
+    </div>
+  );
+}
+
+function App() {
+  if (import.meta.env.DEV && window.location.pathname.startsWith('/dev/')) {
+    return (
+      <ErrorBoundary>
+        <DarkModeProvider>
+          <ToastProvider>
+            <DevPreviewRouter />
+          </ToastProvider>
+        </DarkModeProvider>
+      </ErrorBoundary>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <DarkModeProvider>
+        <AuthProvider>
+          <BrandProvider>
+            <BillingProvider>
+              <ToastProvider>
+                <AppContent />
+              </ToastProvider>
+            </BillingProvider>
+          </BrandProvider>
+        </AuthProvider>
+      </DarkModeProvider>
+    </ErrorBoundary>
+  );
+}
+
+export default App;

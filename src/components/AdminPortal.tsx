@@ -74,16 +74,16 @@ export default function AdminPortal({ onBackToPlatform }: AdminPortalProps) {
           <div className="w-16 h-16 bg-red-600 border-2 border-ink flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-white" strokeWidth={2} />
           </div>
-          <h2 className="text-2xl font-extrabold uppercase tracking-tight mb-2">ACCESS DENIED</h2>
+          <h2 className="text-2xl font-extrabold uppercase tracking-tight mb-2">NOT AUTHORIZED</h2>
           <p className="text-sm mb-6">
             You don't have permission to access the admin portal.
           </p>
           <button
-            onClick={() => window.history.back()}
+            onClick={() => (onBackToPlatform ? onBackToPlatform() : window.history.back())}
             className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-ink font-extrabold text-sm uppercase tracking-tight shadow-brutal-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <ChevronLeft className="w-5 h-5" strokeWidth={2} />
-            GO BACK
+            BACK TO HOME
           </button>
         </div>
       </div>

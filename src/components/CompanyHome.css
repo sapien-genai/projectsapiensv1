@@ -1,0 +1,21 @@
+/* Matches the personal-site mark; scoped to the company homepage. */
+@keyframes company-sapien-pulse {
+  0%, 100% { opacity: .9; }
+  50% { opacity: 0; }
+}
+.company-sapien-mark { animation: company-sapien-pulse 4s ease-in-out infinite; }
+.company-sapien-mark:hover { animation: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .company-sapien-mark { animation: none; opacity: .85; }
+}
+
+.company-logo-window { overflow: hidden; }
+.company-logo-track { display: flex; width: max-content; animation: company-logo-scroll 38s linear infinite; }
+.company-logo-group { display: flex; gap: 2rem; padding-right: 2rem; flex-shrink: 0; }
+.company-logo-window:hover .company-logo-track { animation-play-state: paused; }
+@keyframes company-logo-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .company-logo-track { animation: none; width: 100%; }
+  .company-logo-group { flex-wrap: wrap; justify-content: center; width: 100%; padding-right: 0; gap: 1rem; }
+  .company-logo-group[aria-hidden="true"], .company-logo-toggle { display: none; }
+}

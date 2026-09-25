@@ -1,5 +1,6 @@
 import { Compass, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { useBrand } from '../contexts/BrandContext';
 
 interface NavigationProps {
   onAuthClick?: () => void;
@@ -12,6 +13,7 @@ interface NavigationProps {
 
 export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onCommunityClick, onPricingClick, onHelpClick }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { brand } = useBrand();
 
   return (
     <nav className="bg-surface border-b border-ink">
@@ -20,7 +22,7 @@ export default function Navigation({ onAuthClick, onPathsClick, onLabsClick, onC
           <div className="flex items-center gap-2 md:gap-3">
             <Compass className="w-6 h-6 md:w-8 md:h-8" strokeWidth={2} />
             <h1 className="font-extrabold text-base md:text-xl uppercase tracking-tight">
-              PROJECT SAPIENS
+              {brand.platformLabel}
             </h1>
           </div>
 
