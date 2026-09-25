@@ -1,8 +1,18 @@
 import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './CompanyHome.css';
 
+const pastWork = [
+  { file: 'riowhite.png', name: 'Rio 2016' },
+  { file: 'PyeongChang_2018_Winter_Olympics.png', name: 'PyeongChang 2018' },
+  { file: 'olympicchannelwhite.png', name: 'Olympic Channel' },
+  { file: 'newbalancewhite.png', name: 'New Balance' },
+  { file: 'virginatlanticwhite.png', name: 'Virgin Atlantic' },
+  { file: 'broncoswhite.png', name: 'Denver Broncos' },
+];
+
 export default function CompanyHome() {
+  const [logosPaused, setLogosPaused] = useState(false);
   useEffect(() => { document.title = 'Project Sapiens — Practical AI products'; }, []);
   const link = 'inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4';
   return (
@@ -20,6 +30,19 @@ export default function CompanyHome() {
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-7xl md:text-8xl">Complex information.<br /><span className="text-[#68745b]">Useful experiences.</span></h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#526055]">Project Sapiens builds practical AI products that help people make confident decisions. Our current focus is Hotline Sports.</p>
           <a href="https://hotlinesports.com" className={`${link} mt-8`}>Explore Hotline Sports <ArrowUpRight aria-hidden="true" size={19} /></a>
+        </section>
+        <section aria-labelledby="past-work-title" className="mb-16 border-y border-[#172820]/20 py-7">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div><h2 id="past-work-title" className="text-xs font-bold uppercase tracking-[0.2em]">Experience on a global stage</h2><p className="mt-2 text-sm text-[#526055]">Selected past work by Tony Marks and the Sapien AI team.</p></div>
+            <button type="button" onClick={() => setLogosPaused(value => !value)} aria-pressed={logosPaused} className="company-logo-toggle min-h-11 text-sm font-semibold underline underline-offset-4">{logosPaused ? 'Resume logos' : 'Pause logos'}</button>
+          </div>
+          <div className="company-logo-window mt-7">
+            <div className="company-logo-track" style={{ animationPlayState: logosPaused ? 'paused' : undefined }}>
+              {[0, 1].map(copy => <ul key={copy} aria-hidden={copy === 1 ? true : undefined} className="company-logo-group">
+                {pastWork.map(client => <li key={client.name} className="flex h-24 w-36 shrink-0 items-center justify-center"><img src={`/clients/${client.file}`} alt={copy === 0 ? client.name : ''} className="max-h-20 w-28 object-contain" style={{ filter: 'brightness(0) opacity(0.6)' }} /></li>)}
+              </ul>)}
+            </div>
+          </div>
         </section>
         <section id="work" aria-labelledby="work-title" className="scroll-mt-8 rounded-3xl bg-[#172820] p-7 text-[#f4f2ec] md:p-12">
           <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#d8eb94]">Our flagship product</p><Radio aria-hidden="true" className="text-[#d8eb94]" size={28} /></div>
