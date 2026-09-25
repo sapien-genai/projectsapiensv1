@@ -47,7 +47,7 @@ export default function CompanyHome() {
         <section id="work" aria-labelledby="work-title" className="scroll-mt-8 rounded-3xl bg-[#172820] p-7 text-[#f4f2ec] md:p-12">
           <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#d8eb94]">Our flagship product</p><Radio aria-hidden="true" className="text-[#d8eb94]" size={28} /></div>
           <div className="mt-12 grid gap-8 md:grid-cols-2 md:gap-16">
-            <div><h2 id="work-title" className="text-4xl font-semibold tracking-tight md:text-5xl">Hotline Sports</h2><p className="mt-4 text-2xl leading-snug text-[#d8eb94]">Find the game.<br />Find your way to watch.</p></div>
+            <div><h2 id="work-title"><img src="/hotline-sports-logo.png" alt="Hotline Sports" width="460" height="48" className="h-auto w-full max-w-[400px]" /></h2><p className="mt-4 text-2xl leading-snug text-[#d8eb94]">Find the game.<br />Find your way to watch.</p></div>
             <div><p className="text-lg leading-relaxed text-white/80">Schedules, broadcast information, and personalized watch options come together in one guide—helping fans decide what to watch and where to find it.</p><a href="https://hotlinesports.com" className={`${link} mt-6 text-[#d8eb94]`}>Visit Hotline Sports <ArrowUpRight aria-hidden="true" size={19} /></a></div>
           </div>
         </section>
