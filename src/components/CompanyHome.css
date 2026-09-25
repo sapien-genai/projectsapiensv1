@@ -1,0 +1,10 @@
+/* Matches the personal-site mark; scoped to the company homepage. */
+@keyframes company-sapien-pulse {
+  0%, 100% { opacity: .9; }
+  50% { opacity: 0; }
+}
+.company-sapien-mark { animation: company-sapien-pulse 4s ease-in-out infinite; }
+.company-sapien-mark:hover { animation: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .company-sapien-mark { animation: none; opacity: .85; }
+}

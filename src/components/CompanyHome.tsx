@@ -1,5 +1,6 @@
-import { ArrowUpRight, Compass, Radio, AudioLines } from 'lucide-react';
+import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
 import { useEffect } from 'react';
+import './CompanyHome.css';
 
 export default function CompanyHome() {
   useEffect(() => { document.title = 'Project Sapiens — Practical AI products'; }, []);
@@ -8,7 +9,7 @@ export default function CompanyHome() {
     <div className="min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
       <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-[#172820]/20 px-6 py-6 md:px-10">
-        <a href="/" className="flex min-h-11 items-center gap-3 font-bold tracking-tight"><Compass aria-hidden="true" size={25} /> PROJECT SAPIENS</a>
+        <a href="/" className="flex min-h-11 items-center gap-3 font-bold tracking-tight"><img src="/sapien-mark.svg" alt="" aria-hidden="true" className="company-sapien-mark h-[17px] w-[17px] shrink-0 md:h-[18px] md:w-[18px]" /> PROJECT SAPIENS</a>
         <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-6 text-sm">
           <a className={link} href="#work">Our work</a><a className={link} href="#company">Company</a><a className={link} href="mailto:tony@projectsapiens.xyz">Get in touch <ArrowUpRight aria-hidden="true" size={16} /></a>
         </nav>
