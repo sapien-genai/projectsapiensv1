@@ -1,3 +1,4 @@
+import CompanyHeader from './CompanyHeader';
 import ClientInquiryForm from './ClientInquiryForm';
 import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -39,12 +40,7 @@ export default function CompanyHome() {
   return (
     <div className="min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
       <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>
-      <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-[#172820]/20 px-6 py-6 md:px-10">
-        <a href="/" className="flex min-h-11 items-center gap-3 font-bold tracking-tight"><img src="/sapien-mark.svg" alt="" aria-hidden="true" className="company-sapien-mark h-[17px] w-[17px] shrink-0 md:h-[18px] md:w-[18px]" /> PROJECT SAPIENS</a>
-        <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-6 text-sm">
-          <a className={link} href="#work">Our work</a><a className={link} href="#field-notes">Field Notes</a><a className={link} href="#company">Company</a><a className={link} href="#contact">Get in touch <ArrowUpRight aria-hidden="true" size={16} /></a>
-        </nav>
-      </header>
+      <CompanyHeader />
       <main ref={mainRef} id="main" className="mx-auto max-w-6xl px-6 md:px-10">
         <section className="py-20 md:py-28">
           <p className="mb-7 text-xs font-bold uppercase tracking-[0.2em]">Independent thinking. Practical intelligence.</p>
@@ -105,6 +101,12 @@ export default function CompanyHome() {
         <section id="company" className="grid scroll-mt-8 gap-6 border-b border-[#172820]/20 py-16 md:grid-cols-[1fr_2fr] md:gap-16">
           <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">The company</p><h2 className="mt-5 text-3xl font-semibold tracking-tight">Built from experience.</h2></div>
           <div><p className="leading-relaxed text-[#526055]">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice, and digital products to the practical challenges of building useful software.</p><a className={`${link} mt-5`} href="https://tonymarks.com">Meet the founder <ArrowUpRight aria-hidden="true" size={17} /></a></div>
+        </section>
+        <section aria-labelledby="engagement-title" className="border-b border-[#172820]/20 py-16">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Work with us</p>
+          <h2 id="engagement-title" className="mt-5 text-3xl font-semibold tracking-tight">Experienced help, at the right level.</h2>
+          <p className="mt-5 max-w-2xl leading-relaxed text-[#526055]">Project-based strategy and development, fractional AI leadership, and ongoing advisory retainers. We help you define, build, and improve useful AI products.</p>
+          <a className={`${link} mt-5`} href="/work-with-us/">Explore working together <ArrowUpRight aria-hidden="true" size={17} /></a>
         </section>
         <ClientInquiryForm />
       </main>
