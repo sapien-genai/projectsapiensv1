@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import CompanyHome from './components/CompanyHome';
+import WorkWithUsPage from './components/WorkWithUsPage';
 
 const AcademyApp = lazy(() => import('./AcademyApp'));
 
@@ -10,5 +11,6 @@ export default function App() {
   if (path === '/' && payment !== 'success' && payment !== 'cancel') {
     return <CompanyHome />;
   }
+  if (path === '/work-with-us') return <WorkWithUsPage />;
   return <Suspense fallback={<div className="min-h-screen bg-surface p-8">Loading learning platform…</div>}><AcademyApp /></Suspense>;
 }

@@ -36,12 +36,12 @@ export default function ClientInquiryForm() {
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">New projects & collaborations</p>
         <h2 id="contact-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">Something worth building together?</h2>
-        <p className="mt-5 leading-relaxed text-[#526055]">Tell us what you’re trying to build or improve, who it’s for, and where you are today. Tony will review your inquiry and get back to you.</p>
+        <p className="mt-5 leading-relaxed text-[#526055]">Tell us what you’re trying to build or improve, who it’s for, and where you are today. We’ll review your inquiry and get back to you.</p>
         <p className="mt-4 text-sm leading-relaxed text-[#526055]">An early idea is welcome. Budget and timing can be approximate.</p>
       </div>
       <div>
         <div role="status" aria-live="polite">
-          {status === 'sent' && <div className="rounded-xl border border-[#172820]/20 bg-white/50 p-6"><h3 className="text-xl font-semibold">Thanks for getting in touch.</h3><p className="mt-3 leading-relaxed text-[#526055]">Your inquiry has been submitted. Tony will follow up at the email address you provided.</p></div>}
+          {status === 'sent' && <div className="rounded-xl border border-[#172820]/20 bg-white/50 p-6"><h3 className="text-xl font-semibold">Thanks for getting in touch.</h3><p className="mt-3 leading-relaxed text-[#526055]">Your inquiry has been submitted. We’ll follow up at the email address you provided.</p></div>}
         </div>
         {status !== 'sent' && <form onSubmit={submit} method="post" action="/api/client-inquiry" aria-label="New client inquiry" className="space-y-5">
           <p className="text-sm text-[#526055]">Fields marked * are required.</p>
