@@ -19,3 +19,13 @@
   .company-logo-group { flex-wrap: wrap; justify-content: center; width: 100%; padding-right: 0; gap: 1rem; }
   .company-logo-group[aria-hidden="true"], .company-logo-toggle { display: none; }
 }
+
+/* One entrance per work/note feature. Content stays visible without observers. */
+@keyframes company-enter {
+  from { opacity: .65; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.company-entered { animation: company-enter 500ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .company-entered { animation: none; }
+}
