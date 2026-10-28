@@ -1,3 +1,4 @@
+import ClientInquiryForm from './ClientInquiryForm';
 import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import './CompanyHome.css';
@@ -41,7 +42,7 @@ export default function CompanyHome() {
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-[#172820]/20 px-6 py-6 md:px-10">
         <a href="/" className="flex min-h-11 items-center gap-3 font-bold tracking-tight"><img src="/sapien-mark.svg" alt="" aria-hidden="true" className="company-sapien-mark h-[17px] w-[17px] shrink-0 md:h-[18px] md:w-[18px]" /> PROJECT SAPIENS</a>
         <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-6 text-sm">
-          <a className={link} href="#work">Our work</a><a className={link} href="#field-notes">Field Notes</a><a className={link} href="#company">Company</a><a className={link} href="mailto:tony@projectsapiens.xyz">Get in touch <ArrowUpRight aria-hidden="true" size={16} /></a>
+          <a className={link} href="#work">Our work</a><a className={link} href="#field-notes">Field Notes</a><a className={link} href="#company">Company</a><a className={link} href="#contact">Get in touch <ArrowUpRight aria-hidden="true" size={16} /></a>
         </nav>
       </header>
       <main ref={mainRef} id="main" className="mx-auto max-w-6xl px-6 md:px-10">
@@ -105,7 +106,7 @@ export default function CompanyHome() {
           <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">The company</p><h2 className="mt-5 text-3xl font-semibold tracking-tight">Built from experience.</h2></div>
           <div><p className="leading-relaxed text-[#526055]">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice, and digital products to the practical challenges of building useful software.</p><a className={`${link} mt-5`} href="https://tonymarks.com">Meet the founder <ArrowUpRight aria-hidden="true" size={17} /></a></div>
         </section>
-        <section className="py-16 md:py-20"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Partnerships & select collaborations</p><h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">Something worth building together?</h2><a href="mailto:tony@projectsapiens.xyz" className={`${link} mt-6 text-lg`}>tony@projectsapiens.xyz <ArrowUpRight aria-hidden="true" size={20} /></a></section>
+        <ClientInquiryForm />
       </main>
       <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 border-t border-[#172820]/20 px-6 py-7 text-sm text-[#526055] md:px-10"><p>© {new Date().getFullYear()} Project Sapiens, Inc.</p><a href="/academy/login" className={link}>Learning platform sign in <ArrowUpRight aria-hidden="true" size={16} /></a></footer>
     </div>
