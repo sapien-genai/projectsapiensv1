@@ -29,3 +29,30 @@
 @media (prefers-reduced-motion: reduce) {
   .company-entered { animation: none; }
 }
+
+/* Purposeful, finite motion; all content is readable before animation runs. */
+@keyframes company-rise {
+  from { opacity: .35; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.company-hero > * { animation: company-rise 750ms cubic-bezier(.2,.75,.25,1) both; }
+.company-hero > :nth-child(2) { animation-delay: 90ms; }
+.company-hero > :nth-child(3) { animation-delay: 180ms; }
+.company-hero > :nth-child(4) { animation-delay: 270ms; }
+.company-hero > :nth-child(5) { animation-delay: 360ms; }
+.solution-detail-enter { animation: company-rise 380ms ease-out both; }
+.solution-flow li { animation: company-rise 450ms ease-out both; }
+.solution-choice { transition: background-color 220ms ease, color 220ms ease, transform 220ms ease; }
+.solution-choice:hover { transform: translateX(3px); }
+.company-site a svg { transition: transform 220ms ease; }
+.company-site a:hover svg, .company-site a:focus-visible svg { transform: translate(3px, -3px); }
+.company-lift { transition: transform 300ms ease, box-shadow 300ms ease; }
+.company-lift:hover, .company-lift:focus-within { transform: translateY(-6px); box-shadow: 0 20px 40px -25px #17282066; }
+.company-site :is(a, button):focus-visible { outline: 2px solid #68745b; outline-offset: 5px; }
+.company-solutions button:focus-visible { outline-color: #68745b; outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) {
+  .company-hero > *, .solution-detail-enter, .solution-flow li { animation: none; }
+  .solution-choice, .company-site a svg, .company-lift { transition: none; }
+  .solution-choice:hover, .company-site a:hover svg, .company-site a:focus-visible svg,
+  .company-lift:hover, .company-lift:focus-within { transform: none; }
+}
