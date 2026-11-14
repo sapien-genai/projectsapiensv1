@@ -47,6 +47,10 @@ export default function CompanyHome() {
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-7xl md:text-8xl">Complex information.<br /><span className="text-[#68745b]">Useful experiences.</span></h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#526055]">We build practical AI products, explore how intelligent systems should work, and share what we learn along the way.</p>
           <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2"><a href="#work" className={link}>Explore our work <ArrowUpRight aria-hidden="true" size={19} /></a><a href="#field-notes" className={link}>Read Field Notes <ArrowUpRight aria-hidden="true" size={19} /></a></div>
+          <p className="mt-10 max-w-xl border-l-2 border-[#68745b] pl-4 text-sm leading-relaxed text-[#526055]">
+            Project Sapiens is a member of the{' '}
+            <strong className="font-semibold text-[#172820]">OpenAI Partner Network.</strong>
+          </p>
         </section>
         <section aria-labelledby="past-work-title" className="mb-16 border-y border-[#172820]/20 py-7">
           <div className="flex flex-wrap items-center justify-between gap-3">
