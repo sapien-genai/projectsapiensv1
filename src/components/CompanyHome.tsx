@@ -1,4 +1,5 @@
 import CompanyHeader from './CompanyHeader';
+import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -38,11 +39,11 @@ export default function CompanyHome() {
   }, []);
   const link = 'inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4';
   return (
-    <div className="min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
+    <div className="company-site min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
       <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>
       <CompanyHeader />
       <main ref={mainRef} id="main" className="mx-auto max-w-6xl px-6 md:px-10">
-        <section className="py-20 md:py-28">
+        <section className="company-hero py-20 md:py-28">
           <p className="mb-7 text-xs font-bold uppercase tracking-[0.2em]">Independent thinking. Practical intelligence.</p>
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-7xl md:text-8xl">Complex information.<br /><span className="text-[#68745b]">Useful experiences.</span></h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#526055]">We build practical AI products, explore how intelligent systems should work, and share what we learn along the way.</p>
@@ -65,18 +66,19 @@ export default function CompanyHome() {
             </div>
           </div>
         </section>
+        <OpenAISolutions />
         <section id="work" aria-labelledby="work-title" className="scroll-mt-8 py-4">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Current work</p>
           <h2 id="work-title" className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">What we’re building and exploring.</h2>
           <div className="mt-9 grid gap-6 md:grid-cols-2">
-            <article data-company-reveal className="flex flex-col rounded-3xl bg-[#172820] p-7 text-[#f4f2ec] md:p-9">
+            <article data-company-reveal className="company-lift flex flex-col rounded-3xl bg-[#172820] p-7 text-[#f4f2ec] md:p-9">
               <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#d8eb94]">Live product</p><Radio aria-hidden="true" className="text-[#d8eb94]" size={28} /></div>
               <h3 className="mt-9"><img src="/hotline-sports-logo.png" alt="Hotline Sports" width="460" height="48" className="h-auto w-full max-w-[350px]" /></h3>
               <p className="mt-6 text-2xl leading-snug text-[#d8eb94]">Find the game.<br />Find your way to watch.</p>
               <p className="mb-6 mt-5 leading-relaxed text-white/80">Schedules, broadcast information, and personalized watch options come together in one guide—helping fans decide what to watch and where to find it.</p>
               <a href="https://hotlinesports.com" className={`${link} mt-auto text-[#d8eb94]`}>Visit Hotline Sports <ArrowUpRight aria-hidden="true" size={19} /></a>
             </article>
-            <article data-company-reveal className="flex flex-col rounded-3xl border border-[#172820]/20 p-7 md:p-9">
+            <article data-company-reveal className="company-lift flex flex-col rounded-3xl border border-[#172820]/20 p-7 md:p-9">
               <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Ongoing research</p><AudioLines aria-hidden="true" size={28} className="text-[#68745b]" /></div>
               <h3 className="mt-9 text-3xl font-semibold tracking-tight">Pronunciation intelligence.</h3>
               <p className="mt-6 text-2xl leading-snug text-[#68745b]">Getting a name right matters.</p>

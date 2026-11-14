@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CompanyHeader from './CompanyHeader';
+import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import './CompanyHome.css';
 
@@ -17,16 +18,17 @@ export default function WorkWithUsPage() {
     document.title = 'Work with us — Project Sapiens';
     document.querySelector('meta[name="description"]')?.setAttribute('content', 'AI strategy and product development, fractional AI leadership, and ongoing advisory retainers from Project Sapiens.');
   }, []);
-  return <div className="min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
+  return <div className="company-site min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
     <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>
     <CompanyHeader />
     <main id="main" className="mx-auto max-w-6xl px-6 md:px-10">
-      <header className="py-20 md:py-28">
+      <header className="company-hero py-20 md:py-28">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Work with us</p>
         <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl md:text-7xl">From a promising AI idea to a product people can use.</h1>
         <p className="mt-8 max-w-2xl text-lg leading-relaxed text-[#526055]">We work with founders, product teams, and established organizations that need experienced help defining, building, and improving AI products. We offer project-based engagements, fractional AI leadership, and ongoing advisory retainers through Project Sapiens, Inc.</p>
         <a href="#contact" className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`}>Tell us about your project <ArrowUpRight aria-hidden="true" size={19} /></a>
       </header>
+    <OpenAISolutions />
     <Section label="Where we can help" title="Start with the decision you need to make.">
       {[
         ['Define the right product', 'You see an opportunity for AI but need to decide what to build. We can work through the user need, available data, technical options, and the evidence a prototype should produce.', 'Typical focus: use-case assessment, product scope, architecture, and an evaluation plan.'],
