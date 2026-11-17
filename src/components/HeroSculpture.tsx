@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import './HeroMurmuration.css';
 
-/** Decorative canvas: no network, stopped offscreen, and a static reduced-motion view. */
+type Bird = { x: number; y: number; vx: number; vy: number; phase: number; depth: number };
+const COUNT = 230;
+
+/** Local flock simulation. Each bird steers toward its neighbours, with room to turn. */
 export default function HeroSculpture() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [paused, setPaused] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
   const pauseRef = useRef(paused);
   const resumeRef = useRef<() => void>(() => {});
   useEffect(() => { pauseRef.current = paused; resumeRef.current(); }, [paused]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d');
@@ -14,52 +19,76 @@ export default function HeroSculpture() {
     const ctx = context;
     const hero = canvas.closest('section')!;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let width = 0, height = 0, time = 0, last = 0, frame = 0;
-    let inView = true, pointerX = 0, pointerY = 0, targetX = 0, targetY = 0;
+    let width = 0, height = 0, scale = 1, frame = 0, last = 0, time = 0;
+    let inView = true, following = false, targetX = 0, targetY = 0;
+    let focusX = 0, focusY = 0;
+    const birds: Bird[] = Array.from({ length: COUNT }, (_, i) => {
+      const angle = i * 2.399963, radius = Math.sqrt((i + .5) / COUNT);
+      return { x: Math.cos(angle) * radius * 300, y: Math.sin(angle) * radius * 210,
+        vx: 1.6 + Math.cos(angle) * .3, vy: -.6 + Math.sin(angle) * .3,
+        phase: i * 1.71, depth: .45 + ((i * 37) % 100) / 180 };
+    });
+    function step(dt: number) {
+      time += dt / 60;
+      const destinationX = following ? targetX : Math.cos(time * .32) * 145;
+      const destinationY = following ? targetY : Math.sin(time * .47) * 100;
+      focusX += (destinationX - focusX) * .025 * dt;
+      focusY += (destinationY - focusY) * .025 * dt;
+      const forces = birds.map((bird, index) => {
+        let neighbours = 0, cx = 0, cy = 0, ax = 0, ay = 0, sx = 0, sy = 0;
+        for (let j = 0; j < birds.length; j++) {
+          if (j === index) continue;
+          const other = birds[j], dx = other.x - bird.x, dy = other.y - bird.y;
+          const distance = dx * dx + dy * dy;
+          if (distance < 95 * 95) {
+            neighbours++; cx += other.x; cy += other.y; ax += other.vx; ay += other.vy;
+            if (distance < 38 * 38 && distance > .01) { sx -= dx / distance; sy -= dy / distance; }
+          }
+        }
+        let fx = sx * 1.5, fy = sy * 1.5;
+        if (neighbours) {
+          fx += (cx / neighbours - bird.x) * .00025 + (ax / neighbours - bird.vx) * .04;
+          fy += (cy / neighbours - bird.y) * .00025 + (ay / neighbours - bird.vy) * .04;
+        }
+        // A moving shared heading pulls the flock into sweeping, collective turns.
+        fx += (focusX - bird.x) * .00022 + Math.cos(time * .63 + bird.y * .006) * .013;
+        fy += (focusY - bird.y) * .00022 + Math.sin(time * .55 + bird.x * .006) * .013;
+        if (Math.abs(bird.x) > 320) fx -= Math.sign(bird.x) * (Math.abs(bird.x) - 320) * .003;
+        if (Math.abs(bird.y) > 240) fy -= Math.sign(bird.y) * (Math.abs(bird.y) - 240) * .003;
+        return { fx, fy };
+      });
+      birds.forEach((bird, i) => {
+        bird.vx += forces[i].fx * dt; bird.vy += forces[i].fy * dt;
+        const speed = Math.hypot(bird.vx, bird.vy) || 1;
+        const limited = Math.max(1.35, Math.min(2.7, speed));
+        bird.vx = bird.vx / speed * limited; bird.vy = bird.vy / speed * limited;
+        bird.x += bird.vx * dt; bird.y += bird.vy * dt;
+      });
+    }
     function draw() {
       ctx.clearRect(0, 0, width, height);
-      const cx = width * .5, cy = height * .48, scale = Math.min(width * .38, height * .4);
-      const rotation = time * .14 + pointerX * .3, tilt = .78 + pointerY * .22;
-      const paths: {points: [number, number][]; depth: number}[] = [];
-      for (let band = 0; band < 58; band++) {
-        const v = band / 58 * Math.PI * 2;
-        const points: [number, number][] = [];
-        let depth = 0;
-        for (let step = 0; step <= 128; step++) {
-          const u = step / 128 * Math.PI * 2;
-          const radius = .64 + (.27 + .06 * Math.sin(u * 3 + v * 2 + time * .65)) * Math.cos(v);
-          const x = radius * Math.cos(u), y = radius * Math.sin(u), z = .32 * Math.sin(v) + .15 * Math.sin(u * 2 + time * .3);
-          const x1 = x * Math.cos(rotation) + z * Math.sin(rotation), z1 = -x * Math.sin(rotation) + z * Math.cos(rotation);
-          const y1 = y * Math.cos(tilt) - z1 * Math.sin(tilt), z2 = y * Math.sin(tilt) + z1 * Math.cos(tilt);
-          const perspective = 2.8 / (2.8 - z2);
-          points.push([cx + x1 * scale * perspective, cy + y1 * scale * perspective]);
-          depth += z2;
-        }
-        paths.push({points, depth: depth / 129});
-      }
-      paths.sort((a,b) => a.depth - b.depth);
-      for (const path of paths) {
-        ctx.beginPath();
-        path.points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
-        ctx.strokeStyle = `rgba(20,24,22,${Math.min(.65, (.22 + (path.depth + .8) * .35) * .85)})`;
-        ctx.lineWidth = .75;
-        ctx.stroke();
-      }
-      for (let i = 0; i < 35; i++) {
-        const angle = i * 2.399 + time * .025, radius = scale * (1.08 + (i % 7) * .07);
-        ctx.fillStyle = i % 4 === 0 ? '#157f6855' : '#161a1833';
-        ctx.fillRect(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius * .7, i % 4 === 0 ? 2 : 1, i % 4 === 0 ? 2 : 1);
+      for (const bird of birds) {
+        const x = width * .5 + bird.x * scale, y = height * .47 + bird.y * scale;
+        const wing = Math.sin(time * 8 + bird.phase);
+        const size = (3.8 + bird.depth * 3) * Math.max(.65, scale) * 1.2;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(bird.vy, bird.vx) + Math.PI / 2);
+        ctx.fillStyle = `rgba(12,17,14,${.55 + bird.depth * .45})`;
+        // Tapered wings, a small body, and independent wingbeats read as birds, not dots.
+        ctx.beginPath(); ctx.moveTo(0, -size * .5);
+        ctx.quadraticCurveTo(-size * .35, -size * .4, -size, size * (.05 + wing * .48));
+        ctx.quadraticCurveTo(-size * .45, size * (.12 + wing * .15), 0, size * .26);
+        ctx.lineTo(size * .12, size * .6); ctx.lineTo(0, size * .4); ctx.lineTo(-size * .12, size * .6);
+        ctx.lineTo(0, size * .26);
+        ctx.quadraticCurveTo(size * .45, size * (.12 + wing * .15), size, size * (.05 + wing * .48));
+        ctx.quadraticCurveTo(size * .35, -size * .4, 0, -size * .5);
+        ctx.fill(); ctx.restore();
       }
     }
     function animate(now: number) {
       frame = 0;
       if (pauseRef.current || !inView || document.hidden) return;
-      if (now - last > 30) {
-        time += Math.min((now - last) / 1000, .04) * .5;
-        pointerX += (targetX - pointerX) * .035;
-        pointerY += (targetY - pointerY) * .035;
-        draw(); last = now;
-      }
+      const elapsed = now - last;
+      if (elapsed >= 1000 / 40) { step(Math.min(elapsed / (1000 / 60), 2.5)); draw(); last = now; }
       frame = requestAnimationFrame(animate);
     }
     function resume() {
@@ -68,16 +97,20 @@ export default function HeroSculpture() {
     }
     function resize() {
       const rect = canvas!.getBoundingClientRect(), density = Math.min(devicePixelRatio || 1, 2);
-      width = rect.width; height = rect.height;
-      canvas!.width = width * density; canvas!.height = height * density;
+      width = rect.width; height = rect.height; scale = Math.min(width / 850, height / 680);
+      canvas!.width = Math.round(width * density); canvas!.height = Math.round(height * density);
       ctx.setTransform(density, 0, 0, density, 0, 0); draw();
     }
     function move(event: PointerEvent) {
-      const rect = hero.getBoundingClientRect();
-      targetX = (event.clientX - rect.left) / rect.width - .5;
-      targetY = (event.clientY - rect.top) / rect.height - .5;
+      if (event.pointerType === 'touch') return;
+      const rect = canvas!.getBoundingClientRect();
+      following = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      if (following) {
+        targetX = Math.max(-280, Math.min(280, (event.clientX - rect.left - width * .5) / scale));
+        targetY = Math.max(-190, Math.min(190, (event.clientY - rect.top - height * .47) / scale));
+      }
     }
-    function leave() { targetX = targetY = 0; }
+    function leave() { following = false; }
     function preference(event: MediaQueryListEvent) { pauseRef.current = event.matches; setPaused(event.matches); resume(); }
     const size = new ResizeObserver(resize);
     const visibility = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; resume(); });
@@ -85,7 +118,12 @@ export default function HeroSculpture() {
     hero.addEventListener('pointermove', move); hero.addEventListener('pointerleave', leave);
     document.addEventListener('visibilitychange', resume); reduced.addEventListener('change', preference);
     resumeRef.current = resume; resize(); resume();
-    return () => { cancelAnimationFrame(frame); size.disconnect(); visibility.disconnect(); hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave); document.removeEventListener('visibilitychange', resume); reduced.removeEventListener('change', preference); resumeRef.current = () => {}; };
+    return () => {
+      cancelAnimationFrame(frame); size.disconnect(); visibility.disconnect();
+      hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave);
+      document.removeEventListener('visibilitychange', resume); reduced.removeEventListener('change', preference);
+      resumeRef.current = () => {};
+    };
   }, []);
-  return <><div className="hero-art" aria-hidden="true"><canvas ref={canvasRef}/><div className="art-caption"><span>01 / From possibility to practice</span><span>Designed. Built. Evaluated.</span></div></div><button type="button" className="motion-toggle" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Play motion ▷' : 'Pause motion Ⅱ'}</button></>;
+  return <><div className="hero-art murmuration-art" aria-hidden="true"><canvas ref={canvasRef}/><div className="art-caption"><span>Many minds. One direction.</span><span className="flock-pointer-hint">Move your pointer to guide the flock.</span></div></div><button type="button" className="motion-toggle" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Play motion ▷' : 'Pause motion Ⅱ'}</button></>;
 }
