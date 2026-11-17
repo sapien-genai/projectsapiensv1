@@ -70,12 +70,12 @@ export default function CompanyHome() {
 <span>Explore the live product ↗</span>
 </a>
 </div>
-<div className="research">
+<div className="research" id="research">
 <div>
 <span className="eyebrow">Ongoing research / Pronunciation intelligence</span>
 <h3>Every name matters.</h3>
 <p>Exploring how speech systems can get people’s names right—with verified references and phoneme mappings.</p>
-<a className="textlink" href="https://tonymarks.com/writing/pronunciation-intelligence" target="_blank" rel="noopener">Inside the research ↗</a>
+<a className="textlink" href="/field-notes/pronunciation-intelligence/">Inside the research ↗</a>
 </div>
 <div>
 <div className="wave" aria-hidden="true">
@@ -197,20 +197,20 @@ export default function CompanyHome() {
 <section className="section" id="field-notes" style={{"paddingTop": "0"}}>
 <div className="section-top">
 <div className="eyebrow">04 / Field Notes</div>
-<h2>Thinking in public.</h2>
+<div><h2>Thinking in public.</h2><a className="textlink" href="/field-notes/" style={{display: "inline-block", marginTop: "22px"}}>Explore all Field Notes ↗</a></div>
 </div>
 <div className="notes">
-<a className="note" href="https://tonymarks.com/writing/the-nuclear-lesson" target="_blank" rel="noopener">
+<a className="note" href="/field-notes/the-nuclear-lesson/">
 <small>NO. 06 / AI & JUDGMENT</small>
 <h3>What We Choose<br />to Delegate</h3>
 <span className="arrow">↗</span>
 </a>
-<a className="note" href="https://tonymarks.com/writing/attention-is-all-you-need" target="_blank" rel="noopener">
+<a className="note" href="/field-notes/attention-is-all-you-need/">
 <small>NO. 05 / RESEARCH & PRODUCT</small>
 <h3>What “Attention Is All You Need” Actually Changed</h3>
 <span className="arrow">↗</span>
 </a>
-<a className="note" href="https://tonymarks.com/writing/ai-brand-visibility" target="_blank" rel="noopener">
+<a className="note" href="/field-notes/ai-brand-visibility/">
 <small>NO. 02 / AI & DISCOVERY</small>
 <h3>AI Brand<br />Visibility</h3>
 <span className="arrow">↗</span>

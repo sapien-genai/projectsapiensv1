@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Has Signed What</title>
+<meta name="robots" content="noindex">
+<style>
+  html,body{margin:0;padding:0;background:#fff} body{padding:2px 0} .fn-wrap{--fn-bg-host:#fff;--fn-fg-host:#171717;--fn-muted-host:#666;--fn-line-host:#ddd;--fn-card-host:#f7f7f5;--fn-accent-host:#171717}
+  button:focus-visible,a:focus-visible{outline:2px solid #2463a7;outline-offset:3px} .fn-col{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:12px 6px;min-height:44px;width:100%} th:has(.fn-col){padding:0} td[data-i]{cursor:pointer} td[data-i]:hover{background:#e8eef5} .selected-col{background:#e0eaf4!important;box-shadow:inset 2px 0 #53799c,inset -2px 0 #53799c} .fn-note{scroll-margin:80px 0} .fn-note h3{font-size:18px;margin:0 0 8px} .fn-note p{margin:8px 0} .fn-back{margin-top:12px;font:inherit;cursor:pointer;padding:8px 12px;background:transparent;border:1px solid var(--fn-line);border-radius:6px} .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+  .fn-wrap{
+    --fn-bg: var(--fn-bg-host, #ffffff);
+    --fn-fg: var(--fn-fg-host, #1a1a1a);
+    --fn-muted: var(--fn-muted-host, #6b6b6b);
+    --fn-line: var(--fn-line-host, #e3e3e3);
+    --fn-card: var(--fn-card-host, #f7f7f5);
+    --fn-accent: var(--fn-accent-host, #1a1a1a);
+    --fn-yes: #2f6b3a; --fn-part: #b48a1a; --fn-no: #d6d2cc; --fn-unk: #ffffff;
+    --fn-font: var(--fn-font-host, Georgia, "Times New Roman", serif);
+    --fn-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--fn-font); color: var(--fn-fg); background: var(--fn-bg);
+    max-width: 760px; margin: 0 auto; padding: 0 16px; line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark){
+    .fn-wrap{
+      --fn-bg: var(--fn-bg-host, #121212); --fn-fg: var(--fn-fg-host, #ececec);
+      --fn-muted: var(--fn-muted-host, #9a9a9a); --fn-line: var(--fn-line-host, #2c2c2c);
+      --fn-card: var(--fn-card-host, #1c1c1c); --fn-accent: var(--fn-accent-host, #ececec);
+      --fn-yes:#7fbf8c; --fn-part:#d9b24a; --fn-no:#333; --fn-unk:#121212;
+    }
+  }
+  .fn-kicker{font: 600 12px/1 var(--fn-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--fn-muted); margin:0 0 8px}
+  .fn-title{font-size:22px; margin:0 0 6px; font-weight:600}
+  .fn-lede{color:var(--fn-muted); margin:0 0 14px; font-size:15px}
+  .fn-ctl{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 12px; align-items:center}
+  .fn-chip{font-family:inherit; font-size:13.5px; padding:6px 12px; border-radius:999px; border:1px solid var(--fn-line); background:transparent; color:var(--fn-fg); cursor:pointer}
+  .fn-chip[aria-pressed="true"]{background:var(--fn-accent); color:var(--fn-bg); border-color:var(--fn-accent)}
+  .fn-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--fn-line); border-radius:10px; background:var(--fn-card)}
+  table{border-collapse:separate; border-spacing:0; width:100%; min-width:640px; font-size:13.5px}
+  th,td{padding:7px 6px; border-bottom:1px solid var(--fn-line); text-align:center; vertical-align:middle}
+  th{font: 600 11px/1.25 var(--fn-mono); letter-spacing:.02em; color:var(--fn-muted); cursor:pointer; user-select:none; padding-top:10px; padding-bottom:10px}
+  th:hover{color:var(--fn-fg)}
+  th.sel{color:var(--fn-fg); text-decoration:underline}
+  th.bind::after{content:" ●"; color:var(--fn-yes)}
+  td.c{text-align:left; font-family:var(--fn-font); font-size:14px; white-space:nowrap; position:sticky; left:0; background:var(--fn-card); z-index:1}
+  th.c{font:14px/1.4 var(--fn-font);letter-spacing:normal;text-transform:none;cursor:default;text-align:left; position:sticky; left:0; background:var(--fn-card); z-index:2}
+  th.c .nuke{font: 600 10px/1 var(--fn-mono); color:var(--fn-muted); margin-left:6px; vertical-align:middle; letter-spacing:.04em}
+  .dot{display:inline-block; width:14px; height:14px; border-radius:50%; border:1px solid var(--fn-line); vertical-align:middle}
+  .v1{background:var(--fn-yes); border-color:var(--fn-yes)}
+  .v2{background:linear-gradient(90deg,var(--fn-part) 50%,transparent 50%); border-color:var(--fn-part)}
+  .v0{background:var(--fn-no)}
+  .v3{background:var(--fn-unk); border-style:dashed; border-color:var(--fn-muted)}
+  .v4{opacity:.25}
+  tr.dim td,tr.dim th,.dim{opacity:.25}
+  td.dim-col,th.dim-col{opacity:.2}
+  .fn-note{border:1px solid var(--fn-line); border-radius:10px; padding:12px 14px; margin:12px 0 0; font-size:14.5px; min-height:60px}
+  .fn-note b{font-weight:600}
+  .fn-legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--fn-muted); margin:10px 0 0; align-items:center}
+  .fn-legend span{display:inline-flex; align-items:center; gap:5px}
+  .fn-stat{font-size:15.5px; margin:14px 0 0; border-left:3px solid var(--fn-accent); padding:6px 0 6px 14px}
+  .fn-foot{font-size:12.5px; color:var(--fn-muted); margin:14px 0 0}
+  .fn-foot a{color:inherit}
+  @media (max-width:420px){ .fn-title{font-size:19px} }
+</style>
+</head>
+<body>
+<noscript>This interactive requires JavaScript.</noscript>
+<div class="fn-wrap">
+  <p class="fn-kicker">Interactive · Field Note No. 06</p>
+  <h2 class="fn-title">Who Has Signed What</h2>
+  <p class="fn-lede">Eight selected agreements, institutions and legal frameworks across sixteen governments and jurisdictions. Select a column heading or any dot to open its explanation and sources above the table. The law column is a limited comparison, not a complete inventory of AI legislation. An unmarked entry does not establish the absence of domestic AI rules.</p>
+
+  <div class="fn-ctl">
+    <button class="fn-chip" id="f-all" aria-pressed="true">All governments</button>
+    <button class="fn-chip" id="f-nuke" aria-pressed="false">Nuclear-armed states only</button>
+    <button class="fn-chip" id="f-bind" aria-pressed="false">Binding instruments only</button>
+  </div>
+
+  <div class="fn-note" id="note" tabindex="-1" role="region" aria-label="Selected governance instrument"><b>Explore a column.</b> Select a heading or a dot to see its scope and sources here.</div>
+
+  <div class="fn-scroll"><table aria-label="Selected AI governance agreements, institutions and laws" id="t"></table></div>
+
+  <div class="fn-legend">
+    <span><i class="dot v1"></i> endorsed / established / in force</span>
+    <span><i class="dot v2"></i> partial or announced</span>
+    <span><i class="dot v0"></i> not recorded here</span>
+    <span><i class="dot v3"></i> not confirmed</span>
+    <span><i class="dot v4"></i> not applicable</span><span>● legally binding</span>
+  </div>
+
+  <div class="fn-stat" id="stat"></div>
+
+  <p class="fn-foot">Compiled October 2026 from the dated sources below; institutional and legal coverage is illustrative, not a complete current inventory. Non-binding instruments are endorsements, not obligations. Eight previously uncertain entries were checked against primary sources on October 27, 2026. India’s REAIM entry remains unconfirmed. “Not recorded here” means absent from the cited list or outside this limited inventory; it does not establish a refusal or current status. Select Paris, Military AI declaration, or REAIM for dated verification notes. Sources: <a href="https://www.gov.uk/government/publications/ai-safety-summit-2023-the-bletchley-declaration">Bletchley Declaration</a>; <a href="https://www.gov.uk/government/publications/seoul-declaration-for-safe-innovative-and-inclusive-ai-ai-seoul-summit-2024">Seoul Declaration</a>; <a href="https://www.elysee.fr/en/emmanuel-macron/2025/02/11/statement-on-inclusive-and-sustainable-artificial-intelligence-for-people-and-the-planet">Paris AI Action Summit</a>; <a href="https://2021-2025.state.gov/bureau-of-arms-control-deterrence-and-stability/political-declaration-on-responsible-military-use-of-artificial-intelligence-and-autonomy/">Political Declaration on Responsible Military Use of AI (archive; may be unavailable)</a>; <a href="https://www.mofa.go.kr/eng/brd/m_5674/view.do?seq=321057">REAIM 2024 outcome</a>; <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng/pdf#page=45">EU AI Act, Article 2: scope (PDF, p. 45)</a>; <a href="https://www.presidency.ucsb.edu/documents/readout-president-joe-bidens-meeting-with-president-xi-jinping-the-peoples-republic-1">U.S.–China readout, Nov. 2024</a>; SIPRI Yearbook 2026 for nuclear-armed states.</p>
+</div>
+
+<script>
+(function(){
+  // Instruments. binding: true only for enforceable law. military: does the instrument reach military use?
+  var INS = [
+    {k:'blet', h:'Bletchley<br>Nov 2023', name:'Bletchley Declaration', binding:false,
+     what:'Signed by 28 countries and the EU at the first AI Safety Summit. A shared statement that frontier AI carries serious risks and that governments should cooperate on safety. No obligations, no verification.', mil:'Silent on military use.'},
+    {k:'seoul', h:'Seoul<br>May 2024', name:'Seoul Declaration', binding:false,
+     what:'Leaders-level declaration signed by 10 countries and the EU. Launched the international network of AI safety institutes. China attended the summit but did not sign; 27 countries signed the broader ministerial statement.', mil:'Silent on military use.'},
+    {k:'paris', h:'Paris<br>Feb 2025', name:'Paris Statement on Inclusive and Sustainable AI', binding:false,
+     what:'The published list names 63 countries, the African Union Commission and the EU. Emphasis shifted from safety to inclusion, energy use and public-interest AI. The United States and United Kingdom are absent from that list.', mil:'The statement explicitly covers civil applications and use of AI only (footnote 1).'},
+    {k:'aisi', h:'Safety<br>institute', name:'AI safety institute or equivalent', binding:false,
+     what:'A government body that evaluates advanced models. The international network launched in Nov 2024 (US, UK, Japan, Canada, France, Singapore, South Korea, Australia, Kenya, EU). Half-filled: an announced or differently constituted body (China’s CnAISDA; India’s announced institute).', mil:'Evaluates civilian frontier models. No mandate over military systems.'},
+    {k:'polit', h:'Military AI<br>declaration', name:'Political Declaration on Responsible Military Use of AI and Autonomy', binding:false,
+     what:'U.S.-led, unveiled Feb 2023; roughly 58 endorsing states by late 2024. Non-binding best practices: legal review, human chain of command, ability to disengage systems that behave unexpectedly. China and Russia are absent from the cited November 27, 2024 list.', mil:'Entirely about military use — but non-binding, with no verification.'},
+    {k:'reaim', h:'REAIM<br>Blueprint 2024', name:'REAIM Blueprint for Action', binding:false,
+     what:'Endorsed by 61 countries at the close of the summit, according to Korea’s Ministry of Foreign Affairs. Adopted at the Seoul summit on responsible military AI, Sept 2024. Includes language on keeping human control over nuclear-weapons decisions. China endorsed the 2023 Call to Action but not the 2024 Blueprint. Russia was not invited.', mil:'Entirely about military use — non-binding.'},
+    {k:'law', h:'Selected<br>AI laws ●', name:'Binding law on high-risk and general-purpose AI', binding:true,
+     what:'The EU AI Act is a comprehensive statute: legal duties for general-purpose model providers, extra duties for systemic-risk models, human-oversight requirements for high-risk systems. Half-filled: China’s binding but narrower rules on generative AI services.', mil:'The AI Act excludes AI used exclusively for military, defence or national-security purposes. This comparison does not assess every domestic AI law or its military scope.'},
+    {k:'usch', h:'US–China<br>nuclear 2024', name:'U.S.–China affirmation on human control of nuclear decisions', binding:false,
+     what:'Nov 16, 2024: the two presidents affirmed the need to maintain human control over the decision to use nuclear weapons. A statement of principle between two of the nine nuclear-armed states. It does not define what “human control” requires.', mil:'Directly about nuclear command — no definition, no verification, two parties.'}
+  ];
+  // 1 yes · 2 partial · 0 no · 3 not confirmed · 4 n/a
+  var C = [
+    {n:'United States', nuke:1, v:[1,1,0,1,1,1,0,1]},
+    {n:'China',         nuke:1, v:[1,0,1,2,0,0,2,1]},
+    {n:'Russia',        nuke:1, v:[0,0,0,0,0,0,0,0]},
+    {n:'United Kingdom',nuke:1, v:[1,1,0,1,1,1,0,0]},
+    {n:'France',        nuke:1, v:[1,1,1,1,1,1,1,0]},
+    {n:'India',         nuke:1, v:[1,0,1,2,0,3,0,0]},
+    {n:'Pakistan',      nuke:1, v:[0,0,0,0,0,1,0,0]},
+    {n:'Israel',        nuke:1, v:[1,0,0,0,1,0,0,0]},
+    {n:'North Korea',   nuke:1, v:[0,0,0,0,0,0,0,0]},
+    {n:'European Union',nuke:0, v:[1,1,1,1,4,4,1,0]},
+    {n:'Japan',         nuke:0, v:[1,1,1,1,1,1,0,0]},
+    {n:'South Korea',   nuke:0, v:[1,1,1,1,1,1,0,0]},
+    {n:'Germany',       nuke:0, v:[1,1,1,2,1,1,1,0]},
+    {n:'Canada',        nuke:0, v:[1,1,1,1,1,1,0,0]},
+    {n:'Australia',     nuke:0, v:[1,1,1,1,1,1,0,0]},
+    {n:'Singapore',     nuke:0, v:[1,1,1,1,1,1,0,0]}
+  ];
+  var LBL = {1:'endorsed / established / in force',2:'partial or announced',0:'not recorded here',3:'not confirmed',4:'not applicable'};
+
+  var verificationNotes = {"paris": "<p><b>Primary-source check · October 27, 2026:</b> The Élysée statement, published February 11, 2025, lists Singapore as a signatory. Pakistan and Israel do not appear in its signatory list. The separate Paris Pact membership list in footnote 2 is not this statement’s signatory list.</p><p><a href=\"https://www.elysee.fr/en/emmanuel-macron/2025/02/11/statement-on-inclusive-and-sustainable-artificial-intelligence-for-people-and-the-planet\" target=\"_blank\" rel=\"noopener noreferrer\">Élysée: statement and signatory list</a></p>", "polit": "<p><b>Primary-source check · October 27, 2026:</b> Pakistan does not appear in the State Department’s endorsing-states list dated November 27, 2024. This is a dated list check, not a claim about later endorsements. The archived page is intermittently unavailable; its indexed primary-source text supplied the list.</p><p><a href=\"https://2021-2025.state.gov/bureau-of-arms-control-deterrence-and-stability/political-declaration-on-responsible-military-use-of-artificial-intelligence-and-autonomy/\" target=\"_blank\" rel=\"noopener noreferrer\">U.S. State Department: November 27, 2024 endorsing states (archive)</a></p>", "reaim": "<p><b>Primary-source check · October 27, 2026:</b> Germany, Canada, Australia and Singapore explicitly confirm endorsement of the 2024 Blueprint in the government documents below. India’s attendance at the September 9–10, 2024 REAIM Summit is confirmed by the Ministry of External Affairs annual report. Endorsement of the 2024 Blueprint remains unconfirmed from primary sources. Summit attendance is not endorsement.</p><ul><li><a href=\"https://docs-library.unoda.org/General_Assembly_First_Committee_-Eightieth_session_%282025%29/79-239-Germany-en.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">Germany: 2025 submission to the UN, p. 2</a></li><li><a href=\"https://www.canada.ca/en/department-national-defence/news/2024/09/minister-of-national-defence-remarks-at-the-responsible-ai-in-the-military-domain-reaim-summit-2024.html\" target=\"_blank\" rel=\"noopener noreferrer\">Canada: Defence Minister’s remarks, September 10, 2024</a></li><li><a href=\"https://www.defence.gov.au/sites/default/files/2026-03/Policy-Settings-for-Responsible-Use-of-Artificial-Intelligence-in-Defence-%5BOFFICIAL%5D.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">Australia: Defence policy settings, March 2026, p. 5</a></li><li><a href=\"https://www.mindef.gov.sg/news-and-events/latest-releases/10sep24_nr/\" target=\"_blank\" rel=\"noopener noreferrer\">Singapore: Ministry of Defence, September 10, 2024</a></li><li><a href=\"https://www.mea.gov.in/images/CPV/140725MEAAnnualReport2024English.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">India: Ministry of External Affairs annual report 2024, “AI in the Military Domain” (attendance confirmation)</a></li></ul>"};
+
+  var state = {nukeOnly:false, bindOnly:false, sel:-1};
+  var $ = function(id){return document.getElementById(id)};
+
+  function render(){
+    var t = $('t'), h = '<thead><tr><th class="c">Government</th>';
+    INS.forEach(function(i,ix){
+      var cls = (ix===state.sel?'selected-col ':'') + (state.bindOnly && !i.binding ? 'dim-col':'');
+      h += '<th scope="col" data-i="'+ix+'" class="'+cls+'"><button class="fn-col" data-i="'+ix+'" aria-controls="note" aria-pressed="'+(ix===state.sel)+'">'+i.h+'</button></th>';
+    });
+    h += '</tr></thead><tbody>';
+    C.forEach(function(c){
+      var dim = state.nukeOnly && !c.nuke;
+      h += '<tr class="'+(dim?'dim':'')+'"><th scope="row" class="c">'+c.n+(c.nuke?'<span class="nuke">NUCLEAR</span>':'')+'</th>';
+      c.v.forEach(function(v,ix){
+        
+        h += '<td data-i="'+ix+'" class="'+(ix===state.sel?'selected-col ':'')+(state.bindOnly && !INS[ix].binding ? 'dim-col':'')+'" title="'+c.n+' — '+INS[ix].name+': '+LBL[v]+'"><i aria-hidden="true" class="dot v'+v+'"></i><span class="sr-only">'+LBL[v]+'</span></td>';
+      });
+      h += '</tr>';
+    });
+    t.innerHTML = h+'</tbody>';
+    stat(); note();
+  }
+
+  function note(){
+    var n = $('note');
+    if(state.sel<0){
+      if(state.bindOnly){ n.innerHTML = '<b>One column survives.</b> This column compares selected binding laws. Other columns cover voluntary agreements or institutions. The EU AI Act excludes exclusively military, defence and national-security uses. Select the heading for context.'; return; }
+      n.innerHTML = '<b>Explore a column.</b> Select a heading or a dot to see its scope and sources here.'; return;
+    }
+    var i = INS[state.sel];
+    var nukes = C.filter(function(c){return c.nuke});
+    var yes = nukes.filter(function(c){return c.v[state.sel]===1}).map(function(c){return c.n});
+    var no  = nukes.filter(function(c){return c.v[state.sel]===0}).map(function(c){return c.n});
+    n.innerHTML = '<h3>'+i.name+'</h3><p>'+(i.binding?'Legally binding.':'Non-binding.')+' '+i.what+'</p>'+
+      '<br><br><b>Military scope:</b> '+i.mil+
+      '<br><br><b>Nuclear-armed states marked as full participants:</b> '+(yes.length? yes.join(', ') : 'none')+' ('+yes.length+' of 9).'+
+      (no.length? ' <b>Not recorded as participants here:</b> '+no.join(', ')+'.' : '')+
+      (verificationNotes[i.k] || '')+'<button class="fn-back" id="back-to-table">Back to selected column</button>';
+    $('back-to-table').addEventListener('click', function(){
+      var heading = $('t').querySelector('button[data-i="'+state.sel+'"]');
+      heading.focus({preventScroll:true});
+      reveal(heading);
+    });
+  }
+
+  function reveal(target){
+    // The document is bundled into a same-origin srcdoc. Scroll the host page
+    // explicitly so its fixed navigation cannot hide the selected explanation.
+    if(window.frameElement){
+      window.scrollTo(0, 0);
+      var top = window.parent.scrollY + window.frameElement.getBoundingClientRect().top + target.getBoundingClientRect().top - 80;
+      window.parent.scrollTo({top:top, behavior:'instant'});
+    } else {
+      target.scrollIntoView({block:'start', inline:'nearest'});
+    }
+  }
+
+  // Delegate clicks so headings, their padding, and all dots select a column.
+  // Keep the table DOM stable on selection, preserving focus and horizontal scroll.
+  $('t').addEventListener('click', function(event){
+    var cell = event.target.closest('[data-i]');
+    if(!cell) return;
+    state.sel = Number(cell.getAttribute('data-i'));
+    Array.prototype.forEach.call($('t').querySelectorAll('th[data-i], td[data-i]'), function(el){
+      el.classList.toggle('selected-col', Number(el.getAttribute('data-i'))===state.sel);
+    });
+    Array.prototype.forEach.call($('t').querySelectorAll('button[data-i]'), function(button){
+      button.setAttribute('aria-pressed', Number(button.getAttribute('data-i'))===state.sel?'true':'false');
+    });
+    note();
+    // Let the host ResizeObserver accommodate the expanded explanation first.
+    $('note').focus({preventScroll:true});
+    reveal($('note'));
+    window.parent.setTimeout(function(){ reveal($('note')); }, 150);
+  });
+
+  function stat(){
+    var nukes = C.filter(function(c){return c.nuke});
+    var inNone = nukes.filter(function(c){return c.v.every(function(v){return v!==1 && v!==2})}).map(function(c){return c.n});
+    /* Summary refers to the selected entries, not all governance worldwide. */
+    
+    $('stat').innerHTML =
+      'No column in this selection records full participation by all nine nuclear-armed states, or by the United States, China and Russia together. '+
+      (inNone.length? inNone.join(' and ')+' have no recorded participation in this selection. ' : '')+
+      'The EU AI Act excludes exclusively military, defence and national-security uses. Legal coverage in other jurisdictions must be assessed separately.';
+  }
+
+  function setChip(id, on){ $(id).setAttribute('aria-pressed', on?'true':'false'); }
+  $('f-all').addEventListener('click', function(){ state.nukeOnly=false; setChip('f-all',true); setChip('f-nuke',false); render(); });
+  $('f-nuke').addEventListener('click', function(){ state.nukeOnly=true; setChip('f-all',false); setChip('f-nuke',true); render(); });
+  $('f-bind').addEventListener('click', function(){ state.bindOnly=!state.bindOnly; setChip('f-bind',state.bindOnly); if(state.bindOnly){state.sel=-1;} render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
