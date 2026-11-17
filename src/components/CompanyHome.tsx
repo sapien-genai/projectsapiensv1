@@ -191,7 +191,7 @@ export default function CompanyHome() {
 <div>
 <p>The interesting part of AI is what people can do with it.</p>
 <p className="small">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice, and digital products to the work of building useful software. We connect strategic judgment with hands-on development, from the first question to the next iteration.</p>
-<a className="textlink" href="https://tonymarks.com/" target="_blank" rel="noopener">Meet the founder ↗</a>
+<a className="textlink" href="/about/#founder">Meet the founder ↗</a>
 </div>
 </section>
 <section className="section" id="field-notes" style={{"paddingTop": "0"}}>
