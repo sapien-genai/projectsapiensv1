@@ -21,7 +21,7 @@ export default function HeroSculpture() {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     let width = 0, height = 0, scale = 1, frame = 0, last = 0, time = 0;
     let inView = true, following = false, targetX = 0, targetY = 0;
-    let focusX = 0, focusY = 0;
+    let focusX = 0, focusY = 0, engagement = 0;
     const birds: Bird[] = Array.from({ length: COUNT }, (_, i) => {
       const angle = i * 2.399963, radius = Math.sqrt((i + .5) / COUNT);
       return { x: Math.cos(angle) * radius * 300, y: Math.sin(angle) * radius * 210,
@@ -29,11 +29,18 @@ export default function HeroSculpture() {
         phase: i * 1.71, depth: .45 + ((i * 37) % 100) / 180 };
     });
     function step(dt: number) {
+      // Ease into pursuit quickly, then coast back to a quieter idle pace.
+      // Scale the simulation clock so steering, spacing, and wingbeats stay in sync.
+      const response = 1 - Math.exp(-dt / (following ? 14 : 35));
+      engagement += ((following ? 1 : 0) - engagement) * response;
+      dt *= .65 + engagement * .85;
       time += dt / 60;
       const destinationX = following ? targetX : Math.cos(time * .32) * 145;
       const destinationY = following ? targetY : Math.sin(time * .47) * 100;
-      focusX += (destinationX - focusX) * .025 * dt;
-      focusY += (destinationY - focusY) * .025 * dt;
+      const focusResponse = 1 - Math.exp(-(.025 + engagement * .045) * dt);
+      focusX += (destinationX - focusX) * focusResponse;
+      focusY += (destinationY - focusY) * focusResponse;
+      const attraction = .00022 + engagement * .00018;
       const forces = birds.map((bird, index) => {
         let neighbours = 0, cx = 0, cy = 0, ax = 0, ay = 0, sx = 0, sy = 0;
         for (let j = 0; j < birds.length; j++) {
@@ -51,8 +58,8 @@ export default function HeroSculpture() {
           fy += (cy / neighbours - bird.y) * .00025 + (ay / neighbours - bird.vy) * .04;
         }
         // A moving shared heading pulls the flock into sweeping, collective turns.
-        fx += (focusX - bird.x) * .00022 + Math.cos(time * .63 + bird.y * .006) * .013;
-        fy += (focusY - bird.y) * .00022 + Math.sin(time * .55 + bird.x * .006) * .013;
+        fx += (focusX - bird.x) * attraction + Math.cos(time * .63 + bird.y * .006) * .013;
+        fy += (focusY - bird.y) * attraction + Math.sin(time * .55 + bird.x * .006) * .013;
         if (Math.abs(bird.x) > 320) fx -= Math.sign(bird.x) * (Math.abs(bird.x) - 320) * .003;
         if (Math.abs(bird.y) > 240) fy -= Math.sign(bird.y) * (Math.abs(bird.y) - 240) * .003;
         return { fx, fy };
