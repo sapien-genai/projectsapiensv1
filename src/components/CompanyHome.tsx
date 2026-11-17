@@ -1,122 +1,238 @@
+import { useEffect } from 'react';
 import CompanyHeader from './CompanyHeader';
 import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
-import { ArrowUpRight, Radio, AudioLines } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import HeroSculpture from './HeroSculpture';
 import './CompanyHome.css';
-
-const pastWork = [
-  { file: 'riowhite.png', name: 'Rio 2016' },
-  { file: 'PyeongChang_2018_Winter_Olympics.png', name: 'PyeongChang 2018' },
-  { file: 'olympicchannelwhite.png', name: 'Olympic Channel' },
-  { file: 'newbalancewhite.png', name: 'New Balance' },
-  { file: 'virginatlanticwhite.png', name: 'Virgin Atlantic' },
-  { file: 'broncoswhite.png', name: 'Denver Broncos' },
-];
-
-const fieldNotes = [
-  { number: '06', title: 'What We Choose to Delegate', topic: 'AI & judgment', description: 'What meaningful human control requires when AI systems can act on our behalf.', slug: 'the-nuclear-lesson' },
-  { number: '05', title: 'What “Attention Is All You Need” Actually Changed', topic: 'Research & product decisions', description: 'What the Transformer paper changed—and how those ideas shape the products we build.', slug: 'attention-is-all-you-need' },
-  { number: '02', title: 'AI Brand Visibility', topic: 'AI & discovery', description: 'Why being understood by AI may become as important as being found in search.', slug: 'ai-brand-visibility' },
-];
+import './CompanyPreview.css';
 
 export default function CompanyHome() {
-  const mainRef = useRef<HTMLElement>(null);
-  const [logosPaused, setLogosPaused] = useState(false);
-  useEffect(() => { document.title = 'Project Sapiens — Practical AI products'; }, []);
-  useEffect(() => {
-    if (!('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('company-entered');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    mainRef.current?.querySelectorAll('[data-company-reveal]').forEach(element => observer.observe(element));
-    return () => observer.disconnect();
-  }, []);
-  const link = 'inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4';
-  return (
-    <div className="company-site min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
-      <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>
-      <CompanyHeader />
-      <main ref={mainRef} id="main" className="mx-auto max-w-6xl px-6 md:px-10">
-        <section className="company-hero py-20 md:py-28">
-          <p className="mb-7 text-xs font-bold uppercase tracking-[0.2em]">Independent thinking. Practical intelligence.</p>
-          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-7xl md:text-8xl">Complex information.<br /><span className="text-[#68745b]">Useful experiences.</span></h1>
-          <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#526055]">We build practical AI products, explore how intelligent systems should work, and share what we learn along the way.</p>
-          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2"><a href="#work" className={link}>Explore our work <ArrowUpRight aria-hidden="true" size={19} /></a><a href="#field-notes" className={link}>Read Field Notes <ArrowUpRight aria-hidden="true" size={19} /></a></div>
-          <p className="mt-10 max-w-xl border-l-2 border-[#68745b] pl-4 text-sm leading-relaxed text-[#526055]">
-            Project Sapiens is a member of the{' '}
-            <strong className="font-semibold text-[#172820]">OpenAI Partner Network.</strong>
-          </p>
-        </section>
-        <section aria-labelledby="past-work-title" className="mb-16 border-y border-[#172820]/20 py-7">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div><h2 id="past-work-title" className="text-xs font-bold uppercase tracking-[0.2em]">Experience on a global stage</h2><p className="mt-2 text-sm text-[#526055]">Selected past work by Tony Marks and the Sapien AI team.</p></div>
-            <button type="button" onClick={() => setLogosPaused(value => !value)} aria-pressed={logosPaused} className="company-logo-toggle min-h-11 text-sm font-semibold underline underline-offset-4">{logosPaused ? 'Resume logos' : 'Pause logos'}</button>
-          </div>
-          <div className="company-logo-window mt-7">
-            <div className="company-logo-track" style={{ animationPlayState: logosPaused ? 'paused' : undefined }}>
-              {[0, 1].map(copy => <ul key={copy} aria-hidden={copy === 1 ? true : undefined} className="company-logo-group">
-                {pastWork.map(client => <li key={client.name} className="flex h-24 w-36 shrink-0 items-center justify-center"><img src={`/clients/${client.file}`} alt={copy === 0 ? client.name : ''} className="max-h-20 w-28 object-contain" style={{ filter: 'brightness(0) opacity(0.6)' }} /></li>)}
-              </ul>)}
-            </div>
-          </div>
-        </section>
-        <OpenAISolutions />
-        <section id="work" aria-labelledby="work-title" className="scroll-mt-8 py-4">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Current work</p>
-          <h2 id="work-title" className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">What we’re building and exploring.</h2>
-          <div className="mt-9 grid gap-6 md:grid-cols-2">
-            <article data-company-reveal className="company-lift flex flex-col rounded-3xl bg-[#172820] p-7 text-[#f4f2ec] md:p-9">
-              <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#d8eb94]">Live product</p><Radio aria-hidden="true" className="text-[#d8eb94]" size={28} /></div>
-              <h3 className="mt-9"><img src="/hotline-sports-logo.png" alt="Hotline Sports" width="460" height="48" className="h-auto w-full max-w-[350px]" /></h3>
-              <p className="mt-6 text-2xl leading-snug text-[#d8eb94]">Find the game.<br />Find your way to watch.</p>
-              <p className="mb-6 mt-5 leading-relaxed text-white/80">Schedules, broadcast information, and personalized watch options come together in one guide—helping fans decide what to watch and where to find it.</p>
-              <a href="https://hotlinesports.com" className={`${link} mt-auto text-[#d8eb94]`}>Visit Hotline Sports <ArrowUpRight aria-hidden="true" size={19} /></a>
-            </article>
-            <article data-company-reveal className="company-lift flex flex-col rounded-3xl border border-[#172820]/20 p-7 md:p-9">
-              <div className="flex items-center justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Ongoing research</p><AudioLines aria-hidden="true" size={28} className="text-[#68745b]" /></div>
-              <h3 className="mt-9 text-3xl font-semibold tracking-tight">Pronunciation intelligence.</h3>
-              <p className="mt-6 text-2xl leading-snug text-[#68745b]">Getting a name right matters.</p>
-              <p className="mb-6 mt-5 leading-relaxed text-[#526055]">Research into helping speech systems pronounce people’s names accurately, using verified references and phoneme mappings. An exploration rooted in real experience building voice products for sports.</p>
-              <a className={`${link} mt-auto`} href="https://tonymarks.com/writing/pronunciation-intelligence">Explore the research <ArrowUpRight aria-hidden="true" size={19} /></a>
-            </article>
-          </div>
-        </section>
-        <section id="field-notes" aria-labelledby="field-notes-title" className="scroll-mt-8 border-b border-[#172820]/20 py-20">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">From the work</p><h2 id="field-notes-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">Field Notes</h2><p className="mt-5 max-w-xl leading-relaxed text-[#526055]">What we’re learning about AI, products, and the decisions behind them. Written by founder Tony Marks.</p></div>
-            <a href="https://tonymarks.com/#field-notes" className={link}>All Field Notes <ArrowUpRight aria-hidden="true" size={19} /></a>
-          </div>
-          <div className="mt-10 grid gap-9 md:grid-cols-3">
-            {fieldNotes.map(note => <article key={note.slug} data-company-reveal className="flex flex-col border-t border-[#172820]/20 pt-5">
-              <a href={`https://tonymarks.com/writing/${note.slug}`} className="group flex h-full flex-col rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
-                <img src={`/field-notes/field-note-${note.number}.png`} alt="" width="1200" height="630" loading="lazy" decoding="async" className="mb-6 aspect-[1200/630] w-full rounded-xl object-cover" />
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#68745b]">No. {note.number} · {note.topic}</p>
-                <h3 className="mt-3 text-xl font-semibold leading-snug tracking-tight group-hover:underline underline-offset-4">{note.title}</h3>
-                <p className="mb-5 mt-3 text-sm leading-relaxed text-[#526055]">{note.description}</p>
-                <span className="mt-auto inline-flex min-h-11 items-center gap-2 text-sm font-semibold">Read on tonymarks.com <ArrowUpRight aria-hidden="true" size={17} /></span>
-              </a>
-            </article>)}
-          </div>
-        </section>
-        <section id="company" className="grid scroll-mt-8 gap-6 border-b border-[#172820]/20 py-16 md:grid-cols-[1fr_2fr] md:gap-16">
-          <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">The company</p><h2 className="mt-5 text-3xl font-semibold tracking-tight">Built from experience.</h2></div>
-          <div><p className="leading-relaxed text-[#526055]">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice, and digital products to the practical challenges of building useful software.</p><a className={`${link} mt-5`} href="https://tonymarks.com">Meet the founder <ArrowUpRight aria-hidden="true" size={17} /></a></div>
-        </section>
-        <section aria-labelledby="engagement-title" className="border-b border-[#172820]/20 py-16">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Work with us</p>
-          <h2 id="engagement-title" className="mt-5 text-3xl font-semibold tracking-tight">Experienced help, at the right level.</h2>
-          <p className="mt-5 max-w-2xl leading-relaxed text-[#526055]">Project-based strategy and development, fractional AI leadership, and ongoing advisory retainers. We help you define, build, and improve useful AI products.</p>
-          <a className={`${link} mt-5`} href="/work-with-us/">Explore working together <ArrowUpRight aria-hidden="true" size={17} /></a>
-        </section>
-        <ClientInquiryForm />
-      </main>
-      <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 border-t border-[#172820]/20 px-6 py-7 text-sm text-[#526055] md:px-10"><p>© {new Date().getFullYear()} Project Sapiens, Inc.</p><a href="/academy/login" className={link}>Learning platform sign in <ArrowUpRight aria-hidden="true" size={16} /></a></footer>
-    </div>
-  );
+ useEffect(() => { document.title = 'Project Sapiens — Intelligence built for your business'; }, []);
+ return <div className="company-site sp-site">
+<a className="sp-skip" href="#main">Skip to content</a>
+<CompanyHeader/>
+<main id="main">
+<div className="wrap">
+<section className="hero">
+<div className="hero-top">
+<span className="eyebrow">Member of the OpenAI Partner Network</span>
+<span className="eyebrow status">
+<i className="dot">
+</i> Strategy → Product → Progress</span>
+</div>
+<h1>Intelligence.<br />
+<em>Built for<br />your business.</em>
+</h1>
+<HeroSculpture />
+<div className="hero-bottom">
+<div>
+<p className="intro">We turn OpenAI technology into practical products, agents, and voice experiences. From the first useful prototype to the work your business depends on.</p>
+<div className="hero-ctas">
+<a className="pill" href="#work">See what we’re building <span className="arrow">↘</span>
+</a>
+<a className="textlink" href="#contact">Build with us ↗</a>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div className="partner-band">
+<div className="partner-lockup">
+<span className="membership-mark" aria-hidden="true">↗</span>
+<div>
+<small>PROJECT SAPIENS IS A MEMBER OF THE</small>
+<strong>OpenAI Partner Network</strong>
+</div>
+</div>
+<p>OpenAI technology.<br />Independent expertise. Hands-on delivery.</p>
+<a href="#solutions">Explore what we can build <span>↗</span>
+</a>
+</div>
+<div className="wrap">
+<OpenAISolutions />
+</div>
+<section className="work" id="work">
+<div className="wrap">
+<div className="section-top">
+<div className="eyebrow">02 / Out in the world</div>
+<h2>Ideas are good.<br />Built is better.</h2>
+</div>
+<div className="work-layout">
+<div>
+<span className="eyebrow">Live product / Sports discovery</span>
+<h3>Find the game.<br />Find your way<br />to watch.</h3>
+<p>Hotline Sports brings schedules, broadcast information, and personalized watch options into one useful guide.</p>
+<a className="textlink" href="https://hotlinesports.com/" target="_blank" rel="noopener">Explore Hotline Sports ↗</a>
+</div>
+<a className="sports-art actual-product" href="https://hotlinesports.com/" target="_blank" rel="noopener">
+<img className="hotline-wordmark" src="/hotline-sports-logo.png" alt="Hotline Sports" />
+<img className="product-screen" src="/hotline-preview.jpg" alt="Hotline Sports game discovery interface" loading="lazy" />
+<span>Explore the live product ↗</span>
+</a>
+</div>
+<div className="research">
+<div>
+<span className="eyebrow">Ongoing research / Pronunciation intelligence</span>
+<h3>Every name matters.</h3>
+<p>Exploring how speech systems can get people’s names right—with verified references and phoneme mappings.</p>
+<a className="textlink" href="https://tonymarks.com/writing/pronunciation-intelligence" target="_blank" rel="noopener">Inside the research ↗</a>
+</div>
+<div>
+<div className="wave" aria-hidden="true">
+<i style={{"height": "15px"}}>
+</i>
+<i style={{"height": "24px"}}>
+</i>
+<i style={{"height": "35px"}}>
+</i>
+<i style={{"height": "38px"}}>
+</i>
+<i style={{"height": "25px"}}>
+</i>
+<i style={{"height": "31px"}}>
+</i>
+<i style={{"height": "56px"}}>
+</i>
+<i style={{"height": "65px"}}>
+</i>
+<i style={{"height": "47px"}}>
+</i>
+<i style={{"height": "22px"}}>
+</i>
+<i style={{"height": "64px"}}>
+</i>
+<i style={{"height": "87px"}}>
+</i>
+<i style={{"height": "75px"}}>
+</i>
+<i style={{"height": "30px"}}>
+</i>
+<i style={{"height": "56px"}}>
+</i>
+<i style={{"height": "96px"}}>
+</i>
+<i style={{"height": "98px"}}>
+</i>
+<i style={{"height": "58px"}}>
+</i>
+<i style={{"height": "35px"}}>
+</i>
+<i style={{"height": "90px"}}>
+</i>
+<i style={{"height": "110px"}}>
+</i>
+<i style={{"height": "83px"}}>
+</i>
+<i style={{"height": "23px"}}>
+</i>
+<i style={{"height": "70px"}}>
+</i>
+<i style={{"height": "105px"}}>
+</i>
+<i style={{"height": "96px"}}>
+</i>
+<i style={{"height": "49px"}}>
+</i>
+<i style={{"height": "42px"}}>
+</i>
+<i style={{"height": "87px"}}>
+</i>
+<i style={{"height": "94px"}}>
+</i>
+<i style={{"height": "63px"}}>
+</i>
+<i style={{"height": "16px"}}>
+</i>
+<i style={{"height": "60px"}}>
+</i>
+<i style={{"height": "77px"}}>
+</i>
+<i style={{"height": "63px"}}>
+</i>
+<i style={{"height": "29px"}}>
+</i>
+<i style={{"height": "34px"}}>
+</i>
+<i style={{"height": "51px"}}>
+</i>
+<i style={{"height": "47px"}}>
+</i>
+<i style={{"height": "30px"}}>
+</i>
+<i style={{"height": "18px"}}>
+</i>
+<i style={{"height": "25px"}}>
+</i>
+<i style={{"height": "22px"}}>
+</i>
+</div>
+<div className="eyebrow" style={{"textAlign": "center"}}>Human detail. Technical depth.</div>
+</div>
+</div>
+</div>
+</section>
+<div className="wrap">
+<section className="proof">
+<div className="proof-label">Selected past work by Tony Marks and the Sapien AI team</div>
+<div className="logos">
+<img src="/clients/riowhite.png" alt="Rio 2016" loading="lazy" />
+<img src="/clients/PyeongChang_2018_Winter_Olympics.png" alt="PyeongChang 2018" loading="lazy" />
+<img src="/clients/olympicchannelwhite.png" alt="Olympic Channel" loading="lazy" />
+<img src="/clients/newbalancewhite.png" alt="New Balance" loading="lazy" />
+<img src="/clients/virginatlanticwhite.png" alt="Virgin Atlantic" loading="lazy" />
+<img src="/clients/broncoswhite.png" alt="Denver Broncos" loading="lazy" />
+</div>
+</section>
+<section id="company" className="section about">
+<div>
+<div className="eyebrow">03 / The way we think</div>
+<h2>Curious minds.<br />Working hands.</h2>
+</div>
+<div>
+<p>The interesting part of AI is what people can do with it.</p>
+<p className="small">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice, and digital products to the work of building useful software. We connect strategic judgment with hands-on development, from the first question to the next iteration.</p>
+<a className="textlink" href="https://tonymarks.com/" target="_blank" rel="noopener">Meet the founder ↗</a>
+</div>
+</section>
+<section className="section" id="field-notes" style={{"paddingTop": "0"}}>
+<div className="section-top">
+<div className="eyebrow">04 / Field Notes</div>
+<h2>Thinking in public.</h2>
+</div>
+<div className="notes">
+<a className="note" href="https://tonymarks.com/writing/the-nuclear-lesson" target="_blank" rel="noopener">
+<small>NO. 06 / AI & JUDGMENT</small>
+<h3>What We Choose<br />to Delegate</h3>
+<span className="arrow">↗</span>
+</a>
+<a className="note" href="https://tonymarks.com/writing/attention-is-all-you-need" target="_blank" rel="noopener">
+<small>NO. 05 / RESEARCH & PRODUCT</small>
+<h3>What “Attention Is All You Need” Actually Changed</h3>
+<span className="arrow">↗</span>
+</a>
+<a className="note" href="https://tonymarks.com/writing/ai-brand-visibility" target="_blank" rel="noopener">
+<small>NO. 02 / AI & DISCOVERY</small>
+<h3>AI Brand<br />Visibility</h3>
+<span className="arrow">↗</span>
+</a>
+</div>
+</section>
+</div>
+<section className="engagement wrap">
+<div className="eyebrow">Work with us</div>
+<h2>Experienced help.<br />The right level.</h2>
+<p>Project-based strategy and development, fractional AI leadership, and ongoing advisory.</p>
+<a className="pill" href="/work-with-us/">Explore working together ↗</a>
+</section>
+<div className="wrap inquiry-wrap">
+<ClientInquiryForm previewOnly={import.meta.env.DEV} />
+</div>
+</main>
+<div className="wrap">
+<footer>
+<span>© 2026 Project Sapiens, Inc.</span>
+<a href="/academy/login">Learning platform sign in ↗</a>
+<a href="#">Back to top ↑</a>
+</footer>
+</div>{import.meta.env.DEV && <div className="sp-preview-label">LOCAL PREVIEW · NOT PUBLISHED</div>}</div>;
 }
