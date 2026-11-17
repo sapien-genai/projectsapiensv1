@@ -22,6 +22,7 @@ export default function HeroSculpture() {
     let width = 0, height = 0, scale = 1, frame = 0, last = 0, time = 0;
     let inView = true, following = false, targetX = 0, targetY = 0;
     let focusX = 0, focusY = 0, engagement = 0;
+    let touchId: number | null = null;
     const birds: Bird[] = Array.from({ length: COUNT }, (_, i) => {
       const angle = i * 2.399963, radius = Math.sqrt((i + .5) / COUNT);
       return { x: Math.cos(angle) * radius * 300, y: Math.sin(angle) * radius * 210,
@@ -108,29 +109,56 @@ export default function HeroSculpture() {
       canvas!.width = Math.round(width * density); canvas!.height = Math.round(height * density);
       ctx.setTransform(density, 0, 0, density, 0, 0); draw();
     }
-    function move(event: PointerEvent) {
-      if (event.pointerType === 'touch') return;
+    function guide(clientX: number, clientY: number) {
       const rect = canvas!.getBoundingClientRect();
-      following = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      following = scale > 0 && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
       if (following) {
-        targetX = Math.max(-280, Math.min(280, (event.clientX - rect.left - width * .5) / scale));
-        targetY = Math.max(-190, Math.min(190, (event.clientY - rect.top - height * .47) / scale));
+        targetX = Math.max(-280, Math.min(280, (clientX - rect.left - width * .5) / scale));
+        targetY = Math.max(-190, Math.min(190, (clientY - rect.top - height * .47) / scale));
       }
     }
-    function leave() { following = false; }
+    function move(event: PointerEvent) {
+      if (event.pointerType !== 'touch' && touchId === null) guide(event.clientX, event.clientY);
+    }
+    function leave() { if (touchId === null) following = false; }
+    // Observe native touch gestures without cancelling scrolling, zooming, or capturing input.
+    function touchStart(event: TouchEvent) {
+      if (event.touches.length !== 1) { touchId = null; following = false; return; }
+      const touch = event.touches[0];
+      guide(touch.clientX, touch.clientY);
+      touchId = following ? touch.identifier : null;
+    }
+    function touchMove(event: TouchEvent) {
+      if (touchId === null) return;
+      if (event.touches.length !== 1) { touchId = null; following = false; return; }
+      const touch = Array.from(event.touches).find(item => item.identifier === touchId);
+      if (touch) guide(touch.clientX, touch.clientY);
+    }
+    function touchEnd(event: TouchEvent) {
+      if (touchId !== null && Array.from(event.changedTouches).some(touch => touch.identifier === touchId)) {
+        touchId = null;
+        following = false;
+      }
+    }
     function preference(event: MediaQueryListEvent) { pauseRef.current = event.matches; setPaused(event.matches); resume(); }
     const size = new ResizeObserver(resize);
     const visibility = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; resume(); });
     size.observe(canvas); visibility.observe(hero);
     hero.addEventListener('pointermove', move); hero.addEventListener('pointerleave', leave);
+    hero.addEventListener('touchstart', touchStart, { passive: true });
+    hero.addEventListener('touchmove', touchMove, { passive: true });
+    document.addEventListener('touchend', touchEnd, { passive: true });
+    document.addEventListener('touchcancel', touchEnd, { passive: true });
     document.addEventListener('visibilitychange', resume); reduced.addEventListener('change', preference);
     resumeRef.current = resume; resize(); resume();
     return () => {
       cancelAnimationFrame(frame); size.disconnect(); visibility.disconnect();
       hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave);
+      hero.removeEventListener('touchstart', touchStart); hero.removeEventListener('touchmove', touchMove);
+      document.removeEventListener('touchend', touchEnd); document.removeEventListener('touchcancel', touchEnd);
       document.removeEventListener('visibilitychange', resume); reduced.removeEventListener('change', preference);
       resumeRef.current = () => {};
     };
   }, []);
-  return <><div className="hero-art murmuration-art" aria-hidden="true"><canvas ref={canvasRef}/><div className="art-caption"><span>Many minds. One direction.</span><span className="flock-pointer-hint">Move your pointer to guide the flock.</span></div></div><button type="button" className="motion-toggle" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Play motion ▷' : 'Pause motion Ⅱ'}</button></>;
+  return <><div className="hero-art murmuration-art" aria-hidden="true"><canvas ref={canvasRef}/><div className="art-caption"><span>Many minds. One direction.</span><span className="flock-pointer-hint">Move your pointer to guide the flock.</span><span className="flock-touch-hint">Touch to guide the flock.</span></div></div><button type="button" className="motion-toggle" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Play motion ▷' : 'Pause motion Ⅱ'}</button></>;
 }
