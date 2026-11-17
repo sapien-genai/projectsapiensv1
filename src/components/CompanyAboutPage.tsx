@@ -47,6 +47,6 @@ export default function AboutPage() {
       ].map(([title, body, href, label]) => <a href={href} key={title}><h3>{title}</h3><p>{body}</p><span>{label} <ArrowUpRight size={18}/></span></a>)}</div></div></section>
       <section className="ps-about-cta"><p className="ps-about-label">Work with us</p><h2>Something worth<br />building together?</h2><p>Project-based strategy and development, fractional AI leadership, and ongoing advisory.</p><a className="ps-about-button" href="/work-with-us/">Explore working together <ArrowUpRight size={20}/></a><a className="ps-about-link" href="/#contact">Let’s talk <ArrowUpRight size={18}/></a></section>
     </main>
-    <footer className="ps-about-footer"><span>© {new Date().getFullYear()} Project Sapiens, Inc.</span><a href="/field-notes/">Field Notes</a><a href="/">Back to Project Sapiens ↗</a></footer>
+    <footer className="ps-about-footer"><span>© {new Date().getFullYear()} Project Sapiens, Inc.</span><a href="/field-notes/">Field Notes</a><a href="/">Back to Project Sapiens <ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></a></footer>
   </div>;
 }

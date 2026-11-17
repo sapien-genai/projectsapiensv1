@@ -38,4 +38,4 @@ export default function FieldNotesPage({ slug }: { slug?: string }) {
     </main><NotesFooter />
   </div>;
 }
-function NotesFooter() { return <footer className="fn-footer"><span>© {new Date().getFullYear()} Project Sapiens, Inc.</span><a href="/field-notes/">Field Notes</a><a href="/">Project Sapiens ↗</a></footer>; }
+function NotesFooter() { return <footer className="fn-footer"><span>© {new Date().getFullYear()} Project Sapiens, Inc.</span><a href="/field-notes/">Field Notes</a><a href="/">Project Sapiens <ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></a></footer>; }

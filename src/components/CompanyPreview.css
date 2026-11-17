@@ -16,3 +16,5 @@
 .company-site .sp-nav a.sp-contact-link { color: #fff; }
 
 @media (max-width: 800px) { .sp-site .hero-art { width: 100%; left: auto; right: auto; margin-left: 0; } }
+
+.sp-inline-arrow { display: inline-block; width: 1em; height: 1em; vertical-align: -0.15em; flex-shrink: 0; color: inherit; }
