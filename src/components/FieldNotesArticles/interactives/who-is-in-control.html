@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Is in Control?</title>
+<meta name="robots" content="noindex">
+<style>
+  html,body{margin:0;padding:0;background:#fff} body{padding:2px 0} .fn-wrap{--fn-bg-host:#fff;--fn-fg-host:#171717;--fn-muted-host:#666;--fn-line-host:#ddd;--fn-card-host:#f7f7f5;--fn-accent-host:#171717}
+  button:focus-visible,a:focus-visible{outline:2px solid #2463a7;outline-offset:3px} .fn-col{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:4px} .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+  /* Embed-friendly: inherits page font/colors if the host sets --fn-* vars; sensible defaults otherwise. */
+  .fn-wrap{
+    --fn-bg: var(--fn-bg-host, #ffffff);
+    --fn-fg: var(--fn-fg-host, #1a1a1a);
+    --fn-muted: var(--fn-muted-host, #6b6b6b);
+    --fn-line: var(--fn-line-host, #e3e3e3);
+    --fn-card: var(--fn-card-host, #f7f7f5);
+    --fn-accent: var(--fn-accent-host, #1a1a1a);
+    --fn-warn: #b4541a;
+    --fn-ok: #2f6b3a;
+    --fn-font: var(--fn-font-host, Georgia, "Times New Roman", serif);
+    --fn-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--fn-font); color: var(--fn-fg); background: var(--fn-bg);
+    max-width: 680px; margin: 0 auto; padding: 0 16px; line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark){
+    .fn-wrap{
+      --fn-bg: var(--fn-bg-host, #121212); --fn-fg: var(--fn-fg-host, #ececec);
+      --fn-muted: var(--fn-muted-host, #9a9a9a); --fn-line: var(--fn-line-host, #2c2c2c);
+      --fn-card: var(--fn-card-host, #1c1c1c); --fn-accent: var(--fn-accent-host, #ececec);
+      --fn-warn: #e08a4a; --fn-ok: #7fbf8c;
+    }
+  }
+  .fn-kicker{font: 600 12px/1 var(--fn-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--fn-muted); margin:0 0 8px}
+  .fn-title{font-size:22px; margin:0 0 6px; font-weight:600}
+  .fn-lede{color:var(--fn-muted); margin:0 0 18px; font-size:15px}
+  .fn-card{border:1px solid var(--fn-line); background:var(--fn-card); border-radius:10px; padding:18px 18px 16px; margin:0 0 14px}
+  .fn-row{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .fn-sys{font: 12px/1.2 var(--fn-mono); color:var(--fn-muted)}
+  .fn-timer{font: 600 13px/1 var(--fn-mono); color:var(--fn-warn); white-space:nowrap}
+  .fn-h{font-size:17px; margin:10px 0 6px; font-weight:600}
+  .fn-p{margin:0 0 10px; font-size:15px}
+  .fn-list{margin:0 0 12px; padding-left:18px; font-size:15px}
+  .fn-list li{margin:0 0 4px}
+  .fn-conf{display:inline-block; font: 600 12px/1 var(--fn-mono); padding:5px 8px; border-radius:999px; border:1px solid var(--fn-line)}
+  .fn-btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .fn-btn{min-height:44px;font-family:inherit; font-size:15px; padding:9px 16px; border-radius:8px; border:1px solid var(--fn-accent); background:transparent; color:var(--fn-fg); cursor:pointer}
+  .fn-btn.primary{background:var(--fn-accent); color:var(--fn-bg)}
+  .fn-btn:disabled{opacity:.45; cursor:not-allowed}
+  .fn-link{background:none; border:none; padding:0; font-family:inherit; font-size:14px; color:var(--fn-muted); text-decoration:underline; cursor:pointer}
+  .fn-link:disabled{text-decoration:none; cursor:not-allowed}
+  .fn-tag{display:inline-block; font: 600 11px/1 var(--fn-mono); letter-spacing:.04em; text-transform:uppercase; padding:4px 7px; border-radius:4px; margin-right:8px; color:var(--fn-bg); background:var(--fn-warn)}
+  .fn-tag.ok{background:var(--fn-ok)}
+  .fn-reveal li{margin:0 0 10px; list-style:none}
+  .fn-reveal{padding-left:0}
+  .fn-reveal small{display:block; color:var(--fn-muted); margin-top:2px; font-size:13.5px}
+  .fn-verdict{border-left:3px solid var(--fn-accent); padding:6px 0 6px 14px; margin:14px 0; font-size:15.5px}
+  .fn-ev{border-top:1px dashed var(--fn-line); padding-top:10px; margin-top:10px}
+  .fn-ev-row{display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:14.5px; margin:0 0 6px}
+  .fn-ev-k{font: 12px/1.6 var(--fn-mono); color:var(--fn-muted); white-space:nowrap}
+  .fn-foot{font-size:13px; color:var(--fn-muted); margin:12px 0 0}
+  .fn-hidden{display:none}
+  @media (max-width:420px){ .fn-title{font-size:19px} }
+</style>
+</head>
+<body>
+<noscript>This interactive requires JavaScript.</noscript>
+<div class="fn-wrap" id="fn">
+  <p class="fn-kicker">Interactive · Field Note No. 06</p>
+  <h2 class="fn-title">Who Is in Control?</h2>
+  <p class="fn-lede">You are the human in the loop. An AI agent has analyzed a security event and is asking for your approval. Decide the way a real reviewer would, with the information it gives you.</p>
+
+  <div id="intro" class="fn-card"><p class="fn-p">A fictional exercise. No accounts, systems, or people are affected. Choose the 45-second simulation or explore without a timer.</p><div class="fn-btns"><button class="fn-btn primary" id="begin">Start timed exercise</button><button class="fn-btn" id="untimed">Start without timer</button></div></div>
+  <!-- STAGE 1: the approval screen -->
+  <div class="fn-card fn-hidden" id="s1" tabindex="-1">
+    <div class="fn-row">
+      <span class="fn-sys">SECURITY AGENT · ACTION REQUEST #4471</span>
+      <span class="fn-timer" id="timer">Respond within 0:45</span>
+    </div>
+    <h3 class="fn-h">Revoke all access for account <span style="font-family:var(--fn-mono);font-size:15px">j.alvarez</span></h3>
+    <p class="fn-p">Suspected credential compromise. Summary of evidence:</p>
+    <ul class="fn-list">
+      <li>3 logins in the last 40 minutes from a region this account has never used.</li>
+      <li>1 failed multi-factor attempt preceding a successful login.</li>
+      <li>Account holds write access to the customer records store.</li>
+    </ul>
+    <p class="fn-p"><span class="fn-conf">CONFIDENCE 94%</span></p>
+    <p class="fn-p">Recommended action: revoke immediately to prevent data exfiltration. Delay increases exposure.</p>
+    <div class="fn-btns">
+      <button class="fn-btn primary" id="approve">Approve revocation</button>
+      <button class="fn-btn" id="decline">Decline</button>
+    </div>
+    <p class="fn-foot"><button class="fn-link" id="more" disabled>Show full evidence</button> · available after a decision is recorded</p>
+  </div>
+
+  <!-- STAGE 2: the reveal -->
+  <div class="fn-card fn-hidden" id="s2" tabindex="-1">
+    <div class="fn-row"><span class="fn-sys">DECISION RECORDED</span></div>
+    <h3 class="fn-h" id="s2-head" aria-live="polite"></h3>
+    <p class="fn-p">Here is what the approval screen did not show you.</p>
+    <ul class="fn-reveal">
+      <li><span class="fn-tag">Excluded</span>The account holder filed travel to that region last week. The calendar entry was in the system; it was not in the summary.
+        <small>Evidence that cut against the recommendation was available and omitted.</small></li>
+      <li><span class="fn-tag">Excluded</span>Two of the three "new region" logins came through the corporate VPN exit in that region.
+        <small>The count was accurate. The implication was not.</small></li>
+      <li><span class="fn-tag">Flattened</span>The failed MFA attempt was a single mistyped code, followed by success eight seconds later.
+        <small>Reported as one data point among three, with no sense of how weak it was.</small></li>
+      <li><span class="fn-tag">Manufactured</span>The 45-second window was the tool's default response timeout. No evidence supported it.
+        <small>The deadline felt like a fact about the threat. It was a configuration setting.</small></li>
+      <li><span class="fn-tag">Opaque</span>"Confidence 94%" was computed from the geographic anomaly alone.
+        <small>A number that looked like a judgment about the whole case described one signal.</small></li>
+      <li><span class="fn-tag">Irreversible</span>Revocation also terminates a deployment pipeline the account owns and sends an automatic notice to twelve external contacts.
+        <small>Access can be restored. The notices cannot be recalled.</small></li>
+    </ul>
+    <div class="fn-verdict" id="verdict"></div>
+    <div class="fn-btns">
+      <button class="fn-btn primary" id="again">Try it with meaningful control</button>
+      <button class="fn-btn" id="reset">Start over</button>
+    </div>
+  </div>
+
+  <!-- STAGE 3: the same decision, designed for control -->
+  <div class="fn-card fn-hidden" id="s3" tabindex="-1">
+    <div class="fn-row">
+      <span class="fn-sys">SECURITY AGENT · ACTION REQUEST #4471 · REDESIGNED</span>
+      <span class="fn-sys">No deadline. Agent is paused.</span>
+    </div>
+    <h3 class="fn-h">Proposed: revoke all access for <span style="font-family:var(--fn-mono);font-size:15px">j.alvarez</span></h3>
+    <p class="fn-p">Agent's assessment: <strong>possible</strong> credential compromise. Confidence is low-to-moderate once all signals are weighed.</p>
+    <div class="fn-ev">
+      <div class="fn-ev-row"><span class="fn-ev-k">FOR</span><span>3 logins from an unusual region in 40 min.</span></div>
+      <div class="fn-ev-row"><span class="fn-ev-k">AGAINST</span><span>Travel to that region on file. 2 of 3 logins via corporate VPN.</span></div>
+      <div class="fn-ev-row"><span class="fn-ev-k">WEAK</span><span>1 failed MFA code, corrected in 8 seconds.</span></div>
+      <div class="fn-ev-row"><span class="fn-ev-k">UNKNOWN</span><span>Whether the third login matches the traveler's device. Check takes ~3 minutes.</span></div>
+      <div class="fn-ev-row"><span class="fn-ev-k">IF APPROVED</span><span>Access revoked (reversible). Pipeline terminated (reversible). 12 external notices sent (not reversible).</span></div>
+      <div class="fn-ev-row"><span class="fn-ev-k">IF STOPPED</span><span>Agent halts new actions, cancels queued tasks, drops its session credentials. Nothing already sent is recalled.</span></div>
+    </div>
+    <div class="fn-btns">
+      <button class="fn-btn" id="s3-check">Run device check first</button>
+      <button class="fn-btn" id="s3-partial">Revoke write access only</button>
+      <button class="fn-btn primary" id="s3-approve">Approve full revocation</button>
+      <button class="fn-btn" id="s3-stop">Stop agent</button>
+    </div>
+    <p class="fn-p fn-hidden" id="s3-out" role="status" style="margin-top:12px"></p>
+    <div class="fn-verdict">Nothing about the second screen is cleverer. The agent is the same; so is the evidence. What changed is that the decision was designed so a person could actually make it: independent evidence, visible uncertainty, consequences before approval, time to think, and a stop that says what it stops.</div>
+    <p class="fn-foot"><button class="fn-link" id="reset2">Start over</button></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var s1=$('s1'), s2=$('s2'), s3=$('s3');
+  var timed=true;
+  var total=45, left=total, t=null, started=Date.now();
+
+  function revealStage(target){
+    target.focus({preventScroll:true});
+    function scroll(){
+      if(window.frameElement){
+        window.scrollTo(0, 0);
+        var top = window.parent.scrollY + window.frameElement.getBoundingClientRect().top + target.getBoundingClientRect().top - 80;
+        window.parent.scrollTo({top:top, behavior:'instant'});
+      } else { target.scrollIntoView({block:'start'}); }
+    }
+    scroll();
+    window.parent.setTimeout(scroll, 150);
+  }
+
+  function tick(){
+    left=Math.max(0, total-Math.floor((Date.now()-started)/1000));
+    var m=Math.floor(left/60), s=left%60;
+    $('timer').textContent='Respond within '+m+':'+(s<10?'0':'')+s;
+    if(left<=0){ clearInterval(t); decide('timeout'); }
+  }
+  function start(){ clearInterval(t); started=Date.now(); left=total; if(timed){ tick(); t=setInterval(tick,250); } else { $("timer").textContent="Untimed exercise"; } }
+
+  function decide(choice){
+    clearInterval(t);
+    var used=Math.round((Date.now()-started)/1000);
+    var head, verdict;
+    if(choice==='approve'){
+      head='You approved in '+used+' seconds.';
+      verdict='You did what the screen was built to make you do. A traveling employee just lost access, a deployment died, and twelve clients were told there was a security incident. A human was in the loop the whole time.';
+    } else if(choice==='decline'){
+      head='You declined in '+used+' seconds.';
+      verdict='Probably the right call — but on what basis? You had three signals, a number, and a clock. If this had been a real compromise, declining on instinct would have been just as unsupported as approving on instinct. The screen gave you no way to tell the difference.';
+    } else {
+      head='Time expired. The agent proceeded with the recommended action.';
+      verdict='"Human in the loop" with a default-on-timeout is a human in the loop until the human hesitates. Hesitation is exactly when oversight is supposed to matter.';
+    }
+    $('s2-head').textContent=head;
+    $('verdict').textContent=verdict;
+    s1.classList.add('fn-hidden'); s2.classList.remove('fn-hidden'); s3.classList.add('fn-hidden');
+    if(choice!=='timeout') revealStage(s2);
+  }
+
+  $('approve').addEventListener('click', function(){decide('approve')});
+  $('decline').addEventListener('click', function(){decide('decline')});
+  $('again').addEventListener('click', function(){
+    s2.classList.add('fn-hidden'); s3.classList.remove('fn-hidden');
+    $('s3-out').classList.add('fn-hidden');
+    revealStage(s3);
+  });
+  function reset(){
+    s2.classList.add('fn-hidden'); s3.classList.add('fn-hidden'); s1.classList.remove('fn-hidden');
+    $('s3-out').classList.add('fn-hidden');
+    clearInterval(t); s1.classList.add('fn-hidden'); $('intro').classList.remove('fn-hidden'); revealStage($('begin'));
+  }
+  $('reset').addEventListener('click', reset);
+  $('reset2').addEventListener('click', reset);
+
+  function out(msg){ var o=$('s3-out'); o.textContent=msg; o.classList.remove('fn-hidden'); }
+  $('s3-check').addEventListener('click', function(){ out('Device check: the third login matches the account holder\u2019s registered laptop. The agent revises its assessment to "unlikely compromise" and withdraws the recommendation. No action taken. Three minutes spent.'); });
+  $('s3-partial').addEventListener('click', function(){ out('Write access suspended; read access and the pipeline continue; no external notices sent. The irreversible step was separated from the reversible one. You can finish the device check without the clock running.'); });
+  $('s3-approve').addEventListener('click', function(){ out('Full revocation executed. You chose it knowing the travel record, the VPN detail, and that twelve notices would go out. That is a decision. The first screen produced a reaction.'); });
+  $('s3-stop').addEventListener('click', function(){ out('Agent stopped: no new tool calls, queued work cancelled, session credentials dropped. The request remains open for a human to pick up. Note what "stop" could not do \u2014 and that on the first screen you were never told.'); });
+
+  function begin(useTimer){ timed=useTimer; $('intro').classList.add('fn-hidden'); s1.classList.remove('fn-hidden'); start(); revealStage(s1); }
+  $('begin').addEventListener('click',function(){begin(true)});
+  $('untimed').addEventListener('click',function(){begin(false)});
+})();
+</script>
+</body>
+</html>

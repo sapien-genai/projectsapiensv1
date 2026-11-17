@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import CompanyHome from './components/CompanyHome';
 import WorkWithUsPage from './components/WorkWithUsPage';
 
+const FieldNotesPage = lazy(() => import('./components/FieldNotesPage'));
+
 const AcademyApp = lazy(() => import('./AcademyApp'));
 
 export default function App() {
@@ -11,6 +13,7 @@ export default function App() {
   if (path === '/' && payment !== 'success' && payment !== 'cancel') {
     return <CompanyHome />;
   }
+  if (path === '/field-notes' || path.startsWith('/field-notes/')) return <Suspense fallback={<div role="status" className="p-8">Loading Field Notes…</div>}><FieldNotesPage slug={path.slice('/field-notes/'.length) || undefined} /></Suspense>;
   if (path === '/work-with-us') return <WorkWithUsPage />;
   return <Suspense fallback={<div className="min-h-screen bg-surface p-8">Loading learning platform…</div>}><AcademyApp /></Suspense>;
 }
