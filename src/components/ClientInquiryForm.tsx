@@ -3,13 +3,14 @@ import { ArrowUpRight } from 'lucide-react';
 
 const inputClass = 'mt-2 block min-h-12 w-full rounded-lg border border-[#172820]/30 bg-white/50 px-4 py-3 text-base text-[#172820] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#68745b]';
 
-export default function ClientInquiryForm() {
+export default function ClientInquiryForm({ previewOnly = false }: { previewOnly?: boolean }) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [error, setError] = useState('');
   const sending = useRef(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (previewOnly) { setError("Preview only — nothing was sent. This form will use the existing inquiry service after deployment."); setStatus("error"); return; }
     if (sending.current) return;
     const form = event.currentTarget;
     const body = Object.fromEntries(new FormData(form));
@@ -45,6 +46,7 @@ export default function ClientInquiryForm() {
         </div>
         {status !== 'sent' && <form onSubmit={submit} method="post" action="/api/client-inquiry" aria-label="New client inquiry" className="space-y-5">
           <p className="text-sm text-[#526055]">Fields marked * are required.</p>
+          {previewOnly && <p className="text-sm text-[#526055]">Preview mode: submissions are disabled. You can review the fields without sending an inquiry.</p>}
           <fieldset disabled={status === 'sending'} className="space-y-5 disabled:opacity-70">
             <div className="hidden" aria-hidden="true"><label>Leave this empty<input name="website" tabIndex={-1} autoComplete="off" maxLength={200} /></label></div>
             <div className="grid gap-5 sm:grid-cols-2">

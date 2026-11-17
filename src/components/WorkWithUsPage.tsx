@@ -4,6 +4,7 @@ import CompanyHeader from './CompanyHeader';
 import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import './CompanyHome.css';
+import './CompanyPreview.css';
 
 function Section({ label, title, children }: { label: string; title: string; children: ReactNode }) {
   return <section className="grid gap-6 border-t border-[#172820]/20 py-14 md:grid-cols-[1fr_2fr] md:gap-16 md:py-20">
@@ -62,7 +63,7 @@ export default function WorkWithUsPage() {
       <p>Send a short description of what you’re trying to build or improve, who it’s for, and where the project stands. If you have a target timeline or budget range, include it. Please keep credentials and confidential materials out of the initial inquiry.</p>
       <p>Use the <a className={linkStyle} href="#contact">contact form</a> or email <a className={linkStyle} href="mailto:tony@projectsapiens.xyz">tony@projectsapiens.xyz</a>. We can determine fit and the right next step from there.</p>
     </Section>
-      <ClientInquiryForm />
+      <ClientInquiryForm previewOnly={import.meta.env.DEV} />
     </main>
     <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 border-t border-[#172820]/20 px-6 py-7 text-sm text-[#526055] md:px-10"><p>© {new Date().getFullYear()} Project Sapiens, Inc.</p><a className={linkStyle} href="/">Back to Project Sapiens</a></footer>
   </div>;
