@@ -1,0 +1,16 @@
+import { FIELD_NOTES } from '../src/data/fieldNotes';
+export const origin = 'https://www.projectsapiens.ai';
+export const sharePages = [
+  { path: '/', slug: 'home', title: 'Project Sapiens — Intelligence built for your business', description: 'Practical AI products, agents, and voice experiences. Independent expertise. Hands-on delivery.', label: 'INTELLIGENCE, IN SYNC', lines: ['Intelligence.', 'Built for', 'your business.'], size: 88 },
+  { path: '/about/', slug: 'about', title: 'About Project Sapiens — Meet Tony Marks', description: 'Meet Project Sapiens and founder Tony Marks. Practical AI strategy, product development, and experience building intelligent systems.', label: 'ABOUT PROJECT SAPIENS', lines: ['Curious minds.', 'Working hands.'], size: 88 },
+  { path: '/work-with-us/', slug: 'work-with-us', title: 'Work with Project Sapiens', description: 'AI strategy and development, fractional AI leadership, and ongoing advisory. Turn a promising idea into a product people can use.', label: 'WORK WITH US', lines: ['From AI idea', 'to useful product.'], size: 88 },
+  { path: '/field-notes/', slug: 'field-notes', title: 'Field Notes — Project Sapiens', description: 'Observations from building at the edge of AI. Essays by Tony Marks on technology, product design, and the human details.', label: 'FIELD NOTES / TONY MARKS', lines: ['Thinking', 'in public.'], size: 104 },
+  ...FIELD_NOTES.map(note => ({ path: `${note.href}/`, slug: note.href.split('/').pop()!, title: `${note.title} — Project Sapiens`, description: note.excerpt, label: `FIELD NOTES ${note.number} / TONY MARKS`, ...({
+    '06': { lines: ['What We Choose', 'to Delegate'], size: 88 },
+    '05': { lines: ['What “Attention', 'Is All You Need”', 'Actually Changed'], size: 76 },
+    '04': { lines: ['Why Is It So Hard', 'to Watch Sports?'], size: 82 },
+    '03': { lines: ['AI Has Entered Its', 'Infrastructure Era'], size: 80 },
+    '02': { lines: ['AI Brand', 'Visibility'], size: 104 },
+    '01': { lines: ['How We Accidentally', 'Started Building', 'Pronunciation Intelligence'], size: 65 },
+  }[note.number]!) })),
+];

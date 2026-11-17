@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node --import tsx scripts/build-share-pages.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "lint:file": "eslint",
     "check:content": "tsx scripts/checkContentFreshness.ts",
-    "seed:content": "tsx scripts/seed-content.ts"
+    "seed:content": "tsx scripts/seed-content.ts",
+    "check:share": "node --import tsx scripts/verify-share-pages.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
