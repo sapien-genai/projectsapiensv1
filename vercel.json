@@ -5,6 +5,14 @@
       "destination": "/api/client-inquiry"
     },
     {
+      "source": "/openai-partner-network",
+      "destination": "/share-pages/openai-partner-network.html"
+    },
+    {
+      "source": "/openai-partner-network/",
+      "destination": "/share-pages/openai-partner-network.html"
+    },
+    {
       "source": "/about",
       "destination": "/share-pages/about.html"
     },

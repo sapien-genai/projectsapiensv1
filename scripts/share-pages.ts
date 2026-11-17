@@ -1,6 +1,7 @@
 import { FIELD_NOTES } from '../src/data/fieldNotes';
 export const origin = 'https://www.projectsapiens.ai';
 export const sharePages = [
+  { path: '/openai-partner-network/', slug: 'openai-partner-network', title: 'OpenAI Partner Network — Project Sapiens', description: 'Our experience, our role in the OpenAI Partner Network, and how we approach practical AI adoption, data protection, and security.', label: 'OPENAI PARTNER NETWORK', lines: ['Powerful AI.', 'Experienced hands.'], size: 84 },
   { path: '/', slug: 'home', title: 'Project Sapiens — Intelligence built for your business', description: 'Practical AI products, agents, and voice experiences. Independent expertise. Hands-on delivery.', label: 'INTELLIGENCE, IN SYNC', lines: ['Intelligence.', 'Built for', 'your business.'], size: 88 },
   { path: '/about/', slug: 'about', title: 'About Project Sapiens — Meet Tony Marks', description: 'Meet Project Sapiens and founder Tony Marks. Practical AI strategy, product development, and experience building intelligent systems.', label: 'ABOUT PROJECT SAPIENS', lines: ['Curious minds.', 'Working hands.'], size: 88 },
   { path: '/work-with-us/', slug: 'work-with-us', title: 'Work with Project Sapiens', description: 'AI strategy and development, fractional AI leadership, and ongoing advisory. Turn a promising idea into a product people can use.', label: 'WORK WITH US', lines: ['From AI idea', 'to useful product.'], size: 88 },

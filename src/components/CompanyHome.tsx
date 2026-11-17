@@ -38,13 +38,13 @@ export default function CompanyHome() {
 </section>
 </div>
 <div className="partner-band">
-<div className="partner-lockup">
+<a className="partner-lockup" href="/openai-partner-network/" aria-label="Learn about Project Sapiens and the OpenAI Partner Network">
 <span className="membership-mark" aria-hidden="true"><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span>
 <div>
 <small>PROJECT SAPIENS IS A MEMBER OF THE</small>
 <strong>OpenAI Partner Network</strong>
 </div>
-</div>
+</a>
 <p>OpenAI technology.<br />Independent expertise. Hands-on delivery.</p>
 <a href="#solutions">Explore what we can build <span><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span>
 </a>
