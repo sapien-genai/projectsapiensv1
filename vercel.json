@@ -1,6 +1,84 @@
 {
   "rewrites": [
-    { "source": "/api/client-inquiry", "destination": "/api/client-inquiry" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/client-inquiry",
+      "destination": "/api/client-inquiry"
+    },
+    {
+      "source": "/about",
+      "destination": "/share-pages/about.html"
+    },
+    {
+      "source": "/about/",
+      "destination": "/share-pages/about.html"
+    },
+    {
+      "source": "/work-with-us",
+      "destination": "/share-pages/work-with-us.html"
+    },
+    {
+      "source": "/work-with-us/",
+      "destination": "/share-pages/work-with-us.html"
+    },
+    {
+      "source": "/field-notes",
+      "destination": "/share-pages/field-notes.html"
+    },
+    {
+      "source": "/field-notes/",
+      "destination": "/share-pages/field-notes.html"
+    },
+    {
+      "source": "/field-notes/the-nuclear-lesson",
+      "destination": "/share-pages/the-nuclear-lesson.html"
+    },
+    {
+      "source": "/field-notes/the-nuclear-lesson/",
+      "destination": "/share-pages/the-nuclear-lesson.html"
+    },
+    {
+      "source": "/field-notes/attention-is-all-you-need",
+      "destination": "/share-pages/attention-is-all-you-need.html"
+    },
+    {
+      "source": "/field-notes/attention-is-all-you-need/",
+      "destination": "/share-pages/attention-is-all-you-need.html"
+    },
+    {
+      "source": "/field-notes/hotline-broadcast-deep-dive",
+      "destination": "/share-pages/hotline-broadcast-deep-dive.html"
+    },
+    {
+      "source": "/field-notes/hotline-broadcast-deep-dive/",
+      "destination": "/share-pages/hotline-broadcast-deep-dive.html"
+    },
+    {
+      "source": "/field-notes/infrastructure-era",
+      "destination": "/share-pages/infrastructure-era.html"
+    },
+    {
+      "source": "/field-notes/infrastructure-era/",
+      "destination": "/share-pages/infrastructure-era.html"
+    },
+    {
+      "source": "/field-notes/ai-brand-visibility",
+      "destination": "/share-pages/ai-brand-visibility.html"
+    },
+    {
+      "source": "/field-notes/ai-brand-visibility/",
+      "destination": "/share-pages/ai-brand-visibility.html"
+    },
+    {
+      "source": "/field-notes/pronunciation-intelligence",
+      "destination": "/share-pages/pronunciation-intelligence.html"
+    },
+    {
+      "source": "/field-notes/pronunciation-intelligence/",
+      "destination": "/share-pages/pronunciation-intelligence.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
