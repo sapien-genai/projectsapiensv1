@@ -33,10 +33,11 @@ App state (current view, progress, etc.) is persisted to `localStorage` per user
 
 ### Backend
 
-Five Supabase Edge Functions (Deno/TypeScript, in `/supabase/functions/`):
+Supabase Edge Functions (Deno/TypeScript, in `/supabase/functions/`):
 - `lab-ai-chat` — Streams Google Gemini responses; rate-limited to 20 req/min per user; requires `GEMINI_API_KEY` secret
 - `create-checkout-session` / `create-portal-session` / `stripe-webhook` — Stripe billing
 - `get-usage-status` — Returns remaining quota per plan tier
+- `visibility-report` — Public (no sign-in) engine behind the instant AI visibility report on the company site's `/ai-visibility` page. Calls OpenAI, Anthropic and Gemini; rate-limited per visitor and per day. See `docs/AI_VISIBILITY_REPORT.md`; run `npm run check:visibility` after changing it
 
 Most Edge Functions authenticate callers by validating the Supabase JWT from the `Authorization: Bearer` header. The exception is `stripe-webhook`, which verifies the `Stripe-Signature` header cryptographically — do not add JWT auth to that function.
 
