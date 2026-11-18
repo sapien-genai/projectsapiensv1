@@ -37,6 +37,14 @@
       "destination": "/share-pages/about.html"
     },
     {
+      "source": "/ai-visibility",
+      "destination": "/share-pages/ai-visibility.html"
+    },
+    {
+      "source": "/ai-visibility/",
+      "destination": "/share-pages/ai-visibility.html"
+    },
+    {
       "source": "/work-with-us",
       "destination": "/share-pages/work-with-us.html"
     },
@@ -102,7 +110,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/app.html"
     }
   ]
 }
