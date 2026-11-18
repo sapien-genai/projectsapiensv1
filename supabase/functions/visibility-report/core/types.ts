@@ -28,14 +28,14 @@ export interface Recommendation { title: string; detail: string; priority: 'high
 
 export interface Report {
   version: 1; domain: string; url: string; generatedAt: string;
-  profile: BusinessProfile; overall: number; verdict: string;
+  profile: BusinessProfile; overall: number | null; verdict: string;
   signals: Omit<SiteSignals, 'text'>;
   assistants: AssistantResult[]; recommendations: Recommendation[]; method: string;
 }
 
 /** What a visitor sees before giving an email: numbers and counts, none of the underlying answers. */
 export interface ReportPreview {
-  version: 1; domain: string; generatedAt: string; overall: number; verdict: string;
+  version: 1; domain: string; generatedAt: string; overall: number | null; verdict: string;
   business: { name: string; category: string };
   signalsScore: number;
   assistants: Array<Pick<AssistantResult, 'id' | 'label' | 'scores' | 'searched'> & { failed: boolean }>;

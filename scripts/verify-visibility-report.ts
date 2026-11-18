@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { normalizeUrl, isPrivateAddress, safeFetch, InputError } from '../supabase/functions/visibility-report/core/url.ts';
 import { blockedCrawlers, structuredDataTypes, visibleText } from '../supabase/functions/visibility-report/core/site.ts';
 import { anthropic, gemini, openai } from '../supabase/functions/visibility-report/core/providers.ts';
+import { deliverLead } from '../supabase/functions/visibility-report/core/notification.ts';
 import { mentions, parseJson, runReport, toPreview } from '../supabase/functions/visibility-report/core/pipeline.ts';
 
 // --- address handling -------------------------------------------------------
@@ -11,7 +12,7 @@ assert.deepEqual(normalizeUrl('Acme-Dental.com'), { url: 'https://acme-dental.co
 assert.deepEqual(normalizeUrl(' http://www.acme-dental.com/about?x=1#y '), { url: 'https://www.acme-dental.com/about', domain: 'acme-dental.com' });
 for (const bad of ['', 'localhost', 'http://127.0.0.1', 'http://169.254.169.254/latest', 'http://[::1]/', 'ftp://acme.com', 'https://user:pw@acme.com', 'https://acme.com:8080', 'intranet.local', 'http://2130706433', 'http://0x7f.1', 'javascript:alert(1)'])
   assert.throws(() => normalizeUrl(bad), InputError, `should reject ${bad}`);
-for (const ip of ['10.0.0.1', '127.0.0.1', '172.16.5.4', '192.168.1.1', '169.254.169.254', '100.64.0.1', '0.0.0.0', '::1', 'fd00::1', 'fe80::1', '::ffff:10.0.0.1']) assert.ok(isPrivateAddress(ip), ip);
+for (const ip of ['10.0.0.1', '127.0.0.1', '172.16.5.4', '192.168.1.1', '169.254.169.254', '100.64.0.1', '0.0.0.0', '::1', 'fd00::1', 'fe80::1', '::ffff:10.0.0.1', '::ffff:7f00:1', '0:0:0:0:0:ffff:a00:1', '0:0:0:0:0:0:0:1', '::ffff:a9fe:a9fe']) assert.ok(isPrivateAddress(ip), ip);
 for (const ip of ['8.8.8.8', '93.184.216.34', '2606:4700::1111']) assert.ok(!isPrivateAddress(ip), ip);
 
 // --- page parsing -----------------------------------------------------------
@@ -27,6 +28,10 @@ const acme = { name: 'Acme Dental', category: '', summary: '', audience: '', que
 assert.ok(mentions(acme, 'acme-dental.com', 'Try Acme Dental on Main St.', []));
 assert.ok(mentions(acme, 'acme-dental.com', 'Several options exist.', ['https://www.acme-dental.com/services']));
 assert.ok(!mentions(acme, 'acme-dental.com', 'Try Acme Dentalworks or Smile Co.', ['https://notacme-dental.com/']));
+
+assert.ok(!mentions(acme, 'acme-dental.com', 'Try notacme-dental.com for a dentist.', []));
+assert.ok(!mentions(acme, 'acme-dental.com', 'Try acme-dental.com.evil.org.', []));
+assert.ok(mentions(acme, 'acme-dental.com', 'See https://www.acme-dental.com/about.', []));
 
 // --- simulated internet -----------------------------------------------------
 const words = (n: number) => Array.from({ length: n }, (_, i) => `word${i}`).join(' ');
@@ -136,3 +141,26 @@ await assert.rejects(safeFetch('https://redirector.com/', { resolveHost, fetchIm
 assert.ok(!calls.some(url => url.includes('169.254')), 'A redirect to a private address is never followed');
 
 console.log('Verified address checks, page parsing, scoring, the locked preview, provider fallbacks and hostile targets.');
+
+// Missing extraction/grading must not turn a readable page into 100/100.
+for (const fail of ['both', 'grading', 'extraction']) {
+  const { deps } = setup({ page: goodPage, sitemap: true, llms: true });
+  const original = deps.complete;
+  deps.complete = prompt => (fail === 'both' || (fail === 'grading' ? prompt.includes('You are grading') : prompt.includes('preparing a test')))
+    ? Promise.resolve('invalid json') : original(prompt);
+  const report = await runReport('acme-dental.com', 'https://acme-dental.com/', deps);
+  assert.equal(report.overall, null);
+  assert.ok(report.verdict.includes('incomplete'));
+  assert.equal(toPreview(report).overall, null);
+}
+
+// Intake rejects and network failures must never be reported as delivery.
+let attempts = 0;
+const form = new URLSearchParams({email: 'test@example.com'});
+assert.equal(await deliverLead('https://example.com', form, async () => { attempts++; return new Response(null, {status: attempts < 3 ? 503 : 200}); }), true);
+assert.equal(attempts, 3);
+attempts = 0;
+assert.equal(await deliverLead('https://example.com', form, async () => { attempts++; throw new Error('offline'); }), false);
+assert.equal(attempts, 3);
+assert.equal(await deliverLead('https://example.com', form, async () => new Response(null, {status: 400})), false);
+console.log('Verified missing measurements, hostname boundaries, mapped IPv6, and notification retries.');

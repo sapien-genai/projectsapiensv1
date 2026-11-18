@@ -21,6 +21,7 @@ async function post(url: string, headers: Record<string, string>, body: unknown,
   if (!response.ok) {
     // Keep provider error text out of anything a visitor can read; the status is enough to branch on.
     await response.body?.cancel();
+    console.warn("visibility provider HTTP error", { host: new URL(url).hostname, model: config.model, status: response.status });
     throw new ProviderError(`Provider returned HTTP ${response.status}`, response.status);
   }
   return response.json();

@@ -147,7 +147,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
     <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr] md:items-center">
-      <p className="flex items-baseline gap-2"><span className={`text-7xl font-semibold tracking-[-0.05em] ${tone(preview.overall)}`}>{preview.overall}</span><span className="text-xl text-[#526055]">/ 100</span><span className="sr-only"> overall AI visibility score</span></p>
+      <p className="flex items-baseline gap-2"><span className={`text-7xl font-semibold tracking-[-0.05em] ${tone(preview.overall)}`}>{score(preview.overall)}</span><span className="text-xl text-[#526055]">/ 100</span><span className="sr-only"> overall AI visibility score</span></p>
       <p className="max-w-md text-lg leading-snug text-[#172820]">{preview.verdict}</p>
     </div>
     <div className="mt-8 overflow-x-auto">
@@ -196,7 +196,7 @@ function FullReport({ report }: { report: Report }) {
       {report.recommendations.length ? <ol className="mt-4 space-y-4">{report.recommendations.map(item => <li key={item.title} className="border-l-2 border-[#16745e] pl-4">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#68745b]">{item.priority} priority</p>
         <p className="mt-1 font-semibold text-[#172820]">{item.title}</p><p className="mt-1 text-[#526055]">{item.detail}</p>
-      </li>)}</ol> : <p className="mt-3 text-[#526055]">Nothing urgent turned up in this run.</p>}
+      </li>)}</ol> : <p className="mt-3 text-[#526055]">No recommendations were generated. Review the measurement coverage below before drawing conclusions.</p>}
     </div>
 
     <div>
@@ -225,7 +225,7 @@ function FullReport({ report }: { report: Report }) {
     </div>
 
     <div className="rounded-xl bg-[#172820] p-6 text-[#f4f2ec] md:p-8">
-      <h3 className="text-xl font-semibold">Want this done properly?</h3>
+      <h3 className="text-xl font-semibold">Want help improving these results?</h3>
       <p className="mt-3 max-w-2xl leading-relaxed text-[#d6dccf]">This instant report asks each assistant three questions, once. The full AI Brand Visibility Report uses a prompt set written for your customers, repeats it to account for variation, compares you with named competitors, and ends in a working session on what to fix.</p>
       <a href="#contact" className="mt-5 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Ask about the full report <ArrowUpRight aria-hidden="true" size={18} /></a>
     </div>

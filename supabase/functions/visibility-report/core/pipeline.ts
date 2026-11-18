@@ -65,7 +65,9 @@ export function mentions(profile: BusinessProfile, domain: string, text: string,
   const name = profile.name.toLowerCase().trim();
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (name.length >= 3 && new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`).test(haystack)) return true;
-  if (haystack.includes(domain.toLowerCase())) return true;
+  // Match a whole hostname (or subdomain), never a suffix inside another business's host.
+  const hosts = haystack.match(/[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+/g) ?? [];
+  if (hosts.some(host => host === domain.toLowerCase() || host.endsWith(`.${domain.toLowerCase()}`))) return true;
   return urls.some(url => { try { const host = new URL(url).hostname.toLowerCase(); return host === domain || host.endsWith(`.${domain}`); } catch { return false; } });
 }
 
@@ -74,7 +76,7 @@ async function testAssistant(provider: Provider, profile: BusinessProfile, domai
     scores: { recognition: null, discovery: null, accuracy: null }, summary: '', recognitionAnswer: '', recognitionCitations: [], issues: [], competitors: [], discovery: [] };
   const recognitionPrompt = `What is ${profile.name} (${domain})? What do they do, and who is it for? Answer in a short paragraph.`;
   const [recognition, ...discoveryAnswers] = await Promise.allSettled([provider.ask(recognitionPrompt), ...profile.queries.map(query => provider.ask(`${query} Name specific options and keep the answer brief.`))]);
-  if (recognition.status === 'rejected') return { ...base, error: 'This assistant could not be reached during the test.' };
+  if (recognition.status === 'rejected' || !recognition.value.text.trim()) return { ...base, error: 'This assistant could not be reached during the test.' };
 
   const discovery: DiscoveryResult[] = profile.queries.flatMap((query, index) => {
     const answer = discoveryAnswers[index];
@@ -138,7 +140,8 @@ export function recommend(site: SiteSignals, assistants: AssistantResult[], prof
   return list;
 }
 
-function verdictFor(overall: number): string {
+function verdictFor(overall: number | null): string {
+  if (overall === null) return 'The AI measurements are incomplete. Review the collected answers; an overall score is unavailable.';
   if (overall >= 80) return 'AI assistants know this business well and can read the site.';
   if (overall >= 60) return 'AI assistants recognize this business, with gaps worth closing.';
   if (overall >= 40) return 'AI assistants have a partial picture of this business.';
@@ -162,13 +165,18 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
     [average(tested.map(a => a.scores.recognition)), 0.3], [average(tested.map(a => a.scores.discovery)), 0.3],
     [average(tested.map(a => a.scores.recognition === null ? null : a.scores.accuracy ?? 0)), 0.2], [site.score, 0.2],
   ];
-  const present = weighted.filter((entry): entry is [number, number] => entry[0] !== null);
-  const overall = Math.round(present.reduce((sum, [score, weight]) => sum + score * weight, 0) / present.reduce((sum, [, weight]) => sum + weight, 0));
+  // Never turn missing AI measurements into a confident score based on HTML alone.
+  const completeMeasurements = profile.queries.length === 2 && tested.every(a =>
+    a.discovery.length === 2 && a.scores.recognition !== null && a.scores.discovery !== null &&
+    (a.scores.recognition < 20 || a.scores.accuracy !== null));
+  const overall = completeMeasurements
+    ? Math.round(weighted.reduce((sum, [value, weight]) => sum + (value ?? 0) * weight, 0)) : null;
   const { text: _text, ...signals } = site;
+  void _text;
   const searched = tested.every(a => a.searched) ? 'with each provider’s web search enabled' : tested.some(a => a.searched) ? 'with web search enabled where the provider allowed it' : 'without web search';
   return { version: 1, domain, url, generatedAt: (deps.now?.() ?? new Date()).toISOString(), profile, overall, verdict: verdictFor(overall), signals, assistants,
     recommendations: recommend(site, assistants, profile),
-    method: `Each assistant was asked once through its developer API, ${searched}. Answers in the consumer apps can differ and change from day to day, so treat this as a snapshot.` };
+    method: `${tested.length} of ${assistants.length} configured assistants returned answers. Each question was asked once through the developer API, ${searched}. Answers in the consumer apps can differ and change from day to day, so treat this as a snapshot.` };
 }
 
 export function toPreview(report: Report): ReportPreview {

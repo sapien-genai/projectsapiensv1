@@ -33,9 +33,14 @@ export function isPublicHostname(host: string): boolean {
 export function isPrivateAddress(address: string): boolean {
   const ip = address.toLowerCase();
   if (ip.includes(':')) {
-    const mapped = ip.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-    if (mapped) return isPrivateAddress(mapped[1]);
-    return ip === '::' || ip === '::1' || /^f[cd]/.test(ip) || /^fe[89ab]/.test(ip) || ip.startsWith('ff') || ip.startsWith('64:ff9b:') || ip.startsWith('2001:db8');
+    // The URL parser canonicalizes expanded and dotted IPv6 forms to hex.
+    // Conservatively allow only global unicast IPv6, excluding mapped IPv4,
+    // translation/tunnelling and special-purpose ranges.
+    let canonical: string;
+    try { canonical = new URL(`http://[${ip}]/`).hostname.slice(1, -1); }
+    catch { return true; }
+    if (!/^[23][0-9a-f]{3}:/.test(canonical)) return true;
+    return /^2001:(?:[0-1]?[0-9a-f]{0,2}|db8):/.test(canonical) || canonical.startsWith('2002:') || canonical.startsWith('3fff:');
   }
   const parts = ip.split('.').map(Number);
   if (parts.length !== 4 || parts.some(n => !Number.isInteger(n) || n < 0 || n > 255)) return true;
@@ -61,6 +66,7 @@ export async function safeFetch(target: string, options: SafeFetchOptions): Prom
   for (let hop = 0; hop <= maxRedirects; hop++) {
     const parsed = new URL(current);
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') throw new InputError('Redirected to an unsupported address.');
+    if (parsed.username || parsed.password || (parsed.port && !['80', '443'].includes(parsed.port))) throw new InputError('Redirected to an unsupported web address.');
     const host = parsed.hostname.toLowerCase();
     if (!isPublicHostname(host)) throw new InputError('The site redirected to a non-public address.');
     const addresses = await resolveHost(host);
