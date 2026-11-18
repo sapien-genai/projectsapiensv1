@@ -50,7 +50,7 @@ export async function handleStudy(db:SupabaseClient,req:Request,body:Record<stri
   };
   try {
    const models=run.config.models as Record<string,string>;
-   const config={model:models[a.provider],webSearch:run.config.webSearch===true,onUsage,citationLimit:1000,timeoutMs:45000,purpose:'assistant' as const};
+   const config={model:models[a.provider],webSearch:run.config.webSearch===true,onUsage,citationLimit:1000,timeoutMs:75000,purpose:'assistant' as const};
    const provider=a.provider==='chatgpt'?openai({...config,apiKey:env('OPENAI_API_KEY')}):a.provider==='claude'?anthropic({...config,apiKey:env('ANTHROPIC_API_KEY')}):gemini({...config,apiKey:env('GEMINI_API_KEY')});
    const answer=await provider.ask(a.prompt);
    if(!answer.text.trim())throw new Error('Provider returned no answer.');
