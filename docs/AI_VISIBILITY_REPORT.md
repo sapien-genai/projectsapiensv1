@@ -121,3 +121,5 @@ ORDER BY started_at;
 ```
 
 Live verification showed that the requested Gemini 3.5 alias can return `gemini-3.6-flash`. Pricing uses the returned model, including the [published Gemini 3.6 promotional rates](https://ai.google.dev/gemini-api/docs/pricing?gclsrc=aw.ds) through December 31, 2026 and the January 1 change. Completed Claude responses with omitted search usage use observed web-search tool calls (labeled estimates). Completed Gemini responses without grounding metadata record zero observed searches; incomplete responses or incomplete grounding metadata remain unknown.
+
+Admins can expand a report in Visibility costs and select **Run fresh report (new API charges)**. The function verifies the user and existing admin role server-side, skips the cache only for that request, and keeps the old report intact. Fresh runs have a three-per-admin daily quota and count toward the same global daily cap. Public visitors cannot request this override.

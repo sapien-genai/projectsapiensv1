@@ -13,6 +13,8 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
     assistants: [], recommendations: [{ title: 'Private recommendation', detail: '', priority: 'high' }], method: 'API snapshot' };
   const row = { id: '11111111-1111-4111-8111-111111111111', domain: 'acme.com', status: 'complete', report, email: null as string | null, unlocked_at: null as string | null, created_at: new Date().toISOString() };
   let failReservation = false;
+  let admin = false;
+  let reservation: Record<string, unknown> = {};
   let limit: string | null = null;
   const originalFetch = globalThis.fetch;
   const background: Promise<unknown>[] = [];
@@ -21,7 +23,9 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
   globalThis.fetch = async (input, init) => {
     const url = String(input);
     const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {status, headers: {'Content-Type': 'application/json'}});
-    if (url.endsWith('/rpc/reserve_visibility_report')) return failReservation ? json({message: 'DB down'}, 503) : json(limit ? {limit} : row);
+    if (url.endsWith('/auth/v1/user')) return json({id:'22222222-2222-4222-8222-222222222222'});
+    if (url.includes('/admin_roles?')) return json(admin ? {role:'super_admin'} : null);
+    if (url.endsWith('/rpc/reserve_visibility_report')) { reservation = JSON.parse(String(init?.body)); return failReservation ? json({message: 'DB down'}, 503) : json(limit ? {limit} : row); }
     if (url.endsWith('/rpc/claim_visibility_notification')) return json([]);
     if (url.includes('/visibility_reports?')) {
       if (init?.method === 'PATCH' && !row.unlocked_at) Object.assign(row, JSON.parse(String(init.body)));
@@ -33,8 +37,19 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
     const { handleRequest } = await import('./handler.ts');
     assert.equal((await handleRequest(new Request('https://example.com?check=providers'))).status, 403);
     const call = (body: unknown, origin = 'https://www.projectsapiens.ai') => handleRequest(new Request('https://example.com', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }));
+    assert.equal((await call({action:'start',url:'acme.com',fresh:true})).status,403);
+    const freshCall = () => handleRequest(new Request('https://example.com', {method:'POST',headers:{Origin:'https://www.projectsapiens.ai',Authorization:'Bearer user-token','Content-Type':'application/json'},body:JSON.stringify({action:'start',url:'acme.com',fresh:true})}));
+    assert.equal((await freshCall()).status,403);
+    admin = true;
+    assert.equal((await freshCall()).status,200);
+    assert.equal(reservation.p_cache_days,0);
+    assert.equal(reservation.p_ip_limit,3);
+    assert.equal(reservation.p_daily_cap,100);
+    assert.equal(reservation.p_ip_hash,'admin:22222222-2222-4222-8222-222222222222');
+    limit = 'visitor'; assert.equal((await freshCall()).status,429); limit = null;
     const cached = await call({action: 'start', url: 'acme.com'});
     assert.equal(cached.status, 200);
+    assert.equal(reservation.p_cache_days,7);
     const preview = await cached.json();
     assert.equal(preview.status, 'complete');
     assert.ok(preview.preview);

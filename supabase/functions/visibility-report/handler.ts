@@ -93,10 +93,21 @@ async function start(req: Request, body: Record<string, unknown>) {
   if (typeof body.url !== "string") throw new InputError("Enter a website address, such as example.com.");
   const { url, domain } = normalizeUrl(body.url);
   if (!buildGrader()) return { status: 503, data: { error: "The live check is not available right now." } };
-  const ipHash = await hashIp(req);
+  let ipHash = await hashIp(req);
+  const fresh = body.fresh === true;
+  if (fresh) {
+    const token = req.headers.get("authorization")?.replace(/^Bearer /i, "");
+    if (!token) return { status: 403, data: { error: "Admin sign-in is required to run a fresh report." } };
+    const { data: auth, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !auth.user) return { status: 403, data: { error: "Admin sign-in is required to run a fresh report." } };
+    const { data: role, error: roleError } = await supabase.from("admin_roles").select("role").eq("user_id", auth.user.id).in("role", ["admin", "super_admin"]).limit(1).maybeSingle();
+    if (roleError || !role) return { status: 403, data: { error: "Only admins can run a fresh report." } };
+    // Separate authenticated admin quota; preserve both per-admin and global caps.
+    ipHash = `admin:${auth.user.id}`;
+  }
   const { data, error } = await supabase.rpc("reserve_visibility_report", {
     p_domain: domain, p_url: url, p_ip_hash: ipHash,
-    p_daily_cap: DAILY_CAP, p_ip_limit: IP_DAILY_LIMIT, p_cache_days: CACHE_DAYS,
+    p_daily_cap: DAILY_CAP, p_ip_limit: IP_DAILY_LIMIT, p_cache_days: fresh ? 0 : CACHE_DAYS,
   });
   if (error) throw error; // Fail closed: never start paid work when reservation fails.
   if (data.limit === "visitor") return { status: 429, data: { error: `You have reached today's limit of ${IP_DAILY_LIMIT} new reports. Please try again tomorrow, or get in touch for a full audit.` } };
