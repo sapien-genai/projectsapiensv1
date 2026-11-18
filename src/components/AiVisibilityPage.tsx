@@ -3,6 +3,7 @@ import { useEffect, type ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CompanyHeader from './CompanyHeader';
 import ClientInquiryForm from './ClientInquiryForm';
+import VisibilityChecker from './VisibilityChecker';
 import { VISIBILITY_QUESTIONS, VISIBILITY_ASSISTANTS } from '../data/aiVisibility';
 import './CompanyHome.css';
 import './CompanyPreview.css';
@@ -29,8 +30,9 @@ export default function AiVisibilityPage() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">AI brand visibility</p>
         <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl md:text-7xl">When someone asks AI about your category, what does it say about you?</h1>
         <p className="mt-8 max-w-2xl text-lg leading-relaxed text-[#526055]">People now ask {VISIBILITY_ASSISTANTS.slice(0, -1).join(', ')}, and {VISIBILITY_ASSISTANTS[VISIBILITY_ASSISTANTS.length - 1]} for a recommendation, often before they open a search engine. We test how those assistants describe your business, show you where the picture is missing or wrong, and help you fix what they read.</p>
-        <a href="#contact" className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`}>Request a visibility report <ArrowUpRight aria-hidden="true" size={19} /></a>
+        <a href="#instant-report" className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`}>Run a free instant report <ArrowUpRight aria-hidden="true" size={19} /></a>
       </header>
+      <div className="pb-14 md:pb-20"><VisibilityChecker /></div>
       <Section label="Why it matters" title="Search ranks pages. AI describes companies.">
         <p>A search engine returns a list and leaves the choice to the reader. An AI assistant writes one answer, names a handful of companies, and explains each in a sentence. If that sentence is vague, out of date, or about a different company with a similar name, the reader never sees your website to learn otherwise.</p>
         <p>Ranking well in Google does not settle the question. An assistant can only repeat what it was able to read and connect: your own pages, your documentation, and what other sources say about you. The work is to find out what it currently understands, then make the accurate version easy to find.</p>
@@ -38,7 +40,8 @@ export default function AiVisibilityPage() {
       <Section label="What we look at" title="Four questions, asked of every assistant.">
         {VISIBILITY_QUESTIONS.map((item, i) => <div key={item.name} className="border-b border-[#172820]/20 pb-7 last:border-0"><p className="font-mono text-xs text-[#68745b]">0{i + 1} / {item.name}</p><h3 className="mt-2 text-xl font-semibold text-[#172820]">{item.question}</h3><p className="mt-3">{item.detail}</p></div>)}
       </Section>
-      <Section label="What you get" title="An AI Brand Visibility Report you can act on.">
+      <Section label="The full report" title="When you need more than a snapshot.">
+        <p>The instant report above asks each assistant a few questions once. The full AI Brand Visibility Report is the same idea done thoroughly, by a person, for your market.</p>
         <ul className="list-disc space-y-3 pl-5">
           <li><strong className="text-[#172820]">A side-by-side scorecard.</strong> Recognition, discovery, and accuracy for each of {VISIBILITY_ASSISTANTS.join(', ')}, set against how you appear in Google for the same questions.</li>
           <li><strong className="text-[#172820]">The evidence.</strong> The prompts we ran, the answers that came back, the companies named ahead of you, and the sources each assistant cited, all dated.</li>

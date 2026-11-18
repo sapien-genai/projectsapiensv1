@@ -83,6 +83,14 @@ export const companyLegal = {
         ]
       ],
       [
+        "Instant AI visibility report",
+        [
+          "The instant AI visibility report on our website tests a website address you enter. To run it, we fetch public pages from that address and send the address, text from those public pages, and questions about the business to OpenAI, Anthropic, and Google through their developer APIs. Their handling of that data is governed by their own terms. Please enter only a public business website.",
+          "We store the resulting report. To limit abuse we also store a one-way hash of the requesting IP address. If you enter an email address to unlock the full report, we store it with that report and may contact you about the results. We also forward your email, the business domain, the score, and a report link through our existing contact-form service to notify our team. Anyone with a report’s link can view it at the level it has been unlocked.",
+          "You can ask us to delete a report or the email address attached to it using the contact details below."
+        ]
+      ],
+      [
         "Technical information and cookies",
         [
           "Our hosting and infrastructure providers may process technical information such as IP address, browser details, requested pages, timestamps, and error or security logs to deliver and protect the website.",
@@ -94,7 +102,7 @@ export const companyLegal = {
         "How we use information",
         [
           "We use inquiry details to respond to you, assess a potential project, prepare for business discussions, and maintain related correspondence. Technical information supports website delivery, troubleshooting, and protection against abuse.",
-          "We do not currently use CRM tools or AI tools to process website inquiries. The public contact form does not send your submission to OpenAI. Our membership in the OpenAI Partner Network does not give OpenAI access to your inquiry."
+          "We do not currently use CRM tools or AI tools to process website inquiries. The public contact form does not send your submission to OpenAI. The instant AI visibility report is separate and does use AI providers, as described above. Our membership in the OpenAI Partner Network does not give OpenAI access to your inquiry."
         ]
       ],
       [
