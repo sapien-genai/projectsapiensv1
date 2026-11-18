@@ -1,3 +1,4 @@
+import { newUsage, priceUsage, type CostProvider, type UsageEntry } from './cost.ts';
 import type { Ask, AssistantAnswer, AssistantId, Citation, Complete } from './types.ts';
 
 /**
@@ -8,23 +9,40 @@ import type { Ask, AssistantAnswer, AssistantId, Citation, Complete } from './ty
  * the answer is flagged as unsearched.
  */
 
-export interface ProviderConfig { apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number }
+export interface ProviderConfig { apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number; purpose?: UsageEntry['purpose']; onUsage?: (entry: UsageEntry) => Promise<void> }
 export interface Provider { id: AssistantId; label: string; model: string; ask: Ask; complete: Complete }
 
 class ProviderError extends Error { constructor(message: string, public status: number) { super(message); } }
 
-async function post(url: string, headers: Record<string, string>, body: unknown, config: ProviderConfig): Promise<any> {
-  const response = await (config.fetchImpl ?? fetch)(url, {
-    method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body),
-    signal: AbortSignal.timeout(config.timeoutMs ?? 75000),
-  });
-  if (!response.ok) {
-    // Keep provider error text out of anything a visitor can read; the status is enough to branch on.
-    await response.body?.cancel();
-    console.warn("visibility provider HTTP error", { host: new URL(url).hostname, model: config.model, status: response.status });
-    throw new ProviderError(`Provider returned HTTP ${response.status}`, response.status);
+async function post(url: string, headers: Record<string, string>, body: any, config: ProviderConfig, provider: CostProvider): Promise<any> {
+  let entry = newUsage(provider, config.model, config.purpose ?? 'assistant');
+  // Persist before paid work. A terminated worker leaves a pending, explicitly unknown cost.
+  await config.onUsage?.(entry);
+  let data: any;
+  try {
+    const response = await (config.fetchImpl ?? fetch)(url, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body),
+      signal: AbortSignal.timeout(config.timeoutMs ?? 75000),
+    });
+    entry.http_status = response.status;
+    data = await response.json().catch(() => null);
+    if (!response.ok) {
+      console.warn('visibility provider HTTP error', { host: new URL(url).hostname, model: config.model, status: response.status });
+      throw new ProviderError(`Provider returned HTTP ${response.status}`, response.status);
+    }
+    if (!data) throw new Error('Provider returned invalid JSON');
+    entry = priceUsage(entry, data, Boolean(body.tools?.length));
+    entry.status = 'succeeded';
+    return data;
+  } catch (error) {
+    if (data?.usage || data?.usageMetadata) entry = priceUsage(entry, data, Boolean(body.tools?.length));
+    entry.status = 'failed';
+    entry.notes.push('Failed attempt; final billing may be unknown.');
+    throw error;
+  } finally {
+    entry.finished_at = new Date().toISOString();
+    await config.onUsage?.(entry);
   }
-  return response.json();
 }
 
 const dedupe = (citations: Citation[]) => [...new Map(citations.filter(c => /^https?:\/\//.test(c.url)).map(c => [c.url, c])).values()].slice(0, 12);
@@ -40,7 +58,7 @@ async function withSearchFallback(config: ProviderConfig, run: (search: boolean)
 export function openai(config: ProviderConfig): Provider {
   const call = async (prompt: string, search: boolean, maxTokens: number) => {
     const data = await post('https://api.openai.com/v1/responses', { Authorization: `Bearer ${config.apiKey}` },
-      { model: config.model, input: prompt, max_output_tokens: maxTokens, ...(search ? { tools: [{ type: 'web_search' }] } : {}) }, config);
+      { model: config.model, input: prompt, max_output_tokens: maxTokens, ...(search ? { tools: [{ type: 'web_search' }] } : {}) }, config, 'openai');
     const parts = (data.output ?? []).filter((item: any) => item.type === 'message').flatMap((item: any) => item.content ?? []).filter((part: any) => part.type === 'output_text');
     return {
       text: parts.map((part: any) => part.text ?? '').join('\n').trim(),
@@ -57,7 +75,7 @@ export function anthropic(config: ProviderConfig): Provider {
   const call = async (prompt: string, search: boolean, maxTokens: number) => {
     const data = await post('https://api.anthropic.com/v1/messages', { 'x-api-key': config.apiKey, 'anthropic-version': '2023-06-01' },
       { model: config.model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }],
-        ...(search ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }] } : {}) }, config);
+        ...(search ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }] } : {}) }, config, 'anthropic');
     const blocks: any[] = data.content ?? [];
     const text = blocks.filter(block => block.type === 'text');
     return {
@@ -74,7 +92,7 @@ export function anthropic(config: ProviderConfig): Provider {
 export function gemini(config: ProviderConfig): Provider {
   const call = async (prompt: string, search: boolean, maxTokens: number) => {
     const data = await post(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(config.model)}:generateContent`, { 'x-goog-api-key': config.apiKey },
-      { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: maxTokens }, ...(search ? { tools: [{ google_search: {} }] } : {}) }, config);
+      { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: maxTokens }, ...(search ? { tools: [{ google_search: {} }] } : {}) }, config, 'gemini');
     const candidate = data.candidates?.[0] ?? {};
     const grounding = candidate.groundingMetadata ?? {};
     return {
