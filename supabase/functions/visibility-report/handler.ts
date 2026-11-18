@@ -1,4 +1,5 @@
 declare global { var EdgeRuntime: { waitUntil(promise: Promise<unknown>): void }; }
+import { handleStudy } from "./study-handler.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { anthropic, gemini, openai, type Provider } from "./core/providers.ts";
 import { readableReport, runReport, toPreview } from "./core/pipeline.ts";
@@ -194,10 +195,14 @@ export async function handleRequest(req: Request) {
   if (req.method === "OPTIONS") return new Response(null, { status: allowed ? 204 : 403, headers });
   if (req.method !== "POST") return reply(405, { error: "Method not allowed." });
   if (!allowed) return reply(403, { error: "Invalid origin." });
-  if (Number(req.headers.get("content-length") ?? 0) > 4000) return reply(413, { error: "Request is too large." });
+  if (Number(req.headers.get("content-length") ?? 0) > 20000) return reply(413, { error: "Request is too large." });
   try {
     const body = await req.json().catch(() => null);
     if (!body || typeof body !== "object" || Array.isArray(body)) return reply(400, { error: "Invalid request." });
+    if (typeof body.action === 'string' && body.action.startsWith('study_')) {
+      const result = await handleStudy(supabase,req,body,resolveHost,DAILY_CAP,IP_DAILY_LIMIT);
+      return reply(result.status,result.data);
+    }
     if (body.action === "start") { const result = await start(req, body); return reply(result.status, result.data); }
     if (body.action === "status") { const row = await load(body.id); if (row?.unlocked_at) EdgeRuntime.waitUntil(notify(row.id)); return row ? reply(200, present(row)) : reply(404, { error: "That report was not found." }); }
     if (body.action === "unlock") { const result = await unlock(body); return reply(result.status, result.data); }

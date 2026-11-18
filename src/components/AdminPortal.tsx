@@ -10,9 +10,10 @@ import UserManagement from './admin/UserManagement';
 import TicketSystem from './admin/TicketSystem';
 import AnalyticsDashboard from './admin/AnalyticsDashboard';
 import AuditLog from './admin/AuditLog';
+import VisibilityStudies from './admin/VisibilityStudies';
 import VisibilityCosts from './admin/VisibilityCosts';
 
-type AdminView = 'dashboard' | 'users' | 'tickets' | 'analytics' | 'audit' | 'settings' | 'visibility-costs';
+type AdminView = 'dashboard' | 'users' | 'tickets' | 'analytics' | 'audit' | 'settings' | 'visibility-costs' | 'visibility-studies';
 
 interface AdminRole {
   role: string;
@@ -96,7 +97,7 @@ export default function AdminPortal({ onBackToPlatform }: AdminPortalProps) {
     { id: 'users' as AdminView, label: 'Users', icon: Users },
     { id: 'tickets' as AdminView, label: 'Support Tickets', icon: Ticket },
     { id: 'analytics' as AdminView, label: 'Analytics', icon: BarChart3 },
-    ...(['super_admin', 'admin'].includes(adminRole.role) ? [{ id: 'visibility-costs' as AdminView, label: 'Visibility costs', icon: BarChart3 }] : []),
+    ...(['super_admin', 'admin'].includes(adminRole.role) ? [{ id: 'visibility-studies' as AdminView, label: 'Visibility studies', icon: BarChart3 }, { id: 'visibility-costs' as AdminView, label: 'Visibility costs', icon: BarChart3 }] : []),
     { id: 'audit' as AdminView, label: 'Audit Log', icon: FileText },
     { id: 'settings' as AdminView, label: 'Settings', icon: Settings },
   ];
@@ -211,6 +212,7 @@ export default function AdminPortal({ onBackToPlatform }: AdminPortalProps) {
             {currentView === 'users' && <UserManagement adminRole={adminRole} />}
             {currentView === 'tickets' && <TicketSystem adminRole={adminRole} />}
             {currentView === 'analytics' && <AnalyticsDashboard adminRole={adminRole} />}
+            {currentView === 'visibility-studies' && <VisibilityStudies />}
             {currentView === 'visibility-costs' && <VisibilityCosts />}
             {currentView === 'audit' && <AuditLog adminRole={adminRole} />}
             {currentView === 'settings' && (
