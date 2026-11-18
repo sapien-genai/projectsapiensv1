@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { sharePages, origin } from './share-pages';
+import { SERVICES } from '../src/data/services';
 const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const jsonLd = (data: object) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 const emptyRoot = '<div id="root"></div>';
@@ -21,6 +22,8 @@ for (const page of sharePages) {
   const graph: object[] = [organization, { '@type': 'WebPage', '@id': url, url, name: page.title, description: page.description, isPartOf: { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'Project Sapiens', publisher: { '@id': organization['@id'] } } }];
   if (article) graph.push({ '@type': 'Article', headline: page.title.replace(/ — Project Sapiens$/, ''), description: page.description, url, image: `${origin}${imagePath}`, author: organization.founder, publisher: { '@id': organization['@id'] }, mainEntityOfPage: { '@id': url } });
   if (page.slug === 'ai-visibility') graph.push({ '@type': 'Service', name: 'AI Brand Visibility Report', serviceType: 'AI brand visibility audit', description: page.description, url, provider: { '@id': organization['@id'] } });
+  const service = SERVICES.find(item => item.slug === page.slug);
+  if (service) graph.push({ '@type': 'Service', name: service.name, serviceType: service.title.split(' — ')[0], description: service.description, url, provider: { '@id': organization['@id'] } });
   const metadata = [
     `<title>${escape(page.title)}</title>`,
     `<meta name="description" content="${escape(page.description)}" />`,

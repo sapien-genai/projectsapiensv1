@@ -5,6 +5,22 @@
       "destination": "/api/client-inquiry"
     },
     {
+      "source": "/custom-ai-agents",
+      "destination": "/share-pages/custom-ai-agents.html"
+    },
+    {
+      "source": "/custom-ai-agents/",
+      "destination": "/share-pages/custom-ai-agents.html"
+    },
+    {
+      "source": "/voice-ai-development",
+      "destination": "/share-pages/voice-ai-development.html"
+    },
+    {
+      "source": "/voice-ai-development/",
+      "destination": "/share-pages/voice-ai-development.html"
+    },
+    {
       "source": "/terms",
       "destination": "/share-pages/terms.html"
     },

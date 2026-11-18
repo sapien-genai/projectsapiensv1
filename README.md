@@ -1,27 +1,25 @@
 # Project Sapiens
 
-<!-- DEV REPO VERIFICATION: Connected to development branch - January 16, 2026 -->
+Project Sapiens, Inc. is an independent AI consultancy and product studio founded by Tony Marks. We turn OpenAI technology into practical products, agents, and voice experiences, connecting strategy, design, development, and evaluation from the first useful prototype to production.
 
-A modern AI learning platform designed to help users build confidence and practical skills with AI through guided lessons, hands-on labs, and intentional practice.
+We work with founders, product teams, and established organizations through focused projects, fractional AI leadership, and ongoing advisory. Project Sapiens is a member of the OpenAI Partner Network.
 
-## What is Project Sapiens?
+## What we do
 
-Project Sapiens is a comprehensive learning platform that teaches people how to effectively integrate AI into their daily work and creative practice. The platform combines:
+- **[Custom AI agent development](https://www.projectsapiens.ai/custom-ai-agents/)**: Knowledge assistants, connected workflow agents, and document workflows built around approved information and useful tasks.
+- **[Voice AI development](https://www.projectsapiens.ai/voice-ai-development/)**: Custom voice agents and conversational interfaces that connect spoken requests to information, actions, and human handoff.
+- **[AI brand visibility](https://www.projectsapiens.ai/ai-visibility/)**: Evidence-based reports on how AI assistants recognize, recommend, and describe a business, with a prioritized plan for improvement.
+- **[Strategy and advisory](https://www.projectsapiens.ai/work-with-us/)**: Product definition, evaluation, fractional AI leadership, and ongoing support for decisions about AI.
 
-- **Structured Learning Paths**: Progressive curriculum covering AI fundamentals, prompt engineering, workflow automation, and advanced applications
-- **Interactive Labs**: Hands-on sandbox environments where learners experiment with AI in real-time
-- **Progress Tracking**: Comprehensive achievement system with badges, streaks, and baseline assessments
-- **Command Center**: Personal workspace for managing AI-powered projects, tasks, and launch commitments
-- **Intentional Network**: Community features for sharing projects and learning together
-- **Prompt Library**: Curated collection of effective prompts with practice exercises
+Visit [projectsapiens.ai](https://www.projectsapiens.ai/) for current services, [meet Tony Marks](https://www.projectsapiens.ai/about/), or [get in touch](https://www.projectsapiens.ai/work-with-us/#contact).
 
-The platform emphasizes learning-by-doing with a warm minimalist design that supports long-form reading, mobile-first interaction, and calm, focused learning.
+## What this repository contains
 
-## Current GTM Focus
+This repository powers the public company website and the Project Sapiens academy. Company pages are pre-rendered so their content is available to readers and crawlers without JavaScript.
 
-Project Sapiens is currently being shaped around a small-team AI fluency offer: practical, role-based training for teams that need to use AI safely and measurably in everyday work.
+The **academy is a learning product within Project Sapiens**, not a description of the company's entire business. Its features include guided lessons, hands-on labs, prompt practice, progress tracking, and personal workspaces. Academy development notes and earlier training go-to-market plans describe that product; the company website is the source for current service positioning.
 
-See [Small Team AI Fluency GTM Plan](./SMALL_TEAM_AI_FLUENCY_GTM.md) for the 30-day pilot plan, customization model, packaging, and product backlog.
+For the academy's earlier pilot planning, see [Small Team AI Fluency GTM Plan](./SMALL_TEAM_AI_FLUENCY_GTM.md).
 
 ## Tech Stack
 

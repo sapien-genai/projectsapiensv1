@@ -31,6 +31,7 @@ export default function OpenAISolutions() {
         </div>
       </div>
     </div>
+    <nav aria-label="Service details" className="mt-8 flex flex-wrap gap-x-8 gap-y-4"><a className="sp-solution-cta" href="/custom-ai-agents/">Explore custom AI agent development <ArrowUpRight size={18} aria-hidden="true" /></a><a className="sp-solution-cta" href="/voice-ai-development/">Explore voice AI development <ArrowUpRight size={18} aria-hidden="true" /></a></nav>
     <p className="sp-solution-note">Available as focused projects, fractional AI leadership, or ongoing advisory. We agree on scope, integrations, and platform requirements together.</p>
   </section>;
 }

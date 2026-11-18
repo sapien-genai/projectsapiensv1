@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import CompanyHome from './components/CompanyHome';
 import WorkWithUsPage from './components/WorkWithUsPage';
+import ServicePage from './components/ServicePage';
 import AiVisibilityPage from './components/AiVisibilityPage';
 
 const CompanyLegalPage = lazy(() => import('./components/CompanyLegalPage'));
@@ -23,6 +24,7 @@ export default function App({ path: fixedPath }: { path?: string }) {
   if (path === '/about') return <Suspense fallback={<div role="status" className="p-8">Loading About Project Sapiens…</div>}><AboutPage /></Suspense>;
   if (path === '/terms' || path === '/privacy') return <Suspense fallback={<div role="status" className="p-8">Loading…</div>}><CompanyLegalPage kind={path === '/terms' ? 'terms' : 'privacy'} /></Suspense>;
   if (path === '/work-with-us') return <WorkWithUsPage />;
+  if (path === '/custom-ai-agents' || path === '/voice-ai-development') return <ServicePage slug={path.slice(1)} />;
   if (path === '/ai-visibility') return <AiVisibilityPage />;
   return <Suspense fallback={<div className="min-h-screen bg-surface p-8">Loading learning platform…</div>}><AcademyApp /></Suspense>;
 }

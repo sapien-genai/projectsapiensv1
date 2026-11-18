@@ -1,0 +1,56 @@
+export const SERVICES = [
+  {
+    slug: 'custom-ai-agents', name: 'Custom AI agents',
+    title: 'Custom AI Agent Development — Project Sapiens',
+    description: 'Custom OpenAI agents, knowledge assistants, and connected workflows. Project Sapiens brings strategy, design, integration, and evaluation from prototype to production.',
+    headline: 'Custom AI agents. Built around your work.',
+    intro: 'Project Sapiens designs and builds custom AI agents for businesses: knowledge assistants that find useful answers, and workflow agents that connect those answers to action. We bring OpenAI technology together with your information, tools, and the people responsible for the result.',
+    audience: 'For founders, product teams, and established organizations with a workflow to improve or a product to build. You may be starting with an idea, replacing a manual process, or taking an existing prototype toward production.',
+    examples: [
+      ['Knowledge assistants', 'Help customers or colleagues find answers in approved documents. Show source references, respect access boundaries, and provide a route to a person when the information is missing.'],
+      ['Connected workflow agents', 'Summarize an incoming request, prepare a CRM update, or draft a response for review. Connect to the systems your team already uses through the APIs and permissions available to the project.'],
+      ['Document and intake workflows', 'Extract useful details from documents, flag missing information, and organize a review queue. Keep the original evidence available to the people making decisions.'],
+    ],
+    workflow: ['A customer inquiry arrives', 'The agent finds context and prepares an update', 'Your team reviews and approves the next step'],
+    deliverables: [
+      ['A defined use case', 'A shared scope, workflow map, and acceptance criteria grounded in the job the agent needs to do.'],
+      ['A working product', 'The agent experience, agreed data and tool integrations, and an interface that fits the people using it.'],
+      ['Evidence of performance', 'Representative test cases and an evaluation of answer quality, tool use, failure handling, latency, and operating cost.'],
+      ['A path to operation', 'Deployment and handover documentation, monitoring requirements, and agreed responsibilities for maintenance and ongoing improvement.'],
+    ],
+    questions: [
+      ['Can you connect an agent to our existing systems?', 'We assess your documents, APIs, authentication, and access requirements during scoping. Integrations depend on what those systems expose and what your organization permits.'],
+      ['How much autonomy should an agent have?', 'That depends on the task. We define which actions it may take, which require approval, and how it should stop or hand off when a request falls outside its scope.'],
+      ['Can you improve a prototype we already have?', 'Yes. We can review its behavior, data quality, integrations, and evaluation process, then agree on the changes needed for the next stage.'],
+      ['What does an engagement cost and how long does it take?', 'Scope, timing, and fees are agreed before work begins. We start with the use case, available systems, and acceptance criteria rather than a fixed package that may not fit.'],
+    ],
+    related: 'voice-ai-development',
+  },
+  {
+    slug: 'voice-ai-development', name: 'Voice AI development',
+    title: 'Voice AI Development — Project Sapiens',
+    description: 'Custom voice agents and conversational interfaces built around useful tasks. Project Sapiens connects voice design, OpenAI technology, business systems, and real-world testing.',
+    headline: 'Voice AI. A conversation that goes somewhere.',
+    intro: 'Project Sapiens builds custom voice agents and conversational interfaces for businesses. We connect spoken requests to useful information and actions, combining conversation design, OpenAI technology, and hands-on product development.',
+    audience: 'For teams building a voice-enabled product, a service concierge, or a conversational way to get work done. We help define where voice is useful, what the experience needs to handle, and when a person should take over.',
+    examples: [
+      ['Service and product concierges', 'Help someone explore an offering, ask follow-up questions, and find a useful next step. Ground the conversation in approved information and make the limits of the service clear.'],
+      ['Voice interfaces for business workflows', 'Let a user ask for information or prepare an action through conversation. Confirm important details before updating a record or passing a request to another system.'],
+      ['Voice in a custom application', 'Add a conversational interface to a web or mobile product. Design how people start, interrupt, correct, and leave the conversation alongside the rest of the experience.'],
+    ],
+    workflow: ['Someone asks a spoken question', 'The agent checks context and clarifies the request', 'They receive an answer, confirmed action, or handoff'],
+    deliverables: [
+      ['Conversation design', 'User journeys, representative dialogues, clarification behavior, and clear paths for errors and human handoff.'],
+      ['A connected voice experience', 'Voice integration and agreed connections to business information and tools. OpenAI’s Realtime API is one foundation we use for responsive conversation.'],
+      ['Testing beyond a scripted demo', 'Evaluate interruptions, background noise, names, corrections, response time, and task completion using representative scenarios.'],
+      ['Deployment and operating guidance', 'An agreed deployment approach, documentation, and a plan for monitoring quality, cost, and the conversations that need review.'],
+    ],
+    questions: [
+      ['Can a voice agent use our business information?', 'Yes, where suitable sources and access are available. We scope retrieval and integrations around approved information, then test how the agent handles missing or conflicting answers.'],
+      ['Can it work over the phone?', 'Phone-based experiences can be scoped alongside web and app experiences. We assess telephony requirements, provider compatibility, consent, and handoff before agreeing on the implementation.'],
+      ['How do you handle misunderstandings?', 'We design for clarification, repetition, correction, and confirmation. Testing includes realistic interruptions and unclear requests, with a route to a person or another channel when needed.'],
+      ['Can we start with a focused pilot?', 'Yes. A pilot can test one useful conversation and the integrations behind it. We agree on scope, success criteria, timing, and fees before work begins.'],
+    ],
+    related: 'custom-ai-agents',
+  },
+] as const;
