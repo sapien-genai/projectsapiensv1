@@ -98,3 +98,24 @@ Default model ids were checked against official documentation on November 18, 20
 If the homepage cannot be read, website scores and assistant recognition/accuracy grades are unavailable. The raw assistant answers remain visible, but missing metadata is not inferred from a failed request. Auxiliary checks distinguish unavailable responses from confirmed absence (404/410); an unknown check prevents an aggregate website score. Incomplete reports are not reused by the seven-day cache. Apply `20261118210000_exclude_incomplete_visibility_cache.sql` when upgrading. Older failed-homepage reports are sanitized when displayed.
 
 The Beacon fetch regression was caused by treating all of 192.0.0.0/16 as reserved. Its public 192.0.78.* hosting addresses are allowed; the reserved 192.0.0.0/24 and documentation 192.0.2.0/24 remain blocked. Redirect and private-address protections still apply.
+
+### Per-report costs (2026-11-18)
+
+Academy → Admin Portal → **Visibility costs** shows the most recent reports, paginated, with calculated USD cost and per-call usage. Only existing `admin` and `super_admin` users can read the ledger under RLS. Public report responses do not include costs.
+
+Apply `20261118230000_visibility_report_costs.sql` before deploying the updated Edge Function. Every paid attempt is inserted into `visibility_report_usage` before the HTTP request and updated after it returns. Each row records actual/requested model, assistant vs analysis purpose, HTTP status, provider token usage, cache tokens, reasoning tokens, search count/basis, component costs, and the rate-card snapshot. A normal full report has 13 calls (9 questions, 1 profile extraction, 3 grades). Retries are separate rows. No prompts, credentials or answer text are stored in the ledger.
+
+The displayed amount is **calculated standard-list API cost**, not an invoice. OpenAI output already includes reasoning; Gemini output adds thoughts, and tool prompt tokens are included in input. Anthropic cache reads/writes are separate from uncached input. Google search cost is an estimate based on grounding queries at paid rates; the account's 5,000 free monthly search requests may reduce it. Hosting, taxes, credits and account discounts are excluded. Unknown models, missing usage, failed requests or interrupted workers yield partial/unavailable totals rather than zero. Cached report rows have zero incremental AI cost and link to the original report; old reports remain untracked rather than inventing historical usage.
+
+Prices are versioned in `core/cost.ts` and saved with each attempt. Review them when changing model secrets or provider pricing. Sources: [OpenAI pricing](https://developers.openai.com/api/docs/pricing), [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing), [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing.md), [Gemini usage fields](https://googleapis.github.io/js-genai/release_docs/interfaces/types.UsageMetadata.html).
+
+To inspect a report directly in Supabase SQL Editor:
+
+```sql
+SELECT provider, model, purpose, status, input_tokens, cached_tokens, output_tokens,
+       reasoning_tokens, searches, search_basis, token_cost_usd, search_cost_usd,
+       estimated_cost_usd, pricing_version, notes
+FROM public.visibility_report_usage
+WHERE report_id = 'REPORT_UUID'
+ORDER BY started_at;
+```

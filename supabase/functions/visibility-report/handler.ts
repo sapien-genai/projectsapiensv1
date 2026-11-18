@@ -4,6 +4,7 @@ import { anthropic, gemini, openai, type Provider } from "./core/providers.ts";
 import { readableReport, runReport, toPreview } from "./core/pipeline.ts";
 import { InputError, normalizeUrl } from "./core/url.ts";
 import { deliverLead } from "./core/notification.ts";
+import type { UsageEntry } from './core/cost.ts';
 import type { ProgressStep, Report } from "./core/types.ts";
 
 /**
@@ -32,13 +33,13 @@ function originAllowed(origin: string | null): origin is string {
   try { return new URL(origin).protocol === "https:" && new URL(origin).hostname.endsWith(".vercel.app"); } catch { return false; }
 }
 
-function buildProviders(): Provider[] {
+function buildProviders(onUsage?: (entry: UsageEntry) => Promise<void>): Provider[] {
   const webSearch = env("VISIBILITY_WEB_SEARCH", "on").toLowerCase() !== "off";
   const unavailable = (id: Provider["id"], label: string): Provider => ({ id, label, model: "not configured", ask: async () => { throw new Error("Provider not configured"); }, complete: async () => { throw new Error("Provider not configured"); } });
   const list: Provider[] = [];
-  if (env("OPENAI_API_KEY")) list.push(openai({ apiKey: env("OPENAI_API_KEY"), model: env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch }));
-  if (env("ANTHROPIC_API_KEY")) list.push(anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch }));
-  if (env("GEMINI_API_KEY")) list.push(gemini({ apiKey: env("GEMINI_API_KEY"), model: env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch }));
+  if (env("OPENAI_API_KEY")) list.push(openai({ apiKey: env("OPENAI_API_KEY"), model: env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch, onUsage }));
+  if (env("ANTHROPIC_API_KEY")) list.push(anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch, onUsage }));
+  if (env("GEMINI_API_KEY")) list.push(gemini({ apiKey: env("GEMINI_API_KEY"), model: env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch, onUsage }));
   if (!env("OPENAI_API_KEY")) list.push(unavailable("chatgpt", "ChatGPT"));
   if (!env("ANTHROPIC_API_KEY")) list.push(unavailable("claude", "Claude"));
   if (!env("GEMINI_API_KEY")) list.push(unavailable("gemini", "Gemini"));
@@ -46,11 +47,11 @@ function buildProviders(): Provider[] {
 }
 
 /** Extraction and grading run on one inexpensive model, Gemini first because the project already pays for it. */
-function buildGrader(): Provider | null {
+function buildGrader(onUsage?: (entry: UsageEntry) => Promise<void>): Provider | null {
   const override = env("VISIBILITY_GRADER_MODEL");
-  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, timeoutMs: 45000 });
-  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, timeoutMs: 45000 });
-  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, timeoutMs: 45000 });
+  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
+  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
+  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
   return null;
 }
 
@@ -66,14 +67,20 @@ async function hashIp(req: Request): Promise<string> {
 }
 
 async function execute(id: string, domain: string, url: string) {
-  const grader = buildGrader();
+  const onUsage = async (entry: UsageEntry) => {
+    const { error } = await supabase.from('visibility_report_usage').upsert({ ...entry, report_id: id }, { onConflict: 'id' });
+    if (error) throw new Error('Could not persist API usage');
+  };
+  const grader = buildGrader(onUsage);
   try {
+    const { error: trackingError } = await supabase.from('visibility_reports').update({ cost_tracking_started_at: new Date().toISOString() }).eq('id', id);
+    if (trackingError) throw new Error('Could not initialize cost tracking');
     if (!grader) throw new Error("No AI provider keys are configured.");
     const report = await runReport(domain, url, {
-      providers: buildProviders(), complete: grader.complete, fetchOptions: { resolveHost },
+      providers: buildProviders(onUsage), complete: grader.complete, fetchOptions: { resolveHost },
       onProgress: async (step: ProgressStep) => { await supabase.from("visibility_reports").update({ progress: step }).eq("id", id); },
     });
-    await supabase.from("visibility_reports").update({ status: "complete", report, completed_at: new Date().toISOString() }).eq("id", id);
+    await supabase.from("visibility_reports").update({ status: "complete", report, cost_tracking_finished_at: new Date().toISOString(), completed_at: new Date().toISOString() }).eq("id", id);
   } catch (error) {
     // Log the reason for operators; visitors only ever see a generic failure.
     console.error("visibility-report failed", { id, domain, reason: error instanceof Error ? error.message : "unknown" });
