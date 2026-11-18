@@ -38,6 +38,9 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
     assert.equal((await handleRequest(new Request('https://example.com?check=providers'))).status, 403);
     const call = (body: unknown, origin = 'https://www.projectsapiens.ai') => handleRequest(new Request('https://example.com', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }));
     assert.equal((await call({action:'start',url:'acme.com',fresh:true})).status,403);
+    for (const action of ['study_create','study_start','study_step','study_note','study_review']) {
+      assert.equal((await call({action})).status,403);
+    }
     const freshCall = () => handleRequest(new Request('https://example.com', {method:'POST',headers:{Origin:'https://www.projectsapiens.ai',Authorization:'Bearer user-token','Content-Type':'application/json'},body:JSON.stringify({action:'start',url:'acme.com',fresh:true})}));
     assert.equal((await freshCall()).status,403);
     admin = true;

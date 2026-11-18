@@ -123,3 +123,75 @@ ORDER BY started_at;
 Live verification showed that the requested Gemini 3.5 alias can return `gemini-3.6-flash`. Pricing uses the returned model, including the [published Gemini 3.6 promotional rates](https://ai.google.dev/gemini-api/docs/pricing?gclsrc=aw.ds) through December 31, 2026 and the January 1 change. Completed Claude responses with omitted search usage use observed web-search tool calls (labeled estimates). Completed Gemini responses without grounding metadata record zero observed searches; incomplete responses or incomplete grounding metadata remain unknown.
 
 Admins can expand a report in Visibility costs and select **Run fresh report (new API charges)**. The function verifies the user and existing admin role server-side, skips the cache only for that request, and keeps the old report intact. Fresh runs have a three-per-admin daily quota and count toward the same global daily cap. Public visitors cannot request this override.
+
+## Fixed-question case studies
+
+Admins and super admins can open **Admin → Visibility studies**. This is separate
+from the public instant report: the latter regenerates discovery prompts and its
+composite score is not a controlled longitudinal measurement.
+
+Apply `20261118233000_visibility_studies.sql`, redeploy `visibility-report`, and
+deploy the frontend. No new secrets are required. New tables have admin-only
+read policies; authenticated users cannot mutate them directly. Study actions
+validate the current user's admin role in the function.
+
+Save a fixed question set before the first run. Its questions, brand, domain,
+competitors and scope cannot be edited; create another set to change the method.
+Each run snapshots the questions, requested model/search configuration and website
+checks. The exact question is sent to each provider without supplying the brand's
+website text or internal study context. Branded recognition is reported separately
+from unbranded discovery. Successful answers, returned model identifiers, actual
+search use, citations, human accuracy reviews and usage costs remain available.
+
+A 20-question set makes 60 assistant requests, potentially more HTTP requests if
+an adapter performs its existing compatibility fallback. The browser dispatches
+three requests concurrently. Keep the screen open; if interrupted, use **Resume
+remaining questions**. Completed/failed answers are not replayed. Claims older
+than three minutes become failed on the next claim; their costs may remain
+incomplete. Failed answers are excluded from percentages, with coverage displayed.
+Each admin can start three studies per rolling 24 hours. A 60-answer run consumes
+seven units of the shared 100-unit daily budget; instant reports use one unit.
+These budget units are not dollar caps.
+
+History shows discovery mention/citation rates, coverage and calculated API costs.
+Comparisons use only successful matching question/provider pairs. Different
+question sets or requested configuration, changed/unknown returned models withhold
+numerical deltas. Search-use changes and missing coverage are flagged. Mentions
+are not recommendations, citations are not endorsements, and developer API results
+are not a measurement of every consumer app. Website checks remain separate.
+Download evidence JSON to preserve the raw before/after record and append dated
+changes/outcome notes with evidence links. Costs exclude infrastructure, credits,
+taxes and invoice adjustments and can include estimated search usage.
+
+### Hotline Sports pilot protocol
+
+The supplied template has 2 branded and 18 unbranded evergreen U.S. questions,
+covering sports schedules, TV/streaming discovery, viewing restrictions, subscription
+planning and selected leagues. The reference positioning is a free sports guide
+for schedules, live scores and where to watch; see
+https://www.hotlinesports.com/ and https://www.hotlinesports.com/about.
+
+1. Save the template and collect the first baseline before changing Hotline's site.
+2. Repeat the same panel on two additional days before intervention. Record the
+   range and per-assistant rates; do not select only the best/worst run.
+3. Review branded answers against the reference pages. Separate factual errors,
+   missing discovery and citation gaps; choose a small documented intervention.
+4. Log the deployed change, date and evidence link. Track other changes, indexing,
+   model shifts, news/seasonality and any marketing that could affect outcomes.
+5. Run the unchanged panel at 30, 60 and 90 days after deployment. Compare matched
+   evidence across repeated runs, not just one before/after score. Review factual
+   accuracy and recommendation context manually.
+6. Add measured AI referrals, engaged visits and qualified inquiries where analytics
+   supports them, with periods and sources. Unattributed traffic is not proof of no
+   effect. A case study can show association; this single-site design cannot prove
+   causation. Publish denominators, failures, dates, costs and limitations alongside
+   any claimed improvement.
+
+Runs are manually initiated; the feature does not schedule future runs or modify
+Hotline Sports automatically. The first baseline is a starting point, not a success
+claim.
+
+Validation: `npm run check:visibility`, `npm run typecheck`, the Deno handler tests,
+and `scripts/verify-visibility-study-database.py` against an empty disposable local
+Postgres database with all migrations applied. The database test refuses remote
+hosts and verifies concurrent reservation/claims, quotas, immutability and RLS.

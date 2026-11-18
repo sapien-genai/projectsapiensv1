@@ -9,7 +9,7 @@ import type { Ask, AssistantAnswer, AssistantId, Citation, Complete } from './ty
  * the answer is flagged as unsearched.
  */
 
-export interface ProviderConfig { apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number; purpose?: UsageEntry['purpose']; onUsage?: (entry: UsageEntry) => Promise<void> }
+export interface ProviderConfig { citationLimit?: number; apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number; purpose?: UsageEntry['purpose']; onUsage?: (entry: UsageEntry) => Promise<void> }
 export interface Provider { id: AssistantId; label: string; model: string; ask: Ask; complete: Complete }
 
 class ProviderError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -45,7 +45,7 @@ async function post(url: string, headers: Record<string, string>, body: any, con
   }
 }
 
-const dedupe = (citations: Citation[]) => [...new Map(citations.filter(c => /^https?:\/\//.test(c.url)).map(c => [c.url, c])).values()].slice(0, 12);
+const dedupe = (citations: Citation[], limit = 12) => [...new Map(citations.filter(c => /^https?:\/\//.test(c.url)).map(c => [c.url, c])).values()].slice(0, limit);
 
 async function withSearchFallback(config: ProviderConfig, run: (search: boolean) => Promise<Omit<AssistantAnswer, 'model'>>): Promise<AssistantAnswer> {
   if (config.webSearch) {
@@ -62,7 +62,7 @@ export function openai(config: ProviderConfig): Provider {
     const parts = (data.output ?? []).filter((item: any) => item.type === 'message').flatMap((item: any) => item.content ?? []).filter((part: any) => part.type === 'output_text');
     return {
       text: parts.map((part: any) => part.text ?? '').join('\n').trim(),
-      citations: dedupe(parts.flatMap((part: any) => part.annotations ?? []).filter((a: any) => a.type === 'url_citation').map((a: any) => ({ url: a.url, title: a.title }))),
+      citations: dedupe(parts.flatMap((part: any) => part.annotations ?? []).filter((a: any) => a.type === 'url_citation').map((a: any) => ({ url: a.url, title: a.title })), config.citationLimit ?? 12),
       searched: search && (data.output ?? []).some((item: any) => item.type === 'web_search_call'),
     };
   };
@@ -80,7 +80,7 @@ export function anthropic(config: ProviderConfig): Provider {
     const text = blocks.filter(block => block.type === 'text');
     return {
       text: text.map(block => block.text ?? '').join('').trim(),
-      citations: dedupe(text.flatMap(block => block.citations ?? []).filter((c: any) => c.url).map((c: any) => ({ url: c.url, title: c.title }))),
+      citations: dedupe(text.flatMap(block => block.citations ?? []).filter((c: any) => c.url).map((c: any) => ({ url: c.url, title: c.title })), config.citationLimit ?? 12),
       searched: search && blocks.some(block => block.type === 'server_tool_use'),
     };
   };
@@ -97,7 +97,7 @@ export function gemini(config: ProviderConfig): Provider {
     const grounding = candidate.groundingMetadata ?? {};
     return {
       text: (candidate.content?.parts ?? []).map((part: any) => part.text ?? '').join('').trim(),
-      citations: dedupe((grounding.groundingChunks ?? []).filter((chunk: any) => chunk.web?.uri).map((chunk: any) => ({ url: chunk.web.uri, title: chunk.web.title }))),
+      citations: dedupe((grounding.groundingChunks ?? []).filter((chunk: any) => chunk.web?.uri).map((chunk: any) => ({ url: chunk.web.uri, title: chunk.web.title })), config.citationLimit ?? 12),
       searched: search && Boolean(grounding.webSearchQueries?.length || grounding.groundingChunks?.length),
     };
   };
