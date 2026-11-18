@@ -164,3 +164,44 @@ assert.equal(await deliverLead('https://example.com', form, async () => { attemp
 assert.equal(attempts, 3);
 assert.equal(await deliverLead('https://example.com', form, async () => new Response(null, {status: 400})), false);
 console.log('Verified missing measurements, hostname boundaries, mapped IPv6, and notification retries.');
+
+// Public WordPress hosting must not be confused with the reserved 192.0.0/24.
+for (const ip of ['192.0.78.199', '192.0.78.129']) assert.equal(isPrivateAddress(ip), false, ip);
+for (const ip of ['192.0.0.1', '192.0.2.1', '198.51.100.1', '203.0.113.1']) assert.equal(isPrivateAddress(ip), true, ip);
+for (const failure of ['network', '403', '503']) {
+  const { deps } = setup({ page: goodPage });
+  const original = deps.fetchOptions.fetchImpl;
+  deps.fetchOptions.fetchImpl = async (input, init) => {
+    if (String(input).startsWith('https://acme-dental.com')) {
+      if (failure === 'network') throw new Error('timeout');
+      return new Response('Unavailable', { status: Number(failure) });
+    }
+    return original(input, init);
+  };
+  const complete = deps.complete;
+  deps.complete = prompt => { assert.ok(!prompt.includes('You are grading')); return complete(prompt); };
+  const report = await runReport('acme-dental.com', 'https://acme-dental.com/', deps);
+  assert.equal(report.overall, null);
+  assert.equal(report.signals.score, null);
+  assert.equal(report.signals.checks.filter(c => c.passed === false).length, 1);
+  assert.equal(report.signals.checks.find(c => c.id === 'ai-crawlers')?.passed, null);
+  assert.ok(report.assistants.every(a => a.recognitionAnswer && a.scores.accuracy === null && a.scores.recognition === null));
+  assert.equal(report.recommendations.length, 1);
+  assert.equal(toPreview(report).signalsScore, null);
+}
+{
+  const { deps } = setup({ page: goodPage, sitemap: true, llms: true });
+  const original = deps.fetchOptions.fetchImpl;
+  deps.fetchOptions.fetchImpl = async (input, init) => String(input).endsWith('/robots.txt')
+    ? new Response('Denied', { status: 403 }) : original(input, init);
+  const report = await runReport('acme-dental.com', 'https://acme-dental.com/', deps);
+  assert.equal(report.signals.checks.find(c => c.id === 'ai-crawlers')?.passed, null);
+  assert.equal(report.signals.score, null);
+  assert.equal(report.overall, null);
+  const { readableReport } = await import('../supabase/functions/visibility-report/core/pipeline.ts');
+  const legacy = readableReport({ ...report, overall: 99, signals: { ...report.signals, reachable: false, score: 15 } });
+  assert.equal(legacy.signals.score, null);
+  assert.ok(legacy.assistants.every(a => a.scores.accuracy === null));
+  assert.equal(legacy.recommendations.some(r => r.title.includes('meta description')), false);
+}
+console.log('Verified public Beacon addresses, unavailable checks, ungraded answers and legacy report repair.');

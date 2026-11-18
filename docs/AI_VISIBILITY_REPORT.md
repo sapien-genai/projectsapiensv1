@@ -92,3 +92,9 @@ RLS is on with no public policies; only the function (service role) and academy 
 `scripts/verify-visibility-database.py` checks concurrent global/IP quota reservations and notification leases against an empty, disposable local PostgreSQL database with both migrations applied. It refuses non-local database hosts. Do not run it against production.
 
 Default model ids were checked against official documentation on November 18, 2026: [OpenAI](https://developers.openai.com/api/docs/models/gpt-5.5), [Anthropic](https://platform.claude.com/docs/en/models/sonnet-5-5/overview), [Google](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash). Account access and live responses still need verification. Operators can use the Supabase function Test panel with the service-role Authorization header and `GET ?check=providers` to inspect Gemini model availability without exposing credentials. Ordinary callers receive 403.
+
+### Failed website requests
+
+If the homepage cannot be read, website scores and assistant recognition/accuracy grades are unavailable. The raw assistant answers remain visible, but missing metadata is not inferred from a failed request. Auxiliary checks distinguish unavailable responses from confirmed absence (404/410); an unknown check prevents an aggregate website score. Incomplete reports are not reused by the seven-day cache. Apply `20261118210000_exclude_incomplete_visibility_cache.sql` when upgrading. Older failed-homepage reports are sanitized when displayed.
+
+The Beacon fetch regression was caused by treating all of 192.0.0.0/16 as reserved. Its public 192.0.78.* hosting addresses are allowed; the reserved 192.0.0.0/24 and documentation 192.0.2.0/24 remain blocked. Redirect and private-address protections still apply.

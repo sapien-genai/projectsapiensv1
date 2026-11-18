@@ -158,7 +158,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
           <th scope="row" className="py-4 pr-4 text-base font-semibold">{assistant.label}</th>
           {assistant.failed ? <td colSpan={3} className="py-4 text-[#526055]">Could not be tested this time.</td> : (['recognition', 'discovery', 'accuracy'] as const).map(key => <td key={key} className={`py-4 pr-4 text-xl font-semibold ${tone(assistant.scores[key])}`}>{score(assistant.scores[key])}</td>)}
         </tr>)}
-        <tr><th scope="row" className="py-4 pr-4 text-base font-semibold">Your website</th><td colSpan={3} className="py-4"><span className={`text-xl font-semibold ${tone(preview.signalsScore)}`}>{preview.signalsScore}</span><span className="ml-3 text-[#526055]">How readable the site is to AI crawlers</span></td></tr></tbody>
+        <tr><th scope="row" className="py-4 pr-4 text-base font-semibold">Your website</th><td colSpan={3} className="py-4"><span className={`text-xl font-semibold ${tone(preview.signalsScore)}`}>{preview.signalsScore ?? 'N/A'}</span><span className="ml-3 text-[#526055]">How readable the site is to AI crawlers</span></td></tr></tbody>
       </table>
     </div>
 
@@ -219,8 +219,8 @@ function FullReport({ report }: { report: Report }) {
     <div>
       <h3 className="text-xl font-semibold">How readable your site is</h3>
       <ul className="mt-4 divide-y divide-[#172820]/10">{report.signals.checks.map(check => <li key={check.id} className="flex gap-3 py-3">
-        {check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <X size={20} className="mt-0.5 shrink-0 text-[#a33a2a]" aria-hidden="true" />}
-        <div><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
+        {check.passed === null ? <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">—</span> : check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <X size={20} className="mt-0.5 shrink-0 text-[#a33a2a]" aria-hidden="true" />}
+        <div><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
       </li>)}</ul>
     </div>
 
