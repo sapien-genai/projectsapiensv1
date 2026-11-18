@@ -7,7 +7,7 @@ const COUNT = 230;
 /** Local flock simulation. Each bird steers toward its neighbours, with room to turn. */
 export default function HeroSculpture() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [paused, setPaused] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [paused, setPaused] = useState(false); // Pre-rendered markup has no browser to ask; the effect below applies the motion preference before the first frame.
   const pauseRef = useRef(paused);
   const resumeRef = useRef<() => void>(() => {});
   useEffect(() => { pauseRef.current = paused; resumeRef.current(); }, [paused]);
@@ -19,6 +19,7 @@ export default function HeroSculpture() {
     const ctx = context;
     const hero = canvas.closest('section')!;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduced.matches) { pauseRef.current = true; setPaused(true); }
     let width = 0, height = 0, scale = 1, frame = 0, last = 0, time = 0;
     let inView = true, following = false, targetX = 0, targetY = 0;
     let focusX = 0, focusY = 0, engagement = 0;

@@ -1,0 +1,21 @@
+# Project Sapiens
+
+> Project Sapiens, Inc. is an independent AI consultancy and product studio founded by Tony Marks. It helps businesses and professionals understand how AI assistants describe them, and builds practical AI products, agents, and voice experiences. Project Sapiens is a member of the OpenAI Partner Network.
+
+## Services
+
+- [AI Brand Visibility](https://www.projectsapiens.ai/ai-visibility/): A report on how ChatGPT, Claude, Gemini, and Perplexity recognize, recommend, and describe a company, with the evidence and a prioritized list of changes.
+- [Work with us](https://www.projectsapiens.ai/work-with-us/): Project-based AI strategy and development, fractional AI leadership, and ongoing advisory.
+- [AI solutions](https://www.projectsapiens.ai/#solutions): Knowledge assistants, workflow agents, voice experiences, document intelligence, creative tools, and strategy and evaluation.
+
+## Company
+
+- [About](https://www.projectsapiens.ai/about/): Project Sapiens and its founder, Tony Marks.
+- [OpenAI Partner Network](https://www.projectsapiens.ai/openai-partner-network/): The company's role in the network and its approach to data protection and security.
+- [Hotline Sports](https://hotlinesports.com/): A live product from Project Sapiens that helps fans find a game and where to watch it.
+
+## Field Notes
+
+- [Field Notes](https://www.projectsapiens.ai/field-notes/): Essays by Tony Marks on AI, product design, and voice.
+- [AI Brand Visibility](https://www.projectsapiens.ai/field-notes/ai-brand-visibility/): Why AI systems are changing what it means for a company to be discoverable.
+- [Pronunciation Intelligence](https://www.projectsapiens.ai/field-notes/pronunciation-intelligence/): Research into how speech systems can get people's names right.

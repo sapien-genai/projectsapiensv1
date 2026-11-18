@@ -1,0 +1,7 @@
+# Project Sapiens welcomes search and AI crawlers on its public pages.
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /academy/
+
+Sitemap: https://www.projectsapiens.ai/sitemap.xml

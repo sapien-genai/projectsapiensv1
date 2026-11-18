@@ -3,7 +3,10 @@ import { ArrowUpRight } from 'lucide-react';
 
 const inputClass = 'mt-2 block min-h-12 w-full rounded-lg border border-[#172820]/30 bg-white/50 px-4 py-3 text-base text-[#172820] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#68745b]';
 
-export default function ClientInquiryForm({ previewOnly = false }: { previewOnly?: boolean }) {
+const VISIBILITY_TOPIC = 'AI visibility report';
+
+export default function ClientInquiryForm({ previewOnly = false, topic }: { previewOnly?: boolean; topic?: typeof VISIBILITY_TOPIC }) {
+  const visibility = topic === VISIBILITY_TOPIC;
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [error, setError] = useState('');
   const sending = useRef(false);
@@ -14,6 +17,8 @@ export default function ClientInquiryForm({ previewOnly = false }: { previewOnly
     if (sending.current) return;
     const form = event.currentTarget;
     const body = Object.fromEntries(new FormData(form));
+    // The intake accepts a fixed set of fields, so the topic travels inside the description.
+    if (topic && typeof body.project === 'string') body.project = `[${topic}]\n\n${body.project}`;
     sending.current = true;
     setStatus('sending');
     setError('');
@@ -35,10 +40,10 @@ export default function ClientInquiryForm({ previewOnly = false }: { previewOnly
   return <section id="contact" aria-labelledby="contact-title" className="scroll-mt-8 py-16 md:py-20">
     <div className="grid gap-10 md:grid-cols-[1fr_1.3fr] md:gap-16">
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">New projects & collaborations</p>
-        <h2 id="contact-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">Something worth building together?</h2>
-        <p className="mt-5 leading-relaxed text-[#526055]">Tell us what you’re trying to build or improve, who it’s for, and where you are today. We’ll review your inquiry and get back to you.</p>
-        <p className="mt-4 text-sm leading-relaxed text-[#526055]">An early idea is welcome. Budget and timing can be approximate.</p>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">{visibility ? 'AI brand visibility' : 'New projects & collaborations'}</p>
+        <h2 id="contact-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">{visibility ? 'Find out what AI says about you.' : 'Something worth building together?'}</h2>
+        <p className="mt-5 leading-relaxed text-[#526055]">{visibility ? 'Tell us about your business, the category you compete in, and the questions your customers ask. We’ll review your inquiry and get back to you.' : 'Tell us what you’re trying to build or improve, who it’s for, and where you are today. We’ll review your inquiry and get back to you.'}</p>
+        <p className="mt-4 text-sm leading-relaxed text-[#526055]">{visibility ? 'Include your website address and two or three competitors if you can.' : 'An early idea is welcome. Budget and timing can be approximate.'}</p>
       </div>
       <div>
         <div role="status" aria-live="polite">
@@ -54,9 +59,9 @@ export default function ClientInquiryForm({ previewOnly = false }: { previewOnly
               <label className="block text-sm font-semibold" htmlFor="inquiry-email">Email *<input className={inputClass} id="inquiry-email" name="email" type="email" autoComplete="email" required maxLength={254} /></label>
             </div>
             <label className="block text-sm font-semibold" htmlFor="inquiry-company">Company<input className={inputClass} id="inquiry-company" name="company" autoComplete="organization" maxLength={200} /></label>
-            <label className="block text-sm font-semibold" htmlFor="inquiry-project">What would you like to build or improve? *<textarea className={inputClass} id="inquiry-project" name="project" rows={5} required maxLength={5000} aria-describedby="inquiry-project-help" /></label>
-            <p id="inquiry-project-help" className="text-sm text-[#526055]">A short description of the problem, audience, and what success would look like.</p>
-            <label className="block text-sm font-semibold" htmlFor="inquiry-stage">Current stage<select className={inputClass} id="inquiry-stage" name="stage" defaultValue=""><option value="">Select if known</option>{['Exploring an idea', 'Defined concept', 'Prototype exists', 'Product in development', 'Existing product needs improvement', 'Production system needs scaling'].map(value => <option key={value}>{value}</option>)}</select></label>
+            <label className="block text-sm font-semibold" htmlFor="inquiry-project">{visibility ? 'Your business, website, and category *' : 'What would you like to build or improve? *'}<textarea className={inputClass} id="inquiry-project" name="project" rows={5} required maxLength={5000} aria-describedby="inquiry-project-help" /></label>
+            <p id="inquiry-project-help" className="text-sm text-[#526055]">{visibility ? 'What you offer, who your customers are, and what you would want an AI assistant to say about you.' : 'A short description of the problem, audience, and what success would look like.'}</p>
+            {!visibility && <label className="block text-sm font-semibold" htmlFor="inquiry-stage">Current stage<select className={inputClass} id="inquiry-stage" name="stage" defaultValue=""><option value="">Select if known</option>{['Exploring an idea', 'Defined concept', 'Prototype exists', 'Product in development', 'Existing product needs improvement', 'Production system needs scaling'].map(value => <option key={value}>{value}</option>)}</select></label>}
             <div className="grid gap-5 sm:grid-cols-2">
               <label className="block text-sm font-semibold" htmlFor="inquiry-budget">Approximate budget<select className={inputClass} id="inquiry-budget" name="budget" defaultValue=""><option value="">Select if known</option>{['Under $10,000', '$10,000–$25,000', '$25,000–$50,000', '$50,000–$100,000', '$100,000+', 'Not sure yet'].map(value => <option key={value}>{value}</option>)}</select></label>
               <label className="block text-sm font-semibold" htmlFor="inquiry-timeline">Desired timeline<select className={inputClass} id="inquiry-timeline" name="timeline" defaultValue=""><option value="">Select if known</option>{['ASAP', '1–3 months', '3–6 months', '6+ months', 'Flexible'].map(value => <option key={value}>{value}</option>)}</select></label>

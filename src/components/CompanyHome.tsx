@@ -6,6 +6,7 @@ import CompanyHeader from './CompanyHeader';
 import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import HeroSculpture from './HeroSculpture';
+import { VISIBILITY_QUESTIONS, VISIBILITY_ASSISTANTS } from '../data/aiVisibility';
 import './CompanyHome.css';
 import './CompanyPreview.css';
 
@@ -55,10 +56,25 @@ export default function CompanyHome() {
 <div className="wrap">
 <OpenAISolutions />
 </div>
+<section id="ai-visibility" aria-labelledby="ai-visibility-title" className="wrap border-t border-[#ddd] !py-16 md:!py-24">
+<div className="sp-section-heading"><p className="sp-eyebrow">02 / AI brand visibility</p><h2 id="ai-visibility-title">Search ranks pages.<br />AI describes companies.</h2></div>
+<div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:gap-[35px]">
+<div>
+<p className="max-w-sm leading-relaxed text-[#555]">People ask {VISIBILITY_ASSISTANTS.slice(0, -1).join(', ')}, and {VISIBILITY_ASSISTANTS[VISIBILITY_ASSISTANTS.length - 1]} who to hire and what to buy. We test what those assistants say about your business, and show you what to change.</p>
+<a className="pill mt-8" href="/ai-visibility/">See how the report works <span className="arrow"><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span></a>
+</div>
+<ol className="grid list-none gap-px border border-[#e2e5df] bg-[#e2e5df] p-0 sm:grid-cols-2">
+{VISIBILITY_QUESTIONS.map((item, i) => <li key={item.name} className="bg-white p-7">
+<small className="text-[11px] uppercase tracking-[1.5px] text-[#16745e]">0{i + 1} / {item.name}</small>
+<h3 className="mt-4 text-xl font-semibold leading-snug tracking-[-0.02em]">{item.question}</h3>
+</li>)}
+</ol>
+</div>
+</section>
 <section className="work" id="work">
 <div className="wrap">
 <div className="section-top">
-<div className="eyebrow">02 / Out in the world</div>
+<div className="eyebrow">03 / Out in the world</div>
 <h2>Ideas are good.<br />Built is better.</h2>
 </div>
 <div className="work-layout">
@@ -179,7 +195,7 @@ export default function CompanyHome() {
 
 <section id="company" className="section about">
 <div>
-<div className="eyebrow">03 / The way we think</div>
+<div className="eyebrow">04 / The way we think</div>
 <h2>Curious minds.<br />Working hands.</h2>
 </div>
 <div>
@@ -190,7 +206,7 @@ export default function CompanyHome() {
 </section>
 <section className="section" id="field-notes" style={{"paddingTop": "0"}}>
 <div className="section-top">
-<div className="eyebrow">04 / Field Notes</div>
+<div className="eyebrow">05 / Field Notes</div>
 <div><h2>Thinking in public.</h2><a className="textlink" href="/field-notes/" style={{display: "inline-block", marginTop: "22px"}}>Explore all Field Notes <ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></a></div>
 </div>
 <div className="notes">
