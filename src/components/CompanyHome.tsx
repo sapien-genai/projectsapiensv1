@@ -16,7 +16,7 @@ export default function CompanyHome() {
 <div className="wrap">
 <section className="hero">
 <div className="hero-top">
-<span className="eyebrow">Member of the OpenAI Partner Network</span>
+<span className="eyebrow">Member of the <span className="sp-partner-blue">OpenAI Partner Network</span></span>
 <span className="eyebrow status">
 <i className="dot">
 </i> Strategy → Product → Progress</span>
@@ -42,7 +42,7 @@ export default function CompanyHome() {
 <span className="membership-mark" aria-hidden="true"><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span>
 <div>
 <small>PROJECT SAPIENS IS A MEMBER OF THE</small>
-<strong>OpenAI Partner Network</strong>
+<strong className="sp-partner-blue">OpenAI Partner Network</strong>
 </div>
 </a>
 <p>OpenAI technology.<br />Independent expertise. Hands-on delivery.</p>
