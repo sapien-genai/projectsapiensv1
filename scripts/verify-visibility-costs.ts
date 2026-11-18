@@ -35,3 +35,12 @@ for(const fetchImpl of [async()=>new Response('bad json'),async()=>{throw new Er
  assert.equal(saved.at(-1)?.status,'failed');assert.equal(saved.at(-1)?.estimated_cost_usd,null);
 }
 console.log('Verified token math, cache accounting, reasoning tokens, searches, unknown models/usage, retries, interrupted runs, and fail-closed persistence.');
+
+const liveAlias = {...newUsage('gemini','gemini-3.5-flash','assistant'),started_at:'2026-11-18T20:00:00Z'};
+const noSearch = {modelVersion:'gemini-3.6-flash',usageMetadata:{serviceTier:'standard',promptTokenCount:1000,candidatesTokenCount:100,thoughtsTokenCount:400},candidates:[{finishReason:'STOP',content:{parts:[{text:'Answer'}]}}]};
+close(priceUsage(liveAlias,noSearch,true).estimated_cost_usd,0.002625);
+close(priceUsage({...liveAlias,started_at:'2027-01-01T00:00:00Z'},noSearch,true).estimated_cost_usd,0.00525);
+assert.equal(priceUsage(liveAlias,{...noSearch,usageMetadata:{...noSearch.usageMetadata,serviceTier:'priority'}},true).estimated_cost_usd,null);
+const noClaudeSearch=priceUsage(newUsage('anthropic','claude-sonnet-5-5','assistant'),{stop_reason:'end_turn',content:[{type:'text',text:'Answer'}],usage:{input_tokens:100,output_tokens:200,output_tokens_details:{thinking_tokens:50}}},true);
+assert.equal(noClaudeSearch.searches,0);assert.equal(noClaudeSearch.reasoning_tokens,50);close(noClaudeSearch.estimated_cost_usd,0.0022);
+console.log('Verified live Gemini alias, dated promotional rates, nested service tiers and completed responses without search.');

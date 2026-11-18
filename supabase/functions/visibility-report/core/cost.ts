@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Provider response shapes are validated at the numeric boundary. */
 /** USD standard list prices checked 2026-11-18. Never presented as an invoice. */
-export const PRICING_VERSION = '2026-11-18';
+export const PRICING_VERSION = '2026-11-18.2';
 export type CostProvider = 'openai' | 'anthropic' | 'gemini';
 export interface UsageEntry {
   id: string; provider: CostProvider; requested_model: string; model: string;
@@ -39,7 +39,16 @@ export function priceUsage(entry: UsageEntry, payload: unknown, searchEnabled: b
     cached = count(usage.cache_read_input_tokens) ?? 0;
     writes = count(usage.cache_creation_input_tokens) ?? 0;
     if (input !== null) input += cached + writes; // Anthropic reports these separately
-    if (searchEnabled) { searches = count(usage.server_tool_use?.web_search_requests); searchBasis = searches === null ? 'unavailable' : 'provider usage'; }
+    reasoning = count(usage.output_tokens_details?.thinking_tokens) ?? 0;
+    if (searchEnabled) {
+      searches = count(usage.server_tool_use?.web_search_requests);
+      searchBasis = searches === null ? 'unavailable' : 'provider usage';
+      if (searches === null && Array.isArray(data.content) && data.stop_reason === 'end_turn') {
+        searches = data.content.filter((block: any) => block.type === 'server_tool_use' && block.name === 'web_search').length;
+        searchBasis = 'response tool calls (estimate)';
+        notes.push('Search count inferred from completed response tool calls because provider search usage was omitted.');
+      }
+    }
     if (/^claude-sonnet-5-5(?:-\d{8})?$/.test(model)) rates = { input: 2, cached: 0.1, output: 10, search: 0.01, cacheWrite: 2.5 };
     if (writes > 0 && count(usage.cache_creation?.ephemeral_1h_input_tokens)) {
       // Requests currently never enable prompt caching; do not assume a TTL if that changes.
@@ -55,13 +64,21 @@ export function priceUsage(entry: UsageEntry, payload: unknown, searchEnabled: b
     if (searchEnabled) {
       const candidates = Array.isArray(data.candidates) ? data.candidates : [];
       const queries = candidates.flatMap((v: any) => v.groundingMetadata?.webSearchQueries ?? []);
-      searches = queries.length || null;
+      searches = queries.length || (candidates.length > 0 && candidates.every((v: any) => v.finishReason === 'STOP' && !v.groundingMetadata) ? 0 : null);
       searchBasis = 'grounding queries (estimate)';
       notes.push('Google search cost uses returned queries at paid list price; monthly free allowance and billing counts may differ.');
     }
     if (/^gemini-3\.5-flash(?:-\d{3})?$/.test(model)) rates = { input: 1.5, cached: 0.15, output: 9, search: 0.014, cacheWrite: 1.5 };
+    if (/^gemini-3\.6-flash(?:-\d{3})?$/.test(model)) {
+      const date = Date.parse(entry.started_at);
+      if (Number.isFinite(date)) {
+        const inputRate = date < Date.parse('2027-01-01T00:00:00Z') ? 0.75 : 1.5;
+        rates = { input: inputRate, cached: inputRate / 10, output: inputRate * 5, search: 0.014, cacheWrite: inputRate };
+      }
+    }
   }
-  if (data.service_tier && data.service_tier !== 'default' && data.service_tier !== 'standard') { rates = null; notes.push('Nonstandard service tier is not priced.'); }
+  const tier = data.service_tier ?? usage.service_tier ?? usage.serviceTier;
+  if (tier && tier !== 'default' && tier !== 'standard') { rates = null; notes.push('Nonstandard service tier is not priced.'); }
   const validTokens = input !== null && output !== null && input >= cached + writes;
   const tokenCost = rates && validTokens ? round(((input! - cached - writes) * rates.input + cached * rates.cached + writes * rates.cacheWrite + output! * rates.output) / 1e6) : null;
   const searchCost = searches !== null ? round(searches * (entry.provider === 'gemini' ? 0.014 : 0.01)) : null;
