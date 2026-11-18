@@ -5,6 +5,22 @@
       "destination": "/api/client-inquiry"
     },
     {
+      "source": "/terms",
+      "destination": "/share-pages/terms.html"
+    },
+    {
+      "source": "/terms/",
+      "destination": "/share-pages/terms.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/share-pages/privacy.html"
+    },
+    {
+      "source": "/privacy/",
+      "destination": "/share-pages/privacy.html"
+    },
+    {
       "source": "/openai-partner-network",
       "destination": "/share-pages/openai-partner-network.html"
     },
