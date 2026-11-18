@@ -4,6 +4,9 @@
 
 ## Services
 
+- [Custom AI agent development](https://www.projectsapiens.ai/custom-ai-agents/): Knowledge assistants, connected workflow agents, and document workflows, with integration, evaluation, and human approval where needed.
+- [Voice AI development](https://www.projectsapiens.ai/voice-ai-development/): Custom voice agents and conversational interfaces, including conversation design, business integrations, testing, and handoff.
+
 - [AI Brand Visibility](https://www.projectsapiens.ai/ai-visibility/): A report on how ChatGPT, Claude, Gemini, and Perplexity recognize, recommend, and describe a company, with the evidence and a prioritized list of changes. The page includes a free instant report: enter a website to see how ChatGPT, Claude, and Gemini describe the business.
 - [Work with us](https://www.projectsapiens.ai/work-with-us/): Project-based AI strategy and development, fractional AI leadership, and ongoing advisory.
 - [AI solutions](https://www.projectsapiens.ai/#solutions): Knowledge assistants, workflow agents, voice experiences, document intelligence, creative tools, and strategy and evaluation.

@@ -1,6 +1,8 @@
 import { FIELD_NOTES } from '../src/data/fieldNotes';
+import { SERVICES } from '../src/data/services';
 export const origin = 'https://www.projectsapiens.ai';
 export const sharePages = [
+  ...SERVICES.map(service => ({ path: `/${service.slug}/`, slug: service.slug, title: service.title, description: service.description, label: 'PROJECT SAPIENS / SERVICES', lines: service.slug === 'custom-ai-agents' ? ['Custom AI agents.', 'Built for your work.'] : ['Voice AI.', 'Built for conversation.'], size: 78 })),
   { path: '/terms/', slug: 'terms', title: 'Terms of Service — Project Sapiens', description: 'Terms for using the Project Sapiens company website and submitting project inquiries.', label: 'TRUST & LEGAL', lines: ['Terms of', 'Service'], size: 100 },
   { path: '/privacy/', slug: 'privacy', title: 'Privacy Policy — Project Sapiens', description: 'How Project Sapiens handles website inquiries, technical information, and privacy requests.', label: 'TRUST & LEGAL', lines: ['Privacy', 'Policy'], size: 100 },
   { path: '/openai-partner-network/', slug: 'openai-partner-network', title: 'OpenAI Partner Network — Project Sapiens', description: 'Our experience, our role in the OpenAI Partner Network, and how we approach practical AI adoption, data protection, and security.', label: 'OPENAI PARTNER NETWORK', lines: ['Powerful AI.', 'Experienced hands.'], size: 84 },
