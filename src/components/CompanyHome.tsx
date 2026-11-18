@@ -1,3 +1,4 @@
+import ClientLogoCarousel from './ClientLogoCarousel';
 import CompanyFooter from './CompanyFooter';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { useEffect } from 'react';
@@ -50,6 +51,7 @@ export default function CompanyHome() {
 <a href="#solutions">Explore what we can build <span><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span>
 </a>
 </div>
+<ClientLogoCarousel />
 <div className="wrap">
 <OpenAISolutions />
 </div>
@@ -174,17 +176,7 @@ export default function CompanyHome() {
 </div>
 </section>
 <div className="wrap">
-<section className="proof">
-<div className="proof-label">Selected past work by Tony Marks and the Sapien AI team</div>
-<div className="logos">
-<img src="/clients/riowhite.png" alt="Rio 2016" loading="lazy" />
-<img src="/clients/PyeongChang_2018_Winter_Olympics.png" alt="PyeongChang 2018" loading="lazy" />
-<img src="/clients/olympicchannelwhite.png" alt="Olympic Channel" loading="lazy" />
-<img src="/clients/newbalancewhite.png" alt="New Balance" loading="lazy" />
-<img src="/clients/virginatlanticwhite.png" alt="Virgin Atlantic" loading="lazy" />
-<img src="/clients/broncoswhite.png" alt="Denver Broncos" loading="lazy" />
-</div>
-</section>
+
 <section id="company" className="section about">
 <div>
 <div className="eyebrow">03 / The way we think</div>

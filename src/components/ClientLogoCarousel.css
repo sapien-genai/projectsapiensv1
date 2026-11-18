@@ -1,0 +1,12 @@
+.company-site .sp-client-carousel{position:relative;background:#fff;border-bottom:1px solid #dedfdb;padding:27px 0;overflow:hidden}
+.sp-client-window{overflow:hidden;mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+.sp-client-track{display:flex;width:max-content;animation:sp-client-scroll 55s linear infinite;will-change:transform}
+.sp-client-group{display:flex;flex-shrink:0;align-items:center}
+.sp-client-logo{width:210px;height:96px;display:flex;align-items:center;justify-content:center;padding:8px 30px;flex-shrink:0}
+.sp-client-logo img{display:block;width:150px;height:80px;object-fit:contain;filter:brightness(0);opacity:.8}
+.sp-client-carousel:hover .sp-client-track,.sp-client-carousel:focus-within .sp-client-track,.sp-client-carousel.is-paused .sp-client-track{animation-play-state:paused}
+.company-site .sp-client-toggle{position:absolute;right:12px;bottom:5px;width:28px;height:28px;display:grid;place-items:center;background:#fff;border:1px solid #dedfdb;border-radius:50%;color:#515951;cursor:pointer}
+.company-site .sp-client-toggle:hover{color:#16745e;border-color:#16745e}
+@keyframes sp-client-scroll{to{transform:translateX(-50%)}}
+@media(max-width:600px){.company-site .sp-client-carousel{padding:20px 0}.sp-client-logo{width:165px;height:80px;padding:8px 22px}.sp-client-logo img{width:121px;height:64px}}
+@media(prefers-reduced-motion:reduce){.sp-client-track{animation:none;will-change:auto;width:100%}.sp-client-group{flex-wrap:wrap;justify-content:center;width:100%}.sp-client-group[aria-hidden=true]{display:none}.sp-client-toggle{display:none!important}.sp-client-window{mask-image:none}}
