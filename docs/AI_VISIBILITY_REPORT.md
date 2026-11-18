@@ -201,3 +201,8 @@ exact hostname label supplied with Google's `grounding-api-redirect` link. It do
 not treat an arbitrary title mentioning the business as a citation. Migration
 `20261118234000_study_grounding_citations.sql` corrects derived flags in existing
 study answers without altering their raw text/links or repeating paid requests.
+
+Study provider requests allow 75 seconds per attempt (up to 150 seconds for the
+existing compatibility fallback). This matches the instant-report adapter default;
+interrupted claims still expire after three minutes. Initial pilot calls that
+exceeded the earlier 45-second allowance remain recorded as failures, not retried.
