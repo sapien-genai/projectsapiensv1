@@ -1,3 +1,4 @@
+import CompanyFooter from './CompanyFooter';
 import { useEffect, type ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CompanyHeader from './CompanyHeader';
@@ -65,6 +66,6 @@ export default function WorkWithUsPage() {
     </Section>
       <ClientInquiryForm previewOnly={import.meta.env.DEV} />
     </main>
-    <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 border-t border-[#172820]/20 px-6 py-7 text-sm text-[#526055] md:px-10"><p>© {new Date().getFullYear()} Project Sapiens, Inc.</p><a className={linkStyle} href="/">Back to Project Sapiens</a></footer>
+    <CompanyFooter />
   </div>;
 }

@@ -1,3 +1,4 @@
+import CompanyFooter from './CompanyFooter';
 import { useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CompanyHeader from './CompanyHeader';
@@ -27,6 +28,6 @@ export default function PartnerNetworkPage() {
         ['Agree on retention and oversight.', 'Review logging, retention, residency needs, and third-party integrations with your security and IT teams. Document responsibilities and an operating plan.'],
       ].map(([title,body])=><div key={title} style={{borderTop:'1px solid #dadfd9',padding:'22px 0'}}><h3>{title}</h3><p>{body}</p></div>)}</div><p className="ps-about-caption">Available controls depend on the selected service, configuration, eligibility, and contract. We review these against your requirements; network membership itself is not a security certification or a guarantee of regulatory compliance.</p></div></section>
       <section className="ps-about-cta"><p className="ps-about-label">Start with your business</p><h2>What would useful AI<br />look like for you?</h2><p>Let’s discuss the opportunity, your systems, and the requirements that matter.</p><a className="ps-about-button" href="/#contact">Talk through your project <ArrowUpRight size={20}/></a><a className="ps-about-link" href="/work-with-us/">How we work <ArrowUpRight size={18}/></a></section>
-    </main><footer className="ps-about-footer"><span>© {new Date().getFullYear()} Project Sapiens, Inc.</span><a href="/about/">About Project Sapiens</a><a href="/">Back to home <ArrowUpRight className="sp-inline-arrow" aria-hidden="true"/></a></footer>
+    </main><CompanyFooter />
   </div>;
 }

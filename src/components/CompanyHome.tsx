@@ -1,4 +1,5 @@
-import { ArrowUpRight, ArrowDownRight, ArrowUp } from 'lucide-react';
+import CompanyFooter from './CompanyFooter';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { useEffect } from 'react';
 import CompanyHeader from './CompanyHeader';
 import OpenAISolutions from './OpenAISolutions';
@@ -229,11 +230,5 @@ export default function CompanyHome() {
 <ClientInquiryForm previewOnly={import.meta.env.DEV} />
 </div>
 </main>
-<div className="wrap">
-<footer>
-<span>© 2026 Project Sapiens, Inc.</span>
-<a href="/academy/login">Learning platform sign in <ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></a>
-<a href="#">Back to top <ArrowUp className="sp-inline-arrow" aria-hidden="true" /></a>
-</footer>
-</div>{import.meta.env.DEV && <div className="sp-preview-label">LOCAL PREVIEW · NOT PUBLISHED</div>}</div>;
+<CompanyFooter />{import.meta.env.DEV && <div className="sp-preview-label">LOCAL PREVIEW · NOT PUBLISHED</div>}</div>;
 }
