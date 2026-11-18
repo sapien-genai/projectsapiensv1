@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {validateStudy,measureAnswer,studyMetrics,compareStudyRuns,type StudyRun,type StudyAnswer} from '../supabase/functions/visibility-report/core/studies.ts';
+import {domainCited,validateStudy,measureAnswer,studyMetrics,compareStudyRuns,type StudyRun,type StudyAnswer} from '../supabase/functions/visibility-report/core/studies.ts';
 import {hotlineStudyTemplate} from '../src/data/hotlineVisibilityStudy.ts';
 const study=validateStudy(hotlineStudyTemplate);
 assert.equal(study.questions.length,20);assert.equal(study.questions.filter(q=>q.kind==='discovery').length,18);
@@ -22,3 +22,9 @@ c=compareStudyRuns(run,{...run,questions:run.questions.slice(1)},answers,after);
 c=compareStudyRuns(run,{...run,config:{webSearch:false}},answers,after);assert.equal(c.citationDelta,null);
 c=compareStudyRuns(run,{...run,id:'r2'},answers,after.map(a=>({...a,searched:false})));assert.ok(c.warnings.some(w=>w.includes('search use changed')));
 console.log('Verified fixed 20-question panel, unbranded validation, exact domain/name boundaries, separate metrics, paired missing-data handling and model/config comparison warnings.');
+
+assert.equal(domainCited([{url:'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',title:'hotlinesports.com'}],'hotlinesports.com'),true);
+assert.equal(domainCited([{url:'https://example.com/article',title:'hotlinesports.com'}],'hotlinesports.com'),false);
+assert.equal(domainCited([{url:'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',title:'hotlinesports.com.evil.test'}],'hotlinesports.com'),false);
+assert.equal(domainCited([{url:'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',title:'Article about hotlinesports.com'}],'hotlinesports.com'),false);
+console.log('Verified Google grounding hostname attribution without arbitrary-title false positives.');

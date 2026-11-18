@@ -28,7 +28,15 @@ export function hasName(text:string,name:string) {
   return escaped.length>2 && new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`,'i').test(text);
 }
 export function domainCited(citations:Citation[],domain:string) {
-  return citations.some(c=>{try {const host=new URL(c.url).hostname.toLowerCase();return host===domain || host.endsWith(`.${domain}`);}catch{return false;}});
+  return citations.some(c=>{try {
+    const url=new URL(c.url), host=url.hostname.toLowerCase();
+    if(host===domain || host.endsWith(`.${domain}`)) return true;
+    // Gemini's grounding links hide the destination behind Google's redirect.
+    // Accept only its exact hostname label, never arbitrary page-title mentions.
+    const label=c.title?.trim().toLowerCase()??'';
+    return host==='vertexaisearch.cloud.google.com' && url.pathname.startsWith('/grounding-api-redirect/') &&
+      /^[a-z0-9.-]+$/.test(label) && (label===domain || label.endsWith(`.${domain}`));
+  }catch{return false;}});
 }
 export function measureAnswer(text:string,citations:Citation[],study:Pick<Study,'business_name'|'domain'|'competitors'>) {
   const hosts=text.toLowerCase().match(/[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+/g)??[];

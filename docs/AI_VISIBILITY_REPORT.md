@@ -195,3 +195,9 @@ Validation: `npm run check:visibility`, `npm run typecheck`, the Deno handler te
 and `scripts/verify-visibility-study-database.py` against an empty disposable local
 Postgres database with all migrations applied. The database test refuses remote
 hosts and verifies concurrent reservation/claims, quotas, immutability and RLS.
+
+Google grounding citation attribution uses a direct destination hostname or an
+exact hostname label supplied with Google's `grounding-api-redirect` link. It does
+not treat an arbitrary title mentioning the business as a citation. Migration
+`20261118234000_study_grounding_citations.sql` corrects derived flags in existing
+study answers without altering their raw text/links or repeating paid requests.
