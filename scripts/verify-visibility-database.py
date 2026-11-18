@@ -19,7 +19,7 @@ assert sum(r.get('status') == 'running' for r in results) == 3
 assert sum(r.get('limit') == 'visitor' for r in results) == 9
 row=next(r for r in results if r.get('id'))
 id=row['id']; domain=row['domain']; i=int(domain.split('-')[1].split('.')[0])
-sql(f"update visibility_reports set status='complete',report='{{\"overall\":42}}',email='original@example.com',unlocked_at=now() where id='{id}'")
+sql(f"update visibility_reports set status='complete',report='{{\"overall\":42,\"signals\":{{\"reachable\":true}}}}',email='original@example.com',unlocked_at=now() where id='{id}'")
 cached=reserve(i,'another-ip',3,3)
 assert cached['id'] != id and cached['reused_from'] == id
 assert cached['report']['overall'] == 42 and cached['email'] is None and cached['unlocked_at'] is None
@@ -34,3 +34,14 @@ for role in ('anon','authenticated'):
  assert sql(f"select has_function_privilege('{role}', 'reserve_visibility_report(text,text,text,integer,integer,integer)', 'execute')") == 'f'
  assert sql(f"select has_function_privilege('{role}', 'claim_visibility_notification(uuid)', 'execute')") == 'f'
 print('Verified concurrent global/IP caps, independent cached lead rows, notification claims/retries, and RPC permissions.')
+
+# Incomplete reports must never satisfy the cache, even while marked complete.
+sql('truncate visibility_reports')
+for report in ({'overall': None, 'signals': {'reachable': False}}, {'overall': None, 'signals': {'reachable': True}}):
+ row=reserve(99, 'failed-fetch', 100, 100)
+ payload=json.dumps(report)
+ sql(f"update visibility_reports set status='complete', report='{payload}' where id='{row['id']}'")
+ fresh=reserve(99, 'fresh-test', 100, 100)
+ assert fresh['status'] == 'running' and fresh['reused_from'] is None
+sql('truncate visibility_reports')
+print('Verified incomplete reports are not cached.')

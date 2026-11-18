@@ -1,7 +1,7 @@
 declare global { var EdgeRuntime: { waitUntil(promise: Promise<unknown>): void }; }
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { anthropic, gemini, openai, type Provider } from "./core/providers.ts";
-import { runReport, toPreview } from "./core/pipeline.ts";
+import { readableReport, runReport, toPreview } from "./core/pipeline.ts";
 import { InputError, normalizeUrl } from "./core/url.ts";
 import { deliverLead } from "./core/notification.ts";
 import type { ProgressStep, Report } from "./core/types.ts";
@@ -113,7 +113,7 @@ async function load(id: unknown) {
 function present(row: NonNullable<Awaited<ReturnType<typeof load>>>) {
   if (row.status === "running") return { id: row.id, status: "running", progress: row.progress, domain: row.domain };
   if (row.status !== "complete" || !row.report) return { id: row.id, status: "failed", domain: row.domain, error: "We could not finish this report. Please try again." };
-  const report = row.report as Report;
+  const report = readableReport(row.report as Report);
   return row.unlocked_at
     ? { id: row.id, status: "complete", unlocked: true, preview: toPreview(report), report }
     : { id: row.id, status: "complete", unlocked: false, preview: toPreview(report) };

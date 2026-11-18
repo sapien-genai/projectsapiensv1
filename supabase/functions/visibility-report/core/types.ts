@@ -10,10 +10,10 @@ export type Complete = (prompt: string) => Promise<string>;
 
 export interface BusinessProfile { name: string; category: string; summary: string; audience: string; queries: string[] }
 
-export interface SignalCheck { id: string; label: string; passed: boolean; detail: string; weight: number }
+export interface SignalCheck { id: string; label: string; passed: boolean | null; detail: string; weight: number }
 export interface SiteSignals {
   reachable: boolean; finalUrl: string; status: number; title: string; description: string; h1: string;
-  text: string; wordCount: number; score: number; checks: SignalCheck[];
+  text: string; wordCount: number; score: number | null; checks: SignalCheck[];
 }
 
 export interface DiscoveryResult { query: string; mentioned: boolean; answer: string; citations: Citation[] }
@@ -37,7 +37,7 @@ export interface Report {
 export interface ReportPreview {
   version: 1; domain: string; generatedAt: string; overall: number | null; verdict: string;
   business: { name: string; category: string };
-  signalsScore: number;
+  signalsScore: number | null;
   assistants: Array<Pick<AssistantResult, 'id' | 'label' | 'scores' | 'searched'> & { failed: boolean }>;
   locked: { issues: number; competitors: number; recommendations: number; failedChecks: number; answers: number };
   method: string;

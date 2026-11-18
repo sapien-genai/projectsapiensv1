@@ -84,6 +84,8 @@ export async function analyzeSite(url: string, options: SafeFetchOptions): Promi
   const wordCount = text ? text.split(' ').length : 0;
   const types = structuredDataTypes(html);
   const robotsText = robots?.ok && !/html/.test(robots.contentType) ? robots.body : '';
+  const missing = (response: { status: number } | null) => response?.status === 404 || response?.status === 410;
+  const robotsKnown = Boolean(robots?.ok && !/html/.test(robots.contentType)) || missing(robots);
   const blocked = blockedCrawlers(robotsText, AI_CRAWLERS);
   const hasSitemap = Boolean(sitemap?.ok && /<(urlset|sitemapindex)\b/i.test(sitemap.body)) || /^sitemap:/im.test(robotsText);
   const hasLlms = Boolean(llms?.ok && !/html/.test(llms.contentType) && llms.body.trim().length > 20 && !/^\s*</.test(llms.body));
@@ -93,7 +95,7 @@ export async function analyzeSite(url: string, options: SafeFetchOptions): Promi
 
   const checks: SignalCheck[] = [
     { id: 'reachable', label: 'Page loads for automated readers', weight: 15, passed: reachable,
-      detail: reachable ? `Loaded ${page!.url} (HTTP ${page!.status}).` : page ? `The page returned HTTP ${page.status}${page.ok ? ' but no HTML' : ''}.` : 'The page could not be fetched. It may block automated requests or be offline.' },
+      detail: reachable ? `Loaded ${page!.url} (HTTP ${page!.status}).` : page ? `The page returned HTTP ${page.status}${page.ok ? ' but no HTML' : ''}.` : 'Our request could not fetch the page. This does not establish whether other crawlers can access it.' },
     { id: 'static-content', label: 'Content is present without JavaScript', weight: 25, passed: wordCount >= 150,
       detail: !reachable ? 'Not tested because the page did not load.' : wordCount >= 150 ? `About ${wordCount} words are in the HTML itself.` : `Only about ${wordCount} words are in the HTML. Most AI crawlers do not run JavaScript, so they see very little of this page.` },
     { id: 'title-description', label: 'Clear title and description', weight: 10, passed: title.length >= 10 && description.length >= 50,
@@ -102,13 +104,21 @@ export async function analyzeSite(url: string, options: SafeFetchOptions): Promi
       detail: h1 ? `Main heading: “${h1.slice(0, 90)}”.` : 'No <h1> was found in the HTML.' },
     { id: 'structured-data', label: 'Structured data identifies the business', weight: 15, passed: identityTypes.length > 0,
       detail: identityTypes.length ? `Found schema.org types: ${identityTypes.slice(0, 5).join(', ')}.` : types.length ? `Structured data is present (${types.slice(0, 4).join(', ')}) but nothing that names the organization.` : 'No schema.org structured data was found.' },
-    { id: 'ai-crawlers', label: 'AI crawlers are allowed', weight: 15, passed: blocked.length === 0,
-      detail: blocked.length ? `robots.txt blocks: ${blocked.join(', ')}.` : robotsText ? 'robots.txt does not block the main AI crawlers.' : 'No robots.txt was found, so nothing is blocked.' },
-    { id: 'sitemap', label: 'Sitemap is published', weight: 5, passed: hasSitemap, detail: hasSitemap ? 'A sitemap was found.' : 'No sitemap.xml was found at the site root or in robots.txt.' },
+    { id: 'ai-crawlers', label: 'AI crawlers are allowed', weight: 15, passed: robotsKnown ? blocked.length === 0 : null,
+      detail: !robotsKnown ? 'Not tested because robots.txt could not be read.' : blocked.length ? `robots.txt blocks: ${blocked.join(', ')}.` : robotsText ? 'robots.txt does not block the main AI crawlers.' : 'robots.txt returned 404 or 410; no robots.txt restriction was found. Other access controls were not tested.' },
+    { id: 'sitemap', label: 'Sitemap is published', weight: 5, passed: hasSitemap ? true : (sitemap?.ok || missing(sitemap)) && robotsKnown ? false : null, detail: hasSitemap ? 'A sitemap was found.' : 'No sitemap.xml was found at the site root or in robots.txt.' },
     { id: 'social-metadata', label: 'Share metadata is present', weight: 5, passed: hasOg, detail: hasOg ? 'Open Graph title and description are set.' : 'Open Graph title or description is missing.' },
-    { id: 'llms-txt', label: 'llms.txt summary is published', weight: 5, passed: hasLlms, detail: hasLlms ? 'An llms.txt file was found.' : 'No llms.txt file was found. It is optional and not every assistant reads it.' },
+    { id: 'llms-txt', label: 'llms.txt summary is published', weight: 5, passed: llms?.ok || missing(llms) ? hasLlms : null, detail: hasLlms ? 'An llms.txt file was found.' : 'No llms.txt file was found. It is optional and not every assistant reads it.' },
   ];
+  for (const check of checks) {
+    if ((!reachable && ['static-content', 'title-description', 'heading', 'structured-data', 'social-metadata'].includes(check.id)) || check.passed === null) {
+      check.passed = null;
+      check.detail = !reachable && !['ai-crawlers', 'sitemap', 'llms-txt'].includes(check.id)
+        ? 'Not tested because the homepage could not be read.'
+        : 'Not tested because the required file could not be read.';
+    }
+  }
   const earned = checks.reduce((sum, check) => sum + (check.passed ? check.weight : 0), 0);
   const possible = checks.reduce((sum, check) => sum + check.weight, 0);
-  return { reachable, finalUrl: page?.url ?? url, status: page?.status ?? 0, title, description, h1, text: text.slice(0, 6000), wordCount, score: Math.round((earned / possible) * 100), checks };
+  return { reachable, finalUrl: page?.url ?? url, status: page?.status ?? 0, title, description, h1, text: text.slice(0, 6000), wordCount, score: !reachable || checks.some(check => check.passed === null) ? null : Math.round((earned / possible) * 100), checks };
 }
