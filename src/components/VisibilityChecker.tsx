@@ -105,8 +105,8 @@ export default function VisibilityChecker() {
     setError(''); setView({ kind: 'idle' });
   }
 
-  return <section id="instant-report" aria-labelledby="instant-report-title" className="scroll-mt-8 rounded-2xl border border-[#172820]/15 bg-white/70 p-6 md:p-10">
-    <p className={eyebrow}>Instant report</p>
+  return <section id="instant-report" aria-labelledby="instant-report-title" className="scroll-mt-8 rounded-2xl border border-[#d4e3ed] bg-[linear-gradient(180deg,#d5e9f8_0%,#f2f8fc_55%,#fff_100%)] p-6 md:p-10">
+    <div className="flex items-center justify-between gap-4"><p className={eyebrow}>Instant report</p>{view.kind === 'idle' && <Flock formation="vee" count={9} size={4.5} color="35,49,58" className="pointer-events-none h-10 w-28 shrink-0 sm:w-40" />}</div>
     {view.kind === 'idle' && <>
       <h2 id="instant-report-title" className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">See what AI says about your business.</h2>
       <p className="mt-3 max-w-2xl leading-relaxed text-[#526055]">Enter your website. We read it the way an AI crawler does, then ask ChatGPT, Claude, and Gemini about you and your category. It takes about a minute.</p>
