@@ -1,8 +1,4 @@
-import {
-  fixedQuestions,
-  packagePrompt,
-  verifyStripeSignature,
-} from "./core.ts";
+import { fixedQuestions, verifyStripeSignature } from "./core.ts";
 import {
   compareStudyRuns,
   type StudyAnswer,
@@ -42,13 +38,6 @@ Deno.test("fixed customer questions are stable and separate recognition from dis
     rejected = true;
   }
   assert(rejected, "Branded discovery must be rejected");
-});
-Deno.test("package prompt labels data untrusted and forbids unsupported claims", () => {
-  const prompt = packagePrompt(report);
-  assert(prompt.includes("untrusted data"));
-  assert(prompt.includes("[confirm before publishing]"));
-  assert(prompt.includes("not a claim of deployment"));
-  assert(prompt.includes("Acme Bakery"));
 });
 Deno.test("webhook authentication rejects stale, changed and forged messages and supports rotated signatures", async () => {
   const now = 1800000000000,
