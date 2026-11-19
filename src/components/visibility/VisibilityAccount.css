@@ -1,6 +1,7 @@
 .visibility-account {
   font-family: 'DM Sans',sans-serif;
   min-height: 100vh;
+  overflow-wrap: anywhere;
 }
 .visibility-account main {
   padding-bottom: 5rem!important;
@@ -57,7 +58,7 @@
 .va-auth,
 .va-products {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2,minmax(0,1fr));
   gap: 3rem;
   margin: 3rem 0;
 }
@@ -194,7 +195,7 @@
   margin: 2rem 0;
 }
 .va-toolbar label {
-  min-width: 240px;
+  min-width: min(240px,100%);
   flex: 1;
 }
 .va-toolbar select {
@@ -276,7 +277,7 @@
 }
 .va-metrics {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3,minmax(0,1fr));
   gap: 2rem;
 }
 .va-metrics strong {
