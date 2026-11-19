@@ -1,0 +1,377 @@
+.visibility-account {
+  font-family: 'DM Sans',sans-serif;
+  min-height: 100vh;
+}
+.visibility-account main {
+  padding-bottom: 5rem!important;
+}
+.va-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 4.5rem 0 3rem;
+  border-bottom: 1px solid #17282025;
+}
+.va-heading h1 {
+  font-family: 'Manrope',sans-serif;
+  font-size: clamp(2.3rem,4.6vw,4.8rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+  white-space: pre-line;
+  margin: 1.2rem 0;
+}
+.visibility-account p {
+  line-height: 1.7;
+}
+.va-heading p,
+.va-panel > p,
+.va-section > p,
+.va-overview p {
+  max-width: 46rem;
+  color: #526055;
+}
+.visibility-account h2 {
+  font-family: 'Manrope',sans-serif;
+  font-size: clamp(1.55rem,2.6vw,2.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  margin: .75rem 0 1rem;
+}
+.visibility-account h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.visibility-account h4 {
+  font-weight: 600;
+}
+.visibility-account .va-eyebrow {
+  font-size: .8rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #68745b;
+}
+.va-auth,
+.va-products {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin: 3rem 0;
+}
+.va-auth {
+  gap: 6rem;
+  max-width: 76rem;
+}
+.va-panel {
+  padding: 2rem;
+  border: 1px solid #17282025;
+  border-radius: 1rem;
+  background: #ffffff80;
+}
+.va-panel ul,
+.va-auth ul {
+  padding-left: 1.3rem;
+  list-style: disc;
+  line-height: 1.8;
+  margin: 1.5rem 0;
+}
+.va-panel li {
+  margin: .4rem 0;
+}
+.va-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  border-radius: 100px;
+  background: #111;
+  color: white!important;
+  padding: .8rem 1.6rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #111;
+  cursor: pointer;
+  gap: .5rem;
+}
+.va-button:hover {
+  background: #2b4032;
+}
+.va-button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.va-button.va-secondary {
+  color: #172820!important;
+  background: transparent;
+  border-color: #17282055;
+}
+.va-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.visibility-account label {
+  display: block;
+  font-size: .95rem;
+  font-weight: 500;
+}
+.visibility-account input:not([type=checkbox]),
+.visibility-account select,
+.visibility-account textarea {
+  display: block;
+  min-height: 48px;
+  width: 100%;
+  padding: .8rem 1rem;
+  margin: .5rem 0 1rem;
+  border: 1px solid #17282050;
+  border-radius: .45rem;
+  background: #fff;
+  font-size: 1rem;
+  color: #172820;
+}
+.visibility-account :is(input,select,textarea):focus-visible {
+  outline: 2px solid #68745b;
+  outline-offset: 3px;
+}
+.visibility-account .va-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  line-height: 1.6;
+  margin: 1.5rem 0;
+}
+.va-consent input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: .15rem;
+}
+.va-consent a {
+  text-decoration: underline;
+}
+.va-auth .va-button {
+  width: 100%;
+}
+.va-divider {
+  text-align: center;
+  margin: 1.2rem;
+}
+.visibility-account .va-small {
+  font-size: .875rem;
+  line-height: 1.6;
+  color: #526055;
+  margin: .8rem 0;
+}
+.va-notice {
+  border: 1px solid #68745b66;
+  background: #e9edde;
+  padding: 1.1rem 1.4rem;
+  border-radius: .6rem;
+  margin: 1.5rem 0;
+}
+.va-notice p {
+  margin: .3rem 0;
+}
+.va-error {
+  background: #fff4f0;
+  border-color: #a33a2a66;
+}
+.va-error button {
+  margin-left: 1rem;
+}
+.va-toolbar {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+.va-toolbar label {
+  min-width: 240px;
+  flex: 1;
+}
+.va-toolbar select {
+  margin-bottom: 0;
+  max-width: 460px;
+}
+.va-overview {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 2rem 0;
+}
+.va-score {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  justify-content: center;
+}
+.va-score strong {
+  font-size: 4rem;
+  font-weight: 500;
+  letter-spacing: -.06em;
+}
+.va-score small {
+  font-size: 1.2rem;
+  color: #68745b;
+  letter-spacing: 0;
+}
+.va-score span {
+  font-size: .9rem;
+  color: #526055;
+}
+.visibility-account .va-price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #172820;
+}
+.va-tracking-offer {
+  background: #e9edde;
+}
+.va-purchased {
+  font-weight: 600;
+  color: #16745e!important;
+}
+.va-section {
+  border-top: 1px solid #17282030;
+  padding: 3rem 0;
+}
+.va-details {
+  border-top: 1px solid #17282025;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+.va-details summary {
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: .5rem 0;
+}
+.va-details ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.va-details li {
+  padding: .5rem 0;
+}
+.va-empty {
+  padding: 2rem 0;
+}
+.va-empty .va-button {
+  margin-top: 1.5rem;
+}
+.va-run {
+  border-bottom: 1px solid #17282025;
+  padding: 1rem 0 2rem;
+}
+.va-run .va-toolbar {
+  justify-content: space-between;
+}
+.va-metrics {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 2rem;
+}
+.va-metrics strong {
+  display: block;
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+.va-metrics p {
+  color: #526055;
+}
+.va-answer {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #17282025;
+}
+.va-answer-text {
+  white-space: pre-wrap;
+}
+.va-answer a {
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+.va-changes li {
+  padding: 1rem 0;
+  border-bottom: 1px solid #17282020;
+}
+.va-changes time {
+  font-size: .875rem;
+  color: #68745b;
+}
+.va-markdown {
+  max-width: 55rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.va-markdown :is(h1,h2,h3) {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 .75rem;
+}
+.va-markdown ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.va-markdown ol {
+  list-style: decimal;
+}
+.va-markdown pre {
+  white-space: pre-wrap;
+  background: #e9edde;
+  padding: 1rem;
+  border-radius: .4rem;
+}
+@media (max-width:800px) {
+  .va-heading {
+    padding: 2.5rem 0;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .va-auth,
+  .va-products {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .va-panel {
+    padding: 1.5rem;
+  }
+  .va-overview {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .va-score strong {
+    font-size: 3rem;
+  }
+  .va-metrics {
+    grid-template-columns: 1fr;
+    gap: .5rem;
+  }
+  .va-toolbar {
+    gap: 1rem;
+  }
+  .va-section {
+    padding: 2rem 0;
+  }
+  .va-heading h1 {
+    white-space: normal;
+  }
+  .va-auth {
+    max-width: none;
+  }
+  .va-button {
+    max-width: 100%;
+    text-align: center;
+  }
+}
+.visibility-account main {
+  margin-inline: auto;
+}
