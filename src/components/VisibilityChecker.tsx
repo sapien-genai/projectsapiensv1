@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, Loader2, Lock, X } from 'lucide-react';
+import Flock from './flock/Flock';
 import type { Report, ReportPreview } from '../../supabase/functions/visibility-report/core/types';
 
 /**
@@ -120,7 +121,8 @@ export default function VisibilityChecker() {
 
     {view.kind === 'running' && <div role="status" aria-live="polite">
       <h2 id="instant-report-title" className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">Running your report…</h2>
-      <ol className="mt-6 space-y-3">{STEPS.map(([key, label], index) => {
+      <div className="mt-6 grid items-center gap-6 sm:grid-cols-[1fr_auto]">
+      <ol className="space-y-3">{STEPS.map(([key, label], index) => {
         const current = STEPS.findIndex(([step]) => step === view.progress);
         const state = index < current ? 'done' : index === current ? 'now' : 'next';
         return <li key={key} className={`flex items-center gap-3 ${state === 'next' ? 'text-[#8a9189]' : 'text-[#172820]'}`}>
@@ -128,6 +130,9 @@ export default function VisibilityChecker() {
           <span>{label}{state === 'now' && <span className="sr-only"> (in progress)</span>}</span>
         </li>;
       })}</ol>
+      {/* Scattered birds draw together as each step finishes. */}
+      <Flock formation="cluster" count={34} size={6} cohesion={[.12, .4, .68, .95][Math.max(0, STEPS.findIndex(([step]) => step === view.progress))]} className="h-40 w-full sm:w-64" />
+      </div>
       <p className="mt-6 text-sm text-[#526055]">This usually takes about a minute. You can leave this page open.</p>
     </div>}
 
@@ -146,9 +151,11 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       </div>
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
-    <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr] md:items-center">
+    <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr_auto] md:items-center">
       <p className="flex items-baseline gap-2"><span className={`text-7xl font-semibold tracking-[-0.05em] ${tone(preview.overall)}`}>{score(preview.overall)}</span><span className="text-xl text-[#526055]">/ 100</span><span className="sr-only"> overall AI visibility score</span></p>
       <p className="max-w-md text-lg leading-snug text-[#172820]">{preview.verdict}</p>
+      {/* The flock holds together as tightly as the score: loose when assistants know little, tight when they know the business well. */}
+      <Flock formation="cluster" count={34} size={6} cohesion={typeof preview.overall === 'number' ? preview.overall / 100 : .15} className="hidden h-32 w-56 md:block" />
     </div>
     <div className="mt-8 overflow-x-auto">
       <table className="w-full min-w-[420px] border-collapse text-left text-sm">

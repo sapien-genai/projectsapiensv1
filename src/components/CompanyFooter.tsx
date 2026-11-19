@@ -1,10 +1,13 @@
 import { ArrowUpRight, ArrowUp } from 'lucide-react';
+import Flock from './flock/Flock';
 import './CompanyFooter.css';
 
 export default function CompanyFooter() {
   return <footer className="sapiens-footer" aria-label="Project Sapiens footer">
     <div className="sapiens-footer-inner">
-      <div className="sapiens-footer-invitation">
+      <div className="sapiens-footer-invitation relative">
+        {/* The flock at rest: a still formation, heading the same way as the invitation. */}
+        <Flock formation="vee" still count={11} size={11} color="255,255,255" className="absolute right-[18%] top-2 hidden h-44 w-72 -rotate-[38deg] lg:block" />
         <p className="sapiens-footer-kicker">Your next chapter starts here</p>
         <a href="/#contact" className="sapiens-footer-headline">Let’s build<br />what’s next.<ArrowUpRight aria-hidden="true" /></a>
         <p>Human ambition. Applied intelligence.</p>
