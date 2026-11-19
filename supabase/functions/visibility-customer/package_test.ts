@@ -139,7 +139,7 @@ Deno.test("completed structured response passes through validation", async () =>
 });
 Deno.test("current site collection discovers and reads existing service links and excludes external/private targets", async () => {
   const html = "<html><body>" + sentence.repeat(3) +
-    '<a href="/agents/">Agents</a><a href="https://evil.org/">External</a><a href="http://127.0.0.1/">Private</a></body></html>';
+    '<link href="/assets/site.css"><script src="/assets/site.js"></script><a href="/agents/">Agents</a><a href="https://evil.org/">External</a><a href="http://127.0.0.1/">Private</a></body></html>';
   assert(pageLinks(html, report.url).length === 1);
   const inv = await collectPages(report.url, {
     resolveHost: async () => ["8.8.8.8"],
