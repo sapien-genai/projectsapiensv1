@@ -17,14 +17,18 @@ async function catalog() {
   const result: Record<string, unknown> = {};
   for (const product of ["fix", "tracking"] as Product[]) {
     const id = prices()[product];
-    if (!id || env("VISIBILITY_CHECKOUT_ENABLED") !== "true") {
+    if (!id) {
       result[product] = null;
       continue;
     }
     let price;
     try {
       price = await stripe(`prices/${encodeURIComponent(id)}`);
-    } catch {
+    } catch (error) {
+      console.error("visibility price lookup failed", {
+        product,
+        errorType: error instanceof Error ? error.name : "unknown",
+      });
       result[product] = null;
       continue;
     }
@@ -39,6 +43,7 @@ async function catalog() {
         amount: price.unit_amount,
         currency: price.currency,
         interval: product === "tracking" ? "month" : null,
+        enabled: env("VISIBILITY_CHECKOUT_ENABLED") === "true",
       }
       : null;
   }
@@ -246,7 +251,7 @@ Deno.serve(async (req) => {
     ) return json({ error: "Choose a valid product." }, 400);
     const product = body.product as Product;
     const available = await catalog();
-    if (!available[product]) {
+    if (!available[product] || env("VISIBILITY_CHECKOUT_ENABLED") !== "true") {
       return json({
         error: "Payments are not open yet. Your free report is saved.",
       }, 503);

@@ -422,10 +422,10 @@ export default function VisibilityAccount() {
                           : (
                             <button
                               className="va-button"
-                              disabled={busy || !data.catalog.fix}
+                              disabled={busy || !data.catalog.fix?.enabled}
                               onClick={() => act("checkout", "fix")}
                             >
-                              {data.catalog.fix
+                              {data.catalog.fix?.enabled
                                 ? "Get my fix package"
                                 : "Purchases open soon"}
                             </button>
@@ -481,10 +481,10 @@ export default function VisibilityAccount() {
                           : (
                             <button
                               className="va-button"
-                              disabled={busy || !data.catalog.tracking}
+                              disabled={busy || !data.catalog.tracking?.enabled}
                               onClick={() => act("checkout", "tracking")}
                             >
-                              {data.catalog.tracking
+                              {data.catalog.tracking?.enabled
                                 ? "Start monthly tracking"
                                 : "Subscriptions open soon"}
                             </button>

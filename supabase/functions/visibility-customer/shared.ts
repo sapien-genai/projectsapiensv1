@@ -25,10 +25,14 @@ export async function stripe(
   params?: URLSearchParams,
   key?: string,
 ) {
+  const secret = env("VISIBILITY_STRIPE_SECRET_KEY") ||
+    env("STRIPE_SECRET_KEY") || env("STRIPE_SECRET_KEY\n");
   const response = await fetch(`https://api.stripe.com/v1/${path}`, {
     method: params ? "POST" : "GET",
     headers: {
-      Authorization: `Bearer ${env("VISIBILITY_STRIPE_SECRET_KEY")}`,
+      // Reuse the existing account key; the legacy deployment stored its name
+      // with a trailing newline. A dedicated visibility key takes precedence.
+      Authorization: `Bearer ${secret}`,
       ...(params
         ? { "Content-Type": "application/x-www-form-urlencoded" }
         : {}),
@@ -39,6 +43,12 @@ export async function stripe(
   });
   const value = await response.json();
   if (!response.ok) {
+    console.error("visibility Stripe request failed", {
+      status: response.status,
+      code: value.error?.code,
+      type: value.error?.type,
+      mode: /^(sk|rk)_test_/.test(secret) ? "test" : "live",
+    });
     throw new Error("Payment service unavailable. Please try again.");
   }
   return value;

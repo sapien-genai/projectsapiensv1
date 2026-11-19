@@ -6,6 +6,7 @@ import type {
 } from "../../../supabase/functions/visibility-report/core/studies";
 export type Product = "fix" | "tracking";
 export type Price = {
+  enabled: boolean;
   amount: number;
   currency: string;
   interval: string | null;
