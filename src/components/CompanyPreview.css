@@ -27,3 +27,11 @@
 
 /* Keep workflow steps readable on narrow phones instead of squeezing three columns. */
 @media(max-width:480px){.sp-solution-flow{grid-template-columns:1fr}.sp-solution-flow li{padding:14px}.sp-solution-flow small{margin-bottom:6px}}
+
+/* Leave room for the returning-customer entry point in the main navigation. */
+@media (min-width:1024px) and (max-width:1199px) {
+  .company-site .sp-nav { gap: 14px; font-size: 12px; }
+  .company-site .sp-contact-link { gap: 12px; padding: 14px 18px; }
+  .company-site .sp-header { gap: 18px; }
+}
+.company-site .sp-account-link { font-weight: 700; white-space: nowrap; }

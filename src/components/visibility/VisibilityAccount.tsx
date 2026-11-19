@@ -1,8 +1,8 @@
 import { type FormEvent, useCallback, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import ReactMarkdown from "react-markdown";
-import CompanyHeader from "../CompanyHeader";
-import CompanyFooter from "../CompanyFooter";
+import BusinessProfile from "./BusinessProfile";
+
 import { supabase } from "../../lib/supabase";
 import {
   customerApi,
@@ -54,7 +54,7 @@ export default function VisibilityAccount() {
     );
   }, []);
   useEffect(() => {
-    document.title = "Your visibility dashboard — Project Sapiens";
+    document.title = "Your workspace — Project Sapiens";
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex,nofollow";
@@ -128,7 +128,7 @@ export default function VisibilityAccount() {
       if (result.error) throw result.error;
       if (provider === "email") {
         setMessage(
-          "Check your email for a secure sign-in link. Open it to return to your dashboard.",
+          "Check your email for a secure sign-in link. Open it to return to your workspace.",
         );
       }
     } catch (e) {
@@ -196,33 +196,25 @@ export default function VisibilityAccount() {
   return (
     <div className="company-site visibility-account min-h-screen bg-[#f4f2ec] text-[#172820]">
       <a href="#main" className="sp-skip">Skip to content</a>
-      <CompanyHeader />
+      <header className="va-workspace-header">
+        <a href="/" aria-label="Project Sapiens home"><img src="/brand/project-sapiens-wordmark.png" width="150" height="60" alt="Project Sapiens" /></a>
+        <nav aria-label="Account navigation"><a href="/">Main website</a><a href="mailto:tony@projectsapiens.xyz">Support</a>{user && <button className="va-link" onClick={async () => { await supabase.auth.signOut(); setData(null); }}>Sign out</button>}</nav>
+      </header>
       <main id="main">
         <header className="va-heading">
           <div>
-            <p className="va-eyebrow">Project Sapiens / AI visibility</p>
+            <p className="va-eyebrow">Project Sapiens / Customer workspace</p>
             <h1>
               {user
-                ? "A clearer picture.\nA practical next step."
-                : "Know where you stand.\nDecide what comes next."}
+                ? "Your workspace."
+                : "Welcome to your workspace."}
             </h1>
             <p>
               {user
-                ? "Your reports, website improvements, and monthly measurements in one place."
+                ? "Your business, reports, and deliverables in one place."
                 : "Save your free report, get a website fix package, and follow how AI assistants describe your business."}
             </p>
           </div>
-          {user && (
-            <button
-              className="va-link"
-              onClick={async () => {
-                await supabase.auth.signOut();
-                setData(null);
-              }}
-            >
-              Sign out
-            </button>
-          )}
         </header>
         {error && (
           <div role="alert" className="va-notice va-error">
@@ -320,6 +312,7 @@ export default function VisibilityAccount() {
                     : "Checkout was canceled. Your saved report is still here."}
                 </p>
               )}
+              {data.projects.length > 0 && <nav className="va-workspace-nav" aria-label="Workspace sections"><a href="#reports">Reports</a><a href="#deliverables">Deliverables</a><a href="#tracking">Monthly tracking</a><a href="#business-profile">Business profile</a><a href="#services">Services & billing</a></nav>}
               <nav className="va-toolbar" aria-label="Your websites">
                 <label>
                   Website<select
@@ -352,7 +345,7 @@ export default function VisibilityAccount() {
                     <h2>Your first report starts here.</h2>
                     <p>
                       Run a free website check, then choose “Save to my
-                      dashboard” on your result.
+                      workspace” on your result.
                     </p>
                     <a
                       className="va-button"
@@ -364,7 +357,8 @@ export default function VisibilityAccount() {
                 )
                 : (
                   <>
-                    <section className="va-overview">
+                    <BusinessProfile key={project.id} project={project} onSaved={refresh} />
+                    <section id="reports" className="va-overview">
                       <div>
                         <p className="va-eyebrow">
                           Saved free check · {date(project.report.generatedAt)}
@@ -386,7 +380,7 @@ export default function VisibilityAccount() {
                       </div>
                     </section>
                     <section
-                      className="va-products"
+                      id="services" className="va-products"
                       aria-label="Choose your next step"
                     >
                       <article className="va-panel">
@@ -491,8 +485,9 @@ export default function VisibilityAccount() {
                           )}
                       </article>
                     </section>
+                    {!packageJob && <section id="deliverables" className="va-section"><p className="va-eyebrow">Your deliverables</p><h2>A home for your project work.</h2><p>Your purchased fix package and drafts will appear here when ready. You haven’t ordered a package for this website yet.</p><a className="va-link" href="#services">Explore the fix package</a></section>}
                     {packageJob && (
-                      <section className="va-section">
+                      <section id="deliverables" className="va-section">
                         <p className="va-eyebrow">Your fix package</p>
                         <h2>From findings to publishable drafts.</h2>
                         {packageJob.result
@@ -535,7 +530,7 @@ export default function VisibilityAccount() {
                         </a>
                       </section>
                     )}
-                    <section className="va-section">
+                    <section id="tracking" className="va-section">
                       <p className="va-eyebrow">Monthly tracking</p>
                       <h2>Evidence over time.</h2>
                       <p>
@@ -749,7 +744,7 @@ export default function VisibilityAccount() {
             </>
           )}
       </main>
-      <CompanyFooter />
+      <footer className="va-workspace-footer"><span>Project Sapiens · Your customer workspace</span><nav aria-label="Workspace footer"><a href="mailto:tony@projectsapiens.xyz">Support</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></footer>
     </div>
   );
 }

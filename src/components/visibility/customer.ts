@@ -11,7 +11,9 @@ export type Price = {
   currency: string;
   interval: string | null;
 };
+export type BusinessProfile = { business_name: string; location: string; industry: string; employees: string; goal: string };
 export type Project = {
+  business_profile?: BusinessProfile | null;
   id: string;
   domain: string;
   business_name: string;
