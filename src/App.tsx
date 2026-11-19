@@ -12,6 +12,10 @@ const FieldNotesPage = lazy(() => import('./components/FieldNotesPage'));
 const VisibilityAccount = lazy(() => import('./components/visibility/VisibilityAccount'));
 
 const AcademyApp = lazy(() => import('./AcademyApp'));
+const NotFoundPage = lazy(() => import('./components/NotFoundPage'));
+
+// Every address the learning platform answers. Anything else that is not a company page is a 404.
+const ACADEMY_PATHS = /^\/(academy|admin|billing|snapshots|dev)(\/|$)/;
 
 /** `path` is supplied by the build-time pre-renderer; in the browser it comes from the address bar. */
 export default function App({ path: fixedPath }: { path?: string }) {
@@ -29,5 +33,6 @@ export default function App({ path: fixedPath }: { path?: string }) {
   if (path === '/custom-ai-agents' || path === '/voice-ai-development') return <ServicePage slug={path.slice(1)} />;
   if (path === '/ai-visibility/dashboard' || path === '/ai-visibility/login') return <Suspense fallback={<div className="min-h-screen bg-[#f4f2ec] p-8 text-[#172820]" role="status">Loading your visibility dashboard…</div>}><VisibilityAccount /></Suspense>;
   if (path === '/ai-visibility') return <AiVisibilityPage />;
+  if (path !== '/' && !ACADEMY_PATHS.test(path)) return <Suspense fallback={<div role="status" className="p-8">Loading…</div>}><NotFoundPage /></Suspense>;
   return <Suspense fallback={<div className="min-h-screen bg-surface p-8">Loading learning platform…</div>}><AcademyApp /></Suspense>;
 }
