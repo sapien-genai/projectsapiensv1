@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { drawBird } from './flock/bird';
 import './HeroMurmuration.css';
 
 type Bird = { x: number; y: number; vx: number; vy: number; phase: number; depth: number };
@@ -80,17 +81,7 @@ export default function HeroSculpture() {
         const x = width * .5 + bird.x * scale, y = height * .47 + bird.y * scale;
         const wing = Math.sin(time * 8 + bird.phase);
         const size = (3.8 + bird.depth * 3) * Math.max(.65, scale) * 1.2;
-        ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(bird.vy, bird.vx) + Math.PI / 2);
-        ctx.fillStyle = `rgba(12,17,14,${.55 + bird.depth * .45})`;
-        // Tapered wings, a small body, and independent wingbeats read as birds, not dots.
-        ctx.beginPath(); ctx.moveTo(0, -size * .5);
-        ctx.quadraticCurveTo(-size * .35, -size * .4, -size, size * (.05 + wing * .48));
-        ctx.quadraticCurveTo(-size * .45, size * (.12 + wing * .15), 0, size * .26);
-        ctx.lineTo(size * .12, size * .6); ctx.lineTo(0, size * .4); ctx.lineTo(-size * .12, size * .6);
-        ctx.lineTo(0, size * .26);
-        ctx.quadraticCurveTo(size * .45, size * (.12 + wing * .15), size, size * (.05 + wing * .48));
-        ctx.quadraticCurveTo(size * .35, -size * .4, 0, -size * .5);
-        ctx.fill(); ctx.restore();
+        drawBird(ctx, x, y, Math.atan2(bird.vy, bird.vx), size, wing, `rgba(12,17,14,${.55 + bird.depth * .45})`);
       }
     }
     function animate(now: number) {

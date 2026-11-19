@@ -6,6 +6,7 @@ import CompanyHeader from './CompanyHeader';
 import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import HeroSculpture from './HeroSculpture';
+import FlockPass from './flock/FlockPass';
 import { VISIBILITY_QUESTIONS, VISIBILITY_ASSISTANTS } from '../data/aiVisibility';
 import './CompanyHome.css';
 import './CompanyPreview.css';
@@ -56,7 +57,8 @@ export default function CompanyHome() {
 <div className="wrap">
 <OpenAISolutions />
 </div>
-<section id="ai-visibility" aria-labelledby="ai-visibility-title" className="wrap border-t border-[#ddd] !py-16 md:!py-24">
+<section id="ai-visibility" aria-labelledby="ai-visibility-title" className="wrap relative border-t border-[#ddd] !py-16 md:!py-24">
+<FlockPass />
 <div className="sp-section-heading"><p className="sp-eyebrow">02 / AI brand visibility</p><h2 id="ai-visibility-title">Search ranks pages.<br />AI describes companies.</h2></div>
 <div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:gap-[35px]">
 <div>
@@ -193,7 +195,8 @@ export default function CompanyHome() {
 </section>
 <div className="wrap">
 
-<section id="company" className="section about">
+<section id="company" className="section about relative">
+<FlockPass />
 <div>
 <div className="eyebrow">04 / The way we think</div>
 <h2>Curious minds.<br />Working hands.</h2>
@@ -228,7 +231,8 @@ export default function CompanyHome() {
 </div>
 </section>
 </div>
-<section className="engagement wrap">
+<section className="engagement wrap relative">
+<FlockPass />
 <div className="eyebrow">Work with us</div>
 <h2>Experienced help.<br />The right level.</h2>
 <p>Project-based strategy and development, fractional AI leadership, and ongoing advisory.</p>
