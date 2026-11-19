@@ -25,13 +25,12 @@ export async function stripe(
   params?: URLSearchParams,
   key?: string,
 ) {
-  const secret = env("VISIBILITY_STRIPE_SECRET_KEY") ||
-    env("STRIPE_SECRET_KEY") || env("STRIPE_SECRET_KEY\n");
+  const secret = env("VISIBILITY_STRIPE_SECRET_KEY");
+  if (!secret) throw new Error("Visibility payments are not configured.");
   const response = await fetch(`https://api.stripe.com/v1/${path}`, {
     method: params ? "POST" : "GET",
     headers: {
-      // Reuse the existing account key; the legacy deployment stored its name
-      // with a trailing newline. A dedicated visibility key takes precedence.
+      // Never fall back to another product's key or accidentally use test mode.
       Authorization: `Bearer ${secret}`,
       ...(params
         ? { "Content-Type": "application/x-www-form-urlencoded" }

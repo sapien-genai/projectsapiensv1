@@ -91,6 +91,17 @@ Deno.serve(async (req) => {
       } else {
         const answer = await provider.ask(task.prompt);
         if (!answer.text.trim()) throw new Error("No answer returned.");
+        // Customer tasks store only these metrics. The study helper also returns
+        // competitors, which is not a column in the customer table.
+        const { mentioned, cited } = measureAnswer(
+          answer.text,
+          answer.citations,
+          {
+            business_name: project.business_name,
+            domain: project.domain,
+            competitors: [],
+          },
+        );
         checked(
           await admin.from("visibility_customer_tasks").update({
             status: "succeeded",
@@ -98,11 +109,8 @@ Deno.serve(async (req) => {
             citations: answer.citations,
             model: actualModel ?? answer.model,
             searched: answer.searched,
-            ...measureAnswer(answer.text, answer.citations, {
-              business_name: project.business_name,
-              domain: project.domain,
-              competitors: [],
-            }),
+            mentioned,
+            cited,
             finished_at: new Date().toISOString(),
           }).eq("id", task.id).eq("status", "running"),
         );
