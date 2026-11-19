@@ -206,3 +206,12 @@ Study provider requests allow 75 seconds per attempt (up to 150 seconds for the
 existing compatibility fallback). This matches the instant-report adapter default;
 interrupted claims still expire after three minutes. Initial pilot calls that
 exceeded the earlier 45-second allowance remain recorded as failures, not retried.
+
+
+### Customer workspace and business onboarding
+
+The existing `/ai-visibility/dashboard/` URL remains the customer workspace, preserving OAuth callbacks and checkout returns. Main-site navigation displays Sign in or My workspace according to the current session. The workspace has account navigation and links to reports, deliverables, tracking, business profile, and services/billing.
+
+After saving a report, customers can confirm a business name and provide service area, industry, employee range, and a main goal. Onboarding can be deferred and edited later. Context is stored per owned website in `visibility_projects.business_profile`; it does not rewrite saved report evidence, fixed questions, or baseline schedules, and it is not automatically sent to AI providers. The authenticated `save_profile` action validates field lengths and employee ranges and uses the existing ownership check before updating the selected website.
+
+Deploy migration `20261119193000_customer_business_profile.sql`, then `visibility-customer`, before the frontend. No new secrets or payment settings are required. Validate with `deno test --node-modules-dir=none supabase/functions/visibility-customer/profile_test.ts` plus the customer core tests, frontend typecheck/build, and desktop/mobile UI checks.

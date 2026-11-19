@@ -1,3 +1,4 @@
+import { businessProfile } from "./profile.ts";
 import { checked, db, env, siteOrigin, stripe } from "./shared.ts";
 import { fixedQuestions, type Product } from "./core.ts";
 import type { Report } from "../visibility-report/core/types.ts";
@@ -213,6 +214,13 @@ Deno.serve(async (req) => {
       ).eq("user_id", user.id).maybeSingle(),
     );
     if (!project) return json({ error: "Website not found." }, 404);
+    if (body.action === "save_profile") {
+      let profile: Record<string, string>;
+      try { profile = businessProfile(body.profile); }
+      catch (e) { return json({ error: e instanceof Error ? e.message : "Invalid profile." }, 400); }
+      checked(await admin.from("visibility_projects").update({ business_profile: profile }).eq("id", project.id).eq("user_id", user.id));
+      return json({ saved: true });
+    }
     if (body.action === "note") {
       const note = typeof body.note === "string" ? body.note.trim() : "";
       if (!note || note.length > 2000) {

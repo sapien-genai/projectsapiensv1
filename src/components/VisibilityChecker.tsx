@@ -136,7 +136,7 @@ export default function VisibilityChecker() {
       <p className="mt-6 text-sm text-[#526055]">This usually takes about a minute. You can leave this page open.</p>
     </div>}
 
-    {view.kind === 'done' && <div className="my-6 border-b border-[#172820]/20 pb-6"><a className={buttonClass} href={`/ai-visibility/dashboard/?report=${encodeURIComponent(view.id)}`}>Save to my dashboard</a><p className="mt-3 text-sm text-[#526055]">Sign in with Google or email. Save your free check, get a fix package, or start monthly tracking.</p></div>}
+    {view.kind === 'done' && <div className="my-6 border-b border-[#172820]/20 pb-6"><a className={buttonClass} href={`/ai-visibility/dashboard/?report=${encodeURIComponent(view.id)}`}>Save to my workspace</a><p className="mt-3 text-sm text-[#526055]">Sign in with Google or email. Save your free check, get a fix package, or start monthly tracking.</p></div>}
     {view.kind === 'done' && <Results preview={view.preview} report={view.report} busy={busy} onUnlock={unlock} onReset={reset} />}
     {error && <p role="alert" className="mt-5 rounded-lg border border-red-800/30 p-4 text-sm text-red-900">{error}</p>}
   </section>;

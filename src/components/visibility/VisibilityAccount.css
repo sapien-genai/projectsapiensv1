@@ -376,3 +376,31 @@
 .visibility-account main {
   margin-inline: auto;
 }
+
+/* Customer workspace uses the company identity with task-focused navigation. */
+.va-workspace-header, .va-workspace-footer {
+  width: 90%; max-width: 1440px; margin: auto; padding: 1.5rem 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  border-bottom: 1px solid #17282025;
+}
+.va-workspace-header img { width: 150px; height: auto; }
+.va-workspace-header nav, .va-workspace-footer nav, .va-workspace-nav {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem;
+}
+.va-workspace-header a, .va-workspace-footer a, .va-workspace-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.va-workspace-nav { padding: 1rem 0; border-bottom: 1px solid #17282025; }
+.va-workspace-nav a { text-decoration: underline; text-underline-offset: 5px; }
+.va-workspace-footer { border-top: 1px solid #17282025; border-bottom: 0; font-size: .875rem; }
+.visibility-account .va-heading { padding: 2.5rem 0 2rem; }
+.visibility-account .va-heading h1 { font-size: clamp(2.3rem,4vw,3.6rem); }
+.visibility-account section[id] { scroll-margin-top: 1.5rem; }
+.va-profile-form, .va-profile-summary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem 2rem; margin-top: 1.5rem; }
+.va-profile-goal, .va-profile-form .va-toolbar { grid-column: 1 / -1; }
+.va-profile-form .va-toolbar { margin: 0; }
+.va-profile-summary dt { font-size: .875rem; color: #526055; }
+.va-profile-summary dd { margin: .3rem 0 1rem; }
+@media(max-width:600px) {
+  .va-workspace-header, .va-workspace-footer { align-items: flex-start; flex-direction: column; gap: .75rem; }
+  .va-workspace-header nav, .va-workspace-nav { gap: .5rem 1.25rem; }
+  .va-profile-form, .va-profile-summary { grid-template-columns: minmax(0,1fr); }
+}
