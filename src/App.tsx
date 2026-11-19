@@ -9,6 +9,8 @@ const PartnerNetworkPage = lazy(() => import('./components/PartnerNetworkPage'))
 const AboutPage = lazy(() => import('./components/CompanyAboutPage'));
 const FieldNotesPage = lazy(() => import('./components/FieldNotesPage'));
 
+const VisibilityAccount = lazy(() => import('./components/visibility/VisibilityAccount'));
+
 const AcademyApp = lazy(() => import('./AcademyApp'));
 
 /** `path` is supplied by the build-time pre-renderer; in the browser it comes from the address bar. */
@@ -25,6 +27,7 @@ export default function App({ path: fixedPath }: { path?: string }) {
   if (path === '/terms' || path === '/privacy') return <Suspense fallback={<div role="status" className="p-8">Loading…</div>}><CompanyLegalPage kind={path === '/terms' ? 'terms' : 'privacy'} /></Suspense>;
   if (path === '/work-with-us') return <WorkWithUsPage />;
   if (path === '/custom-ai-agents' || path === '/voice-ai-development') return <ServicePage slug={path.slice(1)} />;
+  if (path === '/ai-visibility/dashboard' || path === '/ai-visibility/login') return <Suspense fallback={<div className="min-h-screen bg-[#f4f2ec] p-8 text-[#172820]" role="status">Loading your visibility dashboard…</div>}><VisibilityAccount /></Suspense>;
   if (path === '/ai-visibility') return <AiVisibilityPage />;
   return <Suspense fallback={<div className="min-h-screen bg-surface p-8">Loading learning platform…</div>}><AcademyApp /></Suspense>;
 }

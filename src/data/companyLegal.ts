@@ -6,8 +6,16 @@ export const companyLegal = {
       [
         "About these terms",
         [
-          "These Terms of Service apply to the public company website at projectsapiens.ai, including our company information, Field Notes, and project inquiry form. The website is operated by Project Sapiens, Inc. (“Project Sapiens,” “we,” “us,” or “our”). By using this website, you agree to these terms. If you do not agree, please stop using the website.",
+          "These Terms of Service apply to the public company website at projectsapiens.ai, including our company information, Field Notes, project inquiry form, and self-service AI visibility dashboard. The website is operated by Project Sapiens, Inc. (“Project Sapiens,” “we,” “us,” or “our”). By using this website, you agree to these terms. If you do not agree, please stop using the website.",
           "Paid consulting, development, and advisory work is governed by a separate written agreement. These website terms do not replace an agreed statement of work, confidentiality agreement, or data-processing agreement. Our learning platform and other products have their own applicable terms."
+        ]
+      ],
+      [
+        "Self-service AI visibility purchases",
+        [
+          "The price and scope shown at checkout apply to your purchase. The one-time fix package provides AI-generated website drafts, recommendations, and a publishing checklist based on your saved report. You are responsible for reviewing facts and publishing changes. It does not include website implementation, professional advice, or guaranteed placement, recommendations, traffic, or scores.",
+          "Monthly tracking renews at the checkout price until canceled through the dashboard billing portal. Each paid monthly period includes one measurement of the saved question set across the listed assistants. Provider failures and configuration changes are shown in the results; failed tests are not scored as zero. Cancellation stops future renewals. Your saved results remain available in your account.",
+          "Payments are processed by Stripe. If a paid package cannot be delivered, contact tony@projectsapiens.xyz for recovery or a refund. Nothing in these terms limits rights you may have under applicable consumer law. Separate consulting or implementation work requires its own agreement."
         ]
       ],
       [
@@ -88,6 +96,14 @@ export const companyLegal = {
           "The instant AI visibility report on our website tests a website address you enter. To run it, we fetch public pages from that address and send the address, text from those public pages, and questions about the business to OpenAI, Anthropic, and Google through their developer APIs. Their handling of that data is governed by their own terms. Please enter only a public business website.",
           "We store the resulting report. To limit abuse we also store a one-way hash of the requesting IP address. If you enter an email address to unlock the full report, we store it with that report and may contact you about the results. We also forward your email, the business domain, the score, and a report link through our existing contact-form service to notify our team. Anyone with a report’s link can view it at the level it has been unlocked.",
           "You can ask us to delete a report or the email address attached to it using the contact details below."
+        ]
+      ],
+      [
+        "Visibility accounts and purchases",
+        [
+          "We use Supabase to authenticate accounts with Google or an email sign-in link, and to store your saved reports, fixed questions, monthly answers and citations, generated fix packages, and change notes. Google sign-in shares basic account information such as your email address. Your browser stores the authentication session and may temporarily store a report identifier so you can save it after signing in.",
+          "Stripe processes payments and billing. We store payment and subscription identifiers and status, not your full card details. Paid fix packages use report information with OpenAI to generate draft improvements. Tracking sends your saved questions to OpenAI, Anthropic, and Google. These providers process that information under their own terms.",
+          "Dashboard records are restricted to your account and authorized service operations. The original free report remains a shareable report, as described above. Contact tony@projectsapiens.xyz to request account or report deletion; we may retain records required for billing, legal obligations, or dispute resolution."
         ]
       ],
       [
