@@ -5,7 +5,7 @@ import { normalizeUrl, isPrivateAddress, safeFetch, InputError } from '../supaba
 import { blockedCrawlers, structuredDataTypes, visibleText } from '../supabase/functions/visibility-report/core/site.ts';
 import { anthropic, gemini, openai } from '../supabase/functions/visibility-report/core/providers.ts';
 import { deliverLead } from '../supabase/functions/visibility-report/core/notification.ts';
-import { mentions, parseJson, runReport, toPreview } from '../supabase/functions/visibility-report/core/pipeline.ts';
+import { mentions, parseJson, runReport, toPreview, readableReport } from '../supabase/functions/visibility-report/core/pipeline.ts';
 
 // --- address handling -------------------------------------------------------
 assert.deepEqual(normalizeUrl('Acme-Dental.com'), { url: 'https://acme-dental.com/', domain: 'acme-dental.com' });
@@ -97,13 +97,13 @@ function setup(world: World) {
     assert.deepEqual(a.competitors, ['Brookside Smiles'], 'The business is never listed as its own competitor');
     assert.equal(a.discovery.length, 2);
   }
-  assert.equal(report.overall, Math.round(90 * .3 + 100 * .3 + 80 * .2 + 100 * .2));
+  assert.equal(report.overall, null, "Unlike measures are not blended into a visibility score");
   assert.ok(report.method.includes('web search enabled'));
   const preview = toPreview(report);
   const serialized = JSON.stringify(preview);
-  for (const secret of ['Brookside', 'emergency hours', 'Good options include', 'recognitionAnswer', 'checks', 'recommendations":['])
+  for (const secret of ['Brookside', 'emergency hours', 'Good options include', 'recognitionAnswer', '"checks":', 'recommendations":['])
     assert.ok(!serialized.includes(secret), `Preview must not leak "${secret}"`);
-  assert.deepEqual(preview.locked, { issues: 3, competitors: 1, recommendations: 1, failedChecks: 0, answers: 9 });
+  assert.deepEqual(preview.locked, { issues: 3, competitors: 1, recommendations: 4, failedChecks: 0, answers: 9 });
   assert.equal(preview.assistants[0].scores.recognition, 90);
 }
 
@@ -116,9 +116,9 @@ function setup(world: World) {
   assert.ok(report.signals.checks.find(c => c.id === 'ai-crawlers')!.detail.includes('GPTBot'));
   assert.equal(report.assistants[0].scores.recognition, 0);
   assert.equal(report.assistants[0].scores.accuracy, null, 'Nothing to be accurate about');
-  assert.ok(report.overall < 40, `expected a low score, got ${report.overall}`);
+  assert.equal(report.overall, null);
   const titles = report.recommendations.map(r => r.title).join(' | ');
-  assert.ok(titles.includes('Serve your content as HTML') && titles.includes('Stop blocking AI crawlers') && titles.includes('State plainly who you are'));
+  assert.ok(titles.includes('Serve your content as HTML') && titles.includes('Review crawler rules') && titles.includes('State plainly who you are'));
   assert.equal(report.recommendations[0].priority, 'high');
 }
 
@@ -132,7 +132,7 @@ function setup(world: World) {
   assert.ok(geminiResult.searched);
   assert.ok(report.method.includes('where the provider allowed it'));
   assert.equal(toPreview(report).assistants[0].failed, true);
-  assert.ok(report.overall > 0);
+  assert.equal(report.overall, null);
 }
 
 // --- hostile targets ---------------------------------------------------------
@@ -205,3 +205,24 @@ for (const failure of ['network', '403', '503']) {
   assert.equal(legacy.recommendations.some(r => r.title.includes('meta description')), false);
 }
 console.log('Verified public Beacon addresses, unavailable checks, ungraded answers and legacy report repair.');
+
+// Historical reports are presented with the same bounded scope, without new calls.
+{
+  const { deps } = setup({ page: goodPage, sitemap: true, llms: true });
+  const report = await runReport('acme-dental.com', 'https://acme-dental.com/', deps);
+  report.overall = 98;
+  report.verdict = 'AI assistants know this business well and can read the site.';
+  report.signals.checks.push({id:'heading',label:'Main heading',passed:false,weight:5,detail:'No h1'});
+  const corrected = readableReport(report);
+  assert.equal(corrected.overall, null);
+  assert.ok(corrected.recommendations.some(r => r.title.includes('main heading')));
+  const preview = toPreview(report);
+  assert.equal(preview.assistants[0].mentions, 2);
+  assert.equal(preview.assistants[0].discoveryAnswers, 2);
+  assert.equal(preview.assistants[0].expectedDiscovery, 2);
+  assert.equal(preview.overall, null);
+  report.assistants[0].discovery.pop();
+  assert.equal(toPreview(report).assistants[0].discoveryAnswers, 1);
+  assert.equal(toPreview(report).assistants[0].expectedDiscovery, 2);
+  assert.equal(report.overall, 98, 'Stored historical data is not mutated');
+}

@@ -18,7 +18,7 @@ const STEPS = [
   ['site', 'Reading your site the way a crawler does'],
   ['profile', 'Working out what your business offers'],
   ['assistants', 'Asking ChatGPT, Claude, and Gemini about you'],
-  ['scoring', 'Scoring the answers'],
+  ['scoring', 'Summarizing the evidence'],
 ] as const;
 
 interface ApiResult { id?: string; status?: 'running' | 'complete' | 'failed'; progress?: string; unlocked?: boolean; preview?: ReportPreview; report?: Report; error?: string }
@@ -39,8 +39,6 @@ async function api(body: Record<string, unknown>): Promise<ApiResult> {
 const inputClass = 'block min-h-12 w-full rounded-lg border border-[#172820]/30 bg-white px-4 py-3 text-base text-[#172820] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#68745b]';
 const buttonClass = 'inline-flex min-h-12 shrink-0 items-center justify-center gap-3 rounded-full bg-[#111] px-6 py-3 font-semibold text-white hover:bg-[#2b4032] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-wait disabled:opacity-70';
 const eyebrow = 'text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]';
-const score = (value: number | null) => value === null ? 'n/a' : String(value);
-const tone = (value: number | null) => value === null ? 'text-[#8a9189]' : value >= 70 ? 'text-[#16745e]' : value >= 40 ? 'text-[#8a6a00]' : 'text-[#a33a2a]';
 const host = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } };
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
@@ -153,31 +151,33 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
     <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr_auto] md:items-center">
-      <p className="flex items-baseline gap-2"><span className={`text-7xl font-semibold tracking-[-0.05em] ${tone(preview.overall)}`}>{score(preview.overall)}</span><span className="text-xl text-[#526055]">/ 100</span><span className="sr-only"> overall AI visibility score</span></p>
-      <p className="max-w-md text-lg leading-snug text-[#172820]">{preview.verdict}</p>
-      {/* The flock holds together as tightly as the score: loose when assistants know little, tight when they know the business well. */}
-      <Flock formation="cluster" count={34} size={6} cohesion={typeof preview.overall === 'number' ? preview.overall / 100 : .15} className="hidden h-32 w-56 md:block" />
+      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. A page fetch and basic HTML checks. No combined visibility score.</p></div>
+      <Flock formation="cluster" count={34} size={6} cohesion={.5} className="hidden h-32 w-56 md:block" />
     </div>
     <div className="mt-8 overflow-x-auto">
       <table className="w-full min-w-[420px] border-collapse text-left text-sm">
-        <caption className="sr-only">Scores out of 100 for each assistant</caption>
-        <thead><tr className="border-b border-[#172820]/20 text-xs uppercase tracking-[0.12em] text-[#68745b]"><th scope="col" className="py-3 pr-4 font-bold">Assistant</th><th scope="col" className="py-3 pr-4 font-bold">Knows you</th><th scope="col" className="py-3 pr-4 font-bold">Recommends you</th><th scope="col" className="py-3 font-bold">Gets you right</th></tr></thead>
+        <caption className="pb-3 text-left text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</caption>
+        <thead><tr className="border-b border-[#172820]/20 text-xs uppercase tracking-[0.12em] text-[#68745b]"><th scope="col" className="py-3 pr-4">Assistant</th><th scope="col" className="py-3 pr-4">Identity assessment</th><th scope="col" className="py-3 pr-4">Category mentions</th><th scope="col" className="py-3">Fact review</th></tr></thead>
         <tbody>{preview.assistants.map(assistant => <tr key={assistant.id} className="border-b border-[#172820]/10">
-          <th scope="row" className="py-4 pr-4 text-base font-semibold">{assistant.label}</th>
-          {assistant.failed ? <td colSpan={3} className="py-4 text-[#526055]">Could not be tested this time.</td> : (['recognition', 'discovery', 'accuracy'] as const).map(key => <td key={key} className={`py-4 pr-4 text-xl font-semibold ${tone(assistant.scores[key])}`}>{score(assistant.scores[key])}</td>)}
-        </tr>)}
-        <tr><th scope="row" className="py-4 pr-4 text-base font-semibold">Your website</th><td colSpan={3} className="py-4"><span className={`text-xl font-semibold ${tone(preview.signalsScore)}`}>{preview.signalsScore ?? 'N/A'}</span><span className="ml-3 text-[#526055]">How readable the site is to AI crawlers</span></td></tr></tbody>
+          <th scope="row" className="py-4 pr-4 font-semibold">{assistant.label}</th>
+          {assistant.failed ? <td colSpan={3} className="py-4">Could not be tested this time.</td> : <>
+            <td className="py-4 pr-4">{assistant.scores.recognition === null ? 'Not assessed' : assistant.scores.recognition >= 80 ? 'Identified the business' : assistant.scores.recognition >= 20 ? 'Partial identification' : 'Not clearly identified'}</td>
+            <td className="py-4 pr-4">{assistant.mentions === undefined ? 'See collected answers' : `${assistant.mentions} of ${assistant.discoveryAnswers} returned answers`}<span className="block text-xs text-[#526055]">{assistant.expectedDiscovery !== undefined && `${assistant.discoveryAnswers}/${assistant.expectedDiscovery} category answers received`}</span></td>
+            <td className="py-4">{assistant.scores.accuracy === null ? 'Not assessed' : 'Automated only'}<span className="block text-xs text-[#526055]">Not independently verified</span></td>
+          </>}
+        </tr>)}</tbody>
       </table>
     </div>
+    <div className="mt-6 rounded-xl border border-[#172820]/15 p-5 text-sm text-[#526055]"><h3 className="font-semibold text-[#172820]">What this does not establish</h3><p className="mt-2">Mention detection checks the business name or matching website domain in the answer or its sources; a parent-domain citation may not identify the specific location. Mentions may be positive, neutral, or negative. We did not grade endorsement, ranking, or suitability. Identity and fact assessments compare answers with a short website-derived summary. Broader discovery, independently verified accuracy, access by every crawler, and successful customer tasks remain untested. The questions are not an independent sample of your market.</p></div>
 
     {!report && <div className="mt-8 rounded-xl border border-[#172820]/15 bg-[#f4f2ec] p-6 md:p-8">
       <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Unlock the full report</h3>
       <ul className="mt-4 grid gap-2 text-[#526055] sm:grid-cols-2">
-        <li>{plural(locked.answers, 'answer', 'answers')} from the assistants, word for word</li>
+        <li>{plural(locked.answers, 'answer', 'answers')} from the assistants, as recorded (answers may be truncated)</li>
         <li>{plural(locked.competitors, 'competitor', 'competitors')} named in your category</li>
-        <li>{plural(locked.issues, 'gap or error', 'gaps and errors')} in how you are described</li>
+        <li>{plural(locked.issues, 'potential gap to verify', 'potential gaps to verify')} in how you are described</li>
         <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} your site did not pass</li>
-        <li>{plural(locked.recommendations, 'recommended change', 'recommended changes')}, in priority order</li>
+        <li>{plural(locked.recommendations, 'next step', 'next steps')}, in priority order</li>
       </ul>
       <form onSubmit={onUnlock} className="mt-6 flex max-w-xl flex-col gap-3 sm:flex-row" aria-label="Unlock the full report">
         <label className="sr-only" htmlFor="visibility-email">Your email address</label>
@@ -200,7 +200,7 @@ function Sources({ citations }: { citations: Array<{ url: string; title?: string
 function FullReport({ report }: { report: Report }) {
   return <div className="mt-10 space-y-12">
     <div>
-      <h3 className="text-xl font-semibold">What to change first</h3>
+      <h3 className="text-xl font-semibold">Findings and next steps</h3>
       {report.recommendations.length ? <ol className="mt-4 space-y-4">{report.recommendations.map(item => <li key={item.title} className="border-l-2 border-[#16745e] pl-4">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#68745b]">{item.priority} priority</p>
         <p className="mt-1 font-semibold text-[#172820]">{item.title}</p><p className="mt-1 text-[#526055]">{item.detail}</p>
@@ -213,19 +213,19 @@ function FullReport({ report }: { report: Report }) {
         <h4 className="text-lg font-semibold">{assistant.label}</h4>
         {assistant.error ? <p className="mt-2 text-[#526055]">{assistant.error}</p> : <>
           {assistant.summary && <p className="mt-2 text-[#172820]">{assistant.summary}</p>}
-          {assistant.issues.length > 0 && <><p className={`${eyebrow} mt-5`}>Gaps and errors</p><ul className="mt-2 list-disc space-y-1 pl-5 text-[#526055]">{assistant.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></>}
-          {assistant.competitors.length > 0 && <><p className={`${eyebrow} mt-5`}>Others it recommended</p><p className="mt-2 text-[#526055]">{assistant.competitors.join(', ')}</p></>}
+          {assistant.issues.length > 0 && <><p className={`${eyebrow} mt-5`}>Potential gaps to verify</p><ul className="mt-2 list-disc space-y-1 pl-5 text-[#526055]">{assistant.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></>}
+          {assistant.competitors.length > 0 && <><p className={`${eyebrow} mt-5`}>Other businesses named (automated extraction)</p><p className="mt-2 text-[#526055]">{assistant.competitors.join(', ')}</p></>}
           <details className="mt-5"><summary className="cursor-pointer font-semibold underline underline-offset-4">Asked: “What is {report.profile.name}?”</summary>
             <p className="mt-3 whitespace-pre-wrap text-[#526055]">{assistant.recognitionAnswer || 'No answer was returned.'}</p><Sources citations={assistant.recognitionCitations} /></details>
           {assistant.discovery.map(item => <details key={item.query} className="mt-3"><summary className="cursor-pointer font-semibold underline underline-offset-4">Asked: “{item.query}” <span className={item.mentioned ? 'text-[#16745e]' : 'text-[#a33a2a]'}>({item.mentioned ? 'you were mentioned' : 'you were not mentioned'})</span></summary>
             <p className="mt-3 whitespace-pre-wrap text-[#526055]">{item.answer}</p><Sources citations={item.citations} /></details>)}
-          {!assistant.searched && <p className="mt-4 text-sm text-[#526055]">This assistant answered from what it already knew, without searching the web.</p>}
+          {!assistant.searched && <p className="mt-4 text-sm text-[#526055]">Search was not observed for the business-description answer.</p>}
         </>}
       </article>)}</div>
     </div>
 
     <div>
-      <h3 className="text-xl font-semibold">How readable your site is</h3>
+      <h3 className="text-xl font-semibold">Page checks from our fetch</h3>
       <ul className="mt-4 divide-y divide-[#172820]/10">{report.signals.checks.map(check => <li key={check.id} className="flex gap-3 py-3">
         {check.passed === null ? <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">—</span> : check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <X size={20} className="mt-0.5 shrink-0 text-[#a33a2a]" aria-hidden="true" />}
         <div><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>

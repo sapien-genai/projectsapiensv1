@@ -60,7 +60,10 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
     assert.equal(preview.preview.overall, null);
     assert.ok(!JSON.stringify(preview).includes('Private recommendation'));
     const unlocked = await call({action: 'unlock', id: row.id, email: 'first@example.com'});
-    assert.equal((await unlocked.json()).report.recommendations[0].title, 'Private recommendation');
+    const full = await unlocked.json();
+    assert.ok(full.report.recommendations.some((r: {title: string}) => r.title === 'Verify important claims against authoritative pages'));
+    assert.equal(full.report.overall, null);
+    assert.equal(preview.preview.recommendations, undefined);
     await call({action: 'unlock', id: row.id, email: 'second@example.com'});
     assert.equal(row.email, 'first@example.com');
     assert.ok((await (await call({action:'status',id:row.id})).json()).report);

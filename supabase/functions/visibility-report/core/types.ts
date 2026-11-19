@@ -38,7 +38,7 @@ export interface ReportPreview {
   version: 1; domain: string; generatedAt: string; overall: number | null; verdict: string;
   business: { name: string; category: string };
   signalsScore: number | null;
-  assistants: Array<Pick<AssistantResult, 'id' | 'label' | 'scores' | 'searched'> & { failed: boolean }>;
+  assistants: Array<Pick<AssistantResult, 'id' | 'label' | 'scores' | 'searched'> & { failed: boolean; mentions?: number; discoveryAnswers?: number; expectedDiscovery?: number }>;
   locked: { issues: number; competitors: number; recommendations: number; failedChecks: number; answers: number };
   method: string;
 }
