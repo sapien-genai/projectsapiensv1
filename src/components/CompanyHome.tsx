@@ -3,6 +3,7 @@ import CompanyFooter from './CompanyFooter';
 import { ArrowUpRight } from 'lucide-react';
 import { useEffect } from 'react';
 import CompanyHeader from './CompanyHeader';
+import VisibilityChecker from './VisibilityChecker';
 import OpenAISolutions from './OpenAISolutions';
 import ClientInquiryForm from './ClientInquiryForm';
 import HeroSculpture from './HeroSculpture';
@@ -73,6 +74,8 @@ export default function CompanyHome() {
 </li>)}
 </ol>
 </div>
+<div className="mt-10 md:mt-12"><VisibilityChecker openReportPage /></div>
+<p className="sp-report-account mt-6 text-[#526055]">Already have an account? <a className="font-semibold underline underline-offset-4" href="/ai-visibility/dashboard/">Open your workspace</a>.</p>
 </section>
 <section className="work" id="work">
 <div className="wrap">
