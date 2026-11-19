@@ -1,6 +1,6 @@
 # Project Sapiens
 
-> Project Sapiens, Inc. is an independent AI consultancy and product studio founded by Tony Marks. It helps businesses and professionals understand how AI assistants describe them, and builds practical AI products, agents, and voice experiences. Project Sapiens is a member of the OpenAI Partner Network.
+> Project Sapiens, Inc. is an independent AI product studio and advisory firm founded by Tony Marks. It builds custom AI agents, voice AI experiences, and practical products with OpenAI technology. Engagements include focused projects, fractional AI leadership, and ongoing advisory. AI brand visibility is a related diagnostic service; the academy is a separate learning resource. Project Sapiens is a member of the OpenAI Partner Network and an independent implementation partner.
 
 ## Services
 
