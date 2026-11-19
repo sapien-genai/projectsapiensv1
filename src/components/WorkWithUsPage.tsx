@@ -27,10 +27,14 @@ export default function WorkWithUsPage() {
       <header className="company-hero py-20 md:py-28">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">Work with us</p>
         <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl md:text-7xl">From a promising AI idea to a product people can use.</h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-[#526055]">We work with founders, product teams, and established organizations that need experienced help defining, building, and improving AI products. We offer project-based engagements, fractional AI leadership, and ongoing advisory retainers through Project Sapiens, Inc.</p>
+        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-[#526055]">Project Sapiens is an independent AI product studio and advisory firm. We work with founders, product teams, and established organizations to build custom AI agents, voice AI experiences, and practical products with OpenAI technology. We offer project-based engagements, fractional AI leadership, and ongoing advisory retainers through Project Sapiens, Inc.</p>
         <a href="#contact" className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`}>Tell us about your project <ArrowUpRight aria-hidden="true" size={19} /></a>
       </header>
     <OpenAISolutions />
+    <Section label="How our offers fit together" title="Practical products. Clear next steps.">
+      <p>Our core work is AI product strategy and development, including <a className={linkStyle} href="/custom-ai-agents/">custom AI agents</a> and <a className={linkStyle} href="/voice-ai-development/">voice AI experiences</a>. We define the use case, connect the systems behind it, and evaluate how it works.</p>
+      <p><a className={linkStyle} href="/ai-visibility/">AI brand visibility</a> is a related diagnostic service: a free check, optional draft fix package, and monthly tracking. The package does not include publishing website changes. Our <a className={linkStyle} href="/academy/login">academy</a> is a separate learning resource.</p>
+    </Section>
     <Section label="Where we can help" title="Start with the decision you need to make.">
       {[
         ['Define the right product', 'You see an opportunity for AI but need to decide what to build. We can work through the user need, available data, technical options, and the evidence a prototype should produce.', 'Typical focus: use-case assessment, product scope, architecture, and an evaluation plan.'],

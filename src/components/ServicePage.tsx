@@ -41,7 +41,7 @@ export default function ServicePage({ slug }: { slug: string }) {
       <section className="border-t border-[#172820]/20 py-12 md:py-16" aria-labelledby="experience-title">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">The people behind the product</p>
         <h2 id="experience-title" className="mt-5 text-3xl font-semibold tracking-tight">Strategy and implementation, connected.</h2>
-        <p className="mt-5 max-w-3xl leading-relaxed text-[#526055]">Founded by Tony Marks, Project Sapiens brings experience in conversational AI, voice interfaces, and digital products to the work of building useful software. Engagements can take the form of focused projects, fractional AI leadership, or ongoing advisory.</p>
+        <p className="mt-5 max-w-3xl leading-relaxed text-[#526055]">Founded by Tony Marks, Project Sapiens brings his experience in conversational AI, voice interfaces, and digital products to the work of building useful software. Earlier Sapien AI projects reflect Tony’s work and the work of that team. Engagements can take the form of focused projects, fractional AI leadership, or ongoing advisory.</p>
         <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4"><a className={linkStyle} href="/about/">Meet Tony and explore his experience</a><a className={linkStyle} href="https://tonymarks.com/work/hotline-sports/">Read the Hotline Sports case study</a><a className={linkStyle} href="/work-with-us/">How we work together</a></div>
       </section>
       <section className="border-t border-[#172820]/20 py-12 md:py-16" aria-labelledby="questions-title">

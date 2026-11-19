@@ -1,10 +1,10 @@
 export const SERVICES = [
   {
     slug: 'custom-ai-agents', name: 'Custom AI agents',
-    title: 'Custom AI Agent Development — Project Sapiens',
+    title: 'Custom AI Agent Development for Business — Project Sapiens',
     description: 'Custom OpenAI agents, knowledge assistants, and connected workflows. Project Sapiens brings strategy, design, integration, and evaluation from prototype to production.',
-    headline: 'Custom AI agents. Built around your work.',
-    intro: 'Project Sapiens designs and builds custom AI agents for businesses: knowledge assistants that find useful answers, and workflow agents that connect those answers to action. We bring OpenAI technology together with your information, tools, and the people responsible for the result.',
+    headline: 'Custom AI agent development. Built around your work.',
+    intro: 'Project Sapiens designs and builds custom AI agents for business workflows: knowledge assistants, connected workflow agents, and document and intake tools. We bring OpenAI technology together with approved information, agreed integrations, and the people responsible for the result.',
     audience: 'For founders, product teams, and established organizations with a workflow to improve or a product to build. You may be starting with an idea, replacing a manual process, or taking an existing prototype toward production.',
     examples: [
       ['Knowledge assistants', 'Help customers or colleagues find answers in approved documents. Show source references, respect access boundaries, and provide a route to a person when the information is missing.'],
@@ -13,7 +13,7 @@ export const SERVICES = [
     ],
     workflow: ['A customer inquiry arrives', 'The agent finds context and prepares an update', 'Your team reviews and approves the next step'],
     deliverables: [
-      ['A defined use case', 'A shared scope, workflow map, and acceptance criteria grounded in the job the agent needs to do.'],
+      ['A defined use case', 'A shared scope, workflow map, and acceptance criteria grounded in the job the agent needs to do. We define which information it can use, which systems it can access, when a person must approve an action, and where the agent should stop or hand off.'],
       ['A working product', 'The agent experience, agreed data and tool integrations, and an interface that fits the people using it.'],
       ['Evidence of performance', 'Representative test cases and an evaluation of answer quality, tool use, failure handling, latency, and operating cost.'],
       ['A path to operation', 'Deployment and handover documentation, monitoring requirements, and agreed responsibilities for maintenance and ongoing improvement.'],
