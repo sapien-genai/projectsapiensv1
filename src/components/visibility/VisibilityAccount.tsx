@@ -364,20 +364,14 @@ export default function VisibilityAccount() {
                           Saved free check · {date(project.report.generatedAt)}
                         </p>
                         <h2>{project.business_name}</h2>
-                        <p>{project.report.verdict}</p>
+                        <p>A snapshot of business descriptions, category mentions, and page checks. Review the original questions and answers before drawing conclusions.</p>
                         <p className="va-small">
-                          The instant score is a snapshot. Monthly tracking uses
+                          The instant check is a snapshot. Monthly tracking uses
                           a separate fixed set of questions, with mentions and
                           citations shown alongside coverage.
                         </p>
                       </div>
-                      <div className="va-score">
-                        <strong>
-                          {project.report.overall ?? "—"}
-                          <small>/100</small>
-                        </strong>
-                        <span>Instant report score</span>
-                      </div>
+                      <div className="va-score"><a className="va-link" href={`/ai-visibility/?report=${project.report_id || ''}`}>View report evidence</a><span>No combined visibility rating</span></div>
                     </section>
                     <section
                       id="services" className="va-products"

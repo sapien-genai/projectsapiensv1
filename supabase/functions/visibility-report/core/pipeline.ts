@@ -130,24 +130,24 @@ export function recommend(site: SiteSignals, assistants: AssistantResult[], prof
   const recognition = average(tested.map(a => a.scores.recognition));
   const discovery = average(tested.map(a => a.scores.discovery));
   if (failed.has('reachable')) list.push({ priority: 'high', title: 'Retry the website check before drawing conclusions', detail: 'Our request could not read the homepage. Website and description scores are unavailable. This may be a problem with our checker or the connection; it does not prove that the site blocks AI crawlers.' });
+  if (!site.reachable) return list;
   if (failed.has('static-content') && !failed.has('reachable')) list.push({ priority: 'high', title: 'Serve your content as HTML, not only through JavaScript', detail: 'Almost none of the page text exists before scripts run. Pre-render or server-render the key pages so crawlers that skip JavaScript can read what you do.' });
-  if (failed.has('ai-crawlers')) list.push({ priority: 'high', title: 'Stop blocking AI crawlers in robots.txt', detail: 'Your robots.txt shuts out one or more assistant crawlers. An assistant that cannot read your site falls back on what others say about you.' });
+  if (failed.has('ai-crawlers')) list.push({ priority: 'high', title: 'Review crawler rules in robots.txt', detail: 'Our robots.txt check found a restriction for a checked user agent. Review its purpose before changing it; search discovery and model-training permissions are different. This does not test actual access by each provider.' });
   if (recognition !== null && recognition < 50) list.push({ priority: 'high', title: 'State plainly who you are and what you do', detail: `Assistants struggled to identify ${profile.name}. Put a one-paragraph description on the homepage and an About page: the name, what you offer, who it is for, and where you operate.` });
   if (failed.has('structured-data')) list.push({ priority: 'medium', title: 'Add structured data that names the business', detail: 'Add schema.org Organization or LocalBusiness markup with your name, URL, logo, and profiles, so machines can tie the site to one entity.' });
   if (discovery !== null && discovery < 50) list.push({ priority: 'medium', title: 'Get named where assistants look for your category', detail: 'When asked about your category, assistants recommended others. Review the sources they cited, and pursue listings, reviews, and coverage in the places those answers draw from.' });
   if (tested.some(a => a.issues.length)) list.push({ priority: 'medium', title: 'Correct the facts assistants get wrong', detail: 'Publish the correct details in plain sentences on your own site, then update the outside profiles and directories that still carry the old version.' });
   if (failed.has('title-description')) list.push({ priority: 'medium', title: 'Write a specific title and meta description', detail: 'These are often the first thing a system reads about a page. Say what you do and for whom in one or two sentences.' });
   if (failed.has('sitemap')) list.push({ priority: 'low', title: 'Publish a sitemap', detail: 'A sitemap.xml helps crawlers find every page you want read.' });
-  if (failed.has('llms-txt')) list.push({ priority: 'low', title: 'Consider an llms.txt summary', detail: 'A short plain-text overview of the business and its key pages. It is an emerging convention and optional.' });
+  if (failed.has('heading')) list.push({ priority: 'medium', title: 'Check the page’s main heading', detail: 'Our HTML check found no h1. Inspect the rendered page and add a clear main heading if missing. This improves page structure; it does not guarantee AI mentions.' });
+  list.push({ priority: 'medium', title: 'Verify important claims against authoritative pages', detail: 'Review the collected answers and cited sources for your location, services, hours and customer actions. Automated comparison with a short website summary is not a comprehensive fact check. Correct confirmed errors; do not assume every suggested gap is an error.' });
+  list.push({ priority: 'medium', title: 'Test a broader, fixed set of customer questions', detail: 'These category questions were generated from your website and asked once. Choose questions customers actually ask, including broader discovery queries, and repeat the same set on separate days. Record mentions, sources and missing answers separately; a mention is not an endorsement.' });
+  list.push({ priority: 'low', title: 'Check customer paths before making changes', detail: 'Test whether an agent can find the right service, contact or booking destination. This report did not test navigation or task completion. Avoid submitting appointments, payments or personal data during these checks.' });
   return list;
 }
 
-function verdictFor(overall: number | null): string {
-  if (overall === null) return 'The AI measurements are incomplete. Review the collected answers; an overall score is unavailable.';
-  if (overall >= 80) return 'AI assistants know this business well and can read the site.';
-  if (overall >= 60) return 'AI assistants recognize this business, with gaps worth closing.';
-  if (overall >= 40) return 'AI assistants have a partial picture of this business.';
-  return 'AI assistants know little about this business today.';
+function verdictFor(_overall: number | null): string {
+  return 'A limited snapshot of business descriptions, category mentions, and page checks—not an overall visibility or agent-readiness rating. Missing tests remain incomplete.';
 }
 
 export async function runReport(domain: string, url: string, deps: PipelineDeps): Promise<Report> {
@@ -162,17 +162,9 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
   await deps.onProgress?.('scoring');
   const tested = assistants.filter(a => !a.error);
   if (!tested.length) throw new Error('No assistant could be reached.');
-  // An assistant that does not know the business has nothing to be accurate about, which counts as zero.
-  const weighted: Array<[number | null, number]> = [
-    [average(tested.map(a => a.scores.recognition)), 0.3], [average(tested.map(a => a.scores.discovery)), 0.3],
-    [average(tested.map(a => a.scores.recognition === null ? null : a.scores.accuracy ?? 0)), 0.2], [site.score, 0.2],
-  ];
-  // Never turn missing AI measurements into a confident score based on HTML alone.
-  const completeMeasurements = site.score !== null && profile.queries.length === 2 && tested.every(a =>
-    a.discovery.length === 2 && a.scores.recognition !== null && a.scores.discovery !== null &&
-    (a.scores.recognition < 20 || a.scores.accuracy !== null));
-  const overall = completeMeasurements
-    ? Math.round(weighted.reduce((sum, [value, weight]) => sum + (value ?? 0) * weight, 0)) : null;
+  // Recognition grades, mention rates and HTML checks measure different things.
+  // Do not blend them into an overall claim about visibility or agent readiness.
+  const overall = null;
   const { text: _text, ...signals } = site;
   void _text;
   const searched = tested.every(a => a.searched) ? 'with each provider’s web search enabled' : tested.some(a => a.searched) ? 'with web search enabled where the provider allowed it' : 'without web search';
@@ -181,10 +173,11 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
     method: `${tested.length} of ${assistants.length} configured assistants returned answers. Each question was asked once through the developer API, ${searched}. Answers in the consumer apps can differ and change from day to day, so treat this as a snapshot.` };
 }
 
-export function toPreview(report: Report): ReportPreview {
+export function toPreview(input: Report): ReportPreview {
+  const report = readableReport(input);
   return { version: 1, domain: report.domain, generatedAt: report.generatedAt, overall: report.overall, verdict: report.verdict,
     business: { name: report.profile.name, category: report.profile.category }, signalsScore: report.signals.score,
-    assistants: report.assistants.map(({ id, label, scores, searched, error }) => ({ id, label, scores, searched, failed: Boolean(error) })),
+    assistants: report.assistants.map(({ id, label, scores, searched, error, discovery }) => ({ id, label, scores, searched, failed: Boolean(error), mentions: discovery.filter(d => d.mentioned).length, discoveryAnswers: discovery.length, expectedDiscovery: report.profile.queries.length })),
     locked: {
       issues: report.assistants.reduce((sum, a) => sum + a.issues.length, 0),
       competitors: new Set(report.assistants.flatMap(a => a.competitors.map(name => name.toLowerCase()))).size,
@@ -196,7 +189,11 @@ export function toPreview(report: Report): ReportPreview {
 
 /** Older reports graded answers even when homepage fetching failed. */
 export function readableReport(report: Report): Report {
-  if (report.signals.reachable) return report;
+  const labels: Record<string, string> = { reachable: 'Our page fetch returned readable HTML', 'title-description': 'Title and description meet basic length checks', heading: 'An h1 is present in the fetched HTML', 'structured-data': 'An organization schema type was detected', 'ai-crawlers': 'robots.txt check for selected user agents', 'llms-txt': 'Optional llms.txt check (not a visibility requirement)' };
+  const scopedSignals = { ...report.signals, checks: report.signals.checks.map(check => ({ ...check, label: labels[check.id] || check.label,
+    detail: check.detail + (check.detail.includes('were not tested.') || check.detail.includes('were not validated.') ? '' : check.id === 'ai-crawlers' ? ' Robots rules alone do not establish provider access; WAF and crawler-specific requests were not tested.' : check.id === 'structured-data' ? ' Schema completeness, factual accuracy and eligibility were not validated.' : '') })) };
+  if (report.signals.reachable) return { ...report, signals: scopedSignals, overall: null, verdict: verdictFor(null),
+    recommendations: recommend({ ...report.signals, text: '' }, report.assistants, report.profile) };
   const signals = { ...report.signals, score: null, checks: report.signals.checks.map(check =>
     check.id === 'reachable' ? { ...check, detail: 'Our request could not read the homepage. This does not establish whether other crawlers can access it.' } :
     { ...check, passed: null, detail: 'Unavailable in this failed-fetch report. Run a fresh report to test this check.' }) };

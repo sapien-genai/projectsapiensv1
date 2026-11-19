@@ -215,3 +215,10 @@ The existing `/ai-visibility/dashboard/` URL remains the customer workspace, pre
 After saving a report, customers can confirm a business name and provide service area, industry, employee range, and a main goal. Onboarding can be deferred and edited later. Context is stored per owned website in `visibility_projects.business_profile`; it does not rewrite saved report evidence, fixed questions, or baseline schedules, and it is not automatically sent to AI providers. The authenticated `save_profile` action validates field lengths and employee ranges and uses the existing ownership check before updating the selected website.
 
 Deploy migration `20261119193000_customer_business_profile.sql`, then `visibility-customer`, before the frontend. No new secrets or payment settings are required. Validate with `deno test --node-modules-dir=none supabase/functions/visibility-customer/profile_test.ts` plus the customer core tests, frontend typecheck/build, and desktop/mobile UI checks.
+
+
+### Instant report scope correction (November 19, 2026)
+
+The instant report no longer blends model grades, mention percentages and HTML checks into an overall visibility score. New reports store `overall: null`; historical report responses suppress the old composite without altering stored evidence. Preview fields include returned/expected category-answer counts and observed mentions. Identity is explicitly an automated assessment; accuracy is not represented as a verified percentage. No recommendation, ranking, or task-completion claim is inferred from mentions.
+
+Historical recommendations are derived from recorded findings, including missing h1, with separate validation and broader-measurement next steps. Optional llms.txt is not promoted as the primary fix. Failed-fetch reports still withhold site-based grading. Workspace score tiles are replaced with links to report evidence. This change does not alter fixed study prompts, matching, schedules, provider settings, or baseline records.
