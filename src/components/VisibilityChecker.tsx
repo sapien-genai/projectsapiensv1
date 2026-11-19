@@ -42,7 +42,7 @@ const eyebrow = 'text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]';
 const host = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } };
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
-export default function VisibilityChecker() {
+export default function VisibilityChecker({ openReportPage = false }: { openReportPage?: boolean }) {
   const [view, setView] = useState<View>({ kind: 'idle' });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -82,7 +82,12 @@ export default function VisibilityChecker() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setBusy(true); setError(''); started.current = Date.now();
-    show(await api({ action: 'start', url: String(data.get('url') ?? ''), website: String(data.get('website') ?? '') }));
+    const result = await api({ action: 'start', url: String(data.get('url') ?? ''), website: String(data.get('website') ?? '') });
+    if (openReportPage && result.id && !result.error && result.status !== 'failed') {
+      window.location.assign(`/ai-visibility/?report=${encodeURIComponent(result.id)}#instant-report`);
+      return;
+    }
+    show(result);
     setBusy(false);
   }
 

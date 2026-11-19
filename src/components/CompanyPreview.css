@@ -35,3 +35,10 @@
   .company-site .sp-header { gap: 18px; }
 }
 .company-site .sp-account-link { font-weight: 700; white-space: nowrap; }
+
+/* Preserve the shared report form's spacing inside the homepage reset. */
+.sp-site #instant-report > h2 { margin-top: 1rem; }
+.sp-site #instant-report > p { margin-top: .75rem; }
+.sp-site #instant-report > p a { text-decoration: underline; text-underline-offset: 4px; }
+.sp-site .sp-report-account { margin-top: 1.5rem; }
+.sp-site .sp-report-account a { text-decoration: underline; text-underline-offset: 4px; }
