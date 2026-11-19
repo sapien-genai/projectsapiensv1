@@ -1,5 +1,12 @@
 import type { Report } from "../visibility-report/core/types.ts";
 import { validateStudy } from "../visibility-report/core/studies.ts";
+/** Save evidence based on completed measurements, never a retired composite score. */
+export function canSaveReport(status: string | undefined, report: Report | undefined): report is Report {
+  return status === "complete" && !!report?.signals?.reachable &&
+    !!report.profile?.name?.trim() && !!report.profile?.category?.trim() &&
+    (report.profile?.queries?.length ?? 0) > 0 &&
+    report.assistants?.some(a => !a.error && !!a.recognitionAnswer && a.discovery.length > 0) === true;
+}
 export type Product = "fix" | "tracking";
 export function fixedQuestions(report: Report) {
   const queries = report.profile.queries.filter((q) => q.trim()).slice(0, 3);

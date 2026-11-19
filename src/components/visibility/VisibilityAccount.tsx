@@ -87,7 +87,9 @@ export default function VisibilityAccount() {
     let active = true;
     (async () => {
       if (reportId) {
-        await customerApi({ action: "save_report", report_id: reportId });
+        const saved = await customerApi<{ id: string }>({ action: "save_report", report_id: reportId });
+        setSelected(saved.id);
+        setMessage("Report saved to your workspace. Existing deliverables and fixed tracking questions are unchanged.");
         sessionStorage.removeItem("visibility-report-to-save");
         window.history.replaceState(null, "", dashboardPath);
       }
@@ -361,7 +363,7 @@ export default function VisibilityAccount() {
                     <section id="reports" className="va-overview">
                       <div>
                         <p className="va-eyebrow">
-                          Saved free check · {date(project.report.generatedAt)}
+                          Latest saved check · {date(project.latest_report_generated_at || project.report.generatedAt)}
                         </p>
                         <h2>{project.business_name}</h2>
                         <p>A snapshot of business descriptions, category mentions, and page checks. Review the original questions and answers before drawing conclusions.</p>
@@ -371,7 +373,7 @@ export default function VisibilityAccount() {
                           citations shown alongside coverage.
                         </p>
                       </div>
-                      <div className="va-score"><a className="va-link" href={`/ai-visibility/?report=${project.report_id || ''}`}>View report evidence</a><span>No combined visibility rating</span></div>
+                      <div className="va-score"><a className="va-link" href={`/ai-visibility/?report=${project.latest_report_id || project.report_id || ''}`}>View report evidence</a><span>No combined visibility rating</span></div>
                     </section>
                     <section
                       id="services" className="va-products"

@@ -1,6 +1,6 @@
 import { businessProfile } from "./profile.ts";
 import { checked, db, env, siteOrigin, stripe } from "./shared.ts";
-import { fixedQuestions, type Product } from "./core.ts";
+import { canSaveReport, fixedQuestions, type Product } from "./core.ts";
 import type { Report } from "../visibility-report/core/types.ts";
 const uuid = (v: unknown) =>
   typeof v === "string" &&
@@ -94,10 +94,7 @@ Deno.serve(async (req) => {
         ).maybeSingle(),
       );
       const report = reportRow?.report as Report | undefined;
-      if (
-        reportRow?.status !== "complete" || !report?.signals.reachable ||
-        report.overall === null
-      ) {
+      if (!canSaveReport(reportRow?.status, report)) {
         return json({
           error:
             "A readable website and completed report are required. Run a new free check first.",
@@ -109,7 +106,14 @@ Deno.serve(async (req) => {
           user.id,
         ).eq("domain", report.domain).maybeSingle(),
       );
-      if (existing) return json(existing);
+      if (existing) {
+        // Keep the original purchase snapshot and fixed tracking questions intact.
+        checked(await admin.from("visibility_projects").update({
+          latest_report_id: body.report_id,
+          latest_report_generated_at: report.generatedAt,
+        }).eq("id", existing.id).eq("user_id", user.id));
+        return json(existing);
+      }
       const count = await admin.from("visibility_projects").select("id", {
         count: "exact",
         head: true,

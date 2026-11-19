@@ -14,6 +14,8 @@ export type Price = {
 export type BusinessProfile = { business_name: string; location: string; industry: string; employees: string; goal: string };
 export type Project = {
   report_id?: string;
+  latest_report_id?: string | null;
+  latest_report_generated_at?: string | null;
   business_profile?: BusinessProfile | null;
   id: string;
   domain: string;
