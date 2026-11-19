@@ -154,9 +154,10 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. A page fetch and basic HTML checks. No combined visibility score.</p></div>
       <Flock formation="cluster" count={34} size={6} cohesion={.5} className="hidden h-32 w-56 md:block" />
     </div>
-    <div className="mt-8 overflow-x-auto">
+    <p className="mt-8 text-sm text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</p><p className="mt-2 text-xs text-[#526055] md:hidden">Scroll the table sideways to see every assessment.</p>
+    <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Assistant evidence table">
       <table className="w-full min-w-[420px] border-collapse text-left text-sm">
-        <caption className="pb-3 text-left text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</caption>
+        <caption className="sr-only">Assistant evidence and coverage</caption>
         <thead><tr className="border-b border-[#172820]/20 text-xs uppercase tracking-[0.12em] text-[#68745b]"><th scope="col" className="py-3 pr-4">Assistant</th><th scope="col" className="py-3 pr-4">Identity assessment</th><th scope="col" className="py-3 pr-4">Category mentions</th><th scope="col" className="py-3">Fact review</th></tr></thead>
         <tbody>{preview.assistants.map(assistant => <tr key={assistant.id} className="border-b border-[#172820]/10">
           <th scope="row" className="py-4 pr-4 font-semibold">{assistant.label}</th>
@@ -216,9 +217,9 @@ function FullReport({ report }: { report: Report }) {
           {assistant.issues.length > 0 && <><p className={`${eyebrow} mt-5`}>Potential gaps to verify</p><ul className="mt-2 list-disc space-y-1 pl-5 text-[#526055]">{assistant.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></>}
           {assistant.competitors.length > 0 && <><p className={`${eyebrow} mt-5`}>Other businesses named (automated extraction)</p><p className="mt-2 text-[#526055]">{assistant.competitors.join(', ')}</p></>}
           <details className="mt-5"><summary className="cursor-pointer font-semibold underline underline-offset-4">Asked: “What is {report.profile.name}?”</summary>
-            <p className="mt-3 whitespace-pre-wrap text-[#526055]">{assistant.recognitionAnswer || 'No answer was returned.'}</p><Sources citations={assistant.recognitionCitations} /></details>
+            <p className="mt-3 whitespace-pre-wrap [overflow-wrap:anywhere] text-[#526055]">{assistant.recognitionAnswer || 'No answer was returned.'}</p><Sources citations={assistant.recognitionCitations} /></details>
           {assistant.discovery.map(item => <details key={item.query} className="mt-3"><summary className="cursor-pointer font-semibold underline underline-offset-4">Asked: “{item.query}” <span className={item.mentioned ? 'text-[#16745e]' : 'text-[#a33a2a]'}>({item.mentioned ? 'you were mentioned' : 'you were not mentioned'})</span></summary>
-            <p className="mt-3 whitespace-pre-wrap text-[#526055]">{item.answer}</p><Sources citations={item.citations} /></details>)}
+            <p className="mt-3 whitespace-pre-wrap [overflow-wrap:anywhere] text-[#526055]">{item.answer}</p><Sources citations={item.citations} /></details>)}
           {!assistant.searched && <p className="mt-4 text-sm text-[#526055]">Search was not observed for the business-description answer.</p>}
         </>}
       </article>)}</div>
@@ -228,7 +229,7 @@ function FullReport({ report }: { report: Report }) {
       <h3 className="text-xl font-semibold">Page checks from our fetch</h3>
       <ul className="mt-4 divide-y divide-[#172820]/10">{report.signals.checks.map(check => <li key={check.id} className="flex gap-3 py-3">
         {check.passed === null ? <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">—</span> : check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <X size={20} className="mt-0.5 shrink-0 text-[#a33a2a]" aria-hidden="true" />}
-        <div><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
+        <div className="min-w-0 [overflow-wrap:anywhere]"><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
       </li>)}</ul>
     </div>
 
