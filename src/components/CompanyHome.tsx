@@ -65,7 +65,6 @@ export default function CompanyHome() {
 <div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:gap-[35px]">
 <div>
 <p className="max-w-sm leading-relaxed text-[#555]">People ask {VISIBILITY_ASSISTANTS.slice(0, -1).join(', ')}, and {VISIBILITY_ASSISTANTS[VISIBILITY_ASSISTANTS.length - 1]} who to hire and what to buy. We test what those assistants say about your business, and show you what to change.</p>
-<a className="pill group mt-8" href="/ai-visibility/">See how the report works <span className="arrow"><BirdGlyph className="sp-inline-arrow !h-[1.35em] !w-[1.35em] transition-transform duration-300 motion-reduce:transition-none group-hover:translate-x-1 group-hover:-translate-y-1" /></span></a>
 </div>
 <ol className="grid list-none gap-px border border-[#e2e5df] bg-[#e2e5df] p-0 sm:grid-cols-2">
 {VISIBILITY_QUESTIONS.map((item, i) => <li key={item.name} className="bg-white p-7">
