@@ -1,5 +1,9 @@
 import { checked, db, env } from "../visibility-customer/shared.ts";
-import { packagePrompt } from "../visibility-customer/core.ts";
+import {
+  collectPages,
+  generateDraft,
+  renderPackage,
+} from "../visibility-customer/package.ts";
 import {
   anthropic,
   gemini,
@@ -65,16 +69,35 @@ Deno.serve(async (req) => {
         ? anthropic({ ...options, apiKey: env("ANTHROPIC_API_KEY") })
         : gemini({ ...options, apiKey: env("GEMINI_API_KEY") });
       if (job.kind === "fix") {
-        const text = await provider.complete(packagePrompt(project.report));
-        if (text.trim().length < 500) {
-          throw new Error(
-            "The package could not be completed. Contact support for recovery or a refund.",
-          );
-        }
+        const inventory = await collectPages(project.report.url, {
+          resolveHost: async (host) => {
+            const results = await Promise.allSettled([
+              Deno.resolveDns(host, "A"),
+              Deno.resolveDns(host, "AAAA"),
+            ]);
+            return results.flatMap((result) =>
+              result.status === "fulfilled" ? result.value : []
+            );
+          },
+        });
+        const draft = await generateDraft(project.report, inventory, {
+          apiKey: env("OPENAI_API_KEY"),
+          model: job.config.models.chatgpt,
+          onUsage,
+        });
+        const text = renderPackage(
+          project.report,
+          inventory,
+          draft,
+          project.questions,
+        );
         checked(
           await admin.from("visibility_customer_jobs").update({
             result: {
               markdown: text,
+              packageVersion: "complete-v2",
+              inventory,
+              draft,
               generatedAt: new Date().toISOString(),
               sourceReportDate: project.report.generatedAt,
             },
