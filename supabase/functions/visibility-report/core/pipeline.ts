@@ -40,7 +40,7 @@ Return only a JSON object with these keys:
 - "category": what kind of business it is, in 2 to 6 plain words (for example "family dental practice")
 - "summary": one factual sentence on what it offers and to whom, using only what the text says
 - "audience": who the customers are, in a short phrase, including the city or region if the text gives one
-- "queries": exactly 2 questions a prospective customer might type into an AI assistant when choosing providers in this category, including the location if the business is local. Ask for specific businesses or websites solving the customer's problem, not generic instructions or adjacent products. The questions must NOT contain the business's name or domain.
+- "queries": exactly 2 questions a prospective customer might type into an AI assistant when choosing providers in this category, including the location if the business is local. Ask for specific businesses or websites solving the customer's problem, not generic instructions or adjacent products. The questions must NOT contain the business's name or domain. Use one broad category question first, then one question about a genuine customer need or differentiator. Do not stack unique features to steer an answer toward this business. These are exploratory questions, not a replacement for an existing fixed baseline.
 
 Domain: ${domain}
 Title: ${site.title}
@@ -72,20 +72,22 @@ export function mentions(profile: BusinessProfile, domain: string, text: string,
   return urls.some(url => { try { const host = new URL(url).hostname.toLowerCase(); return host === domain || host.endsWith(`.${domain}`); } catch { return false; } });
 }
 
-async function testAssistant(provider: Provider, profile: BusinessProfile, domain: string, site: SiteSignals, complete: Complete): Promise<AssistantResult> {
+async function testAssistant(provider: Provider, profile: BusinessProfile, domain: string, site: SiteSignals, complete: Complete, pages: Array<{id: string; url: string; excerpt: string}> = []): Promise<AssistantResult> {
   const base: AssistantResult = { id: provider.id, label: provider.label, model: provider.model, searched: false,
     scores: { recognition: null, discovery: null, accuracy: null }, summary: '', recognitionAnswer: '', recognitionCitations: [], issues: [], competitors: [], discovery: [] };
   const recognitionPrompt = `What is ${profile.name} (${domain})? What do they do, and who is it for? Answer in a short paragraph.`;
   const [recognition, ...discoveryAnswers] = await Promise.allSettled([provider.ask(recognitionPrompt), ...profile.queries.map(query => provider.ask(`${query} Name specific options and keep the answer brief.`))]);
-  if (recognition.status === 'rejected' || !recognition.value.text.trim()) return { ...base, error: 'This assistant could not be reached during the test.' };
+  const named = recognition.status === 'fulfilled' && recognition.value.text.trim() ? recognition.value : null;
 
   const discovery: DiscoveryResult[] = profile.queries.flatMap((query, index) => {
     const answer = discoveryAnswers[index];
     if (answer.status !== 'fulfilled' || !answer.value.text) return [];
     return [{ query, answer: answer.value.text.slice(0, 2500), citations: answer.value.citations, mentioned: mentions(profile, domain, answer.value.text, answer.value.citations.map(c => c.url)) }];
   });
-  const result: AssistantResult = { ...base, searched: recognition.value.searched, recognitionAnswer: recognition.value.text.slice(0, 2500), recognitionCitations: recognition.value.citations, discovery,
+  const result: AssistantResult = { ...base, searched: named?.searched ?? false, recognitionAnswer: named?.text.slice(0, 2500) || '', recognitionCitations: named?.citations || [], discovery,
     scores: { ...base.scores, discovery: discovery.length ? Math.round((discovery.filter(d => d.mentioned).length / discovery.length) * 100) : null } };
+  if (!named) return discovery.length ? { ...result, summary: 'The named-business answer was unavailable. Returned category answers are preserved; identity and factual accuracy were not assessed.' }
+    : { ...base, error: 'This assistant could not be reached during the test.' };
 
   if (!site.reachable || !profile.category || !profile.summary) return { ...result, summary: 'The answer was collected but cannot be graded without reliable facts from the website.' };
 
@@ -99,6 +101,7 @@ Summary: ${profile.summary}
 Audience: ${profile.audience}
 Title: ${site.title}
 Description: ${site.description}
+Captured page evidence: ${JSON.stringify(pages)}
 </facts_from_the_business_website>
 
 <assistant_answer_about_the_business>
@@ -113,15 +116,21 @@ Return only a JSON object:
 - "recognition": 0-100. 0 if the assistant says it does not know the business or describes a different one; 50 if it identifies it only vaguely; 100 if it clearly identifies the right business and what it does.
 - "accuracy": 0-100 for how correct the specific claims are against the facts, or null if the assistant did not describe this business at all.
 - "summary": one plain sentence on how this assistant sees the business.
-- "issues": up to 4 short strings, each a specific gap, error, or outdated detail in the assistant's description. Empty if none.
-- "competitors": up to 6 names of other businesses the assistant recommended in the category answers. Do not include "${profile.name}".`;
+- "contradictions": up to 4 objects with claim (exact substring of the assistant's business-description answer), pageId, quote (exact 25-240 character quote from that page excerpt), and detail (specific apparent contradiction). An omitted detail, an unsupported claim, or a fact absent from the short profile is NOT a contradiction. Read all captured page evidence, including About and developer pages, before flagging a capability. Empty if no explicit conflicting evidence. These are hypotheses for human review, not independently verified errors.
+- "competitors": up to 6 names of other businesses named in the category answers, without assuming endorsement. Do not include "${profile.name}".`;
   const grade = parseJson(await complete(gradePrompt).catch(() => ''));
   if (!grade) return { ...result, summary: 'The answers were collected but could not be graded automatically.' };
   const recognitionScore = clamp(grade.recognition);
   return { ...result,
     scores: { ...result.scores, recognition: recognitionScore, accuracy: recognitionScore !== null && recognitionScore < 20 ? null : clamp(grade.accuracy) },
     summary: typeof grade.summary === 'string' ? grade.summary.trim().slice(0, 300) : '',
-    issues: strings(grade.issues, 4), competitors: strings(grade.competitors, 6, 80).filter(name => name.toLowerCase() !== profile.name.toLowerCase()) };
+    issues: (Array.isArray(grade.contradictions) ? grade.contradictions.slice(0, 4) : []).flatMap(item => {
+      if (!item || typeof item !== 'object') return [];
+      const page = pages.find(p => p.id === item.pageId);
+      if (!page || typeof item.quote !== 'string' || item.quote.length < 25 || item.quote.length > 240 || !page.excerpt.includes(item.quote)
+        || typeof item.claim !== 'string' || item.claim.length < 10 || !result.recognitionAnswer.includes(item.claim) || typeof item.detail !== 'string') return [];
+      return [`Verify: ${item.detail.slice(0, 400)} Assistant: “${item.claim.slice(0, 300)}” Website: “${item.quote}” (${page.url})`];
+    }), competitors: strings(grade.competitors, 6, 80).filter(name => name.toLowerCase() !== profile.name.toLowerCase()) };
 }
 
 export function recommend(site: SiteSignals, assistants: AssistantResult[], profile: BusinessProfile): Recommendation[] {
@@ -158,7 +167,7 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
   const profile = await buildProfile(domain, site, deps.complete);
   await deps.onProgress?.('assistants');
   const assistants = await Promise.all(deps.providers.map(provider =>
-    testAssistant(provider, profile, domain, site, deps.complete).catch((): AssistantResult => ({ id: provider.id, label: provider.label, model: provider.model, searched: false, error: 'This assistant could not be tested.',
+    testAssistant(provider, profile, domain, site, deps.complete, investigation.pages.filter(p => p.readable).map(p => ({id:p.id,url:p.url,excerpt:p.excerpt}))).catch((): AssistantResult => ({ id: provider.id, label: provider.label, model: provider.model, searched: false, error: 'This assistant could not be tested.',
       scores: { recognition: null, discovery: null, accuracy: null }, summary: '', recognitionAnswer: '', recognitionCitations: [], issues: [], competitors: [], discovery: [] }))));
   await deps.onProgress?.('scoring');
   const tested = assistants.filter(a => !a.error);

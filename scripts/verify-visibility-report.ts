@@ -103,7 +103,7 @@ function setup(world: World) {
   const serialized = JSON.stringify(preview);
   for (const secret of ['Brookside', 'emergency hours', 'Good options include', 'recognitionAnswer', '"checks":', 'recommendations":['])
     assert.ok(!serialized.includes(secret), `Preview must not leak "${secret}"`);
-  assert.deepEqual(preview.locked, { issues: 3, competitors: 1, recommendations: report.audit!.actions.length, failedChecks: 0, answers: 9 });
+  assert.deepEqual(preview.locked, { issues: 0, competitors: 1, recommendations: report.audit!.actions.length, failedChecks: 0, answers: 9 });
   assert.equal(preview.investigation?.status, 'partial', 'Mock grader does not fabricate a tailored plan when synthesis is unavailable');
   assert.equal(preview.assistants[0].scores.recognition, 90);
 }
@@ -226,4 +226,30 @@ console.log('Verified public Beacon addresses, unavailable checks, ungraded answ
   assert.equal(toPreview(report).assistants[0].discoveryAnswers, 1);
   assert.equal(toPreview(report).assistants[0].expectedDiscovery, 2);
   assert.equal(report.overall, 98, 'Stored historical data is not mutated');
+}
+
+// A failed named-business question must not discard successful category answers.
+{
+  const {deps} = setup({page:goodPage});
+  deps.providers = deps.providers.slice(0,1).map(p=>({...p,ask:async(prompt:string)=>{
+    if(prompt.startsWith('What is ')) throw new Error('recognition unavailable');
+    return {text:'Acme Dental offers family dentistry.',citations:[],searched:true,model:'fixture'};
+  }}));
+  const r=await runReport('acme-dental.com','https://acme-dental.com/',deps);
+  assert.equal(r.assistants[0].discovery.length,2);
+  assert.equal(r.assistants[0].scores.recognition,null);
+  assert.equal(toPreview(r).assistants[0].discoveryAnswers,2);
+}
+// Fact flags need conflicting source quotations; omissions from a short profile are insufficient.
+{
+  const {deps}=setup({page:goodPage});
+  deps.providers=deps.providers.slice(0,1).map(p=>({...p,ask:async()=>({text:'Acme Dental is in Boston.',citations:[],searched:true,model:'fixture'})}));
+  const original=deps.complete;
+  deps.complete=async prompt=>prompt.includes('You are grading')?JSON.stringify({recognition:100,accuracy:50,summary:'Verify the location.',contradictions:[
+    {claim:'Acme Dental is in Boston.',pageId:'page-1',quote:'Family dentistry in Kansas City',detail:'The answer gives a different city.'},
+    {claim:'Acme Dental is in Boston.',pageId:'page-1',quote:'This quotation does not exist on the website.',detail:'Invented evidence'}
+  ],issues:['The short profile does not mention a mobile app.'],competitors:[]}):original(prompt);
+  const r=await runReport('acme-dental.com','https://acme-dental.com/',deps);
+  assert.equal(r.assistants[0].issues.length,1);
+  assert.ok(r.assistants[0].issues[0].includes('Family dentistry in Kansas City'));
 }

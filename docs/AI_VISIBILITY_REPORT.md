@@ -259,3 +259,14 @@ packages and their fulfillment/webhooks remain intact. Monthly tracking is uncha
 Release checks: `npm run check:visibility`, `npm run typecheck`, targeted ESLint,
 Deno check/tests for both affected functions, production build, desktop/mobile
 review, and a fresh non-study report to verify persisted synthesis and cost records.
+
+
+## Evidence checks and sampled discovery score November 20
+
+New reports separate verified syntax problems in captured JSON-LD from incomplete fetch/rendering checks and proposed improvements. Missing raw-HTML fields, capped documents, hydration markers, failed fetches and unexecuted MCP endpoints do not establish missing features. The crawler does not execute customer endpoints or render JavaScript. Private/account routes are excluded from page selection. Parsed links, existing schema types and noindex signals inform proposal validation.
+
+Each generated implementation proposal must cite the actual readable target page, including an exact current-text quotation. Known duplicate links/schema and unchanged replacement wording are rejected. Noindex and unread targets are not offered implementation changes. Opportunities remain provisional; absence from a bounded capture is not proof of sitewide absence. Earlier stored reports retain their evidence and display a legacy-verification notice.
+
+The display-only sampled discovery score is round(100 × mentions / usable category answers). Mentions include matching business names or domain citations; they do not establish endorsement. Failed calls are excluded and coverage is shown, zero usable answers means unavailable, and named recognition/HTML checks are not blended into it. A recognition failure does not discard successfully returned category answers. The score is also in the Markdown export. A scroll walkthrough reveals saved provider contributions; it makes no new API calls and supports reduced motion. The final score remains visible independently of scrolling.
+
+Instant questions are exploratory (a broad category question plus a customer-need question), not interchangeable with fixed study questions. Hotline code, baseline definitions, saved answers and schedules are unchanged. No Hotline changes or new Hotline runs are part of this release.
