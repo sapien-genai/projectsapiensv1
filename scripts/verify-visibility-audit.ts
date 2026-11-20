@@ -82,3 +82,6 @@ assert.ok(md.includes('## Incomplete checks')&&md.includes('## Verified problems
 console.log('Verified incomplete-rendering taxonomy, invalid JSON evidence, duplicate-proposal rejection, score coverage and exported definitions.');
 
 assert.equal(discoveryScore([{mentions:2,discoveryAnswers:2,expectedDiscovery:2}],false).score,null,'Failed website context cannot produce a grade');
+
+const olderPage = {...page,canonical:'https://acme.com/',capture:undefined};
+assert.equal(auditFindings({...audit,pages:[olderPage, {...olderPage,id:'old-2'}]}).length,1,'Missing legacy capture flags are grouped, not multiplied into page alarms');
