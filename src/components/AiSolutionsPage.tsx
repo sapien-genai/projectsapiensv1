@@ -14,7 +14,7 @@ export default function AiSolutionsPage() {
   return <div className="company-site min-h-screen">
     <a className="sp-skip" href="#main">Skip to content</a>
     <CompanyHeader />
-    <main id="main">
+    <main id="main" className="mx-auto">
       <section className="company-hero">
         <p className="text-sm font-semibold uppercase tracking-widest text-[#526055]">AI Solutions</p>
         <h1 className="mt-7 max-w-4xl">Make the work easier.<br />Make the idea real.</h1>
