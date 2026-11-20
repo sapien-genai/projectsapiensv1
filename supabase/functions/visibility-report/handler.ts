@@ -104,13 +104,17 @@ async function start(req: Request, body: Record<string, unknown>) {
     if (authError || !auth.user) return { status: 403, data: { error: "Admin sign-in is required to run a fresh report." } };
     const { data: role, error: roleError } = await supabase.from("admin_roles").select("role").eq("user_id", auth.user.id).in("role", ["admin", "super_admin"]).limit(1).maybeSingle();
     if (roleError || !role) return { status: 403, data: { error: "Only admins can run a fresh report." } };
-    // Separate authenticated admin quota; preserve both per-admin and global caps.
+    // Server-verified admins may run paid fresh checks beyond public daily caps.
     ipHash = `admin:${auth.user.id}`;
   }
-  const { data, error } = await supabase.rpc("reserve_visibility_report", {
-    p_domain: domain, p_url: url, p_ip_hash: ipHash,
-    p_daily_cap: DAILY_CAP, p_ip_limit: IP_DAILY_LIMIT, p_cache_days: fresh ? 0 : CACHE_DAYS,
-  });
+  // Only the verified fresh-admin branch bypasses reservation quotas. Public
+  // requests retain the atomic database reservation and its existing accounting.
+  const { data, error } = fresh
+    ? await supabase.from("visibility_reports").insert({ domain, url, ip_hash: ipHash, status: "running", progress: "site" }).select().single()
+    : await supabase.rpc("reserve_visibility_report", {
+      p_domain: domain, p_url: url, p_ip_hash: ipHash,
+      p_daily_cap: DAILY_CAP, p_ip_limit: IP_DAILY_LIMIT, p_cache_days: CACHE_DAYS,
+    });
   if (error) throw error; // Fail closed: never start paid work when reservation fails.
   if (data.limit === "visitor") return { status: 429, data: { error: `You have reached today's limit of ${IP_DAILY_LIMIT} new reports. Please try again tomorrow, or get in touch for a full audit.` } };
   if (data.limit === "global") return { status: 429, data: { error: "The live check is at capacity for today. Please try again tomorrow, or get in touch and we will run it for you." } };

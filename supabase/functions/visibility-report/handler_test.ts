@@ -14,6 +14,9 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
   const row = { id: '11111111-1111-4111-8111-111111111111', domain: 'acme.com', status: 'complete', report, email: null as string | null, unlocked_at: null as string | null, created_at: new Date().toISOString() };
   let failReservation = false;
   let admin = false;
+  let inserted = 0;
+  let invalidAuth = false;
+  let roleError = false;
   let reservation: Record<string, unknown> = {};
   let limit: string | null = null;
   const originalFetch = globalThis.fetch;
@@ -23,11 +26,16 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
   globalThis.fetch = async (input, init) => {
     const url = String(input);
     const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {status, headers: {'Content-Type': 'application/json'}});
-    if (url.endsWith('/auth/v1/user')) return json({id:'22222222-2222-4222-8222-222222222222'});
-    if (url.includes('/admin_roles?')) return json(admin ? {role:'super_admin'} : null);
+    if (url.endsWith('/auth/v1/user')) return invalidAuth ? json({message:'Invalid token'},401) : json({id:'22222222-2222-4222-8222-222222222222'});
+    if (url.includes('/admin_roles?')) return roleError ? json({message:'Unavailable'},503) : json(admin ? {role:'super_admin'} : null);
     if (url.endsWith('/rpc/reserve_visibility_report')) { reservation = JSON.parse(String(init?.body)); return failReservation ? json({message: 'DB down'}, 503) : json(limit ? {limit} : row); }
     if (url.endsWith('/rpc/claim_visibility_notification')) return json([]);
     if (url.includes('/visibility_reports?')) {
+      if (init?.method === 'POST') {
+        inserted++;
+        reservation = JSON.parse(String(init.body));
+        return failReservation ? json({message:'DB down'},503) : json(row);
+      }
       if (init?.method === 'PATCH' && !row.unlocked_at) Object.assign(row, JSON.parse(String(init.body)));
       return json(init?.method === 'PATCH' ? null : row);
     }
@@ -45,14 +53,25 @@ Deno.test('cached start, locked preview, unlock, status, and failed quota reserv
     assert.equal((await freshCall()).status,403);
     admin = true;
     assert.equal((await freshCall()).status,200);
-    assert.equal(reservation.p_cache_days,0);
-    assert.equal(reservation.p_ip_limit,3);
-    assert.equal(reservation.p_daily_cap,100);
-    assert.equal(reservation.p_ip_hash,'admin:22222222-2222-4222-8222-222222222222');
-    limit = 'visitor'; assert.equal((await freshCall()).status,429); limit = null;
+    assert.equal(inserted,1);
+    assert.equal(reservation.ip_hash,'admin:22222222-2222-4222-8222-222222222222');
+    assert.equal(reservation.status,'running');
+    for (const cap of ['visitor','global']) {
+      limit = cap; assert.equal((await freshCall()).status,200);
+    }
+    assert.equal(inserted,3);
+    invalidAuth = true; assert.equal((await freshCall()).status,403); invalidAuth = false;
+    roleError = true; assert.equal((await freshCall()).status,403); roleError = false;
+    assert.equal(inserted,3);
+    failReservation = true; assert.equal((await freshCall()).status,500); failReservation = false;
+    assert.equal(background.length,0);
+    limit = 'visitor'; assert.equal((await call({action:'start',url:'acme.com',admin:true})).status,429);
+    limit = null;
     const cached = await call({action: 'start', url: 'acme.com'});
     assert.equal(cached.status, 200);
     assert.equal(reservation.p_cache_days,7);
+    assert.equal(reservation.p_ip_limit,3);
+    assert.equal(reservation.p_daily_cap,100);
     const preview = await cached.json();
     assert.equal(preview.status, 'complete');
     assert.ok(preview.preview);
