@@ -158,7 +158,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
     <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr_auto] md:items-center">
-      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. A page fetch and basic HTML checks. No combined visibility score.</p></div>
+      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. {preview.investigation ? `${preview.investigation.read}/${preview.investigation.sampled} sampled pages read, with ${preview.investigation.status === 'partial' ? 'a partial' : 'an automated'} website investigation and action plan.` : 'A page fetch and basic HTML checks.'} No combined visibility score.</p></div>
       <Flock formation="cluster" count={34} size={6} cohesion={.5} className="hidden h-32 w-56 md:block" />
     </div>
     <p className="mt-8 text-sm text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</p><p className="mt-2 text-xs text-[#526055] md:hidden">Scroll the table sideways to see every assessment.</p>
@@ -179,12 +179,12 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
     <div className="mt-6 rounded-xl border border-[#172820]/15 p-5 text-sm text-[#526055]"><h3 className="font-semibold text-[#172820]">What this does not establish</h3><p className="mt-2">Mention detection checks the business name or matching website domain in the answer or its sources; a parent-domain citation may not identify the specific location. Mentions may be positive, neutral, or negative. We did not grade endorsement, ranking, or suitability. Identity and fact assessments compare answers with a short website-derived summary. Broader discovery, independently verified accuracy, access by every crawler, and successful customer tasks remain untested. The questions are not an independent sample of your market.</p></div>
 
     {!report && <div className="mt-8 rounded-xl border border-[#172820]/15 bg-[#f4f2ec] p-6 md:p-8">
-      <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Unlock the full report</h3>
+      <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Get your full report — free</h3>
       <ul className="mt-4 grid gap-2 text-[#526055] sm:grid-cols-2">
         <li>{plural(locked.answers, 'answer', 'answers')} from the assistants, as recorded (answers may be truncated)</li>
         <li>{plural(locked.competitors, 'competitor', 'competitors')} named in your category</li>
         <li>{plural(locked.issues, 'potential gap to verify', 'potential gaps to verify')} in how you are described</li>
-        <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} your site did not pass</li>
+        <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} flagged for review</li>
         <li>{plural(locked.recommendations, 'next step', 'next steps')}, in priority order</li>
       </ul>
       <form onSubmit={onUnlock} className="mt-6 flex max-w-xl flex-col gap-3 sm:flex-row" aria-label="Unlock the full report">

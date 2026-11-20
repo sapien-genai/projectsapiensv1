@@ -183,6 +183,7 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
 export function toPreview(input: Report): ReportPreview {
   const report = readableReport(input);
   return { version: 1, domain: report.domain, generatedAt: report.generatedAt, overall: report.overall, verdict: report.verdict,
+    ...(report.audit ? { investigation: { read: report.audit.pages.filter(p => p.readable).length, sampled: report.audit.pages.length, status: report.audit.status } } : {}),
     business: { name: report.profile.name, category: report.profile.category }, signalsScore: report.signals.score,
     assistants: report.assistants.map(({ id, label, scores, searched, error, discovery }) => ({ id, label, scores, searched, failed: Boolean(error), mentions: discovery.filter(d => d.mentioned).length, discoveryAnswers: discovery.length, expectedDiscovery: report.profile.queries.length })),
     locked: {

@@ -53,6 +53,7 @@ export interface Report {
 
 /** What a visitor sees before giving an email: numbers and counts, none of the underlying answers. */
 export interface ReportPreview {
+  investigation?: { read: number; sampled: number; status: 'complete' | 'partial' };
   version: 1; domain: string; generatedAt: string; overall: number | null; verdict: string;
   business: { name: string; category: string };
   signalsScore: number | null;
