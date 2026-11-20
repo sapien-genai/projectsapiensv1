@@ -42,3 +42,17 @@
 .sp-site #instant-report > p a { text-decoration: underline; text-underline-offset: 4px; }
 .sp-site .sp-report-account { margin-top: 1.5rem; }
 .sp-site .sp-report-account a { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Give the two offers and the report action room across shared page templates. */
+.company-site .sp-contact-link { white-space: nowrap; }
+.company-site .sp-footer-capabilities { display: flex; flex-direction: column; gap: 12px; border-left: 1px solid #071a3540; padding-left: 14px; margin: 4px 0 12px; }
+.company-site .sp-footer-capabilities a { font-size: 14px; }
+.sp-site .hero h1 { font-size: clamp(56px, 7vw, 108px); }
+.sp-site .hero .hero-ctas .pill { font-size: 16px; }
+@media (min-width:1024px) and (max-width:1199px) {
+  .company-site .sp-nav { gap: 16px; }
+}
+@media (max-width:800px) {
+  .sp-site .hero h1 { font-size: clamp(44px, 8vw, 64px); }
+  .sp-site .motion-toggle { top: auto; bottom: 48px; }
+}

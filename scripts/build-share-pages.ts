@@ -12,7 +12,7 @@ await copyFile('dist/index.html', 'dist/app.html');
 process.env.NODE_ENV = 'production'; // Render with React's production build, matching what the browser hydrates.
 const { render } = await import(pathToFileURL('dist-ssr/entry-server.js').href) as { render: (path: string) => Promise<string> };
 const template = shell.replace(/<title>[\s\S]*?<\/title>/, '').replace(/<meta name="description"[^>]*>/, '');
-const organization = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Project Sapiens', legalName: 'Project Sapiens, Inc.', description: 'Independent AI product studio and advisory firm building custom AI agents, voice AI experiences, and practical products with OpenAI technology.', url: `${origin}/`, logo: `${origin}/brand/project-sapiens-circle.png`, founder: { '@type': 'Person', name: 'Tony Marks', url: 'https://tonymarks.com/about/' } };
+const organization = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Project Sapiens', legalName: 'Project Sapiens, Inc.', description: 'Independent AI product studio and advisory firm helping businesses understand and improve their AI visibility and build practical AI solutions, from workflow automation to voice experiences and custom products.', url: `${origin}/`, logo: `${origin}/brand/project-sapiens-circle.png`, founder: { '@type': 'Person', name: 'Tony Marks', url: 'https://tonymarks.com/about/' } };
 await mkdir('dist/share-pages', { recursive: true });
 for (const page of sharePages) {
   const imagePath = `/og/${page.slug}-v1.png`;

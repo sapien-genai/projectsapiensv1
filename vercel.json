@@ -5,6 +5,14 @@
       "destination": "/api/client-inquiry"
     },
     {
+      "source": "/ai-solutions",
+      "destination": "/share-pages/ai-solutions.html"
+    },
+    {
+      "source": "/ai-solutions/",
+      "destination": "/share-pages/ai-solutions.html"
+    },
+    {
       "source": "/custom-ai-agents",
       "destination": "/share-pages/custom-ai-agents.html"
     },

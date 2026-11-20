@@ -1,15 +1,15 @@
 # Project Sapiens
 
-> Project Sapiens, Inc. is an independent AI product studio and advisory firm founded by Tony Marks. It builds custom AI agents, voice AI experiences, and practical products with OpenAI technology. Engagements include focused projects, fractional AI leadership, and ongoing advisory. AI brand visibility is a related diagnostic service; the academy is a separate learning resource. Project Sapiens is a member of the OpenAI Partner Network and an independent implementation partner.
+> Project Sapiens, Inc. is an independent AI product studio and advisory firm founded by Tony Marks. Its two core offers are AI Visibility and AI Solutions. AI Visibility provides a free report, optional implementation, and ongoing tracking. AI Solutions covers workflow automation, knowledge tools, voice experiences, custom products, and agents where useful. Engagements include focused projects, fractional AI leadership, and ongoing advisory. The academy is a separate learning resource. Project Sapiens is a member of the OpenAI Partner Network and an independent implementation partner.
 
 ## Services
 
 - [Custom AI agent development](https://www.projectsapiens.ai/custom-ai-agents/): Knowledge assistants, connected workflow agents, and document workflows, with integration, evaluation, and human approval where needed.
 - [Voice AI development](https://www.projectsapiens.ai/voice-ai-development/): Custom voice agents and conversational interfaces, including conversation design, business integrations, testing, and handoff.
 
-- [AI Brand Visibility](https://www.projectsapiens.ai/ai-visibility/): A report on how ChatGPT, Claude, Gemini, and Perplexity recognize, recommend, and describe a company, with the evidence and a prioritized list of changes. The page includes a free instant report: enter a website to see how ChatGPT, Claude, and Gemini describe the business.
+- [AI Brand Visibility](https://www.projectsapiens.ai/ai-visibility/): A report on how ChatGPT, Claude, and Gemini recognize, recommend, and describe a company, with the evidence and a prioritized list of changes. The page includes a free instant report: enter a website to see how ChatGPT, Claude, and Gemini describe the business.
 - [Work with us](https://www.projectsapiens.ai/work-with-us/): Project-based AI strategy and development, fractional AI leadership, and ongoing advisory.
-- [AI solutions](https://www.projectsapiens.ai/#solutions): Knowledge assistants, workflow agents, voice experiences, document intelligence, creative tools, and strategy and evaluation.
+- [AI solutions](https://www.projectsapiens.ai/ai-solutions/): Knowledge assistants, workflow agents, voice experiences, document intelligence, creative tools, and strategy and evaluation.
 
 ## Company
 

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import CompanyHome from './components/CompanyHome';
 import WorkWithUsPage from './components/WorkWithUsPage';
 import ServicePage from './components/ServicePage';
+import AiSolutionsPage from './components/AiSolutionsPage';
 import AiVisibilityPage from './components/AiVisibilityPage';
 
 const CompanyLegalPage = lazy(() => import('./components/CompanyLegalPage'));
@@ -29,6 +30,7 @@ export default function App({ path: fixedPath }: { path?: string }) {
   if (path === '/openai-partner-network') return <Suspense fallback={<div role="status" className="p-8">Loading partner information…</div>}><PartnerNetworkPage /></Suspense>;
   if (path === '/about') return <Suspense fallback={<div role="status" className="p-8">Loading About Project Sapiens…</div>}><AboutPage /></Suspense>;
   if (path === '/terms' || path === '/privacy') return <Suspense fallback={<div role="status" className="p-8">Loading…</div>}><CompanyLegalPage kind={path === '/terms' ? 'terms' : 'privacy'} /></Suspense>;
+  if (path === '/ai-solutions') return <AiSolutionsPage />;
   if (path === '/work-with-us') return <WorkWithUsPage />;
   if (path === '/custom-ai-agents' || path === '/voice-ai-development') return <ServicePage slug={path.slice(1)} />;
   if (path === '/ai-visibility/dashboard' || path === '/ai-visibility/login') return <Suspense fallback={<div className="min-h-screen bg-[#f4f2ec] p-8 text-[#172820]" role="status">Loading your visibility dashboard…</div>}><VisibilityAccount /></Suspense>;
