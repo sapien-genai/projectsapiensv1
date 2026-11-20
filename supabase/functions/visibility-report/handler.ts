@@ -3,6 +3,7 @@ import { handleStudy } from "./study-handler.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { anthropic, gemini, openai, type Provider } from "./core/providers.ts";
 import { readableReport, runReport, toPreview } from "./core/pipeline.ts";
+import { persistReport, storageSafeJson } from "./core/storage.ts";
 import { InputError, normalizeUrl } from "./core/url.ts";
 import { deliverLead } from "./core/notification.ts";
 import type { UsageEntry } from './core/cost.ts';
@@ -81,7 +82,7 @@ async function execute(id: string, domain: string, url: string) {
       providers: buildProviders(onUsage), complete: grader.complete, fetchOptions: { resolveHost },
       onProgress: async (step: ProgressStep) => { await supabase.from("visibility_reports").update({ progress: step }).eq("id", id); },
     });
-    await supabase.from("visibility_reports").update({ status: "complete", report, cost_tracking_finished_at: new Date().toISOString(), completed_at: new Date().toISOString() }).eq("id", id);
+    await persistReport(() => supabase.from("visibility_reports").update({ status: "complete", report: storageSafeJson(report), cost_tracking_finished_at: new Date().toISOString(), completed_at: new Date().toISOString() }).eq("id", id));
   } catch (error) {
     // Log the reason for operators; visitors only ever see a generic failure.
     console.error("visibility-report failed", { id, domain, reason: error instanceof Error ? error.message : "unknown" });
