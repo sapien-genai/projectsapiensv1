@@ -270,3 +270,7 @@ Each generated implementation proposal must cite the actual readable target page
 The display-only sampled discovery score is round(100 × mentions / usable category answers). Mentions include matching business names or domain citations; they do not establish endorsement. Failed calls are excluded and coverage is shown, zero usable answers means unavailable, and named recognition/HTML checks are not blended into it. A recognition failure does not discard successfully returned category answers. The score is also in the Markdown export. A scroll walkthrough reveals saved provider contributions; it makes no new API calls and supports reduced motion. The final score remains visible independently of scrolling.
 
 Instant questions are exploratory (a broad category question plus a customer-need question), not interchangeable with fixed study questions. Hotline code, baseline definitions, saved answers and schedules are unchanged. No Hotline changes or new Hotline runs are part of this release.
+
+### Admin fresh-report quota bypass
+
+The admin cost screen’s fresh-report action verifies the bearer token and an `admin` or `super_admin` role on the server, then reserves a new paid report without the visitor or global daily cap. Public requests still use the existing atomic reservation, three-report visitor limit, 100-report global limit, and seven-day cache. Admin reports retain user attribution and normal cost tracking; they remain part of existing global usage accounting. Failed authentication, role lookup, or reservation never starts paid work.
