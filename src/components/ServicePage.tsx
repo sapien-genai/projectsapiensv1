@@ -21,7 +21,7 @@ export default function ServicePage({ slug }: { slug: string }) {
     <CompanyHeader />
     <main id="main" className="mx-auto max-w-6xl px-6 md:px-10">
       <header className="py-16 md:py-24">
-        <a className={`${linkStyle} text-sm`} href="/#solutions">Solutions / {service.name}</a>
+        <a className={`${linkStyle} text-sm`} href="/ai-solutions/">AI Solutions / {service.name}</a>
         <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl md:text-7xl">{service.headline}</h1>
         <p className="mt-8 max-w-3xl text-lg leading-relaxed text-[#526055]">{service.intro}</p>
         <a className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`} href="#contact">Tell us what you want to build <ArrowUpRight size={19} aria-hidden="true" /></a>

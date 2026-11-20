@@ -5,7 +5,7 @@ const inputClass = 'mt-2 block min-h-12 w-full rounded-lg border border-[#172820
 
 const VISIBILITY_TOPIC = 'AI visibility report';
 
-export default function ClientInquiryForm({ previewOnly = false, topic }: { previewOnly?: boolean; topic?: typeof VISIBILITY_TOPIC | 'Custom AI agents' | 'Voice AI development' }) {
+export default function ClientInquiryForm({ previewOnly = false, topic }: { previewOnly?: boolean; topic?: typeof VISIBILITY_TOPIC | 'AI Solutions' | 'Custom AI agents' | 'Voice AI development' }) {
   const visibility = topic === VISIBILITY_TOPIC;
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [error, setError] = useState('');

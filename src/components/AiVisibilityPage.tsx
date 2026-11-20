@@ -21,6 +21,9 @@ export default function AiVisibilityPage() {
   useEffect(() => {
     document.title = 'AI Brand Visibility — Project Sapiens';
     document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    if (window.location.hash === '#instant-report') {
+      document.getElementById('instant-report')?.scrollIntoView();
+    }
   }, []);
   return <div className="company-site min-h-screen bg-[#f4f2ec] text-[#172820] selection:bg-[#d8eb94]">
     <a href="#main" className="sr-only focus:not-sr-only focus:block focus:p-4">Skip to content</a>

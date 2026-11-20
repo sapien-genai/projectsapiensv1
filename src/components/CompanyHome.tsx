@@ -14,7 +14,7 @@ import './CompanyHome.css';
 import './CompanyPreview.css';
 
 export default function CompanyHome() {
- useEffect(() => { document.title = 'Project Sapiens — Custom AI Agents & Voice AI Development'; document.querySelector('meta[name="description"]')?.setAttribute('content', 'Custom AI agents, voice AI, and OpenAI product development for businesses. Independent expertise, fractional AI leadership, and hands-on delivery.'); }, []);
+ useEffect(() => { document.title = 'Project Sapiens — AI Visibility & AI Solutions'; document.querySelector('meta[name="description"]')?.setAttribute('content', 'Understand how AI sees your business with a free AI visibility report. Build practical AI solutions for your workflows, customers, and products.'); }, []);
  return <div className="company-site sp-site">
 <a className="sp-skip" href="#main">Skip to content</a>
 <CompanyHeader/>
@@ -27,22 +27,38 @@ export default function CompanyHome() {
 <i className="dot">
 </i> Strategy → Product → Progress</span>
 </div>
-<h1>Intelligence.<br />
-<em>Built for<br />your business.</em>
+<h1>Make AI work<br />
+<em>for your business.</em>
 </h1>
-<HeroSculpture />
 <div className="hero-bottom">
 <div>
-<p className="intro">Project Sapiens is an independent AI product studio and advisory firm. We build custom AI agents, voice AI experiences, and practical products with OpenAI technology—from the first useful prototype to the work your business depends on.</p>
+<p className="intro">Understand how AI sees your company—and build practical solutions that help your business move forward. Start with a free AI visibility report, or talk to us about a workflow, customer experience, or product.</p>
 <div className="hero-ctas">
-<a className="pill group" href="#work">See what we’re building <span className="arrow"><BirdGlyph heading="down-right" className="sp-inline-arrow !h-[1.35em] !w-[1.35em] transition-transform duration-300 motion-reduce:transition-none group-hover:translate-x-1 group-hover:translate-y-1" /></span>
-</a>
-<a className="textlink" href="#contact">Build with us <ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></a>
+<a className="pill" href="#instant-report">Get your free AI report</a>
+<a className="textlink" href="#contact">Discuss a project</a>
 </div>
 </div>
 </div>
+<HeroSculpture />
 </section>
 </div>
+<section id="ai-visibility" aria-labelledby="ai-visibility-title" className="wrap relative border-t border-[#ddd] !py-16 md:!py-24">
+<FlockPass />
+<div className="sp-section-heading"><p className="sp-eyebrow">AI Visibility</p><h2 id="ai-visibility-title">Search ranks pages.<br />AI describes companies.</h2></div>
+<div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:gap-[35px]">
+<div>
+<p className="max-w-sm leading-relaxed text-[#555]">People ask {VISIBILITY_ASSISTANTS.slice(0, -1).join(', ')}, and {VISIBILITY_ASSISTANTS[VISIBILITY_ASSISTANTS.length - 1]} who to hire and what to buy. We test what those assistants say about your business, and show you what to change.</p>
+</div>
+<ol className="grid list-none gap-px border border-[#e2e5df] bg-[#e2e5df] p-0 sm:grid-cols-2">
+{VISIBILITY_QUESTIONS.map((item, i) => <li key={item.name} className="bg-white p-7">
+<small className="text-[11px] uppercase tracking-[1.5px] text-[#16745e]">0{i + 1} / {item.name}</small>
+<h3 className="mt-4 text-xl font-semibold leading-snug tracking-[-0.02em]">{item.question}</h3>
+</li>)}
+</ol>
+</div>
+<div className="mt-10 md:mt-12"><VisibilityChecker openReportPage /></div>
+<p className="sp-report-account mt-6 text-[#526055]">Already have an account? <a className="font-semibold underline underline-offset-4" href="/ai-visibility/dashboard/">Open your workspace</a>.</p>
+</section>
 <div className="partner-band">
 <a className="partner-lockup" href="/openai-partner-network/" aria-label="Learn about Project Sapiens and the OpenAI Partner Network">
 <span className="membership-mark" aria-hidden="true"><ArrowUpRight className="sp-inline-arrow" aria-hidden="true" /></span>
@@ -59,23 +75,6 @@ export default function CompanyHome() {
 <div className="wrap">
 <OpenAISolutions />
 </div>
-<section id="ai-visibility" aria-labelledby="ai-visibility-title" className="wrap relative border-t border-[#ddd] !py-16 md:!py-24">
-<FlockPass />
-<div className="sp-section-heading"><p className="sp-eyebrow">02 / AI brand visibility</p><h2 id="ai-visibility-title">Search ranks pages.<br />AI describes companies.</h2></div>
-<div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:gap-[35px]">
-<div>
-<p className="max-w-sm leading-relaxed text-[#555]">People ask {VISIBILITY_ASSISTANTS.slice(0, -1).join(', ')}, and {VISIBILITY_ASSISTANTS[VISIBILITY_ASSISTANTS.length - 1]} who to hire and what to buy. We test what those assistants say about your business, and show you what to change.</p>
-</div>
-<ol className="grid list-none gap-px border border-[#e2e5df] bg-[#e2e5df] p-0 sm:grid-cols-2">
-{VISIBILITY_QUESTIONS.map((item, i) => <li key={item.name} className="bg-white p-7">
-<small className="text-[11px] uppercase tracking-[1.5px] text-[#16745e]">0{i + 1} / {item.name}</small>
-<h3 className="mt-4 text-xl font-semibold leading-snug tracking-[-0.02em]">{item.question}</h3>
-</li>)}
-</ol>
-</div>
-<div className="mt-10 md:mt-12"><VisibilityChecker openReportPage /></div>
-<p className="sp-report-account mt-6 text-[#526055]">Already have an account? <a className="font-semibold underline underline-offset-4" href="/ai-visibility/dashboard/">Open your workspace</a>.</p>
-</section>
 <section className="work" id="work">
 <div className="wrap">
 <div className="section-top">
@@ -202,13 +201,13 @@ export default function CompanyHome() {
 <div className="sp-section-heading"><p className="sp-eyebrow">Working with Project Sapiens</p><h2 id="company-faq-title">A few useful answers.</h2></div>
 <div className="grid gap-8 md:grid-cols-2">
 {[
-  ['What does Project Sapiens build?', 'We build custom AI agents, knowledge assistants, workflow tools, and voice experiences for businesses. Our work connects strategy, design, development, integration, and evaluation.'],
+  ['How can Project Sapiens help my business?', 'AI Visibility helps you understand how ChatGPT, Claude, and Gemini describe your business, with a free report and practical improvements. AI Solutions covers workflow automation, knowledge tools, voice experiences, and custom products—including agents where useful.'],
   ['Can you improve an existing AI prototype?', 'Yes. We review its behavior, data quality, integrations, user experience, and evaluation process, then agree on the work needed to make it more useful and dependable.'],
   ['Do you offer fractional AI leadership?', 'Yes. We help set direction, prioritize a roadmap, and guide product and technical decisions. Engagements can be focused projects, fractional AI leadership, or ongoing advisory.'],
   ['How does a project start?', 'Tell us what you want to build or improve, who will use it, and any timing or budget constraints. We discuss fit and agree on scope, responsibilities, timing, and fees before work begins.'],
 ].map(([question, answer]) => <div key={question}><h3 className="text-lg font-semibold">{question}</h3><p className="mt-3 leading-relaxed text-[#555]">{answer}</p></div>)}
 </div>
-<p className="mt-8 leading-relaxed text-[#555]">Our core work is <a className="underline underline-offset-4" href="/work-with-us/">AI product strategy and development</a>. <a className="underline underline-offset-4" href="/ai-visibility/">AI brand visibility</a> is a related diagnostic service; our <a className="underline underline-offset-4" href="/academy/login">academy</a> is a separate learning resource.</p>
+<p className="mt-8 leading-relaxed text-[#555]">Explore <a className="underline underline-offset-4" href="/ai-visibility/">AI Visibility</a> to understand and improve how AI describes your business, or <a className="underline underline-offset-4" href="/ai-solutions/">AI Solutions</a> to build tools around the way you work; our <a className="underline underline-offset-4" href="/academy/login">academy</a> is a separate learning resource.</p>
 </section>
 <section id="company" className="section about relative">
 <FlockPass />
