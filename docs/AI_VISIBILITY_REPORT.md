@@ -222,3 +222,40 @@ Deploy migration `20261119193000_customer_business_profile.sql`, then `visibilit
 The instant report no longer blends model grades, mention percentages and HTML checks into an overall visibility score. New reports store `overall: null`; historical report responses suppress the old composite without altering stored evidence. Preview fields include returned/expected category-answer counts and observed mentions. Identity is explicitly an automated assessment; accuracy is not represented as a verified percentage. No recommendation, ranking, or task-completion claim is inferred from mentions.
 
 Historical recommendations are derived from recorded findings, including missing h1, with separate validation and broader-measurement next steps. Optional llms.txt is not promoted as the primary fix. Failed-fetch reports still withhold site-based grading. Workspace score tiles are replaced with links to report evidence. This change does not alter fixed study prompts, matching, schedules, provider settings, or baseline records.
+
+## November 20: free diagnosis, optional scoped implementation
+
+New instant reports include a bounded public-page investigation (`core/audit.ts`):
+up to eight same-site HTML pages, standard robots/sitemap/llms files, and up to
+100 discovered URLs. Each request uses the existing public-address/redirect
+validation, a six-second attempt timeout and 350 KB body cap. Links to common
+account/admin/checkout routes are excluded. Missing reads remain unavailable,
+never evidence that a feature is absent. The sample is not a full crawl.
+
+One additional metered analysis call synthesizes the captured pages and category
+answers into a practical plan. Every accepted generated action references an
+existing evidence ID and an exact captured quotation. Generated interpretations
+are always `verify` or `opportunity`; only deterministic missing-field findings
+can be `observed`, scoped to the fetched HTML. An exact quote is grounding, not
+proof of a model's inference. Unsupported source IDs/quotes are discarded.
+Synthesis failure preserves evidence with explicit partial status.
+
+An audit is saved inside the existing report JSON; no schema migration is needed.
+The full report remains free after email unlock and can be downloaded as Markdown.
+Earlier cached reports remain dated snapshots and are labelled as predating the
+expanded investigation; they are not silently backfilled or billed again.
+Normal complete runs now have 14 paid calls before provider fallbacks (9 sampled
+answers, profile, 3 grades, synthesis). Actual usage remains in the cost ledger.
+Analysis completion allowance is raised only for instant-report analysis;
+fixed-question study models, questions, request allowances and adapters' defaults
+remain unchanged. Do not redeploy the shared function during an active study.
+
+New draft-package checkout is closed server-side. The site offers an implementation
+scope request from $299 via the existing inquiry form, carrying the report link.
+There is no automatic implementation charge or promise to fix an entire audit for
+$299. Access, exact changes, timing and price must be agreed first. Existing paid
+packages and their fulfillment/webhooks remain intact. Monthly tracking is unchanged.
+
+Release checks: `npm run check:visibility`, `npm run typecheck`, targeted ESLint,
+Deno check/tests for both affected functions, production build, desktop/mobile
+review, and a fresh non-study report to verify persisted synthesis and cost records.

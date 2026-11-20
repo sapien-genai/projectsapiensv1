@@ -9,7 +9,7 @@ import type { Ask, AssistantAnswer, AssistantId, Citation, Complete } from './ty
  * the answer is flagged as unsearched.
  */
 
-export interface ProviderConfig { citationLimit?: number; apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number; purpose?: UsageEntry['purpose']; onUsage?: (entry: UsageEntry) => Promise<void> }
+export interface ProviderConfig { completionMaxTokens?: number; citationLimit?: number; apiKey: string; model: string; webSearch: boolean; fetchImpl?: typeof fetch; timeoutMs?: number; purpose?: UsageEntry['purpose']; onUsage?: (entry: UsageEntry) => Promise<void> }
 export interface Provider { id: AssistantId; label: string; model: string; ask: Ask; complete: Complete }
 
 class ProviderError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -68,7 +68,7 @@ export function openai(config: ProviderConfig): Provider {
   };
   return { id: 'chatgpt', label: 'ChatGPT', model: config.model,
     ask: prompt => withSearchFallback(config, search => call(prompt, search, 4000)),
-    complete: async prompt => (await call(prompt, false, 4000)).text };
+    complete: async prompt => (await call(prompt, false, config.completionMaxTokens ?? 4000)).text };
 }
 
 export function anthropic(config: ProviderConfig): Provider {
@@ -86,7 +86,7 @@ export function anthropic(config: ProviderConfig): Provider {
   };
   return { id: 'claude', label: 'Claude', model: config.model,
     ask: prompt => withSearchFallback(config, search => call(prompt, search, 1500)),
-    complete: async prompt => (await call(prompt, false, 2000)).text };
+    complete: async prompt => (await call(prompt, false, config.completionMaxTokens ?? 2000)).text };
 }
 
 export function gemini(config: ProviderConfig): Provider {
@@ -103,5 +103,5 @@ export function gemini(config: ProviderConfig): Provider {
   };
   return { id: 'gemini', label: 'Gemini', model: config.model,
     ask: prompt => withSearchFallback(config, search => call(prompt, search, 4000)),
-    complete: async prompt => (await call(prompt, false, 4000)).text };
+    complete: async prompt => (await call(prompt, false, config.completionMaxTokens ?? 4000)).text };
 }

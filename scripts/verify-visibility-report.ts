@@ -103,7 +103,8 @@ function setup(world: World) {
   const serialized = JSON.stringify(preview);
   for (const secret of ['Brookside', 'emergency hours', 'Good options include', 'recognitionAnswer', '"checks":', 'recommendations":['])
     assert.ok(!serialized.includes(secret), `Preview must not leak "${secret}"`);
-  assert.deepEqual(preview.locked, { issues: 3, competitors: 1, recommendations: 4, failedChecks: 0, answers: 9 });
+  assert.deepEqual(preview.locked, { issues: 3, competitors: 1, recommendations: report.audit!.actions.length, failedChecks: 0, answers: 9 });
+  assert.equal(preview.investigation?.status, 'partial', 'Mock grader does not fabricate a tailored plan when synthesis is unavailable');
   assert.equal(preview.assistants[0].scores.recognition, 90);
 }
 

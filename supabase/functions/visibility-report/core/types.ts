@@ -26,15 +26,34 @@ export interface AssistantResult {
 
 export interface Recommendation { title: string; detail: string; priority: 'high' | 'medium' | 'low' }
 
+export interface AuditPage {
+  id: string; url: string; status: number | null; readable: boolean;
+  title: string; description: string; h1: string; canonical: string; schemaTypes: string[];
+  wordCount: number; excerpt: string;
+}
+export interface AuditAction {
+  title: string; priority: 'high' | 'medium' | 'low'; classification: 'observed' | 'verify' | 'opportunity';
+  evidenceIds: string[]; observation: string; why: string; steps: string[];
+  example: string; owner: string; effort: string; validation: string;
+}
+export interface WebsiteAudit {
+  version: 1; checkedAt: string; status: 'complete' | 'partial'; summary: string;
+  pages: AuditPage[]; discovered: string[]; resources: Array<{ id: string; url: string; status: number | null; readable: boolean; excerpt: string }>;
+  strengths: Array<{ detail: string; evidenceIds: string[] }>;
+  actions: AuditAction[]; limitations: string[];
+}
+
 export interface Report {
   version: 1; domain: string; url: string; generatedAt: string;
   profile: BusinessProfile; overall: number | null; verdict: string;
   signals: Omit<SiteSignals, 'text'>;
   assistants: AssistantResult[]; recommendations: Recommendation[]; method: string;
+  audit?: WebsiteAudit;
 }
 
 /** What a visitor sees before giving an email: numbers and counts, none of the underlying answers. */
 export interface ReportPreview {
+  investigation?: { read: number; sampled: number; status: 'complete' | 'partial' };
   version: 1; domain: string; generatedAt: string; overall: number | null; verdict: string;
   business: { name: string; category: string };
   signalsScore: number | null;

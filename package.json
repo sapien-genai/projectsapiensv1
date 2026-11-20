@@ -13,7 +13,7 @@
     "check:content": "tsx scripts/checkContentFreshness.ts",
     "seed:content": "tsx scripts/seed-content.ts",
     "check:share": "node --import tsx scripts/verify-share-pages.ts",
-    "check:visibility": "node --import tsx scripts/verify-visibility-report.ts && node --import tsx scripts/verify-visibility-costs.ts && node --import tsx scripts/verify-visibility-studies.ts"
+    "check:visibility": "node --import tsx scripts/verify-visibility-report.ts && node --import tsx scripts/verify-visibility-costs.ts && node --import tsx scripts/verify-visibility-studies.ts && node --import tsx scripts/verify-visibility-audit.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

@@ -52,7 +52,7 @@ export default function VisibilityCosts() {
     </div>
     <p className="mt-3 text-sm">Calculated API cost in USD, using provider-reported tokens and the saved rate card for each call. Includes analysis calls and retries. This is not an invoice: taxes, hosting, credits and account discounts are excluded. Google search is estimated from returned queries at paid rates; its free allowance may reduce your bill.</p>
     <p className="mt-2 text-sm">Cached reports incur $0 in new AI calls. Older reports without usage records are unavailable. Partial totals show known charges only; failed or interrupted calls may have additional charges.</p>
-    {freshReport && <p role="status" className="mt-4">Fresh report started. <a className="underline" href={`/ai-visibility/?report=${freshReport}`} target="_blank" rel="noreferrer">View progress and score</a>. Refresh costs after it finishes.</p>}
+    {freshReport && <p role="status" className="mt-4">Fresh report started. <a className="underline" href={`/ai-visibility/?report=${freshReport}`} target="_blank" rel="noreferrer">View progress and report</a>. Refresh costs after it finishes.</p>}
     {error && <p role="alert" className="mt-4 text-red-700">{error}</p>}
     {loading ? <p role="status" className="mt-6">Loading costs…</p> : !error && <>
       {!rows.length && <p className="mt-6">No reports on this page.</p>}

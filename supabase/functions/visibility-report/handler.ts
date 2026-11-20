@@ -21,7 +21,7 @@ const numberEnv = (name: string, fallback: number) => { const value = Number(env
 const DAILY_CAP = numberEnv("VISIBILITY_DAILY_CAP", 100);
 const IP_DAILY_LIMIT = numberEnv("VISIBILITY_IP_DAILY_LIMIT", 3);
 const CACHE_DAYS = numberEnv("VISIBILITY_CACHE_DAYS", 7);
-const STALE_AFTER_MS = 4 * 60 * 1000;
+const STALE_AFTER_MS = 6 * 60 * 1000;
 const ALLOWED_ORIGINS = new Set(["https://www.projectsapiens.ai", "https://projectsapiens.ai", "http://localhost:5173", "http://localhost:4173",
   ...env("VISIBILITY_ALLOWED_ORIGINS").split(",").map(origin => origin.trim()).filter(Boolean)]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -50,9 +50,9 @@ function buildProviders(onUsage?: (entry: UsageEntry) => Promise<void>): Provide
 /** Extraction and grading run on one inexpensive model, Gemini first because the project already pays for it. */
 function buildGrader(onUsage?: (entry: UsageEntry) => Promise<void>): Provider | null {
   const override = env("VISIBILITY_GRADER_MODEL");
-  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
-  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
-  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 45000 });
+  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
+  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
+  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
   return null;
 }
 
@@ -163,7 +163,7 @@ async function notify(id: string) {
   const overall = (row.report as Report).overall;
   const target = env("VISIBILITY_LEAD_FORWARD_URL", "https://tonymarks.com/");
   const form = new URLSearchParams({ "form-name": env("VISIBILITY_LEAD_FORM_NAME", "contact"), name: "AI visibility report lead", email: row.email, company: row.domain,
-    project: `[AI visibility report] ${row.domain}: ${overall === null ? "score unavailable (incomplete measurements)" : `${overall}/100`}. Report: https://www.projectsapiens.ai/ai-visibility/?report=${id}` });
+    project: `[AI visibility report] ${row.domain}: ${overall === null ? "evidence and action plan available; no combined score" : `${overall}/100 (legacy rating)`}. Report: https://www.projectsapiens.ai/ai-visibility/?report=${id}` });
   const sent = await deliverLead(target, form);
   const { error: saveError } = await supabase.from("visibility_reports").update({
     notification_status: sent ? "sent" : "failed", ...(sent ? { notified_at: new Date().toISOString() } : {}),

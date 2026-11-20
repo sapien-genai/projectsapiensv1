@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, Loader2, Lock, X } from 'lucide-react';
 import Flock from './flock/Flock';
+import WebsiteDiagnosis from './visibility/WebsiteDiagnosis';
+import { downloadReport } from './visibility/reportDownload';
 import type { Report, ReportPreview } from '../../supabase/functions/visibility-report/core/types';
 
 /**
@@ -13,12 +15,12 @@ import type { Report, ReportPreview } from '../../supabase/functions/visibility-
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 const POLL_MS = 2500;
-const GIVE_UP_MS = 5 * 60 * 1000;
+const GIVE_UP_MS = 7 * 60 * 1000;
 const STEPS = [
   ['site', 'Reading your site the way a crawler does'],
   ['profile', 'Working out what your business offers'],
   ['assistants', 'Asking ChatGPT, Claude, and Gemini about you'],
-  ['scoring', 'Summarizing the evidence'],
+  ['scoring', 'Preparing your evidence and action plan'],
 ] as const;
 
 interface ApiResult { id?: string; status?: 'running' | 'complete' | 'failed'; progress?: string; unlocked?: boolean; preview?: ReportPreview; report?: Report; error?: string }
@@ -112,7 +114,7 @@ export default function VisibilityChecker({ openReportPage = false }: { openRepo
     <div className="flex items-center justify-between gap-4"><p className={eyebrow}>Instant report</p>{view.kind === 'idle' && <Flock formation="vee" count={9} size={4.5} color="35,49,58" className="pointer-events-none h-10 w-28 shrink-0 sm:w-40" />}</div>
     {view.kind === 'idle' && <>
       <h2 id="instant-report-title" className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">See what AI says about your business.</h2>
-      <p className="mt-3 max-w-2xl leading-relaxed text-[#526055]">Enter your website. We read it the way an AI crawler does, then ask ChatGPT, Claude, and Gemini about you and your category. It takes about a minute.</p>
+      <p className="mt-3 max-w-2xl leading-relaxed text-[#526055]">Enter your website. We read a sample of public pages, ask ChatGPT, Claude, and Gemini about you and your category, and build a practical action plan. Allow a few minutes.</p>
       <form onSubmit={start} className="mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row" aria-label="Run an instant AI visibility report">
         <div className="hidden" aria-hidden="true"><label>Leave this empty<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
         <label className="sr-only" htmlFor="visibility-url">Your website address</label>
@@ -136,7 +138,7 @@ export default function VisibilityChecker({ openReportPage = false }: { openRepo
       {/* Scattered birds draw together as each step finishes. */}
       <Flock formation="cluster" count={34} size={6} cohesion={[.12, .4, .68, .95][Math.max(0, STEPS.findIndex(([step]) => step === view.progress))]} className="h-40 w-full sm:w-64" />
       </div>
-      <p className="mt-6 text-sm text-[#526055]">This usually takes about a minute. You can leave this page open.</p>
+      <p className="mt-6 text-sm text-[#526055]">We are checking public pages and collecting assistant answers. This can take a few minutes; leave this page open.</p>
     </div>}
 
     {view.kind === 'done' && <div className="my-6 border-b border-[#172820]/20 pb-6"><a className={buttonClass} href={`/ai-visibility/dashboard/?report=${encodeURIComponent(view.id)}`}>Save to my workspace</a><p className="mt-3 text-sm text-[#526055]">Sign in with Google or email. Save your free check, get a fix package, or start monthly tracking.</p></div>}
@@ -156,7 +158,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
     <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr_auto] md:items-center">
-      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. A page fetch and basic HTML checks. No combined visibility score.</p></div>
+      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. {preview.investigation ? `${preview.investigation.read}/${preview.investigation.sampled} sampled pages read, with ${preview.investigation.status === 'partial' ? 'a partial' : 'an automated'} website investigation and action plan.` : 'A page fetch and basic HTML checks.'} No combined visibility score.</p></div>
       <Flock formation="cluster" count={34} size={6} cohesion={.5} className="hidden h-32 w-56 md:block" />
     </div>
     <p className="mt-8 text-sm text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</p><p className="mt-2 text-xs text-[#526055] md:hidden">Scroll the table sideways to see every assessment.</p>
@@ -177,12 +179,12 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
     <div className="mt-6 rounded-xl border border-[#172820]/15 p-5 text-sm text-[#526055]"><h3 className="font-semibold text-[#172820]">What this does not establish</h3><p className="mt-2">Mention detection checks the business name or matching website domain in the answer or its sources; a parent-domain citation may not identify the specific location. Mentions may be positive, neutral, or negative. We did not grade endorsement, ranking, or suitability. Identity and fact assessments compare answers with a short website-derived summary. Broader discovery, independently verified accuracy, access by every crawler, and successful customer tasks remain untested. The questions are not an independent sample of your market.</p></div>
 
     {!report && <div className="mt-8 rounded-xl border border-[#172820]/15 bg-[#f4f2ec] p-6 md:p-8">
-      <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Unlock the full report</h3>
+      <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Get your full report — free</h3>
       <ul className="mt-4 grid gap-2 text-[#526055] sm:grid-cols-2">
         <li>{plural(locked.answers, 'answer', 'answers')} from the assistants, as recorded (answers may be truncated)</li>
         <li>{plural(locked.competitors, 'competitor', 'competitors')} named in your category</li>
         <li>{plural(locked.issues, 'potential gap to verify', 'potential gaps to verify')} in how you are described</li>
-        <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} your site did not pass</li>
+        <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} flagged for review</li>
         <li>{plural(locked.recommendations, 'next step', 'next steps')}, in priority order</li>
       </ul>
       <form onSubmit={onUnlock} className="mt-6 flex max-w-xl flex-col gap-3 sm:flex-row" aria-label="Unlock the full report">
@@ -205,12 +207,16 @@ function Sources({ citations }: { citations: Array<{ url: string; title?: string
 
 function FullReport({ report }: { report: Report }) {
   return <div className="mt-10 space-y-12">
+    <button type="button" onClick={() => downloadReport(report)} className={buttonClass}>Download your full report</button>
     <div>
+      {report.audit ? <WebsiteDiagnosis audit={report.audit} report={report} /> : <>
+      <p className="mb-3 text-sm text-[#526055]">This earlier report contains a homepage check and assistant answers. It predates the expanded page investigation.</p>
       <h3 className="text-xl font-semibold">Findings and next steps</h3>
       {report.recommendations.length ? <ol className="mt-4 space-y-4">{report.recommendations.map(item => <li key={item.title} className="border-l-2 border-[#16745e] pl-4">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#68745b]">{item.priority} priority</p>
         <p className="mt-1 font-semibold text-[#172820]">{item.title}</p><p className="mt-1 text-[#526055]">{item.detail}</p>
       </li>)}</ol> : <p className="mt-3 text-[#526055]">No recommendations were generated. Review the measurement coverage below before drawing conclusions.</p>}
+      </>}
     </div>
 
     <div>
@@ -239,9 +245,9 @@ function FullReport({ report }: { report: Report }) {
     </div>
 
     <div className="rounded-xl bg-[#172820] p-6 text-[#f4f2ec] md:p-8">
-      <h3 className="text-xl font-semibold">Want help improving these results?</h3>
-      <p className="mt-3 max-w-2xl leading-relaxed text-[#d6dccf]">This instant report asks each assistant three questions, once. The full AI Brand Visibility Report uses a prompt set written for your customers, repeats it to account for variation, compares you with named competitors, and ends in a working session on what to fix.</p>
-      <a href="#contact" className="mt-5 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Ask about the full report <ArrowUpRight aria-hidden="true" size={18} /></a>
+      <h3 className="text-xl font-semibold">You have the plan. Want us to do the work?</h3>
+      <p className="mt-3 max-w-2xl leading-relaxed text-[#d6dccf]">The diagnosis and action plan are free. Use them yourself, share them with your developer, or ask us to implement a focused set of improvements. Implementation starts at $299; we confirm the exact pages, changes, access, timing and price before you pay. Larger projects are quoted separately. No guaranteed placement or increase in mentions.</p>
+      <a href="#contact" className="mt-5 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Request an implementation scope <ArrowUpRight aria-hidden="true" size={18} /></a>
     </div>
   </div>;
 }

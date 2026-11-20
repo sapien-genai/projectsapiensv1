@@ -262,6 +262,9 @@ Deno.serve(async (req) => {
       body.action !== "checkout" || !["fix", "tracking"].includes(body.product)
     ) return json({ error: "Choose a valid product." }, 400);
     const product = body.product as Product;
+    // Existing paid draft packages still fulfill. New implementation work must
+    // be scoped and approved before collecting payment through a separate quote.
+    if (body.product === "fix") return json({ error: "Implementation starts with an agreed scope. Request help from your workspace; no payment has been taken." }, 409);
     const available = await catalog();
     if (!available[product] || env("VISIBILITY_CHECKOUT_ENABLED") !== "true") {
       return json({
