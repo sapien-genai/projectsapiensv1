@@ -16,7 +16,7 @@ export default function WebsiteDiagnosis({ audit, report }: { audit: WebsiteAudi
       <p className="mt-3">{report.profile.summary}</p><p className="mt-2 text-[#526055]">Customers and service area: {report.profile.audience || 'Not established from the sampled content.'}</p>
       <p className="mt-3 text-sm text-[#526055]">If this description is wrong, correct your business profile in your workspace and include the correction when requesting help. This saved report is a dated snapshot; editing your profile does not rerun its tests.</p>
     </div>
-    <div><h3 className="text-xl font-semibold">Your diagnosis</h3><p className="mt-3 leading-relaxed text-[#526055]">{audit.summary}</p>
+    <div><h3 className="text-xl font-semibold">Your diagnosis</h3><p className="mt-2 text-sm text-[#526055]">Automated interpretation of this sample. Suggested business effects and causes are hypotheses to verify, not measured outcomes.</p><p className="mt-3 leading-relaxed text-[#526055]">{audit.summary}</p>
       {audit.status === 'partial' && <p className="mt-3 font-semibold">Partial investigation: review coverage and limitations below before acting.</p>}
       <p className="mt-3 text-sm">{audit.pages.filter(p => p.readable).length} of {audit.pages.length} sampled pages read · {audit.discovered.length} page links discovered · {new Date(audit.checkedAt).toLocaleDateString('en-US')}</p>
     </div>

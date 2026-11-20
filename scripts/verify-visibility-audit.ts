@@ -38,4 +38,7 @@ const unsafe = { nested: ['About\u0000us', 'truncated\uD83D', '\uDE00orphan', 'B
 assert.deepEqual(storageSafeJson(unsafe), { nested: ['About�us', 'truncated�', '�orphan', 'Bird 🐦'], count: 2, missing: null });
 await assert.rejects(persistReport(async () => ({ error: { code: '22P05' } })), /Could not save completed report/);
 await persistReport(async () => ({ error: null }));
+const question = 'Which studios build custom agents for businesses?';
+const questionOnly = await explainAudit(audit, {profile,assistants:[{id:'chatgpt',discovery:[{query:question,answer:'Several studios offer software delivery and integration services.',citations:[]}]}] as unknown as Pick<Report,'profile'|'assistants'>}, async () => JSON.stringify({actions:[{...action,evidenceId:'chatgpt-0',quote:question}]}));
+assert.equal(questionOnly.status,'partial','A question alone cannot serve as evidence of an assistant answer');
 console.log('Verified bounded same-site investigation, nested schema, failed fetches, grounded quotations, provisional findings, partial synthesis, and saved evidence.');

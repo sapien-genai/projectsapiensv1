@@ -141,7 +141,7 @@ export default function VisibilityChecker({ openReportPage = false }: { openRepo
       <p className="mt-6 text-sm text-[#526055]">We are checking public pages and collecting assistant answers. This can take a few minutes; leave this page open.</p>
     </div>}
 
-    {view.kind === 'done' && <div className="my-6 border-b border-[#172820]/20 pb-6"><a className={buttonClass} href={`/ai-visibility/dashboard/?report=${encodeURIComponent(view.id)}`}>Save to my workspace</a><p className="mt-3 text-sm text-[#526055]">Sign in with Google or email. Save your free check, get a fix package, or start monthly tracking.</p></div>}
+    {view.kind === 'done' && <div className="my-6 border-b border-[#172820]/20 pb-6"><a className={buttonClass} href={`/ai-visibility/dashboard/?report=${encodeURIComponent(view.id)}`}>Save to my workspace</a><p className="mt-3 text-sm text-[#526055]">Sign in with Google or email. Save your free report, request implementation help, or start monthly tracking.</p></div>}
     {view.kind === 'done' && <Results preview={view.preview} report={view.report} busy={busy} onUnlock={unlock} onReset={reset} />}
     {error && <p role="alert" className="mt-5 rounded-lg border border-red-800/30 p-4 text-sm text-red-900">{error}</p>}
   </section>;
@@ -182,7 +182,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Get your full report — free</h3>
       <ul className="mt-4 grid gap-2 text-[#526055] sm:grid-cols-2">
         <li>{plural(locked.answers, 'answer', 'answers')} from the assistants, as recorded (answers may be truncated)</li>
-        <li>{plural(locked.competitors, 'competitor', 'competitors')} named in your category</li>
+        <li>{plural(locked.competitors, 'other business', 'other businesses')} named in the sampled answers</li>
         <li>{plural(locked.issues, 'potential gap to verify', 'potential gaps to verify')} in how you are described</li>
         <li>{plural(locked.failedChecks, 'technical check', 'technical checks')} flagged for review</li>
         <li>{plural(locked.recommendations, 'next step', 'next steps')}, in priority order</li>
