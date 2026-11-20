@@ -274,3 +274,7 @@ Instant questions are exploratory (a broad category question plus a customer-nee
 ### Admin fresh-report quota bypass
 
 The admin cost screen’s fresh-report action verifies the bearer token and an `admin` or `super_admin` role on the server, then reserves a new paid report without the visitor or global daily cap. Public requests still use the existing atomic reservation, three-report visitor limit, 100-report global limit, and seven-day cache. Admin reports retain user attribution and normal cost tracking; they remain part of existing global usage accounting. Failed authentication, role lookup, or reservation never starts paid work.
+
+### Action-plan completion budget
+
+Instant-report interpretation has a separate 24,000-token completion allowance (including provider reasoning) and a 90-second per-attempt timeout. Profile extraction and fact comparison retain their existing budgets. An invalid JSON plan or failed provider attempt gets one compact retry from the original evidence, with both attempts cost-tracked. Exhaustion stays explicitly partial; evidence validation is never relaxed. Fixed-question study configuration is unchanged.

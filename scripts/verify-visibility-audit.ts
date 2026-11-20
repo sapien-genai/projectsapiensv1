@@ -85,3 +85,19 @@ assert.equal(discoveryScore([{mentions:2,discoveryAnswers:2,expectedDiscovery:2}
 
 const olderPage = {...page,canonical:'https://acme.com/',capture:undefined};
 assert.equal(auditFindings({...audit,pages:[olderPage, {...olderPage,id:'old-2'}]}).length,1,'Missing legacy capture flags are grouped, not multiplied into page alarms');
+
+let planAttempts = 0;
+const recovered = await explainAudit(audit, {profile,assistants:[]}, async prompt => {
+  planAttempts++;
+  if (planAttempts === 1) return '{"actions":[{"title":"cut off';
+  assert.ok(prompt.includes('at most 3 actions'));
+  return JSON.stringify({actions:[action,{...action,quote:'Unsupported invented evidence that must be rejected.'}]});
+});
+assert.equal(planAttempts,2);
+assert.equal(recovered.status,'complete');
+assert.equal(recovered.actions.length,1,'Retry must preserve evidence validation');
+let exhaustedAttempts = 0;
+const exhausted = await explainAudit(audit,{profile,assistants:[]},async()=>{exhaustedAttempts++;throw new Error('provider timeout');});
+assert.equal(exhaustedAttempts,2,'Paid retries are bounded');
+assert.equal(exhausted.status,'partial');
+assert.ok(exhausted.limitations.some(s=>s.includes('could not be completed')));
