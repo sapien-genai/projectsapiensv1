@@ -30,6 +30,11 @@ export interface AuditPage {
   id: string; url: string; status: number | null; readable: boolean;
   title: string; description: string; h1: string; canonical: string; schemaTypes: string[];
   wordCount: number; excerpt: string;
+  links?: string[];
+  capture?: { documentClosed: boolean; atByteLimit: boolean; hydrationDetected: boolean; noindex: boolean; invalidJsonLd: number };
+}
+export interface AuditFinding {
+  status: 'verified_problem' | 'incomplete'; title: string; detail: string; evidenceIds: string[]; nextStep: string;
 }
 export interface AuditAction {
   title: string; priority: 'high' | 'medium' | 'low'; classification: 'observed' | 'verify' | 'opportunity';
@@ -41,6 +46,8 @@ export interface WebsiteAudit {
   pages: AuditPage[]; discovered: string[]; resources: Array<{ id: string; url: string; status: number | null; readable: boolean; excerpt: string }>;
   strengths: Array<{ detail: string; evidenceIds: string[] }>;
   actions: AuditAction[]; limitations: string[];
+  evidenceVersion?: 2;
+  findings?: AuditFinding[];
 }
 
 export interface Report {

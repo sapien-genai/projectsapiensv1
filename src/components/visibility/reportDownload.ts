@@ -1,14 +1,26 @@
 import type { Report } from '../../../supabase/functions/visibility-report/core/types';
+import { auditFindings } from '../../../supabase/functions/visibility-report/core/evidence';
+import { discoveryScore } from '../../../supabase/functions/visibility/discovery-score';
 
 export function reportMarkdown(report: Report): string {
   const lines = [`# ${report.profile.name} — website and AI visibility report`, '', `Website: ${report.url}`, `Generated: ${report.generatedAt}`, '', report.profile.summary, `Audience / service area: ${report.profile.audience || 'Not established'}`, '', report.method];
   const audit = report.audit;
+  const score = discoveryScore(report.assistants.map(a => ({failed: Boolean(a.error), mentions: a.discovery.filter(d => d.mentioned).length, discoveryAnswers: a.discovery.length, expectedDiscovery: report.profile.queries.length})), report.signals.reachable);
+  lines.push('', '## Sampled discovery score', '', score.score === null ? 'Unavailable: usable category answers or reliable website context are missing. This is not a zero score.' : `${score.score}/100 — ${score.mentions} mentions or domain citations in ${score.answers} usable category answers.`, `Coverage: ${score.answers}/${score.expected} expected category answers${score.partial ? ' (incomplete)' : ''}.`, 'Formula: 100 × mentions ÷ usable category answers, rounded. Failed calls are excluded, not scored as zero. Named recognition and website checks are separate. This small website-derived sample is not a grade of website quality, an endorsement or an independent market benchmark. Compare unchanged questions and models over time.');
   if (audit) {
     lines.push('', '## Diagnosis', '', audit.summary, `Investigation: ${audit.status}; captured ${audit.checkedAt}`, '', '## What already works');
     for (const s of audit.strengths) lines.push('', `- ${s.detail} [${s.evidenceIds.join(', ')}]`);
-    lines.push('', '## Prioritized action plan');
+    const findings = auditFindings(audit);
+    lines.push('', '## Verified problems in captured evidence');
+    const problems = findings.filter(f => f.status === 'verified_problem');
+    if (!problems.length) lines.push('No problem conclusively verified by these checks. This is not a clean bill of health.');
+    for (const f of problems) lines.push('', `### ${f.title}`, f.detail, `Evidence: ${f.evidenceIds.join(', ')}`, `Next step: ${f.nextStep}`);
+    lines.push('', '## Incomplete checks', 'These do not establish defects or lower the discovery score.');
+    for (const f of findings.filter(f => f.status === 'incomplete')) lines.push('', `### ${f.title}`, f.detail, `Evidence: ${f.evidenceIds.join(', ') || 'Not executed'}`, `How to complete: ${f.nextStep}`);
+    lines.push('', '## Improvement ideas and verification tasks');
+    if (audit.evidenceVersion !== 2) lines.push('Earlier suggestions: existing links and markup were not checked for duplication. Verify before implementing.');
     for (const [i, a] of audit.actions.entries()) {
-      lines.push('', `### ${i + 1}. ${a.title}`, '', `${a.priority} priority · ${a.classification === 'observed' ? 'Observed in this fetch' : a.classification === 'verify' ? 'Verify first' : 'Opportunity'}`, '', a.observation, `Evidence: ${a.evidenceIds.join(', ')}`, '', `Why: ${a.why}`, '', ...a.steps.map((s, n) => `${n + 1}. ${s}`), '', `Draft example (verify facts): ${a.example || 'No draft generated.'}`, '', `Owner: ${a.owner}`, `Approximate effort: ${a.effort}`, '', `Verification: ${a.validation}`);
+      lines.push('', `### ${i + 1}. ${a.title}`, '', audit.evidenceVersion !== 2 ? 'Earlier suggestion: verification required' : a.classification === 'opportunity' ? `${a.priority} priority · improvement idea` : 'Verification task: not a confirmed problem', '', a.observation, `Evidence: ${a.evidenceIds.join(', ')}`, '', `Why: ${a.why}`, '', ...a.steps.map((s, n) => `${n + 1}. ${s}`), '', `Draft example (verify facts): ${a.example || 'No draft generated.'}`, '', `Owner: ${a.owner}`, `Approximate effort: ${a.effort}`, '', `Verification: ${a.validation}`);
     }
     lines.push('', '## Pages and files inspected');
     for (const p of audit.pages) lines.push('', `### ${p.id}: ${p.url}`, `${p.readable ? 'Read' : 'Unavailable'}; HTTP ${p.status ?? 'unknown'}; ${p.wordCount} words in captured HTML`, `Title: ${p.title}`, `Description: ${p.description}`, `H1: ${p.h1}`, `Canonical: ${p.canonical}`, `Schema types: ${p.schemaTypes.join(', ')}`, '', p.excerpt);

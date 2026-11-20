@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { ArrowUpRight, Check, Loader2, Lock, X } from 'lucide-react';
+import { ArrowUpRight, Check, Loader2, Lock } from 'lucide-react';
 import Flock from './flock/Flock';
 import WebsiteDiagnosis from './visibility/WebsiteDiagnosis';
+import { DiscoveryScoreCard, DiscoveryScoreJourney } from './visibility/DiscoveryScore';
 import { downloadReport } from './visibility/reportDownload';
 import type { Report, ReportPreview } from '../../supabase/functions/visibility-report/core/types';
 
@@ -147,7 +148,7 @@ export default function VisibilityChecker({ openReportPage = false }: { openRepo
   </section>;
 }
 
-function Results({ preview, report, busy, onUnlock, onReset }: { preview: ReportPreview; report?: Report; busy: boolean; onUnlock: (event: FormEvent<HTMLFormElement>) => void; onReset: () => void }) {
+export function Results({ preview, report, busy, onUnlock, onReset }: { preview: ReportPreview; report?: Report; busy: boolean; onUnlock: (event: FormEvent<HTMLFormElement>) => void; onReset: () => void }) {
   const { locked } = preview;
   return <div>
     <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
@@ -158,9 +159,10 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <button type="button" onClick={onReset} className="text-sm font-semibold underline underline-offset-4">Check another site</button>
     </div>
     <div className="mt-8 grid gap-8 md:grid-cols-[auto_1fr_auto] md:items-center">
-      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. {preview.investigation ? `${preview.investigation.read}/${preview.investigation.sampled} sampled pages read, with ${preview.investigation.status === 'partial' ? 'a partial' : 'an automated'} website investigation and action plan.` : 'A page fetch and basic HTML checks.'} No combined visibility score.</p></div>
+      <div><p className="text-2xl font-semibold">What this check observed</p><p className="mt-3 max-w-2xl text-[#526055]">One business-description question and up to two website-derived category questions per assistant, asked once. {preview.investigation ? `${preview.investigation.read}/${preview.investigation.sampled} sampled pages read, with ${preview.investigation.status === 'partial' ? 'a partial' : 'an automated'} website investigation and action plan.` : 'A page fetch and basic HTML checks.'} Website checks and recognition do not contribute to the discovery score.</p></div>
       <Flock formation="cluster" count={34} size={6} cohesion={.5} className="hidden h-32 w-56 md:block" />
     </div>
+    <DiscoveryScoreCard rows={preview.assistants} eligible={report ? report.signals.reachable : preview.signalsScore !== null} />
     <p className="mt-8 text-sm text-[#526055]">Observed mentions and limited automated assessments—not recommendations or verified accuracy.</p><p className="mt-2 text-xs text-[#526055] md:hidden">Scroll the table sideways to see every assessment.</p>
     <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Assistant evidence table">
       <table className="w-full min-w-[420px] border-collapse text-left text-sm">
@@ -176,7 +178,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
         </tr>)}</tbody>
       </table>
     </div>
-    <div className="mt-6 rounded-xl border border-[#172820]/15 p-5 text-sm text-[#526055]"><h3 className="font-semibold text-[#172820]">What this does not establish</h3><p className="mt-2">Mention detection checks the business name or matching website domain in the answer or its sources; a parent-domain citation may not identify the specific location. Mentions may be positive, neutral, or negative. We did not grade endorsement, ranking, or suitability. Identity and fact assessments compare answers with a short website-derived summary. Broader discovery, independently verified accuracy, access by every crawler, and successful customer tasks remain untested. The questions are not an independent sample of your market.</p></div>
+    <div className="mt-6 rounded-xl border border-[#172820]/15 p-5 text-sm text-[#526055]"><h3 className="font-semibold text-[#172820]">What this does not establish</h3><p className="mt-2">Mention detection checks the business name or matching website domain in the answer or its sources; a parent-domain citation may not identify the specific location. Mentions may be positive, neutral, or negative. We did not grade endorsement, ranking, or suitability. Identity and fact assessments compare answers with captured website information; an omitted detail alone does not establish a factual error. Broader discovery, independently verified accuracy, access by every crawler, and successful customer tasks remain untested. The questions are not an independent sample of your market.</p></div>
 
     {!report && <div className="mt-8 rounded-xl border border-[#172820]/15 bg-[#f4f2ec] p-6 md:p-8">
       <h3 className="flex items-center gap-3 text-xl font-semibold"><Lock size={20} aria-hidden="true" />Get your full report — free</h3>
@@ -195,7 +197,7 @@ function Results({ preview, report, busy, onUnlock, onReset }: { preview: Report
       <p className="mt-3 text-sm text-[#526055]">The report opens here straight away. We keep your email with this report and may follow up about the results. <a className="underline underline-offset-4" href="/privacy/">Privacy Policy</a>.</p>
     </div>}
 
-    {report && <FullReport report={report} />}
+    {report && <FullReport key={`${report.domain}-${report.generatedAt}`} report={report} />}
     <p className="mt-8 text-sm leading-relaxed text-[#526055]">{preview.method}</p>
   </div>;
 }
@@ -206,7 +208,8 @@ function Sources({ citations }: { citations: Array<{ url: string; title?: string
 }
 
 function FullReport({ report }: { report: Report }) {
-  return <div className="mt-10 space-y-12">
+  return <div className="mt-10 space-y-8">
+    <DiscoveryScoreJourney report={report} />
     <button type="button" onClick={() => downloadReport(report)} className={buttonClass}>Download your full report</button>
     <div>
       {report.audit ? <WebsiteDiagnosis audit={report.audit} report={report} /> : <>
@@ -221,11 +224,11 @@ function FullReport({ report }: { report: Report }) {
 
     <div>
       <h3 className="text-xl font-semibold">What each assistant said</h3>
-      <div className="mt-4 space-y-6">{report.assistants.map(assistant => <article key={assistant.id} className="rounded-xl border border-[#172820]/15 p-5 md:p-6">
+      <div className="mt-4 space-y-6">{report.assistants.map(assistant => <article key={assistant.id} data-discovery-provider={assistant.id} className="rounded-xl border border-[#172820]/15 p-5 md:p-6">
         <h4 className="text-lg font-semibold">{assistant.label}</h4>
         {assistant.error ? <p className="mt-2 text-[#526055]">{assistant.error}</p> : <>
           {assistant.summary && <p className="mt-2 text-[#172820]">{assistant.summary}</p>}
-          {assistant.issues.length > 0 && <><p className={`${eyebrow} mt-5`}>Potential gaps to verify</p><ul className="mt-2 list-disc space-y-1 pl-5 text-[#526055]">{assistant.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></>}
+          {assistant.issues.length > 0 && <>{report.audit?.evidenceVersion !== 2 && <p className="mt-4 text-sm text-[#526055]">These earlier automated flags used limited business context. Missing context is not evidence that an assistant claim is wrong.</p>}<p className={`${eyebrow} mt-5`}>Possible contradictions to verify</p><ul className="mt-2 list-disc space-y-1 pl-5 text-[#526055]">{assistant.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></>}
           {assistant.competitors.length > 0 && <><p className={`${eyebrow} mt-5`}>Other businesses named (automated extraction)</p><p className="mt-2 text-[#526055]">{assistant.competitors.join(', ')}</p></>}
           <details className="mt-5"><summary className="cursor-pointer font-semibold underline underline-offset-4">Asked: “What is {report.profile.name}?”</summary>
             <p className="mt-3 whitespace-pre-wrap [overflow-wrap:anywhere] text-[#526055]">{assistant.recognitionAnswer || 'No answer was returned.'}</p><Sources citations={assistant.recognitionCitations} /></details>
@@ -238,9 +241,10 @@ function FullReport({ report }: { report: Report }) {
 
     <div>
       <h3 className="text-xl font-semibold">Page checks from our fetch</h3>
+      <p className="mt-2 text-sm text-[#526055]">These describe the captured response. A question mark means verification is needed—not a confirmed website defect. Metadata and schema not detected here may exist in rendered content or beyond the capture limit.</p>
       <ul className="mt-4 divide-y divide-[#172820]/10">{report.signals.checks.map(check => <li key={check.id} className="flex gap-3 py-3">
-        {check.passed === null ? <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">—</span> : check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <X size={20} className="mt-0.5 shrink-0 text-[#a33a2a]" aria-hidden="true" />}
-        <div className="min-w-0 [overflow-wrap:anywhere]"><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'passed' : 'not passed'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
+        {check.passed === null ? <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">—</span> : check.passed ? <Check size={20} className="mt-0.5 shrink-0 text-[#16745e]" aria-hidden="true" /> : <span className="mt-0.5 w-5 shrink-0 text-[#526055]" aria-hidden="true">?</span>}
+        <div className="min-w-0 [overflow-wrap:anywhere]"><p className="font-semibold text-[#172820]">{check.label}<span className="sr-only">: {check.passed === null ? 'not tested' : check.passed ? 'observed in this fetch' : 'needs verification'}</span></p><p className="text-sm text-[#526055]">{check.detail}</p></div>
       </li>)}</ul>
     </div>
 

@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { auditLinks, auditPage, investigate, explainAudit } from '../supabase/functions/visibility-report/core/audit.ts';
+import { auditFindings } from '../supabase/functions/visibility-report/core/evidence.ts';
+import { discoveryScore } from '../supabase/functions/visibility/discovery-score.ts';
+import { reportMarkdown } from '../src/components/visibility/reportDownload.ts';
 import { readableReport } from '../supabase/functions/visibility-report/core/pipeline.ts';
 import { persistReport, storageSafeJson } from '../supabase/functions/visibility-report/core/storage.ts';
 import type { Report } from '../supabase/functions/visibility-report/core/types.ts';
@@ -21,7 +24,7 @@ assert.equal(audit.pages[2].status, null);
 assert.equal(audit.resources.filter(r => r.readable).length, 0);
 assert.ok(!requests.some(u => /other.com|127.0.0.1|\/admin/.test(u)));
 const profile = {name:'Acme',category:'sports guide',summary:'A guide',audience:'Fans',queries:[]};
-const action = {title:'Explain access',priority:'high',classification:'observed',evidenceId:'page-1',quote:'Existing guide pages help customers find channels',observation:'Review the access explanation.',why:'Help customers understand access',steps:['Inspect the existing guide','Verify provider requirements','Publish accurate access details'],example:'Check your subscription before watching.',owner:'Editor',effort:'Small copy update',validation:'Verify the published guide and repeat the same questions.'};
+const action = {targetEvidenceId:'page-1',changeKind:'inspect',existingQuote:'Existing guide pages help customers find channels',title:'Explain access',priority:'high',classification:'observed',evidenceId:'page-1',quote:'Existing guide pages help customers find channels',observation:'Review the access explanation.',why:'Help customers understand access',steps:['Inspect the existing guide','Verify provider requirements','Publish accurate access details'],example:'Check your subscription before watching.',owner:'Editor',effort:'Small copy update',validation:'Verify the published guide and repeat the same questions.'};
 const explained = await explainAudit(audit, {profile,assistants:[]}, async () => JSON.stringify({summary:'A useful plan',actions:[action,{...action,title:'Unsupported',quote:'This invented sentence is not in the captured evidence.'},{...action,title:'Unknown source',evidenceId:'missing'}]}));
 assert.equal(explained.status,'complete');
 assert.equal(explained.actions.length,1);
@@ -40,5 +43,42 @@ await assert.rejects(persistReport(async () => ({ error: { code: '22P05' } })), 
 await persistReport(async () => ({ error: null }));
 const question = 'Which studios build custom agents for businesses?';
 const questionOnly = await explainAudit(audit, {profile,assistants:[{id:'chatgpt',discovery:[{query:question,answer:'Several studios offer software delivery and integration services.',citations:[]}]}] as unknown as Pick<Report,'profile'|'assistants'>}, async () => JSON.stringify({actions:[{...action,evidenceId:'chatgpt-0',quote:question}]}));
-assert.equal(questionOnly.status,'partial','A question alone cannot serve as evidence of an assistant answer');
+assert.equal(questionOnly.actions.length,0,'A question alone cannot serve as evidence of an assistant answer');
 console.log('Verified bounded same-site investigation, nested schema, failed fetches, grounded quotations, provisional findings, partial synthesis, and saved evidence.');
+
+const missing = auditPage('<html><body><div id="root"></div><script>self.__next_f.push([1,"application/ld+json"])</script></body></html>', page.url, 200, 'shell');
+const shellAudit = {...audit,pages:[missing],actions:[]};
+assert.ok(auditFindings(shellAudit).every(f=>f.status==='incomplete'), 'Missing raw fields and Flight strings do not establish defects');
+assert.equal(missing.capture?.hydrationDetected,true);
+assert.equal(missing.schemaTypes.length,0,'A Flight string alone is not usable JSON-LD');
+const broken = auditPage('<html><head><script type="application/ld+json">{"@type": bad}</script></head><body><h1>Test</h1></body></html>',page.url,200,'broken');
+assert.equal(auditFindings({...audit,pages:[broken]}).filter(f=>f.status==='verified_problem').length,1,'Complete invalid JSON script is a verified syntax issue');
+const cutoff = auditPage('<html><body>'+ 'x'.repeat(350000),page.url,200,'capped');
+assert.equal(cutoff.capture?.atByteLimit,true);
+assert.equal(cutoff.capture?.documentClosed,false);
+const proposals = [
+ {...action,title:'Duplicate link',changeKind:'add_link',linkTarget:'https://www.acme.com/tv-guide/'},
+ {...action,title:'Duplicate schema',changeKind:'add_schema',schemaType:'Organization'},
+ {...action,title:'Unread target',targetEvidenceId:audit.pages[2].id},
+ {...action,title:'Identical text',changeKind:'edit_copy',replacement:action.existingQuote},
+ {...action,title:'Real copy proposal',changeKind:'edit_copy',replacement:'Find listed channels here, then check your subscription and location before choosing a viewing option.'}
+];
+const filtered = await explainAudit(audit,{profile,assistants:[]},async()=>JSON.stringify({actions:proposals}));
+assert.deepEqual(filtered.actions.map(a=>a.title),['Real copy proposal']);
+assert.ok(filtered.actions[0].example.includes('Current captured wording'));
+assert.equal(filtered.actions[0].classification,'opportunity');
+assert.equal(filtered.actions[0].priority,'medium','Model cannot declare an unverified proposal urgent');
+const noindex = {...audit,pages:[{...page,capture:{...page.capture!,noindex:true}}]};
+const noindexPlan = await explainAudit(noindex,{profile,assistants:[]},async()=>JSON.stringify({actions:[proposals[4]]}));
+assert.equal(noindexPlan.actions.length,0);
+assert.equal(discoveryScore([{mentions:1,discoveryAnswers:2,expectedDiscovery:2},{mentions:0,discoveryAnswers:2,expectedDiscovery:2},{mentions:0,discoveryAnswers:2,expectedDiscovery:2}]).score,17);
+const partialScore = discoveryScore([{mentions:1,discoveryAnswers:2,expectedDiscovery:2},{failed:true,mentions:0,discoveryAnswers:0,expectedDiscovery:2}]);
+assert.equal(partialScore.score,50);assert.equal(partialScore.partial,true);assert.equal(partialScore.expected,4);
+assert.equal(discoveryScore([{failed:true,expectedDiscovery:2}]).score,null);
+assert.equal(discoveryScore([{mentions:5,discoveryAnswers:2,expectedDiscovery:2}]).score,null);
+assert.equal(discoveryScore([{mentions:0,discoveryAnswers:2,expectedDiscovery:2}]).score,0);
+const md=reportMarkdown({...report,audit:shellAudit});
+assert.ok(md.includes('## Incomplete checks')&&md.includes('## Verified problems')&&md.includes('## Sampled discovery score'));
+console.log('Verified incomplete-rendering taxonomy, invalid JSON evidence, duplicate-proposal rejection, score coverage and exported definitions.');
+
+assert.equal(discoveryScore([{mentions:2,discoveryAnswers:2,expectedDiscovery:2}],false).score,null,'Failed website context cannot produce a grade');
