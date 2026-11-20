@@ -8,6 +8,8 @@ export interface PipelineDeps {
   providers: Provider[];
   /** Cheap text model used for extraction and grading. */
   complete: Complete;
+  /** Separate reasoning/output budget for the longer evidence-backed action plan. */
+  completePlan?: Complete;
   fetchOptions: SafeFetchOptions;
   onProgress?: (step: ProgressStep) => Promise<void> | void;
   now?: () => Date;
@@ -175,7 +177,7 @@ export async function runReport(domain: string, url: string, deps: PipelineDeps)
   // Recognition grades, mention rates and HTML checks measure different things.
   // Do not blend them into an overall claim about visibility or agent readiness.
   const overall = null;
-  const audit = await explainAudit(investigation, { profile, assistants }, deps.complete);
+  const audit = await explainAudit(investigation, { profile, assistants }, deps.completePlan ?? deps.complete);
   const { text: _text, ...signals } = site;
   const sampledHome = audit.pages[0];
   if (sampledHome?.readable) signals.checks = signals.checks.map(check => check.id !== 'structured-data' ? check : {

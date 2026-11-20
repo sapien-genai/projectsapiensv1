@@ -152,8 +152,20 @@ Each action: title, priority (high/medium/low), classification (verify/opportuni
 Account for ALL discovered URLs and read pages. Improve existing relevant pages before proposing new ones. A discovered but unread page must be inspected first, not declared missing. Never assert absent sitewide content from a sample, or weak authority, low indexation, poor speed, young domain age, broken MCP, incorrect data, or superiority without measurements. Metadata/schema presence is not validity. Documented tools are not tested tools. Do not invent verification timestamps, locations, services, reviews or credentials. llms.txt is optional; do not prioritize it over customer information. Training access is distinct from search access. Separate recognition when named from unprompted discovery; other options named need not be recommendations. Include concrete source/answer context where useful. Do not recommend changing a control merely to improve a score. Prefer 3 valuable actions to 5 generic ones. Keep total output under 2800 tokens.
 <evidence>${JSON.stringify({ business: report.profile, discovered: audit.discovered, evidence })}</evidence>`;
   try {
-    const raw = await complete(prompt);
-    const parsed = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
+    let parsed;
+    // Retry once from the original evidence, never from a truncated model draft.
+    // Both attempts use normal provider usage tracking; failures stay partial.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const raw = await complete(prompt + (attempt ? '\nThe previous attempt did not produce a complete valid plan. Return a compact JSON object with at most 3 actions and 1 strength. Keep all required evidence and validation fields; omit markdown.' : ''));
+        parsed = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
+        if (!parsed || !Array.isArray(parsed.actions)) throw new Error('Invalid action plan');
+        break;
+      } catch {
+        console.warn('visibility action plan attempt incomplete', { attempt: attempt + 1 });
+        if (attempt === 1) throw new Error('Action plan attempts exhausted');
+      }
+    }
     const actions: AuditAction[] = [];
     for (const item of list(parsed.actions, 5)) {
       if (!item || typeof item !== 'object') continue;

@@ -49,11 +49,11 @@ function buildProviders(onUsage?: (entry: UsageEntry) => Promise<void>): Provide
 }
 
 /** Extraction and grading run on one inexpensive model, Gemini first because the project already pays for it. */
-function buildGrader(onUsage?: (entry: UsageEntry) => Promise<void>): Provider | null {
+function buildGrader(onUsage?: (entry: UsageEntry) => Promise<void>, actionPlan = false): Provider | null {
   const override = env("VISIBILITY_GRADER_MODEL");
-  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
-  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
-  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: 60000, completionMaxTokens: 8000 });
+  if (env("GEMINI_API_KEY")) return gemini({ apiKey: env("GEMINI_API_KEY"), model: override || env("VISIBILITY_GEMINI_MODEL", "gemini-3.5-flash"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: actionPlan ? 90000 : 60000, completionMaxTokens: actionPlan ? 24000 : 8000 });
+  if (env("OPENAI_API_KEY")) return openai({ apiKey: env("OPENAI_API_KEY"), model: override || env("VISIBILITY_OPENAI_MODEL", "gpt-5.5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: actionPlan ? 90000 : 60000, completionMaxTokens: actionPlan ? 24000 : 8000 });
+  if (env("ANTHROPIC_API_KEY")) return anthropic({ apiKey: env("ANTHROPIC_API_KEY"), model: override || env("VISIBILITY_ANTHROPIC_MODEL", "claude-sonnet-5-5"), webSearch: false, onUsage, purpose: "analysis", timeoutMs: actionPlan ? 90000 : 60000, completionMaxTokens: actionPlan ? 24000 : 8000 });
   return null;
 }
 
@@ -79,7 +79,7 @@ async function execute(id: string, domain: string, url: string) {
     if (trackingError) throw new Error('Could not initialize cost tracking');
     if (!grader) throw new Error("No AI provider keys are configured.");
     const report = await runReport(domain, url, {
-      providers: buildProviders(onUsage), complete: grader.complete, fetchOptions: { resolveHost },
+      providers: buildProviders(onUsage), complete: grader.complete, completePlan: buildGrader(onUsage, true)!.complete, fetchOptions: { resolveHost },
       onProgress: async (step: ProgressStep) => { await supabase.from("visibility_reports").update({ progress: step }).eq("id", id); },
     });
     await persistReport(() => supabase.from("visibility_reports").update({ status: "complete", report: storageSafeJson(report), cost_tracking_finished_at: new Date().toISOString(), completed_at: new Date().toISOString() }).eq("id", id));
