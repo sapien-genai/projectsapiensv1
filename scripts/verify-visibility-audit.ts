@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { auditLinks, auditPage, investigate, explainAudit } from '../supabase/functions/visibility-report/core/audit.ts';
 import { readableReport } from '../supabase/functions/visibility-report/core/pipeline.ts';
+import { persistReport, storageSafeJson } from '../supabase/functions/visibility-report/core/storage.ts';
 import type { Report } from '../supabase/functions/visibility-report/core/types.ts';
 const html = '<html><head><title>Acme Sports</title><meta name="description" content="Find verified schedules"><script type="application/ld+json">{"@type":"WebPage","publisher":{"@type":"Organization"}}</script></head><body><h1>Find where to watch</h1><p>Existing guide pages help customers find channels and understand access restrictions. '+ 'Useful public information. '.repeat(40)+'</p><a href="/tv-guide">Guide</a><a href="/about">About</a><a href="/admin">Admin</a><a href="https://other.com/">Outside</a><a href="http://127.0.0.1/">Local</a></body></html>';
 const page = auditPage(html, 'https://acme.com/', 200, 'page-1');
@@ -33,4 +34,8 @@ assert.equal(unavailable.actions.length,0);assert.equal(unavailable.pages[0].rea
 let calls=0;await explainAudit(unavailable,{profile,assistants:[]},async()=>{calls++;return '{}';});assert.equal(calls,0);
 const report = {version:1,domain:'acme.com',url:page.url,generatedAt:new Date().toISOString(),profile,overall:null,verdict:'',signals:{reachable:true,checks:[]},assistants:[],recommendations:[],method:'',audit:explained} as unknown as Report;
 assert.deepEqual(readableReport(report).audit,explained,'Saved audit evidence survives legacy display normalization');
+const unsafe = { nested: ['About\u0000us', 'truncated\uD83D', '\uDE00orphan', 'Bird 🐦'], count: 2, missing: null };
+assert.deepEqual(storageSafeJson(unsafe), { nested: ['About�us', 'truncated�', '�orphan', 'Bird 🐦'], count: 2, missing: null });
+await assert.rejects(persistReport(async () => ({ error: { code: '22P05' } })), /Could not save completed report/);
+await persistReport(async () => ({ error: null }));
 console.log('Verified bounded same-site investigation, nested schema, failed fetches, grounded quotations, provisional findings, partial synthesis, and saved evidence.');

@@ -1,6 +1,6 @@
 # Hotline: verified findings and staged before/after work
 
-Status: prepare only until Baseline 3 completes and its evidence is saved.
+Status: all three baselines completed and exported. The baseline release hold is satisfied; normal review/CI and deployment checks still apply.
 Existing prepared code: `codex/tv-guide-baseline-hold`, commit `b64fe29e`.
 The final scheduled baseline uses the immutable 20-question study unchanged.
 
@@ -15,8 +15,10 @@ The final scheduled baseline uses the immutable 20-question study unchanged.
   Sitemap sample size is capped; no claim of full coverage or stale dates follows.
 - Developers explicitly says retrieval time is different from source verification
   time, which is unavailable. Do not invent a “last verified” stamp.
-- No JSON-LD types detected in the capped initial HTML sample. Review actual
-  source/rendered output and existing server schema before proposing additions.
+- A larger direct verification read returned the populated TV guide (200). A
+  current USC–Michigan volleyball game page already includes SportsEvent,
+  SportsTeam, Place and PostalAddress JSON-LD, a game summary and an explicit
+  unverified-broadcaster state. Do not propose these existing features as absent.
 - Search-tool TV-guide snapshot is dated October 29. It is not a live deployment
   or crawl-frequency measurement. Use direct fetch/production checks for release.
 
@@ -47,7 +49,14 @@ November 18: 58/60 answers, 6/6 branded mentions/citations, discovery 2/52;
 known calculated cost $5.2302, incomplete billing for two failed calls.
 November 19: 60/60 answers, 6/6 branded mentions/citations, discovery 2/54
 (ChatGPT 1/18, Claude 0/18, Gemini 1/18); calculated cost $6.0495.
-November 20: record final persisted results before release.
+November 20: 60/60 answers, 6/6 branded mentions/citations, discovery 2/54
+(ChatGPT 1/18: channel-organized schedules; Claude 0/18; Gemini 1/18: existing
+subscriptions). Calculated cost $6.0631. Run `12b18a14-d37e-4d9f-920a-81f4e47e8c68`
+finished at 16:31:03 UTC and was exported before release. The 60 matched pairs
+show no mention/citation change versus November 19. Provider/model configuration
+is unchanged; search use differs, and human accuracy review is still outstanding.
+Production commit `89316a240455ae35995138fa778887cb969d422c` preceded this run;
+unrelated editorial/data/score changes were recorded as confounders in the study.
 
 Repeat the same fixed questions at the agreed post-deployment intervals. Compare
 successful matching question/provider pairs, retain failures and model/search
