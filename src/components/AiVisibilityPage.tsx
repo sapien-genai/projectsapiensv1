@@ -15,7 +15,7 @@ function Section({ label, title, children }: { label: string; title: string; chi
   </section>;
 }
 const linkStyle = 'font-semibold text-[#172820] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4';
-const description = 'Find out how ChatGPT, Claude, Gemini, and Perplexity describe your company, where the picture is missing or wrong, and what to change. An AI Brand Visibility Report from Project Sapiens.';
+const description = 'Find out how ChatGPT, Claude and Gemini describe your business. Get a free website diagnosis and practical action plan, with optional implementation from Project Sapiens.';
 
 export default function AiVisibilityPage() {
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function AiVisibilityPage() {
         <a href="#instant-report" className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`}>Run a free instant report <ArrowUpRight aria-hidden="true" size={19} /></a>
       </header>
       <div className="pb-14 md:pb-20"><VisibilityChecker /><p className="mt-6 text-[#526055]">Already have an account? <a className={linkStyle} href="/ai-visibility/dashboard/">Open your workspace</a>.</p></div>
-      <Section label="Your next step" title="Check it. Improve it. Keep measuring."><p>Save your free report with Google or email sign-in. From your workspace, choose a one-time fix package with website-specific drafts and a publishing checklist, or monthly tracking across ChatGPT, Claude, and Gemini using the same questions.</p><p>You review and publish the drafts. We record what the assistants actually say over time, with their sources and test coverage. No guaranteed increases in mentions or automatic edits to your website.</p><a className={linkStyle} href="/ai-visibility/dashboard/">Create your free account</a></Section>
+      <Section label="Your next step" title="The diagnosis is free. The next step is yours."><p>Read your page evidence, assistant answers and prioritized action plan. Use the recommendations yourself or share them with your developer. Save the report in your workspace with Google or email sign-in.</p><p>If you want us to do the work, implementation starts at $299 for an agreed scope. Optional monthly tracking repeats fixed questions and records answers, sources and coverage. Neither is required to use your free report.</p><a className={linkStyle} href="/ai-visibility/dashboard/">Open your workspace</a></Section>
       <Section label="Why it matters" title="Search ranks pages. AI describes companies.">
         <p>A search engine returns a list and leaves the choice to the reader. An AI assistant writes one answer, names a handful of companies, and explains each in a sentence. If that sentence is vague, out of date, or about a different company with a similar name, the reader never sees your website to learn otherwise.</p>
         <p>Ranking well in Google does not settle the question. An assistant can only repeat what it was able to read and connect: your own pages, your documentation, and what other sources say about you. The work is to find out what it currently understands, then make the accurate version easy to find.</p>
@@ -41,24 +41,21 @@ export default function AiVisibilityPage() {
       <Section label="What we look at" title="Four areas for a deeper review.">
         {VISIBILITY_QUESTIONS.map((item, i) => <div key={item.name} className="border-b border-[#172820]/20 pb-7 last:border-0"><p className="font-mono text-xs text-[#68745b]">0{i + 1} / {item.name}</p><h3 className="mt-2 text-xl font-semibold text-[#172820]">{item.question}</h3><p className="mt-3">{item.detail}</p></div>)}
       </Section>
-      <Section label="Optional consulting" title="Need a deeper, human-led review?">
-        <p>The instant report above asks each assistant a few questions once. The full AI Brand Visibility Report is the same idea done thoroughly, by a person, for your market.</p>
+      <Section label="Included for free" title="A diagnosis you can act on.">
         <ul className="list-disc space-y-3 pl-5">
-          <li><strong className="text-[#172820]">A side-by-side scorecard.</strong> Recognition, discovery, and accuracy for each of {VISIBILITY_ASSISTANTS.join(', ')}, set against how you appear in Google for the same questions.</li>
-          <li><strong className="text-[#172820]">The evidence.</strong> The prompts we ran, the answers that came back, the companies named ahead of you, and the sources each assistant cited, all dated.</li>
-          <li><strong className="text-[#172820]">A technical read of your site.</strong> Whether crawlers can reach your pages, whether the content exists without JavaScript, and what your structured data and metadata say.</li>
-          <li><strong className="text-[#172820]">A prioritized list of changes.</strong> What to clarify, what to document, what to connect, and which outside sources to strengthen, ordered by expected effect and effort.</li>
+          <li><strong className="text-[#172820]">Your business and existing content.</strong> An inferred description of what you offer and who you serve, plus a sample of up to eight public pages. Existing pages and structured data inform the plan.</li>
+          <li><strong className="text-[#172820]">Actual assistant answers.</strong> One named-business question and up to two category questions per assistant, with sources and missing answers shown. Mentions are distinct from recommendations.</li>
+          <li><strong className="text-[#172820]">Specific changes.</strong> Page-linked findings, priorities, proposed steps and example wording, with responsibility, approximate effort and verification instructions.</li>
+          <li><strong className="text-[#172820]">An honest account of coverage.</strong> Observed findings, items to verify and opportunities are labelled separately. We do not claim to measure your traffic, backlinks or search rankings.</li>
         </ul>
-        <p>We walk through the report with you. If you want help making the changes, that can follow as a separate engagement, with a second measurement afterward to see what moved.</p>
       </Section>
-      <Section label="How it works" title="From a short intake to a clear next step.">
+      <Section label="How it works" title="Understand it. Fix it. Check what changes.">
         <ol className="space-y-6">{[
-          ['Tell us about the business', 'Your company, your category, the competitors you are compared with, and the questions your customers ask before they buy.'],
-          ['We run the questions', 'We write a prompt set in your customers’ words and run it across the assistants more than once, because answers vary from one run to the next. We review your site and public footprint alongside.'],
-          ['You get the report', 'A written report and a working session to go through the findings and decide what is worth doing first.'],
-          ['Fix, then measure again', 'You make the changes or we make them with you. We repeat the same prompt set later so the comparison is like for like.'],
+          ['Run your free report', 'Enter your website. We sample public pages and ask ChatGPT, Claude and Gemini about your business and category.'],
+          ['Review your diagnosis', 'Provide your email to open the full report free. Check the inferred business details, evidence and suggested actions. You can save it in your workspace.'],
+          ['Choose how to implement', 'Do it yourself, work with your developer, or request help from us. Implementation starts at $299; we agree specific changes, access, timing and price before payment. Larger projects are quoted separately.'],
+          ['Measure over time', 'Record the changes you publish. Optional monthly tracking repeats its own fixed question set; compare matching questions and models and account for normal variation.'],
         ].map(([title, body], i) => <li key={title}><h3 className="font-semibold text-[#172820]">{i + 1}. {title}</h3><p className="mt-2">{body}</p></li>)}</ol>
-        <p>Scope, timing, and fee are agreed before work begins.</p>
       </Section>
       <Section label="What to expect" title="Evidence, without promises nobody can keep.">
         <p>No one can guarantee a place in an AI answer. The models change, the same question can return different answers, and none of the companies behind them sell placement in the answer itself. We report what we observed and when.</p>

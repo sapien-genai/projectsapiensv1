@@ -18,7 +18,11 @@ export default function ClientInquiryForm({ previewOnly = false, topic }: { prev
     const form = event.currentTarget;
     const body = Object.fromEntries(new FormData(form));
     // The intake accepts a fixed set of fields, so the topic travels inside the description.
-    if (topic && typeof body.project === 'string') body.project = `[${topic}]\n\n${body.project}`;
+    if (topic && typeof body.project === 'string') {
+      const reportId = visibility ? new URLSearchParams(window.location.search).get('report') : null;
+      const reportLink = reportId && /^[a-f0-9-]{36}$/i.test(reportId) ? `\nReport: https://www.projectsapiens.ai/ai-visibility/?report=${reportId}` : '';
+      body.project = `[${topic}]${reportLink}\n\n${body.project}`;
+    }
     sending.current = true;
     setStatus('sending');
     setError('');
@@ -41,9 +45,9 @@ export default function ClientInquiryForm({ previewOnly = false, topic }: { prev
     <div className="grid gap-10 md:grid-cols-[1fr_1.3fr] md:gap-16">
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">{visibility ? 'AI brand visibility' : 'New projects & collaborations'}</p>
-        <h2 id="contact-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">{visibility ? 'Find out what AI says about you.' : 'Something worth building together?'}</h2>
-        <p className="mt-5 leading-relaxed text-[#526055]">{visibility ? 'Tell us about your business, the category you compete in, and the questions your customers ask. We’ll review your inquiry and get back to you.' : 'Tell us what you’re trying to build or improve, who it’s for, and where you are today. We’ll review your inquiry and get back to you.'}</p>
-        <p className="mt-4 text-sm leading-relaxed text-[#526055]">{visibility ? 'Include your website address and two or three competitors if you can.' : 'An early idea is welcome. Budget and timing can be approximate.'}</p>
+        <h2 id="contact-title" className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">{visibility ? 'Let’s put your plan to work.' : 'Something worth building together?'}</h2>
+        <p className="mt-5 leading-relaxed text-[#526055]">{visibility ? 'Tell us which findings you want help with. Implementation starts at $299 for an agreed scope. We confirm access, deliverables, timing and price before you pay.' : 'Tell us what you’re trying to build or improve, who it’s for, and where you are today. We’ll review your inquiry and get back to you.'}</p>
+        <p className="mt-4 text-sm leading-relaxed text-[#526055]">{visibility ? 'Include your website and report link. This request does not place an order.' : 'An early idea is welcome. Budget and timing can be approximate.'}</p>
       </div>
       <div>
         <div role="status" aria-live="polite">
@@ -59,11 +63,11 @@ export default function ClientInquiryForm({ previewOnly = false, topic }: { prev
               <label className="block text-sm font-semibold" htmlFor="inquiry-email">Email *<input className={inputClass} id="inquiry-email" name="email" type="email" autoComplete="email" required maxLength={254} /></label>
             </div>
             <label className="block text-sm font-semibold" htmlFor="inquiry-company">Company<input className={inputClass} id="inquiry-company" name="company" autoComplete="organization" maxLength={200} /></label>
-            <label className="block text-sm font-semibold" htmlFor="inquiry-project">{visibility ? 'Your business, website, and category *' : 'What would you like to build or improve? *'}<textarea className={inputClass} id="inquiry-project" name="project" rows={5} required maxLength={5000} aria-describedby="inquiry-project-help" /></label>
+            <label className="block text-sm font-semibold" htmlFor="inquiry-project">{visibility ? 'Your website and the improvements you need *' : 'What would you like to build or improve? *'}<textarea className={inputClass} id="inquiry-project" name="project" rows={5} required maxLength={5000} aria-describedby="inquiry-project-help" /></label>
             <p id="inquiry-project-help" className="text-sm text-[#526055]">{visibility ? 'What you offer, who your customers are, and what you would want an AI assistant to say about you.' : 'A short description of the problem, audience, and what success would look like.'}</p>
             {!visibility && <label className="block text-sm font-semibold" htmlFor="inquiry-stage">Current stage<select className={inputClass} id="inquiry-stage" name="stage" defaultValue=""><option value="">Select if known</option>{['Exploring an idea', 'Defined concept', 'Prototype exists', 'Product in development', 'Existing product needs improvement', 'Production system needs scaling'].map(value => <option key={value}>{value}</option>)}</select></label>}
             <div className="grid gap-5 sm:grid-cols-2">
-              <label className="block text-sm font-semibold" htmlFor="inquiry-budget">Approximate budget<select className={inputClass} id="inquiry-budget" name="budget" defaultValue=""><option value="">Select if known</option>{['Under $10,000', '$10,000–$25,000', '$25,000–$50,000', '$50,000–$100,000', '$100,000+', 'Not sure yet'].map(value => <option key={value}>{value}</option>)}</select></label>
+              <label className="block text-sm font-semibold" htmlFor="inquiry-budget">Approximate budget<select className={inputClass} id="inquiry-budget" name="budget" defaultValue=""><option value="">Select if known</option>{(visibility ? ['$299–$999', '$1,000–$2,999', '$3,000+', 'Not sure yet'] : ['Under $10,000', '$10,000–$25,000', '$25,000–$50,000', '$50,000–$100,000', '$100,000+', 'Not sure yet']).map(value => <option key={value}>{value}</option>)}</select></label>
               <label className="block text-sm font-semibold" htmlFor="inquiry-timeline">Desired timeline<select className={inputClass} id="inquiry-timeline" name="timeline" defaultValue=""><option value="">Select if known</option>{['ASAP', '1–3 months', '3–6 months', '6+ months', 'Flexible'].map(value => <option key={value}>{value}</option>)}</select></label>
             </div>
             <p className="text-sm leading-relaxed text-[#526055]">We’ll use these details to respond to your inquiry. Please leave out passwords and confidential information. <a href="/privacy/" className="underline underline-offset-4 hover:text-[#16745e]">Read our Privacy Policy.</a></p>

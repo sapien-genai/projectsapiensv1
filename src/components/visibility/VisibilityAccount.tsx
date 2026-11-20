@@ -214,7 +214,7 @@ export default function VisibilityAccount() {
             <p>
               {user
                 ? "Your business, reports, and deliverables in one place."
-                : "Save your free report, get a website fix package, and follow how AI assistants describe your business."}
+                : "Save your free diagnosis, request implementation help, and follow how AI assistants describe your business."}
             </p>
           </div>
         </header>
@@ -247,7 +247,7 @@ export default function VisibilityAccount() {
                 </p>
                 <ul>
                   <li>Keep your business report in one place.</li>
-                  <li>Get drafts and a clear publishing checklist.</li>
+                  <li>Get an actionable plan; choose implementation help if you need it.</li>
                   <li>Track the same questions month after month.</li>
                 </ul>
                 <a className="va-link" href="/ai-visibility/#instant-report">
@@ -380,27 +380,12 @@ export default function VisibilityAccount() {
                       aria-label="Choose your next step"
                     >
                       <article className="va-panel">
-                        <p className="va-eyebrow">One-time purchase</p>
-                        <h2>A fix package you can use.</h2>
-                        <p className="va-price">
-                          {priceLabel(data.catalog.fix)}
-                        </p>
-                        <p>
-                          Website-specific drafts and a prioritized plan,
-                          generated from your saved report.
-                        </p>
-                        <ul>
-                          <li>Homepage title, description, and opening copy</li>
-                          <li>
-                            Service page draft, factual FAQ, and structured data
-                          </li>
-                          <li>Publishing checklist and a measurement plan</li>
-                        </ul>
-                        <p className="va-small">
-                          Review the facts before publishing. Website access,
-                          implementation, and guaranteed placement are not
-                          included.
-                        </p>
+                        <p className="va-eyebrow">Optional implementation</p>
+                        <h2>Put your plan into practice.</h2>
+                        <p className="va-price">From $299</p>
+                        <p>Your diagnosis and action plan are free. Ask us to implement a focused set of improvements on your existing website.</p>
+                        <ul><li>Agree the specific pages and changes first</li><li>Confirm website access, timing and a fixed price</li><li>Review the published changes and verification evidence</li></ul>
+                        <p className="va-small">A scope request is not a purchase. Larger projects are quoted separately. Rankings, mentions and recommendations are not guaranteed. Previously purchased draft packages retain their original scope.</p>
                         {orders.some((o) =>
                             o.product === "fix" && o.status === "paid"
                           )
@@ -410,15 +395,7 @@ export default function VisibilityAccount() {
                             </p>
                           )
                           : (
-                            <button
-                              className="va-button"
-                              disabled={busy || !data.catalog.fix?.enabled}
-                              onClick={() => act("checkout", "fix")}
-                            >
-                              {data.catalog.fix?.enabled
-                                ? "Get my fix package"
-                                : "Purchases open soon"}
-                            </button>
+                            <a className="va-button" href={`/ai-visibility/?report=${encodeURIComponent(project.latest_report_id || project.report_id || '')}#contact`}>Request an implementation scope</a>
                           )}
                       </article>
                       <article className="va-panel va-tracking-offer">
@@ -481,7 +458,7 @@ export default function VisibilityAccount() {
                           )}
                       </article>
                     </section>
-                    {!packageJob && <section id="deliverables" className="va-section"><p className="va-eyebrow">Your deliverables</p><h2>A home for your project work.</h2><p>Your purchased fix package and drafts will appear here when ready. You haven’t ordered a package for this website yet.</p><a className="va-link" href="#services">Explore the fix package</a></section>}
+                    {!packageJob && <section id="deliverables" className="va-section"><p className="va-eyebrow">Your deliverables</p><h2>A home for your project work.</h2><p>Your purchased fix package and drafts will appear here when ready. You haven’t ordered a package for this website yet.</p><a className="va-link" href="#services">Explore implementation help</a></section>}
                     {packageJob && (
                       <section id="deliverables" className="va-section">
                         <p className="va-eyebrow">Your fix package</p>
