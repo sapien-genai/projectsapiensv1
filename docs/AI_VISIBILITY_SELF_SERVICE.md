@@ -1,5 +1,7 @@
 # Self-service AI visibility
 
+**November 20 offer update:** new reports include a free page investigation and actionable diagnosis. New automatic draft-package checkout is closed. Implementation begins with a scope request from $299, with exact work, access, timing and price agreed before payment. Existing paid draft packages retain their original fulfillment; monthly tracking remains available. The draft-package details below document that legacy purchase contract. See `AI_VISIBILITY_REPORT.md` for the current report and release boundary.
+
 ## Scope and launch status
 
 Customer routes `/ai-visibility/dashboard/` and `/ai-visibility/login/` use the company website's header, footer, typography and colors. They do not mount AcademyApp, its onboarding, or its billing. The existing free checker links to the customer dashboard with a report ID. Google or email magic-link sign-in preserves that ID in both redirect URL and session storage. A verified email is required by the customer API.

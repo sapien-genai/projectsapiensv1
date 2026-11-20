@@ -15,7 +15,7 @@ import type { Report, ReportPreview } from '../../supabase/functions/visibility-
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 const POLL_MS = 2500;
-const GIVE_UP_MS = 5 * 60 * 1000;
+const GIVE_UP_MS = 7 * 60 * 1000;
 const STEPS = [
   ['site', 'Reading your site the way a crawler does'],
   ['profile', 'Working out what your business offers'],
@@ -114,7 +114,7 @@ export default function VisibilityChecker({ openReportPage = false }: { openRepo
     <div className="flex items-center justify-between gap-4"><p className={eyebrow}>Instant report</p>{view.kind === 'idle' && <Flock formation="vee" count={9} size={4.5} color="35,49,58" className="pointer-events-none h-10 w-28 shrink-0 sm:w-40" />}</div>
     {view.kind === 'idle' && <>
       <h2 id="instant-report-title" className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">See what AI says about your business.</h2>
-      <p className="mt-3 max-w-2xl leading-relaxed text-[#526055]">Enter your website. We read it the way an AI crawler does, then ask ChatGPT, Claude, and Gemini about you and your category. We sample key pages and build a practical action plan. Allow a few minutes.</p>
+      <p className="mt-3 max-w-2xl leading-relaxed text-[#526055]">Enter your website. We read a sample of public pages, ask ChatGPT, Claude, and Gemini about you and your category, and build a practical action plan. Allow a few minutes.</p>
       <form onSubmit={start} className="mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row" aria-label="Run an instant AI visibility report">
         <div className="hidden" aria-hidden="true"><label>Leave this empty<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
         <label className="sr-only" htmlFor="visibility-url">Your website address</label>

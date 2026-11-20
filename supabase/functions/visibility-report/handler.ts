@@ -21,7 +21,7 @@ const numberEnv = (name: string, fallback: number) => { const value = Number(env
 const DAILY_CAP = numberEnv("VISIBILITY_DAILY_CAP", 100);
 const IP_DAILY_LIMIT = numberEnv("VISIBILITY_IP_DAILY_LIMIT", 3);
 const CACHE_DAYS = numberEnv("VISIBILITY_CACHE_DAYS", 7);
-const STALE_AFTER_MS = 4 * 60 * 1000;
+const STALE_AFTER_MS = 6 * 60 * 1000;
 const ALLOWED_ORIGINS = new Set(["https://www.projectsapiens.ai", "https://projectsapiens.ai", "http://localhost:5173", "http://localhost:4173",
   ...env("VISIBILITY_ALLOWED_ORIGINS").split(",").map(origin => origin.trim()).filter(Boolean)]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
