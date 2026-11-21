@@ -207,7 +207,7 @@ export default function CompanyHome() {
   ['How does a project start?', 'Tell us what you want to build or improve, who will use it, and any timing or budget constraints. We discuss fit and agree on scope, responsibilities, timing, and fees before work begins.'],
 ].map(([question, answer]) => <div key={question}><h3 className="text-lg font-semibold">{question}</h3><p className="mt-3 leading-relaxed text-[#555]">{answer}</p></div>)}
 </div>
-<p className="mt-8 leading-relaxed text-[#555]">Explore <a className="underline underline-offset-4" href="/ai-visibility/">AI Visibility</a> to understand and improve how AI describes your business, or <a className="underline underline-offset-4" href="/ai-solutions/">AI Solutions</a> to build tools around the way you work; our <a className="underline underline-offset-4" href="/academy/login">academy</a> is a separate learning resource.</p>
+<p className="mt-8 leading-relaxed text-[#555]">Explore <a className="underline underline-offset-4" href="/ai-visibility/">AI Visibility</a> to understand and improve how AI describes your business, or <a className="underline underline-offset-4" href="/ai-solutions/">AI Solutions</a> to build tools around the way you work. We also offer <a className="underline underline-offset-4" href="/claude-services/">Claude services</a> for teams adopting Anthropic’s assistant.</p>
 </section>
 <section id="company" className="section about relative">
 <FlockPass />

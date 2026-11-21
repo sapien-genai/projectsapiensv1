@@ -25,7 +25,7 @@ export default function ServicePage({ slug }: { slug: string }) {
         <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl md:text-7xl">{service.headline}</h1>
         <p className="mt-8 max-w-3xl text-lg leading-relaxed text-[#526055]">{service.intro}</p>
         <a className={`${linkStyle} mt-7 inline-flex min-h-11 items-center gap-2`} href="#contact">Tell us what you want to build <ArrowUpRight size={19} aria-hidden="true" /></a>
-        <p className="mt-6 text-sm text-[#526055]">Independent expertise. Hands-on delivery. <a className={linkStyle} href="/openai-partner-network/">Member of the OpenAI Partner Network.</a></p>
+        <p className="mt-6 text-sm text-[#526055]">Independent expertise. Hands-on delivery. <a className={linkStyle} href="/openai-partner-network/">Member of the OpenAI Partner Network.</a> <a className={linkStyle} href="/claude-services/">Claude services.</a></p>
       </header>
       <section className="border-t border-[#172820]/20 py-12 md:py-16" aria-labelledby="build-title">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#68745b]">What we can build</p>

@@ -33,7 +33,7 @@ export default function WorkWithUsPage() {
     <OpenAISolutions />
     <Section label="How our offers fit together" title="Practical products. Clear next steps.">
       <p>Our core work is AI product strategy and development, including <a className={linkStyle} href="/custom-ai-agents/">custom AI agents</a> and <a className={linkStyle} href="/voice-ai-development/">voice AI experiences</a>. We define the use case, connect the systems behind it, and evaluate how it works.</p>
-      <p><a className={linkStyle} href="/ai-visibility/">AI brand visibility</a> is a related diagnostic service: a free check, optional draft fix package, and monthly tracking. The package does not include publishing website changes. Our <a className={linkStyle} href="/academy/login">academy</a> is a separate learning resource.</p>
+      <p><a className={linkStyle} href="/ai-visibility/">AI brand visibility</a> is a related diagnostic service: a free check, optional draft fix package, and monthly tracking. The package does not include publishing website changes.</p>
     </Section>
     <Section label="Where we can help" title="Start with the decision you need to make.">
       {[
