@@ -53,6 +53,14 @@
       "destination": "/share-pages/openai-partner-network.html"
     },
     {
+      "source": "/claude-services",
+      "destination": "/share-pages/claude-services.html"
+    },
+    {
+      "source": "/claude-services/",
+      "destination": "/share-pages/claude-services.html"
+    },
+    {
       "source": "/about",
       "destination": "/share-pages/about.html"
     },

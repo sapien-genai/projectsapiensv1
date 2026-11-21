@@ -7,6 +7,7 @@ import AiVisibilityPage from './components/AiVisibilityPage';
 
 const CompanyLegalPage = lazy(() => import('./components/CompanyLegalPage'));
 const PartnerNetworkPage = lazy(() => import('./components/PartnerNetworkPage'));
+const ClaudeServicesPage = lazy(() => import('./components/ClaudeServicesPage'));
 const AboutPage = lazy(() => import('./components/CompanyAboutPage'));
 const FieldNotesPage = lazy(() => import('./components/FieldNotesPage'));
 
@@ -28,6 +29,7 @@ export default function App({ path: fixedPath }: { path?: string }) {
   }
   if (path === '/field-notes' || path.startsWith('/field-notes/')) return <Suspense fallback={<div role="status" className="p-8">Loading Field Notes…</div>}><FieldNotesPage slug={path.slice('/field-notes/'.length) || undefined} /></Suspense>;
   if (path === '/openai-partner-network') return <Suspense fallback={<div role="status" className="p-8">Loading partner information…</div>}><PartnerNetworkPage /></Suspense>;
+  if (path === '/claude-services') return <Suspense fallback={<div role="status" className="p-8">Loading Claude services…</div>}><ClaudeServicesPage /></Suspense>;
   if (path === '/about') return <Suspense fallback={<div role="status" className="p-8">Loading About Project Sapiens…</div>}><AboutPage /></Suspense>;
   if (path === '/terms' || path === '/privacy') return <Suspense fallback={<div role="status" className="p-8">Loading…</div>}><CompanyLegalPage kind={path === '/terms' ? 'terms' : 'privacy'} /></Suspense>;
   if (path === '/ai-solutions') return <AiSolutionsPage />;

@@ -24,6 +24,8 @@
 .sp-site .partner-band a.partner-lockup:hover strong { text-decoration: underline; text-underline-offset: 5px; }
 
 .company-site .sp-partner-blue { color: #175cd3; }
+.company-site .sp-claude-clay { color: #b4532a; }
+.company-site .ps-about-inline { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Keep workflow steps readable on narrow phones instead of squeezing three columns. */
 @media(max-width:480px){.sp-solution-flow{grid-template-columns:1fr}.sp-solution-flow li{padding:14px}.sp-solution-flow small{margin-bottom:6px}}
